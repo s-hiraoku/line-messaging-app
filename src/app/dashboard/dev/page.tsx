@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DebugPanel } from "../_components/debug-panel";
+import { DebugPanel, toCurl } from "../_components/debug-panel";
 
 type DevInfo = {
   app: { name: string; version: string; node: string; env: string; now: string };
@@ -326,12 +326,36 @@ export default function DevPage() {
                 全て再読込
               </button>
             </div>
-            <DebugPanel title="/api/dev/logs" response={rawLogs} />
-            <DebugPanel title="/api/settings/channel" response={rawChannel} />
-            <DebugPanel title="/api/analytics?days=7" response={rawAnalytics} />
-            <DebugPanel title="/api/line/insights" response={rawInsights} />
-            <DebugPanel title="/api/line/demographics" response={rawDemographics} />
-            <DebugPanel title="/api/dashboard/stats" response={rawDashboard} />
+            <DebugPanel
+              title="/api/dev/logs"
+              curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/dev/logs`, method: 'GET' })}
+              response={rawLogs}
+            />
+            <DebugPanel
+              title="/api/settings/channel"
+              curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/settings/channel`, method: 'GET' })}
+              response={rawChannel}
+            />
+            <DebugPanel
+              title="/api/analytics?days=7"
+              curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/analytics?days=7`, method: 'GET' })}
+              response={rawAnalytics}
+            />
+            <DebugPanel
+              title="/api/line/insights"
+              curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/line/insights`, method: 'GET' })}
+              response={rawInsights}
+            />
+            <DebugPanel
+              title="/api/line/demographics"
+              curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/line/demographics`, method: 'GET' })}
+              response={rawDemographics}
+            />
+            <DebugPanel
+              title="/api/dashboard/stats"
+              curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/dashboard/stats`, method: 'GET' })}
+              response={rawDashboard}
+            />
           </section>
         </div>
       )}

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRealtimeEvents } from "@/lib/realtime/use-events";
 import Link from "next/link";
 import { ArrowUpRight, MessageSquare, Users, Send, FileText } from "lucide-react";
+import { DebugPanel, toCurl } from "./_components/debug-panel";
 
 type DashboardStats = {
   today: {
@@ -43,6 +44,9 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Debug用の生データ
+  const [rawStats, setRawStats] = useState<unknown>(null);
+
   const loadStats = async () => {
     try {
       setLoading(true);
@@ -50,6 +54,7 @@ export default function DashboardPage() {
       if (!res.ok) throw new Error("Failed to load stats");
       const data = await res.json();
       setStats(data);
+      setRawStats(data);
       setError(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load dashboard");
@@ -247,6 +252,16 @@ export default function DashboardPage() {
             </div>
           </div>
         </Link>
+      </section>
+
+      {/* API デバッグ */}
+      <section className="space-y-4">
+        <h2 className="text-lg font-semibold text-white">API デバッグ</h2>
+        <DebugPanel
+          title="/api/dashboard/stats"
+          curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/dashboard/stats`, method: 'GET' })}
+          response={rawStats}
+        />
       </section>
     </div>
   );

@@ -105,7 +105,7 @@ export default function MessagesImagePage() {
         >
           <input type="file" accept="image/*" ref={inputRef} className="hidden" onChange={(e) => { const f=e.target.files?.[0]; if (f) void onFile(f); }} />
           <p className="mb-2">画像ファイルをドロップ or 貼り付け（Cmd/Ctrl+V）</p>
-          <button type="button" className="rounded-md border border-slate-700 px-3 py-1 text-xs text-slate-200 hover:border-slate-500" onClick={pickFile} disabled={uploading}>{uploading ? 'アップロード中...' : 'ファイルを選択'}</button>
+          <button type="button" className="rounded-md border border-slate-700 px-3 py-1 text-xs text-slate-200 hover:border-slate-500 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60" onClick={pickFile} disabled={uploading}>{uploading ? 'アップロード中...' : 'ファイルを選択'}</button>
           <p className="mt-2 text-xs text-slate-500">Cloudinary が設定されている場合、アップロードして URL を自動入力します。</p>
         </div>
         <div className="space-y-2">
@@ -117,31 +117,29 @@ export default function MessagesImagePage() {
             className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
           />
           <div className="flex items-center gap-2 text-xs text-slate-400">
-            <input type="checkbox" checked={linkPreview} onChange={(e)=> setLinkPreview(e.target.checked)} />
+            <input
+              type="checkbox"
+              checked={linkPreview}
+              onChange={(e) => {
+                const checked = e.target.checked;
+                setLinkPreview(checked);
+                if (checked && originalUrl) {
+                  setPreviewUrl(originalUrl);
+                } else if (!checked) {
+                  setPreviewUrl("");
+                }
+              }}
+              className="cursor-pointer"
+            />
             <span>プレビュー画像URLを original と同じにする</span>
           </div>
           <p className="text-xs text-slate-400">未指定の場合、LINE側で original をサムネイル表示することがあります。</p>
         </div>
-        {(originalUrl || previewUrl) && (
-          <div className="grid gap-3 sm:grid-cols-2">
-            {originalUrl && (
-              <div className="rounded border border-slate-800 bg-slate-950 p-2">
-                <p className="mb-1 text-xs text-slate-400">original</p>
-                <img src={originalUrl} alt="original" className="max-h-48 w-full object-contain" />
-              </div>
-            )}
-            {previewUrl && (
-              <div className="rounded border border-slate-800 bg-slate-950 p-2">
-                <p className="mb-1 text-xs text-slate-400">preview</p>
-                <img src={previewUrl} alt="preview" className="max-h-48 w-full object-contain" />
-              </div>
-            )}
-          </div>
-        )}
-        <LineConversation direction={'inbound'} displayName={'ユーザー'} message={{ type: 'image', originalContentUrl: originalUrl, previewImageUrl: (previewUrl || (linkPreview ? originalUrl : undefined)) || undefined }} />
+        {/* 画像のサムネイルプレビュー（会話プレビューで代替するため省略） */}
+        <LineConversation direction={'outbound'} displayName={'Bot'} message={{ type: 'image', originalContentUrl: originalUrl, previewImageUrl: (previewUrl || (linkPreview ? originalUrl : undefined)) || undefined }} />
         <button
           type="submit"
-          className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
+          className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
           disabled={status === "sending"}
         >
           {status === "sending" ? "送信中..." : "送信"}

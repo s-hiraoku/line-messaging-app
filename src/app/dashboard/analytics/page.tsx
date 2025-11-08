@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { TrendingUp, TrendingDown, MessageSquare, Users, Clock, Calendar, UserPlus, UserMinus, Target, User, MapPin } from "lucide-react";
-import { DebugPanel } from "../_components/debug-panel";
+import { DebugPanel, toCurl } from "../_components/debug-panel";
 
 type AnalyticsData = {
   period: {
@@ -486,9 +486,21 @@ export default function AnalyticsPage() {
       {/* API デバッグ */}
       <div className="space-y-4">
         <h2 className="text-lg font-semibold text-white">API デバッグ</h2>
-        <DebugPanel title="/api/analytics" response={rawAnalytics} />
-        <DebugPanel title="/api/line/insights" response={rawInsights} />
-        <DebugPanel title="/api/line/demographics" response={rawDemographics} />
+        <DebugPanel
+          title="/api/analytics"
+          curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/analytics?days=${period}`, method: 'GET' })}
+          response={rawAnalytics}
+        />
+        <DebugPanel
+          title="/api/line/insights"
+          curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/line/insights`, method: 'GET' })}
+          response={rawInsights}
+        />
+        <DebugPanel
+          title="/api/line/demographics"
+          curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/line/demographics`, method: 'GET' })}
+          response={rawDemographics}
+        />
       </div>
     </div>
   );
