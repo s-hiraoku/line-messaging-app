@@ -17,6 +17,8 @@ export async function GET() {
     return NextResponse.json({
       channelId: config?.channelId ?? "",
       channelSecretConfigured: Boolean(config?.channelSecret),
+      basicId: config?.basicId ?? "",
+      friendUrl: config?.friendUrl ?? "",
     });
   } catch (error) {
     console.error("Failed to load channel config", error);

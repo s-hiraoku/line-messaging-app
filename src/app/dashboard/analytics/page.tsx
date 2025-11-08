@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TrendingUp, TrendingDown, MessageSquare, Users, Clock, Calendar } from "lucide-react";
+import { TrendingUp, TrendingDown, MessageSquare, Users, Clock, Calendar, UserPlus, UserMinus, Target } from "lucide-react";
 
 type AnalyticsData = {
   period: {
@@ -37,9 +37,24 @@ type AnalyticsData = {
   }>;
 };
 
+type LineInsights = {
+  date: string;
+  followers: {
+    followers: number;
+    targetedReaches: number;
+    blocks: number;
+  } | null;
+  messageDelivery: Array<{
+    status: string;
+    success?: number;
+  }> | null;
+};
+
 export default function AnalyticsPage() {
   const [data, setData] = useState<AnalyticsData | null>(null);
+  const [insights, setInsights] = useState<LineInsights | null>(null);
   const [loading, setLoading] = useState(true);
+  const [insightsLoading, setInsightsLoading] = useState(true);
   const [period, setPeriod] = useState<7 | 30 | 90>(7);
 
   const loadAnalytics = async () => {
@@ -56,8 +71,24 @@ export default function AnalyticsPage() {
     }
   };
 
+  const loadInsights = async () => {
+    try {
+      setInsightsLoading(true);
+      const res = await fetch("/api/line/insights", { cache: "no-store" });
+      if (res.ok) {
+        const result = await res.json();
+        setInsights(result);
+      }
+    } catch (e) {
+      console.error("Failed to load LINE insights:", e);
+    } finally {
+      setInsightsLoading(false);
+    }
+  };
+
   useEffect(() => {
     loadAnalytics();
+    loadInsights();
   }, [period]);
 
   if (loading || !data) {
@@ -95,6 +126,70 @@ export default function AnalyticsPage() {
           ))}
         </div>
       </header>
+
+      {/* LINE公式統計 */}
+      {insights && insights.followers && (
+        <section className="rounded-lg border border-blue-800/40 bg-gradient-to-br from-blue-900/30 to-slate-900/60 p-5 shadow-lg">
+          <div className="mb-4 flex items-center gap-2">
+            <Target className="h-5 w-5 text-blue-400" />
+            <h2 className="text-lg font-semibold text-white">LINE 公式統計</h2>
+            <span className="ml-auto text-xs text-slate-400">
+              {insights.date.slice(0, 4)}/{insights.date.slice(4, 6)}/{insights.date.slice(6, 8)}
+            </span>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            <article className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-medium text-slate-400">ターゲットリーチ</h3>
+                <Target className="h-4 w-4 text-blue-400" />
+              </div>
+              <p className="mt-2 text-2xl font-semibold text-white">
+                {insights.followers.targetedReaches.toLocaleString()}
+              </p>
+              <p className="mt-1 text-xs text-slate-400">メッセージ到達可能数</p>
+            </article>
+
+            <article className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-medium text-slate-400">友だち数</h3>
+                <Users className="h-4 w-4 text-emerald-400" />
+              </div>
+              <p className="mt-2 text-2xl font-semibold text-white">
+                {insights.followers.followers.toLocaleString()}
+              </p>
+              <p className="mt-1 text-xs text-slate-400">公式フォロワー数</p>
+            </article>
+
+            <article className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-medium text-slate-400">ブロック数</h3>
+                <UserMinus className="h-4 w-4 text-red-400" />
+              </div>
+              <p className="mt-2 text-2xl font-semibold text-white">
+                {insights.followers.blocks.toLocaleString()}
+              </p>
+              <p className="mt-1 text-xs text-slate-400">ブロック中のユーザー</p>
+            </article>
+          </div>
+          <p className="mt-4 text-xs text-slate-500">
+            ※ LINE公式APIから取得した統計データです。前日の数値が表示されます。
+          </p>
+        </section>
+      )}
+
+      {insightsLoading && (
+        <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
+          <p className="text-center text-sm text-slate-400">LINE統計情報を読み込み中...</p>
+        </section>
+      )}
+
+      {!insightsLoading && !insights?.followers && (
+        <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
+          <p className="text-center text-sm text-slate-400">
+            LINE統計情報を取得できませんでした。チャネル設定を確認してください。
+          </p>
+        </section>
+      )}
 
       {/* サマリーカード */}
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
