@@ -6,7 +6,7 @@ import { DebugPanel } from "../_components/debug-panel";
 type DevInfo = {
   app: { name: string; version: string; node: string; env: string; now: string };
   runtime: { databaseConnected: boolean; redisConfigured: boolean; sseEndpoint: string };
-  channel: { channelId: string; channelSecretConfigured: boolean; webhookPath: string };
+  channel: { channelId: string; channelSecretConfigured: boolean; webhookPath: string; basicId?: string; friendUrl?: string; friendAddUrl?: string };
 };
 
 export default function DevPage() {
@@ -66,9 +66,44 @@ export default function DevPage() {
               <li>channelId: <code className="text-xs">{info.channel.channelId || "(未設定)"}</code></li>
               <li>channelSecretConfigured: {info.channel.channelSecretConfigured ? "true" : "false"}</li>
               <li>webhookPath: <code className="text-xs">{info.channel.webhookPath}</code></li>
+              {info.channel.basicId && (
+                <li>basicId: <code className="text-xs">@{info.channel.basicId}</code></li>
+              )}
+              {info.channel.friendAddUrl && (
+                <li>friendAddUrl: <a className="text-blue-300 underline" href={info.channel.friendAddUrl} target="_blank" rel="noreferrer">{info.channel.friendAddUrl}</a></li>
+              )}
             </ul>
             <p className="mt-2 text-xs text-slate-500">アクセストークンは保存しません。送信時に自動発行します。</p>
           </section>
+          {info.channel.friendAddUrl ? (
+            <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm md:col-span-2">
+              <h2 className="mb-2 text-sm font-semibold text-slate-300">友だち追加 QR</h2>
+              <div className="flex items-start gap-4">
+                <img
+                  alt="Add friend QR"
+                  className="h-40 w-40 rounded-lg border border-slate-800 bg-white p-2"
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=${encodeURIComponent(info.channel.friendAddUrl)}`}
+                />
+                <div className="space-y-2 text-sm text-slate-200">
+                  <p>QR をスキャン、または下のリンクから友だち追加できます。</p>
+                  <a className="text-blue-300 underline" href={info.channel.friendAddUrl} target="_blank" rel="noreferrer">{info.channel.friendAddUrl}</a>
+                  <div>
+                    <button
+                      className="mt-2 rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 hover:border-slate-500"
+                      onClick={async () => {
+                        try { await navigator.clipboard.writeText(info.channel.friendAddUrl!); } catch {}
+                      }}
+                    >リンクをコピー</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          ) : (
+            <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm md:col-span-2">
+              <h2 className="mb-2 text-sm font-semibold text-slate-300">友だち追加 QR</h2>
+              <p className="text-sm text-slate-400">設定でベーシックIDまたは友だち追加URLを入力するとQRを表示できます。</p>
+            </section>
+          )}
           <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm md:col-span-2">
             <h2 className="mb-2 text-sm font-semibold text-slate-300">Webhook チェック</h2>
             <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto] items-end">

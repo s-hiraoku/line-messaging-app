@@ -14,6 +14,14 @@ export async function GET() {
     }
 
     const cfg = await prisma.channelConfig.findUnique({ where: { id: "primary" } });
+    const basicId = cfg?.basicId ?? "";
+    const friendUrl = cfg?.friendUrl ?? "";
+    const basicIdNoAt = basicId.startsWith("@") ? basicId.slice(1) : basicId;
+    const computedFriendAddUrl = friendUrl
+      ? friendUrl
+      : basicIdNoAt
+        ? `https://line.me/R/ti/p/%40${encodeURIComponent(basicIdNoAt)}`
+        : "";
 
     // Read package.json
     const pkgPath = path.join(process.cwd(), "package.json");
@@ -37,6 +45,9 @@ export async function GET() {
         channelId: cfg?.channelId ?? "",
         channelSecretConfigured: Boolean(cfg?.channelSecret),
         webhookPath: "/api/line/webhook",
+        basicId,
+        friendUrl,
+        friendAddUrl: computedFriendAddUrl,
       },
     } as const;
 
@@ -45,4 +56,3 @@ export async function GET() {
     return NextResponse.json({ error: "failed to load dev info" }, { status: 500 });
   }
 }
-
