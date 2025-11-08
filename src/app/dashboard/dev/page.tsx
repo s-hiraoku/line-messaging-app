@@ -19,6 +19,14 @@ export default function DevPage() {
   const [logs, setLogs] = useState<Array<{ time: string; level: string; message: string; data?: any }>>([]);
   const [logsLoading, setLogsLoading] = useState(false);
 
+  // Debug用の生データ
+  const [rawLogs, setRawLogs] = useState<unknown>(null);
+  const [rawChannel, setRawChannel] = useState<unknown>(null);
+  const [rawAnalytics, setRawAnalytics] = useState<unknown>(null);
+  const [rawInsights, setRawInsights] = useState<unknown>(null);
+  const [rawDemographics, setRawDemographics] = useState<unknown>(null);
+  const [rawDashboard, setRawDashboard] = useState<unknown>(null);
+
   useEffect(() => {
     const load = async () => {
       try {
@@ -32,16 +40,86 @@ export default function DevPage() {
     load();
   }, []);
 
+  // 各種APIデータをロード
+  const loadAllDebugData = async () => {
+    // Logs
+    try {
+      const r = await fetch('/api/dev/logs', { cache: 'no-store' });
+      const j = await r.json().catch(() => ({ items: [] }));
+      setRawLogs(j);
+      if (Array.isArray(j.items)) setLogs(j.items);
+    } catch (e) {
+      console.error('Failed to load logs:', e);
+    }
+
+    // Channel settings
+    try {
+      const r = await fetch('/api/settings/channel', { cache: 'no-store' });
+      if (r.ok) {
+        const j = await r.json();
+        setRawChannel(j);
+      }
+    } catch (e) {
+      console.error('Failed to load channel settings:', e);
+    }
+
+    // Analytics
+    try {
+      const r = await fetch('/api/analytics?days=7', { cache: 'no-store' });
+      if (r.ok) {
+        const j = await r.json();
+        setRawAnalytics(j);
+      }
+    } catch (e) {
+      console.error('Failed to load analytics:', e);
+    }
+
+    // LINE Insights
+    try {
+      const r = await fetch('/api/line/insights', { cache: 'no-store' });
+      if (r.ok) {
+        const j = await r.json();
+        setRawInsights(j);
+      }
+    } catch (e) {
+      console.error('Failed to load LINE insights:', e);
+    }
+
+    // LINE Demographics
+    try {
+      const r = await fetch('/api/line/demographics', { cache: 'no-store' });
+      if (r.ok) {
+        const j = await r.json();
+        setRawDemographics(j);
+      }
+    } catch (e) {
+      console.error('Failed to load LINE demographics:', e);
+    }
+
+    // Dashboard stats
+    try {
+      const r = await fetch('/api/dashboard/stats', { cache: 'no-store' });
+      if (r.ok) {
+        const j = await r.json();
+        setRawDashboard(j);
+      }
+    } catch (e) {
+      console.error('Failed to load dashboard stats:', e);
+    }
+  };
+
   useEffect(() => {
     const loadLogs = async () => {
       setLogsLoading(true);
       try {
         const r = await fetch('/api/dev/logs', { cache: 'no-store' });
         const j = await r.json().catch(() => ({ items: [] }));
+        setRawLogs(j);
         if (Array.isArray(j.items)) setLogs(j.items);
       } finally { setLogsLoading(false); }
     };
     loadLogs();
+    loadAllDebugData();
 
     const es = new EventSource('/api/events');
     es.addEventListener('dev:log', (e) => {
