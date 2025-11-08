@@ -107,6 +107,10 @@ npm run dev
 - ログ: `npm run db:logs`
 - psql: `npm run db:psql`
 - リセット: `npm run db:reset`
+- **Prisma Studio（GUI）**: `npx prisma studio`
+  - ブラウザベースのデータベース管理ツール
+  - http://localhost:5555 で起動
+  - テーブルデータの閲覧・作成・編集・削除が可能
 
 主要モデル（抜粋）
 - `User`（`lineUserId`, `displayName`, `isFollowing`）
@@ -263,6 +267,7 @@ curl -X POST http://localhost:3000/api/line/broadcast \
 - `npm run lint` ESLint（Next core-web-vitals + TS）
 - `npm test` / `npm run test:watch` テスト実行
 - DB: `npm run db:up | db:down | db:logs | db:psql | db:reset`
+- Prisma Studio: `npx prisma studio` ブラウザでデータベースを管理（http://localhost:5555）
 
 ---
 
