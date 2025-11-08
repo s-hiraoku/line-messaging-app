@@ -53,6 +53,11 @@ export async function getLineClient(): Promise<Client> {
   return createClient();
 }
 
+// Export for tools (e.g., followers backfill) that need to call REST endpoints directly.
+export async function getChannelAccessToken(): Promise<string> {
+  return getAccessToken();
+}
+
 export async function pushMessage(to: string, messages: Message | Message[]): Promise<void> {
   const client = await getLineClient();
   await client.pushMessage(to, messages);

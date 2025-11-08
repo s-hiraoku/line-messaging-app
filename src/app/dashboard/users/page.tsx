@@ -21,6 +21,12 @@ export default function UsersPage() {
   const [showRawIds, setShowRawIds] = useState(false);
   const [lastUrl, setLastUrl] = useState<string>("");
   const [lastResponse, setLastResponse] = useState<unknown>();
+  const [bfSaving, setBfSaving] = useState(false);
+  const [bfLimit, setBfLimit] = useState(1000);
+  const [bfPages, setBfPages] = useState(1);
+  const [bfSyncProfile, setBfSyncProfile] = useState(false);
+  const [bfRequest, setBfRequest] = useState<unknown>();
+  const [bfResponse, setBfResponse] = useState<unknown>();
 
   const load = async (initial = false) => {
     setLoading(true);
@@ -67,6 +73,46 @@ export default function UsersPage() {
           <input type="checkbox" checked={showRawIds} onChange={(e) => setShowRawIds(e.target.checked)} />
           lineUserId を生表示
         </label>
+      </div>
+
+      <div className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 text-slate-100">
+        <h2 className="mb-2 text-sm font-semibold text-slate-300">フォロワー取り込み（バックフィル）</h2>
+        <div className="grid gap-3 sm:grid-cols-[140px_140px_1fr_auto] items-end">
+          <label className="text-xs">
+            <span className="mb-1 block text-slate-400">最大件数/ページ</span>
+            <input type="number" min={1} max={1000} value={bfLimit} onChange={(e) => setBfLimit(Number(e.target.value) || 1000)}
+              className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
+          </label>
+          <label className="text-xs">
+            <span className="mb-1 block text-slate-400">ページ数</span>
+            <input type="number" min={1} max={50} value={bfPages} onChange={(e) => setBfPages(Number(e.target.value) || 1)}
+              className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
+          </label>
+          <label className="inline-flex items-center gap-2 text-xs text-slate-400">
+            <input type="checkbox" checked={bfSyncProfile} onChange={(e) => setBfSyncProfile(e.target.checked)} /> プロフィールも取得
+          </label>
+          <button
+            onClick={async () => {
+              setBfSaving(true);
+              const payload = { limitPerPage: bfLimit, maxPages: bfPages, syncProfile: bfSyncProfile };
+              setBfRequest(payload);
+              try {
+                const res = await fetch('/api/line/followers/backfill', {
+                  method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+                });
+                const data = await res.json().catch(() => ({}));
+                setBfResponse(data);
+                if (!res.ok) throw new Error('バックフィルに失敗しました');
+                await load(true);
+              } catch (e) {
+                // eslint-disable-next-line no-console
+                console.error(e);
+              } finally { setBfSaving(false); }
+            }}
+            disabled={bfSaving}
+            className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
+          >{bfSaving ? '実行中...' : '取り込む'}</button>
+        </div>
       </div>
 
       <div className="overflow-hidden rounded-lg border border-slate-800/60 bg-slate-900/60 text-slate-100">
@@ -118,6 +164,15 @@ export default function UsersPage() {
         response={lastResponse}
         curl={lastUrl ? toCurl({ url: lastUrl }) : null}
       />
+
+      <div className="mt-4">
+        <DebugPanel
+          title="バックフィル API デバッグ"
+          request={bfRequest}
+          response={bfResponse}
+          curl={toCurl({ url: new URL('/api/line/followers/backfill', location.origin).toString(), method: 'POST', headers: { 'Content-Type': 'application/json' }, body: bfRequest })}
+        />
+      </div>
     </div>
   );
 }
