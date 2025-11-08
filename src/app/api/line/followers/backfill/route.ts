@@ -17,7 +17,13 @@ export async function POST(req: NextRequest) {
     const body = await req.json().catch(() => ({}));
     const { limitPerPage, maxPages, start, syncProfile } = schema.parse(body);
 
-    const accessToken = await getChannelAccessToken();
+    let accessToken: string;
+    try {
+      accessToken = await getChannelAccessToken();
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Failed to issue channel access token';
+      return NextResponse.json({ error: msg }, { status: 400 });
+    }
     const client = syncProfile ? await getLineClient() : null;
 
     let imported = 0;
@@ -36,7 +42,7 @@ export async function POST(req: NextRequest) {
       });
       if (!res.ok) {
         const errText = await res.text().catch(() => "");
-        return NextResponse.json({ error: "Failed to fetch followers", status: res.status, body: errText }, { status: 502 });
+        return NextResponse.json({ error: "LINE API error", status: res.status, body: errText }, { status: res.status });
       }
 
       const data = (await res.json()) as FollowersResp;
@@ -82,4 +88,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Backfill failed" }, { status: 500 });
   }
 }
-
