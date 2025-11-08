@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { DebugPanel, toCurl } from "../_components/debug-panel";
 
 type Template = {
   id: string;
@@ -16,10 +17,17 @@ export default function TemplatesPage() {
   const [name, setName] = useState("");
   const [text, setText] = useState("");
   const [saving, setSaving] = useState(false);
+  const [lastListUrl, setLastListUrl] = useState<string>("");
+  const [lastListResponse, setLastListResponse] = useState<unknown>();
+  const [lastCreateRequest, setLastCreateRequest] = useState<unknown>();
+  const [lastCreateResponse, setLastCreateResponse] = useState<unknown>();
 
   const load = async () => {
-    const res = await fetch("/api/templates");
+    const url = new URL("/api/templates", location.origin).toString();
+    setLastListUrl(url);
+    const res = await fetch(url);
     const data = (await res.json()) as { items: Template[] };
+    setLastListResponse(data);
     setItems(data.items);
   };
 
@@ -30,11 +38,15 @@ export default function TemplatesPage() {
   const create = async () => {
     setSaving(true);
     try {
+      const payload = { name, type: "TEXT" as const, content: { text } };
+      setLastCreateRequest(payload);
       const res = await fetch("/api/templates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, type: "TEXT", content: { text } }),
+        body: JSON.stringify(payload),
       });
+      const data = (await res.json().catch(() => ({}))) as unknown;
+      setLastCreateResponse(data);
       if (!res.ok) throw new Error("作成に失敗しました");
       setName("");
       setText("");
@@ -88,6 +100,21 @@ export default function TemplatesPage() {
             )}
           </tbody>
         </table>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <DebugPanel
+          title="テンプレート作成 API デバッグ"
+          request={lastCreateRequest}
+          response={lastCreateResponse}
+          curl={toCurl({ url: new URL('/api/templates', location.origin).toString(), method: 'POST', headers: { 'Content-Type': 'application/json' }, body: lastCreateRequest })}
+        />
+        <DebugPanel
+          title="テンプレート一覧 API デバッグ"
+          request={{ url: lastListUrl }}
+          response={lastListResponse}
+          curl={lastListUrl ? toCurl({ url: lastListUrl }) : null}
+        />
       </div>
     </div>
   );

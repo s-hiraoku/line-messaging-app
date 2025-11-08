@@ -1,21 +1,28 @@
 "use client";
 
 import { useState } from "react";
+import { DebugPanel, toCurl } from "../_components/debug-panel";
 
 export default function BroadcastsPage() {
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const [lastRequest, setLastRequest] = useState<unknown>();
+  const [lastResponse, setLastResponse] = useState<unknown>();
 
   const send = async () => {
     setStatus("sending");
     setError(null);
     try {
+      const payload = { message, name: "dashboard" };
+      setLastRequest(payload);
       const res = await fetch("/api/line/broadcast", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message, name: "dashboard" }),
+        body: JSON.stringify(payload),
       });
+      const data = (await res.json().catch(() => ({}))) as unknown;
+      setLastResponse(data);
       if (!res.ok) throw new Error("送信に失敗しました");
       setStatus("sent");
       setMessage("");
@@ -47,6 +54,13 @@ export default function BroadcastsPage() {
         {status === "sent" && <p className="text-sm text-emerald-600">配信しました。</p>}
         {status === "error" && error && <p className="text-sm text-red-600">{error}</p>}
       </div>
+
+      <DebugPanel
+        title="ブロードキャスト API デバッグ"
+        request={lastRequest}
+        response={lastResponse}
+        curl={toCurl({ url: new URL('/api/line/broadcast', location.origin).toString(), method: 'POST', headers: { 'Content-Type': 'application/json' }, body: lastRequest })}
+      />
     </div>
   );
 }
