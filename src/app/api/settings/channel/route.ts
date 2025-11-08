@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 const updateSchema = z.object({
   channelId: z.string().trim().min(1, "チャネルIDを入力してください"),
   channelSecret: z.string().trim().min(1, "チャネルシークレットを入力してください").optional(),
+  basicId: z.string().trim().optional(),
+  friendUrl: z.string().trim().url().optional(),
 });
 
 const CHANNEL_CONFIG_ID = "primary";
@@ -28,12 +30,14 @@ export async function GET() {
 export async function PUT(req: NextRequest) {
   try {
     const json = await req.json();
-    const { channelId, channelSecret } = updateSchema.parse(json);
+    const { channelId, channelSecret, basicId, friendUrl } = updateSchema.parse(json);
 
-    const dataToUpdate: { channelId: string; channelSecret?: string | null } = {
+    const dataToUpdate: { channelId: string; channelSecret?: string | null; basicId?: string | null; friendUrl?: string | null } = {
       channelId,
     };
     if (typeof channelSecret === "string") dataToUpdate.channelSecret = channelSecret;
+    if (typeof basicId === "string") dataToUpdate.basicId = basicId;
+    if (typeof friendUrl === "string") dataToUpdate.friendUrl = friendUrl;
 
     const updated = await prisma.channelConfig.upsert({
       where: { id: CHANNEL_CONFIG_ID },
@@ -41,16 +45,22 @@ export async function PUT(req: NextRequest) {
         id: CHANNEL_CONFIG_ID,
         channelId: dataToUpdate.channelId,
         channelSecret: dataToUpdate.channelSecret ?? null,
+        basicId: dataToUpdate.basicId ?? null,
+        friendUrl: dataToUpdate.friendUrl ?? null,
       },
       update: {
         channelId: dataToUpdate.channelId,
         ...(dataToUpdate.channelSecret !== undefined ? { channelSecret: dataToUpdate.channelSecret } : {}),
+        ...(dataToUpdate.basicId !== undefined ? { basicId: dataToUpdate.basicId } : {}),
+        ...(dataToUpdate.friendUrl !== undefined ? { friendUrl: dataToUpdate.friendUrl } : {}),
       },
     });
 
     return NextResponse.json({
       channelId: updated.channelId ?? "",
       channelSecretConfigured: Boolean(updated.channelSecret),
+      basicId: updated.basicId ?? "",
+      friendUrl: updated.friendUrl ?? "",
     });
   } catch (error) {
     if (error instanceof z.ZodError) {

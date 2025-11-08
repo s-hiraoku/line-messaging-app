@@ -12,6 +12,9 @@ type DevInfo = {
 export default function DevPage() {
   const [info, setInfo] = useState<DevInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [publicUrl, setPublicUrl] = useState("");
+  const [wbReq, setWbReq] = useState<unknown>();
+  const [wbRes, setWbRes] = useState<unknown>();
 
   useEffect(() => {
     const load = async () => {
@@ -66,9 +69,53 @@ export default function DevPage() {
             </ul>
             <p className="mt-2 text-xs text-slate-500">アクセストークンは保存しません。送信時に自動発行します。</p>
           </section>
+          <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm md:col-span-2">
+            <h2 className="mb-2 text-sm font-semibold text-slate-300">Webhook チェック</h2>
+            <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto] items-end">
+              <input
+                placeholder="公開URL (https://xxxx.trycloudflare.com)"
+                value={publicUrl}
+                onChange={(e) => setPublicUrl(e.target.value)}
+                className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
+              />
+              <button
+                className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 hover:border-slate-500"
+                onClick={async () => {
+                  const payload = { mode: 'local' } as const;
+                  setWbReq(payload);
+                  const res = await fetch('/api/dev/webhook/selftest', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                  const data = await res.json().catch(() => ({}));
+                  setWbRes(data);
+                }}
+              >ローカルに送る</button>
+              <button
+                className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
+                disabled={!publicUrl}
+                onClick={async () => {
+                  const payload = { mode: 'public', publicUrl } as const;
+                  setWbReq(payload);
+                  const res = await fetch('/api/dev/webhook/selftest', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                  const data = await res.json().catch(() => ({}));
+                  setWbRes(data);
+                }}
+              >公開URLに送る</button>
+            </div>
+            <p className="mt-2 text-xs text-slate-500">ローカルは内部HTTPへの自己呼び出し、公開URLはトンネル経由の疎通を確認します。</p>
+          </section>
           <div className="md:col-span-2">
             <DebugPanel title="/api/dev/info (raw)" response={info} />
           </div>
+          <div className="md:col-span-2">
+            <DebugPanel title="Webhook Selftest" request={wbReq} response={wbRes} />
+          </div>
+          <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm md:col-span-2">
+            <h2 className="mb-2 text-sm font-semibold text-slate-300">権限・運用ヒント</h2>
+            <ul className="list-disc space-y-1 pl-5 text-xs text-slate-400">
+              <li>followers/ids API はアカウント種別・プランにより利用できない場合があります（403）。Webhook 取り込みで代替可能です。</li>
+              <li>Webhook は https の公開URLが必要（例: Cloudflare Tunnel）。再起動でURLが変わる場合はLINE側URLも更新します。</li>
+              <li>署名検証はチャネルシークレットを使用。不一致だと 400 になるため、設定の値と LINE Developers の値を必ず一致させてください。</li>
+            </ul>
+          </section>
         </div>
       )}
     </div>

@@ -36,6 +36,8 @@ export default function SettingsPage() {
   const [channelId, setChannelId] = useState("");
   const [channelSecret, setChannelSecret] = useState("");
   const [secretConfigured, setSecretConfigured] = useState(false);
+  const [basicId, setBasicId] = useState("");
+  const [friendUrl, setFriendUrl] = useState("");
   // アクセストークンは自動発行のため、設定フラグは不要
   const [message, setMessage] = useState<string | null>(null);
 
@@ -46,9 +48,11 @@ export default function SettingsPage() {
         if (!response.ok) {
           throw new Error("チャネル設定の取得に失敗しました");
         }
-        const data: { channelId?: string; channelSecretConfigured?: boolean } = await response.json();
+        const data: { channelId?: string; channelSecretConfigured?: boolean; basicId?: string; friendUrl?: string } = await response.json();
         setChannelId(data.channelId ?? "");
         setSecretConfigured(Boolean(data.channelSecretConfigured));
+        setBasicId(data.basicId ?? "");
+        setFriendUrl(data.friendUrl ?? "");
         setFetchState("ready");
       } catch (error) {
         console.error("Failed to load channel config", error);
@@ -73,10 +77,12 @@ export default function SettingsPage() {
     setMessage(null);
 
     try {
-      const payload: { channelId: string; channelSecret?: string } = {
+      const payload: { channelId: string; channelSecret?: string; basicId?: string; friendUrl?: string } = {
         channelId: channelId.trim(),
       };
       if (channelSecret.trim()) payload.channelSecret = channelSecret.trim();
+      if (basicId.trim()) payload.basicId = basicId.trim();
+      if (friendUrl.trim()) payload.friendUrl = friendUrl.trim();
 
       const response = await fetch("/api/settings/channel", {
         method: "PUT",
@@ -87,6 +93,8 @@ export default function SettingsPage() {
       const data = (await response.json().catch(() => null)) as {
         channelId?: string;
         channelSecretConfigured?: boolean;
+        basicId?: string;
+        friendUrl?: string;
         error?: string;
       } | null;
 
@@ -94,6 +102,8 @@ export default function SettingsPage() {
 
       setChannelId(data?.channelId ?? "");
       setSecretConfigured(Boolean(data?.channelSecretConfigured));
+      setBasicId(data?.basicId ?? "");
+      setFriendUrl(data?.friendUrl ?? "");
       setChannelSecret("");
       setSaveState("saved");
       setMessage("チャネル情報を保存しました。");
@@ -153,6 +163,33 @@ export default function SettingsPage() {
                 {secretConfigured ? "既に登録済みです。更新時のみ入力してください。" : "初回登録時は LINE Developers で発行されたシークレットを入力してください。"}
               </span>
             </label>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className="block space-y-2 text-sm text-slate-300">
+                <span>ベーシックID（任意）</span>
+                <input
+                  type="text"
+                  value={basicId}
+                  onChange={(e) => setBasicId(e.target.value)}
+                  placeholder="@your_basic_id（@は含めずに入力）"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-white outline-none focus:border-blue-500"
+                  disabled={isBusy}
+                />
+                <span className="block text-xs text-slate-500">友だち追加リンク生成に利用します。</span>
+              </label>
+              <label className="block space-y-2 text-sm text-slate-300">
+                <span>友だち追加URL（任意・既存の短縮URLなど）</span>
+                <input
+                  type="url"
+                  value={friendUrl}
+                  onChange={(e) => setFriendUrl(e.target.value)}
+                  placeholder="https://lin.ee/xxxxxx"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-white outline-none focus:border-blue-500"
+                  disabled={isBusy}
+                />
+                <span className="block text-xs text-slate-500">LINE Developers/公式アカウントマネージャーで発行したURLがあれば入力。</span>
+              </label>
+            </div>
 
             <div className="rounded-xl border border-slate-800/70 bg-slate-950/70 p-4 text-xs text-slate-400"> 
               <p className="mb-1 font-semibold text-slate-200">実装メモ</p>
