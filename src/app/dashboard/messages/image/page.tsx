@@ -17,7 +17,6 @@ export default function MessagesImagePage() {
   const [uploading, setUploading] = useState(false);
   const [linkPreview, setLinkPreview] = useState(true);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [previewSide, setPreviewSide] = useState<'left' | 'right'>('left');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -87,11 +86,6 @@ export default function MessagesImagePage() {
             required
           />
         </div>
-        <div className="flex items-center gap-3 text-xs text-slate-300">
-          <span>プレビュー方向:</span>
-          <label className="inline-flex items-center gap-1"><input type="radio" name="pvdir" checked={previewSide==='left'} onChange={()=>setPreviewSide('left')} /> 左</label>
-          <label className="inline-flex items-center gap-1"><input type="radio" name="pvdir" checked={previewSide==='right'} onChange={()=>setPreviewSide('right')} /> 右</label>
-        </div>
         <div className="space-y-2">
           <label className="text-sm font-medium text-slate-300">画像URL（originalContentUrl）</label>
           <input
@@ -144,7 +138,7 @@ export default function MessagesImagePage() {
             )}
           </div>
         )}
-        <LineConversation direction={previewSide==='left' ? 'inbound' : 'outbound'} displayName={previewSide==='left' ? 'hiraoku' : 'あなた'} message={{ type: 'image', originalContentUrl: originalUrl, previewImageUrl: (previewUrl || (linkPreview ? originalUrl : undefined)) || undefined }} />
+        <LineConversation direction={'inbound'} displayName={'ユーザー'} message={{ type: 'image', originalContentUrl: originalUrl, previewImageUrl: (previewUrl || (linkPreview ? originalUrl : undefined)) || undefined }} />
         <button
           type="submit"
           className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
