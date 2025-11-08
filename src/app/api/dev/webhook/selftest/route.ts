@@ -20,23 +20,34 @@ export async function POST(req: NextRequest) {
     const body = JSON.stringify({ events: [] });
     const signature = createHmac('sha256', secret).update(body).digest('base64');
 
-    const base = mode === 'public'
-      ? (publicUrl?.replace(/\/$/, '') || '')
-      : 'http://localhost:3000';
+    let base: string;
+    if (mode === 'public') {
+      base = (publicUrl?.replace(/\/$/, '') || '');
+    } else {
+      const host = req.headers.get('host') || 'localhost:3000';
+      const isLocalhost = /^(localhost|127\.0\.0\.1|\[::1\])(?::\d+)?$/.test(host);
+      const protocol = isLocalhost ? 'http' : 'https';
+      base = `${protocol}://${host}`;
+    }
 
     if (!base) return NextResponse.json({ error: 'publicUrl を指定してください' }, { status: 400 });
 
-    const url = `${base}/api/line/webhook`;
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-line-signature': signature },
-      body,
-    });
-    const text = await res.text().catch(() => '');
-    return NextResponse.json({ url, status: res.status, body: text });
+    // Accept both origin-only (https://xxx.trycloudflare.com) and full path (.../api/line/webhook)
+    const url = base.endsWith('/api/line/webhook') ? base : `${base}/api/line/webhook`;
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-line-signature': signature },
+        body,
+      });
+      const text = await res.text().catch(() => '');
+      return NextResponse.json({ url, status: res.status, body: text });
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      return NextResponse.json({ url, error: msg }, { status: 502 });
+    }
   } catch (e) {
     const msg = e instanceof Error ? e.message : 'selftest failed';
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
-

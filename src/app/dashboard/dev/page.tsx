@@ -15,6 +15,9 @@ export default function DevPage() {
   const [publicUrl, setPublicUrl] = useState("");
   const [wbReq, setWbReq] = useState<unknown>();
   const [wbRes, setWbRes] = useState<unknown>();
+  const [wbStatus, setWbStatus] = useState<string>("");
+  const [logs, setLogs] = useState<Array<{ time: string; level: string; message: string; data?: any }>>([]);
+  const [logsLoading, setLogsLoading] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -27,6 +30,31 @@ export default function DevPage() {
       }
     };
     load();
+  }, []);
+
+  useEffect(() => {
+    const loadLogs = async () => {
+      setLogsLoading(true);
+      try {
+        const r = await fetch('/api/dev/logs', { cache: 'no-store' });
+        const j = await r.json().catch(() => ({ items: [] }));
+        if (Array.isArray(j.items)) setLogs(j.items);
+      } finally { setLogsLoading(false); }
+    };
+    loadLogs();
+
+    const es = new EventSource('/api/events');
+    es.addEventListener('dev:log', (e) => {
+      try {
+        const data = JSON.parse((e as MessageEvent).data);
+        setLogs((prev) => {
+          const next = [...prev, data];
+          if (next.length > 200) return next.slice(next.length - 200);
+          return next;
+        });
+      } catch {}
+    });
+    return () => es.close();
   }, []);
 
   return (
@@ -70,7 +98,7 @@ export default function DevPage() {
                 <li>basicId: <code className="text-xs">@{info.channel.basicId}</code></li>
               )}
               {info.channel.friendAddUrl && (
-                <li>friendAddUrl: <a className="text-blue-300 underline" href={info.channel.friendAddUrl} target="_blank" rel="noreferrer">{info.channel.friendAddUrl}</a></li>
+                <li>friendAddUrl: <a className="text-blue-300 underline cursor-pointer" href={info.channel.friendAddUrl} target="_blank" rel="noreferrer">{info.channel.friendAddUrl}</a></li>
               )}
             </ul>
             <p className="mt-2 text-xs text-slate-500">アクセストークンは保存しません。送信時に自動発行します。</p>
@@ -86,10 +114,10 @@ export default function DevPage() {
                 />
                 <div className="space-y-2 text-sm text-slate-200">
                   <p>QR をスキャン、または下のリンクから友だち追加できます。</p>
-                  <a className="text-blue-300 underline" href={info.channel.friendAddUrl} target="_blank" rel="noreferrer">{info.channel.friendAddUrl}</a>
+                  <a className="text-blue-300 underline cursor-pointer" href={info.channel.friendAddUrl} target="_blank" rel="noreferrer">{info.channel.friendAddUrl}</a>
                   <div>
                     <button
-                      className="mt-2 rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 hover:border-slate-500"
+                      className="mt-2 rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 hover:border-slate-500 cursor-pointer"
                       onClick={async () => {
                         try { await navigator.clipboard.writeText(info.channel.friendAddUrl!); } catch {}
                       }}
@@ -108,23 +136,24 @@ export default function DevPage() {
             <h2 className="mb-2 text-sm font-semibold text-slate-300">Webhook チェック</h2>
             <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto] items-end">
               <input
-                placeholder="公開URL (https://xxxx.trycloudflare.com)"
+                placeholder="公開URL（https://xxxx.trycloudflare.com または 完全URL /api/line/webhook まで）"
                 value={publicUrl}
                 onChange={(e) => setPublicUrl(e.target.value)}
                 className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
               />
               <button
-                className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 hover:border-slate-500"
+                className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 hover:border-slate-500 cursor-pointer"
                 onClick={async () => {
                   const payload = { mode: 'local' } as const;
                   setWbReq(payload);
                   const res = await fetch('/api/dev/webhook/selftest', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                   const data = await res.json().catch(() => ({}));
                   setWbRes(data);
+                  setWbStatus(typeof data.status === 'number' ? String(data.status) : (data.error ? `ERR: ${data.error}` : ''));
                 }}
               >ローカルに送る</button>
               <button
-                className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
+                className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
                 disabled={!publicUrl}
                 onClick={async () => {
                   const payload = { mode: 'public', publicUrl } as const;
@@ -132,10 +161,14 @@ export default function DevPage() {
                   const res = await fetch('/api/dev/webhook/selftest', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                   const data = await res.json().catch(() => ({}));
                   setWbRes(data);
+                  setWbStatus(typeof data.status === 'number' ? String(data.status) : (data.error ? `ERR: ${data.error}` : ''));
                 }}
               >公開URLに送る</button>
             </div>
             <p className="mt-2 text-xs text-slate-500">ローカルは内部HTTPへの自己呼び出し、公開URLはトンネル経由の疎通を確認します。</p>
+            {wbStatus && (
+              <p className="mt-1 text-xs text-slate-300">結果: {wbStatus}</p>
+            )}
           </section>
           <div className="md:col-span-2">
             <DebugPanel title="/api/dev/info (raw)" response={info} />
@@ -143,6 +176,53 @@ export default function DevPage() {
           <div className="md:col-span-2">
             <DebugPanel title="Webhook Selftest" request={wbReq} response={wbRes} />
           </div>
+          <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm md:col-span-2">
+            <div className="mb-2 flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-slate-300">開発ログ（Webhook）</h2>
+              <div className="flex items-center gap-2">
+                <button
+                  className="rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 hover:border-slate-500"
+                  onClick={async () => {
+                    setLogsLoading(true);
+                    try {
+                      const r = await fetch('/api/dev/logs', { cache: 'no-store' });
+                      const j = await r.json().catch(() => ({ items: [] }));
+                      if (Array.isArray(j.items)) setLogs(j.items);
+                    } finally { setLogsLoading(false); }
+                  }}
+                >再読込</button>
+                <button
+                  className="rounded-md bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
+                  onClick={async () => { await fetch('/api/dev/logs', { method: 'DELETE' }); setLogs([]); }}
+                >クリア</button>
+              </div>
+            </div>
+            <div className="max-h-80 overflow-auto rounded border border-slate-800">
+              <table className="w-full text-left text-xs text-slate-200">
+                <thead className="bg-slate-800/60 text-slate-300">
+                  <tr>
+                    <th className="px-3 py-2">時刻</th>
+                    <th className="px-3 py-2">レベル</th>
+                    <th className="px-3 py-2">メッセージ</th>
+                    <th className="px-3 py-2">データ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {logs.map((l, idx) => (
+                    <tr key={`${l.time}-${idx}`} className="border-t border-slate-800">
+                      <td className="px-3 py-1 text-slate-400">{new Date(l.time).toLocaleString()}</td>
+                      <td className="px-3 py-1">{l.level}</td>
+                      <td className="px-3 py-1">{l.message}</td>
+                      <td className="px-3 py-1 text-[10px] text-slate-300"><pre className="whitespace-pre-wrap">{l.data ? JSON.stringify(l.data) : ''}</pre></td>
+                    </tr>
+                  ))}
+                  {logs.length === 0 && (
+                    <tr><td colSpan={4} className="px-3 py-6 text-center text-slate-500">{logsLoading ? '読み込み中...' : 'ログはありません'}</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </section>
           <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm md:col-span-2">
             <h2 className="mb-2 text-sm font-semibold text-slate-300">権限・運用ヒント</h2>
             <ul className="list-disc space-y-1 pl-5 text-xs text-slate-400">

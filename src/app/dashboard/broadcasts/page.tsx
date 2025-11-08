@@ -48,7 +48,7 @@ export default function BroadcastsPage() {
           className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
         />
         <button onClick={send} disabled={!message || status === "sending"}
-          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90">
+          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90">
           {status === "sending" ? "送信中..." : "配信する"}
         </button>
         {status === "sent" && <p className="text-sm text-emerald-600">配信しました。</p>}

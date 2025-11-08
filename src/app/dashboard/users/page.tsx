@@ -68,9 +68,9 @@ export default function UsersPage() {
           placeholder="displayName / lineUserId / email"
           className="w-64 rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
         />
-        <button onClick={() => load(true)} disabled={loading} className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 hover:border-slate-500 disabled:cursor-not-allowed disabled:opacity-60 disabled:text-slate-300">{loading ? "検索中..." : "検索"}</button>
-        <label className="ml-2 inline-flex items-center gap-2 text-xs text-slate-400">
-          <input type="checkbox" checked={showRawIds} onChange={(e) => setShowRawIds(e.target.checked)} />
+        <button onClick={() => load(true)} disabled={loading} className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 hover:border-slate-500 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-slate-300">{loading ? "検索中..." : "検索"}</button>
+        <label className="ml-2 inline-flex items-center gap-2 text-xs text-slate-400 cursor-pointer">
+          <input type="checkbox" checked={showRawIds} onChange={(e) => setShowRawIds(e.target.checked)} className="cursor-pointer" />
           lineUserId を生表示
         </label>
       </div>
@@ -88,8 +88,8 @@ export default function UsersPage() {
             <input type="number" min={1} max={50} value={bfPages} onChange={(e) => setBfPages(Number(e.target.value) || 1)}
               className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
           </label>
-          <label className="inline-flex items-center gap-2 text-xs text-slate-400">
-            <input type="checkbox" checked={bfSyncProfile} onChange={(e) => setBfSyncProfile(e.target.checked)} /> プロフィールも取得
+          <label className="inline-flex items-center gap-2 text-xs text-slate-400 cursor-pointer">
+            <input type="checkbox" checked={bfSyncProfile} onChange={(e) => setBfSyncProfile(e.target.checked)} className="cursor-pointer" /> プロフィールも取得
           </label>
           <button
             onClick={async () => {
@@ -110,7 +110,7 @@ export default function UsersPage() {
               } finally { setBfSaving(false); }
             }}
             disabled={bfSaving}
-            className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
+            className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
           >{bfSaving ? '実行中...' : '取り込む'}</button>
         </div>
       </div>
@@ -153,7 +153,7 @@ export default function UsersPage() {
 
       <div>
         <button onClick={() => load(false)} disabled={!hasMore || loading}
-          className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 hover:border-slate-500 disabled:cursor-not-allowed disabled:opacity-60 disabled:text-slate-300">
+          className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 hover:border-slate-500 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-slate-300">
           {loading ? "読み込み中..." : hasMore ? "さらに読み込む" : "すべて取得済み"}
         </button>
       </div>

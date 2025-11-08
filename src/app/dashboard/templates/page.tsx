@@ -70,7 +70,7 @@ export default function TemplatesPage() {
           <input placeholder="本文 (TEXT)" value={text} onChange={(e) => setText(e.target.value)}
             className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
           <button onClick={create} disabled={saving || !name || !text}
-            className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90">{saving ? "作成中..." : "作成"}</button>
+            className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90">{saving ? "作成中..." : "作成"}</button>
         </div>
       </div>
 

@@ -3,6 +3,7 @@ import { validateSignature, type WebhookEvent } from "@line/bot-sdk";
 import { getLineClient } from "@/lib/line/client";
 import { prisma } from "@/lib/prisma";
 import { realtime } from "@/lib/realtime/bus";
+import { addLog } from "@/lib/dev/logger";
 
 async function verifySignature(body: string, signature: string | null): Promise<void> {
   const config = await prisma.channelConfig.findUnique({ where: { id: "primary" } });
@@ -29,6 +30,7 @@ async function handleEvent(event: WebhookEvent) {
   switch (event.type) {
     case "follow": {
       if (event.source.type === "user" && event.source.userId) {
+        addLog('info', 'webhook:event:follow', { userId: event.source.userId });
         try {
           const profile = await client.getProfile(event.source.userId);
           await prisma.user.upsert({
@@ -45,7 +47,8 @@ async function handleEvent(event: WebhookEvent) {
               isFollowing: true,
             },
           });
-        } catch {
+        } catch (e) {
+          addLog('warn', 'webhook:profile:error', { userId: event.source.userId, error: e instanceof Error ? e.message : String(e) });
           // swallow profile errors
           await prisma.user.upsert({
             where: { lineUserId: event.source.userId },
@@ -58,6 +61,7 @@ async function handleEvent(event: WebhookEvent) {
     }
     case "unfollow": {
       if (event.source.type === "user" && event.source.userId) {
+        addLog('info', 'webhook:event:unfollow', { userId: event.source.userId });
         await prisma.user.updateMany({
           where: { lineUserId: event.source.userId },
           data: { isFollowing: false },
@@ -69,6 +73,7 @@ async function handleEvent(event: WebhookEvent) {
       if (event.message.type === "text") {
         // store inbound
         if (event.source.type === "user" && event.source.userId) {
+          addLog('info', 'webhook:event:message', { userId: event.source.userId, text: event.message.text?.slice(0,120) });
           const user = await prisma.user.upsert({
             where: { lineUserId: event.source.userId },
             update: {},
@@ -89,11 +94,15 @@ async function handleEvent(event: WebhookEvent) {
             createdAt: msg.createdAt.toISOString(),
           });
         }
-
-        await client.replyMessage(event.replyToken, {
-          type: "text",
-          text: "メッセージありがとうございます！",
-        });
+        try {
+          await client.replyMessage(event.replyToken, {
+            type: "text",
+            text: "メッセージありがとうございます！",
+          });
+          addLog('info', 'webhook:reply:ok');
+        } catch (e) {
+          addLog('error', 'webhook:reply:error', { error: e instanceof Error ? e.message : String(e) });
+        }
       }
       break;
     }
@@ -111,9 +120,11 @@ export async function POST(req: NextRequest) {
     const signature = req.headers.get("x-line-signature");
     const rawBody = await req.text();
 
+    addLog('info', 'webhook:received', { signaturePresent: Boolean(signature), length: rawBody.length });
     await verifySignature(rawBody, signature);
 
     const events = JSON.parse(rawBody).events as WebhookEvent[];
+    addLog('info', 'webhook:events', { count: Array.isArray(events) ? events.length : 0 });
 
     await Promise.all(events.map((event) => handleEvent(event)));
 

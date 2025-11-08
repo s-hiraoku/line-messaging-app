@@ -5,6 +5,7 @@ import { useEffect } from "react";
 type Handlers = Partial<{
   "message:inbound": (data: any) => void;
   "message:outbound": (data: any) => void;
+  "dev:log": (data: any) => void;
   ping: (data: any) => void;
   connected: (data: any) => void;
 }>;
@@ -31,10 +32,10 @@ export function useRealtimeEvents(handlers: Handlers) {
     bind("message:outbound");
     bind("ping");
     bind("connected");
+    bind("dev:log");
 
     return () => {
       es.close();
     };
   }, []);
 }
-

@@ -201,7 +201,7 @@ export default function SettingsPage() {
 
             <button
               type="submit"
-              className="w-full rounded-full bg-blue-500 py-2 text-sm font-semibold text-white transition hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
+              className="w-full rounded-full bg-blue-500 py-2 text-sm font-semibold text-white transition hover:bg-blue-400 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
               disabled={isBusy}
             >
               {saveState === "saved" ? "保存しました" : saveState === "saving" ? "保存中..." : "チャネル情報を保存"}

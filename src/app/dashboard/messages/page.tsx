@@ -127,7 +127,7 @@ export default function MessagesPage() {
               placeholder="こんにちは！" required />
           </div>
         </div>
-        <button type="submit" className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90" disabled={status === "sending"}>
+        <button type="submit" className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90" disabled={status === "sending"}>
           {status === "sending" ? "送信中..." : "送信"}
         </button>
         {status === "success" && <p className="text-sm text-green-600">メッセージを送信しました。</p>}
@@ -151,7 +151,7 @@ export default function MessagesPage() {
         </ul>
         <div className="mt-3">
           <button onClick={() => load(false)} disabled={!hasMore || loading}
-            className="rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 hover:border-slate-500 disabled:cursor-not-allowed disabled:opacity-60 disabled:text-slate-300">
+            className="rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 hover:border-slate-500 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-slate-300">
             {loading ? "読み込み中..." : hasMore ? "さらに読み込む" : "すべて取得済み"}
           </button>
         </div>

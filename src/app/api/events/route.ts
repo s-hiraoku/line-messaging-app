@@ -17,8 +17,10 @@ export async function GET(_req: NextRequest) {
       const bus = realtime();
       const onInbound = (payload: any) => write("message:inbound", payload);
       const onOutbound = (payload: any) => write("message:outbound", payload);
+      const onDevLog = (payload: any) => write("dev:log", payload);
       bus.on("message:inbound", onInbound);
       bus.on("message:outbound", onOutbound);
+      bus.on("dev:log", onDevLog);
 
       // heartbeat to keep connection alive
       const heartbeat = setInterval(() => write("ping", {}), 25000);
@@ -30,6 +32,7 @@ export async function GET(_req: NextRequest) {
         clearInterval(heartbeat);
         bus.off("message:inbound", onInbound);
         bus.off("message:outbound", onOutbound);
+        bus.off("dev:log", onDevLog);
       };
     },
     cancel() {},
@@ -43,4 +46,3 @@ export async function GET(_req: NextRequest) {
     },
   });
 }
-
