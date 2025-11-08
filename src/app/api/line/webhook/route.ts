@@ -24,7 +24,7 @@ async function verifySignature(body: string, signature: string | null): Promise<
 }
 
 async function handleEvent(event: WebhookEvent) {
-  const client = getLineClient();
+  const client = await getLineClient();
 
   switch (event.type) {
     case "follow": {

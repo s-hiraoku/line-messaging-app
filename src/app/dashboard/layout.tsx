@@ -10,8 +10,6 @@ import {
 } from "lucide-react";
 
 import { NavLink } from "./_components/nav-link";
-import Link from "next/link";
-import { auth } from "@/lib/auth/auth";
 
 const primaryNav = [
   {
@@ -52,12 +50,11 @@ const primaryNav = [
   },
 ];
 
-export default async function DashboardLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: ReactNode;
 }) {
-  const session = await auth();
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[280px_1fr]">
@@ -79,23 +76,6 @@ export default async function DashboardLayout({
                 <NavLink key={item.href} {...item} />
               ))}
             </nav>
-            <div className="mt-auto pt-6 text-xs text-slate-400">
-              {session?.user ? (
-                <div className="space-y-2">
-                  <p className="text-slate-300">{session.user.displayName || session.user.name || "ユーザー"}</p>
-                  <form action="/api/auth/signout" method="post">
-                    <button className="rounded-md border border-slate-700 px-3 py-1 text-slate-300 hover:border-slate-500">サインアウト</button>
-                  </form>
-                </div>
-              ) : (
-                <Link
-                  href="/api/auth/signin"
-                  className="inline-flex items-center rounded-md border border-slate-700 px-3 py-1 text-slate-300 hover:border-slate-500"
-                >
-                  サインイン
-                </Link>
-              )}
-            </div>
           </div>
         </aside>
 
