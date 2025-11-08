@@ -159,6 +159,38 @@ cloudflared tunnel --config /dev/null --no-autoupdate --url http://localhost:300
 
 - 送信時はチャネルID/シークレットから OAuth2 Client Credentials でチャネルアクセストークンを自動発行し、メモリにキャッシュします（期限前に自動更新）
 
+### Webhook の自己診断（Selftest）
+
+- 画面: `/dashboard/dev` → 「Webhook チェック」
+- ローカルに送る: アプリ内で `/api/line/webhook` に署名付きで自己呼び出し（200 ならアプリ実装と署名検証はOK）
+- 公開URLに送る: Cloudflare Tunnel の URL を入力して実行（ドメインのみ or `/api/line/webhook` までの完全URLのどちらでも可）
+  - 200: トンネル経由もOK（LINE → 公開URL → アプリ の流れと同等）
+  - 400: 署名不一致/シークレット未設定など。`/dashboard/settings` の値を再確認
+  - ERR: fetch失敗。URLのミスやトンネル停止を確認
+
+Selftest の結果はボタン下に表示され、ページ下部の DebugPanel に raw の `url/status/body` も表示されます。
+
+### 友だち追加リンク／QR の表示
+
+- `/dashboard/settings` に「ベーシックID（@なし推奨）」または「友だち追加URL（lin.ee 等）」を保存
+- `/dashboard/dev` に「友だち追加QR」とリンクが表示されます（コピー可）
+
+### E2E 動作確認のチェックリスト
+
+1) 友だち追加QRからボットを追加し、ブロックしていないことを確認
+2) あなたのLINEからボットに「こんにちは」等のテキストを送信
+   - 期待: すぐに「メッセージありがとうございます！」と自動返信
+   - `/dashboard/messages` に IN（受信）が1件追加
+   - `/dashboard/users` にユーザーが表示（最終メッセージ時刻も更新）
+3) こちらからの送信確認
+   - `/dashboard/messages` で `lineUserId` と本文を入力 → 送信
+   - 期待: OUT（送信）が表示され、相手のLINEに届く
+
+うまくいかない場合
+- Selftest（ローカル/公開）を再度実行して 200 を確認（トンネルURLが変わるとLINE側URLも更新が必要）
+- 友だち追加・ブロック状態を確認
+- 署名検証（チャネルシークレット）が一致しているか `/dashboard/settings` の値と LINE Developers の値を照合
+
 ---
 
 ## メッセージ送信の試験
