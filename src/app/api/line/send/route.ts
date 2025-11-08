@@ -5,44 +5,87 @@ import { pushMessage } from "@/lib/line/client";
 import { prisma } from "@/lib/prisma";
 import { realtime } from "@/lib/realtime/bus";
 
-const payloadSchema = z.object({
+const textPayloadSchema = z.object({
   to: z.string().min(1),
   message: z.string().min(1),
+  type: z.literal("text").optional(),
 });
+
+const flexPayloadSchema = z.object({
+  to: z.string().min(1),
+  type: z.literal("flex"),
+  altText: z.string().min(1).max(400),
+  contents: z.any(), // Flex Message JSON structure - can be bubble, carousel, etc.
+});
+
+const payloadSchema = z.union([textPayloadSchema, flexPayloadSchema]);
 
 export async function POST(req: NextRequest) {
   try {
     const json = await req.json();
-    const { to, message } = payloadSchema.parse(json);
+    const payload = payloadSchema.parse(json);
 
-    await pushMessage(to, { type: "text", text: message });
-
-    // Persist outbound message and ensure user exists
+    // Ensure user exists
     const user = await prisma.user.upsert({
-      where: { lineUserId: to },
+      where: { lineUserId: payload.to },
       update: {},
       create: {
-        lineUserId: to,
+        lineUserId: payload.to,
         displayName: "",
         isFollowing: true,
       },
     });
 
-    const msg = await prisma.message.create({
-      data: {
-        type: "TEXT",
-        content: { text: message },
-        direction: "OUTBOUND",
-        userId: user.id,
-        deliveryStatus: "SENT",
-      },
-    });
+    // Handle different message types
+    if ("type" in payload && payload.type === "flex") {
+      // Send flex message
+      await pushMessage(payload.to, {
+        type: "flex",
+        altText: payload.altText,
+        contents: payload.contents,
+      });
 
-    await realtime().emit("message:outbound", {
-      userId: user.id,
-      text: message,
-      createdAt: msg.createdAt.toISOString(),
-    });
+      // Persist flex message
+      const msg = await prisma.message.create({
+        data: {
+          type: "FLEX",
+          content: {
+            altText: payload.altText,
+            contents: payload.contents,
+          },
+          direction: "OUTBOUND",
+          userId: user.id,
+          deliveryStatus: "SENT",
+        },
+      });
+
+      await realtime().emit("message:outbound", {
+        userId: user.id,
+        text: `📊 ${payload.altText}`,
+        createdAt: msg.createdAt.toISOString(),
+      });
+    } else {
+      // Send text message (legacy support)
+      const message = "message" in payload ? payload.message : "";
+      await pushMessage(payload.to, { type: "text", text: message });
+
+      // Persist text message
+      const msg = await prisma.message.create({
+        data: {
+          type: "TEXT",
+          content: { text: message },
+          direction: "OUTBOUND",
+          userId: user.id,
+          deliveryStatus: "SENT",
+        },
+      });
+
+      await realtime().emit("message:outbound", {
+        userId: user.id,
+        text: message,
+        createdAt: msg.createdAt.toISOString(),
+      });
+    }
 
     return NextResponse.json({ status: "sent" });
   } catch (error) {
