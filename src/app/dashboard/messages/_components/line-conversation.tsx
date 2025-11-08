@@ -16,7 +16,8 @@ type Props = {
 };
 
 export function LineConversation({ direction = "outbound", displayName = "あなた", avatarUrl = null, message }: Props) {
-  const isMe = direction === "outbound";
+  // プレビューは常に左側（受信風）で表示
+  const isMe = false;
   const [tab, setTab] = useState<'room' | 'list'>('room');
 
   return (
