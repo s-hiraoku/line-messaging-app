@@ -10,8 +10,8 @@ import {
 } from "lucide-react";
 
 import { NavLink } from "./_components/nav-link";
-import { auth } from "@/lib/auth/auth";
 import Link from "next/link";
+import { auth } from "@/lib/auth/auth";
 
 const primaryNav = [
   {
@@ -89,10 +89,10 @@ export default async function DashboardLayout({
                 </div>
               ) : (
                 <Link
-                  href="/api/auth/signin/line"
+                  href="/api/auth/signin"
                   className="inline-flex items-center rounded-md border border-slate-700 px-3 py-1 text-slate-300 hover:border-slate-500"
                 >
-                  LINE でサインイン
+                  サインイン
                 </Link>
               )}
             </div>

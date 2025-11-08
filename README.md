@@ -72,7 +72,14 @@ npm run dev
 # http://localhost:3000 を開く
 ```
 
-6) 動作確認（任意）
+6) チャネル情報の登録（画面から）
+
+- ダッシュボード → 設定 → 「チャネル情報の保存」で以下を入力し保存
+  - チャネルID（LINE Developers で確認）
+  - チャネルシークレット
+  - チャネルアクセストークン（Messaging API）
+
+7) 動作確認（任意）
 
 - ダッシュボード: http://localhost:3000/dashboard
 - 送信フォーム: http://localhost:3000/dashboard/messages
@@ -86,9 +93,8 @@ npm run dev
 - `DATABASE_URL` 例: `postgresql://postgres:postgres@localhost:5432/line_app?schema=public`
 - `NEXTAUTH_SECRET` ランダム長文字列
 - `NEXTAUTH_URL` `http://localhost:3000`
-- `LINE_CHANNEL_ID` LINE のチャネル ID（本リポでは NextAuth/LINE ログインでも使用）
-- `LINE_CHANNEL_SECRET` LINE のチャネルシークレット（署名検証・ログイン）
-- `LINE_CHANNEL_ACCESS_TOKEN` LINE Messaging API のチャネルアクセストークン（送信/ブロードキャスト）
+- （任意）`ADMIN_USERNAME` / `ADMIN_PASSWORD`（未設定時は admin/admin）
+  - 認証は Credentials Provider を既定とし、LINE 用の認証情報は画面から登録します
 
 オプション
 - `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`（設定するとリアルタイムイベントを publish）
@@ -96,8 +102,8 @@ npm run dev
 - `SENTRY_DSN` ほか監視系
 
 注意
-- 本 POC は「チャネル設定は環境変数がソース・オブ・トゥルース」です。ダッシュボード設定画面は読み取り専用で、値の更新は `.env` または `.env.local` 編集＋再起動で反映されます。
-- 実運用では「ログイン用 LINE チャネル」と「Messaging API チャネル」を分けることが多いです。現状は同一の `LINE_CHANNEL_ID/SECRET` を利用する前提です（分離する場合はコード/ENV を調整してください）。
+- 本 POC は「チャネル設定（チャネルID/シークレット/アクセストークン）は 画面（設定→チャネル情報）から保存」します。DB の `ChannelConfig` に保存され、LINE SDK と Webhook 署名検証はこの値を使用します。
+- NextAuth の認証は Credentials Provider を既定とし、LINE ログインは任意（`.env` に `LINE_CHANNEL_ID/SECRET` を設定した場合のみ有効）。
 
 ---
 
@@ -117,13 +123,12 @@ npm run dev
 
 ---
 
-## 認証（NextAuth v5 / LINE）
+## 認証（NextAuth v5 / Credentials + 任意で LINE）
 
 - 実装: `src/lib/auth/auth.ts`（App Router ハンドラ）
-- Adapter: PrismaAdapter（`User` に `name`/`image`/`emailVerified` を追加済み）
+- 既定: Credentials Provider（`ADMIN_USERNAME`/`ADMIN_PASSWORD` で検証。未設定時は admin/admin）
+- 任意: `.env` に `LINE_CHANNEL_ID`/`LINE_CHANNEL_SECRET` を設定すると LINE ログインも追加
 - 事前準備
-  - `LINE_CHANNEL_ID` と `LINE_CHANNEL_SECRET` を設定
-  - LINE Developers の Callback URL に `http://localhost:3000/api/auth/callback/line` を登録
   - `.env` または `.env.local` に `NEXTAUTH_URL`, `NEXTAUTH_SECRET` を設定
 
 ### アクセス制御（middleware）
@@ -152,8 +157,8 @@ npx ngrok http 3000
 - 「検証」ボタンで 200 OK を確認
 
 3) 署名検証
-- 本アプリは `LINE_CHANNEL_SECRET` を用い `x-line-signature` を検証します
-- 値が不一致だと 400 になります
+- 本アプリは DB に保存されたチャネルシークレットを用い `x-line-signature` を検証します
+- 未設定/不一致の場合は 400 となります
 
 ---
 

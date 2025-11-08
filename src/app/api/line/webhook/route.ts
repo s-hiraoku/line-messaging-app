@@ -4,11 +4,12 @@ import { getLineClient } from "@/lib/line/client";
 import { prisma } from "@/lib/prisma";
 import { realtime } from "@/lib/realtime/bus";
 
-function verifySignature(body: string, signature: string | null): void {
-  const channelSecret = process.env.LINE_CHANNEL_SECRET;
+async function verifySignature(body: string, signature: string | null): Promise<void> {
+  const config = await prisma.channelConfig.findUnique({ where: { id: "primary" } });
+  const channelSecret = config?.channelSecret ?? null;
 
   if (!channelSecret) {
-    throw new Error("Missing LINE_CHANNEL_SECRET environment variable.");
+    throw new Error("チャネルシークレットが未設定です。設定画面から登録してください。");
   }
 
   if (!signature) {
@@ -110,7 +111,7 @@ export async function POST(req: NextRequest) {
     const signature = req.headers.get("x-line-signature");
     const rawBody = await req.text();
 
-    verifySignature(rawBody, signature);
+    await verifySignature(rawBody, signature);
 
     const events = JSON.parse(rawBody).events as WebhookEvent[];
 

@@ -34,7 +34,10 @@ export default function SettingsPage() {
   const [fetchState, setFetchState] = useState<FetchState>("loading");
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [channelId, setChannelId] = useState("");
+  const [channelSecret, setChannelSecret] = useState("");
+  const [channelAccessToken, setChannelAccessToken] = useState("");
   const [secretConfigured, setSecretConfigured] = useState(false);
+  const [accessTokenConfigured, setAccessTokenConfigured] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -44,9 +47,10 @@ export default function SettingsPage() {
         if (!response.ok) {
           throw new Error("チャネル設定の取得に失敗しました");
         }
-        const data: { channelId?: string; channelSecretConfigured?: boolean } = await response.json();
+        const data: { channelId?: string; channelSecretConfigured?: boolean; channelAccessTokenConfigured?: boolean } = await response.json();
         setChannelId(data.channelId ?? "");
         setSecretConfigured(Boolean(data.channelSecretConfigured));
+        setAccessTokenConfigured(Boolean(data.channelAccessTokenConfigured));
         setFetchState("ready");
       } catch (error) {
         console.error("Failed to load channel config", error);
@@ -63,11 +67,47 @@ export default function SettingsPage() {
     [fetchState, saveState],
   );
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setMessage("本環境ではチャネル設定は環境変数（.env または .env.local）で管理されています。ファイルを更新し、サーバーを再起動してください。");
-    setSaveState("saved");
-    setTimeout(() => setSaveState("idle"), 2000);
+    if (fetchState !== "ready") return;
+
+    setSaveState("saving");
+    setMessage(null);
+
+    try {
+      const payload: { channelId: string; channelSecret?: string; channelAccessToken?: string } = {
+        channelId: channelId.trim(),
+      };
+      if (channelSecret.trim()) payload.channelSecret = channelSecret.trim();
+      if (channelAccessToken.trim()) payload.channelAccessToken = channelAccessToken.trim();
+
+      const response = await fetch("/api/settings/channel", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = (await response.json().catch(() => null)) as {
+        channelId?: string;
+        channelSecretConfigured?: boolean;
+        channelAccessTokenConfigured?: boolean;
+        error?: string;
+      } | null;
+
+      if (!response.ok) throw new Error(data?.error ?? "チャネル情報の保存に失敗しました");
+
+      setChannelId(data?.channelId ?? "");
+      setSecretConfigured(Boolean(data?.channelSecretConfigured));
+      setAccessTokenConfigured(Boolean(data?.channelAccessTokenConfigured));
+      setChannelSecret("");
+      setChannelAccessToken("");
+      setSaveState("saved");
+      setMessage("チャネル情報を保存しました。");
+      setTimeout(() => setSaveState("idle"), 2000);
+    } catch (error) {
+      setSaveState("error");
+      setMessage(error instanceof Error ? error.message : "チャネル情報の保存に失敗しました");
+    }
   };
 
   return (
@@ -93,28 +133,54 @@ export default function SettingsPage() {
 
           <form className="space-y-4" onSubmit={handleSubmit}>
             <label className="block space-y-2 text-sm text-slate-300">
-              <span>チャネル ID（読み取り専用）</span>
+              <span>チャネル ID</span>
               <input
                 type="text"
                 value={channelId}
                 onChange={(event) => setChannelId(event.target.value)}
                 placeholder="165xxxxxxxx"
                 className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-white outline-none focus:border-blue-500"
-                disabled
+                disabled={isBusy}
+                required
               />
             </label>
 
-            <div className="space-y-1 text-xs text-slate-400">
-              <p>チャネルシークレット: {secretConfigured ? "設定済み" : "未設定"}</p>
-              <p className="text-slate-500">※ 値の更新は `.env` または `.env.local` を編集して行ってください。</p>
-            </div>
+            <label className="block space-y-2 text-sm text-slate-300">
+              <span>チャネルシークレット</span>
+              <input
+                type="password"
+                value={channelSecret}
+                onChange={(event) => setChannelSecret(event.target.value)}
+                placeholder={secretConfigured ? "更新する場合のみ入力" : "XXXXXXXXXXXXXXXXXXXX"}
+                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-white outline-none focus:border-blue-500"
+                disabled={isBusy}
+              />
+              <span className="block text-xs text-slate-500">
+                {secretConfigured ? "既に登録済みです。更新時のみ入力してください。" : "初回登録時は LINE Developers で発行されたシークレットを入力してください。"}
+              </span>
+            </label>
+
+            <label className="block space-y-2 text-sm text-slate-300">
+              <span>チャネルアクセストークン</span>
+              <input
+                type="password"
+                value={channelAccessToken}
+                onChange={(event) => setChannelAccessToken(event.target.value)}
+                placeholder={accessTokenConfigured ? "更新する場合のみ入力" : "xxxxxxxxxxxxxxxx"}
+                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-white outline-none focus:border-blue-500"
+                disabled={isBusy}
+              />
+              <span className="block text-xs text-slate-500">
+                {accessTokenConfigured ? "既に登録済みです。更新時のみ入力してください。" : "Messaging API のチャネルアクセストークンを入力してください。"}
+              </span>
+            </label>
 
             <button
               type="submit"
               className="w-full rounded-full bg-blue-500 py-2 text-sm font-semibold text-white transition hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-60"
               disabled={isBusy}
             >
-              {saveState === "saved" ? "案内を表示しました" : "設定方法の案内を表示"}
+              {saveState === "saved" ? "保存しました" : saveState === "saving" ? "保存中..." : "チャネル情報を保存"}
             </button>
 
             <div className="space-y-2 text-xs">
