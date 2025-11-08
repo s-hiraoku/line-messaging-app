@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { TrendingUp, TrendingDown, MessageSquare, Users, Clock, Calendar, UserPlus, UserMinus, Target, User, MapPin } from "lucide-react";
+import { DebugPanel } from "../_components/debug-panel";
 
 type AnalyticsData = {
   period: {
@@ -69,9 +70,16 @@ type LineDemographics = {
 export default function AnalyticsPage() {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [insights, setInsights] = useState<LineInsights | null>(null);
+  const [demographics, setDemographics] = useState<LineDemographics | null>(null);
   const [loading, setLoading] = useState(true);
   const [insightsLoading, setInsightsLoading] = useState(true);
+  const [demographicsLoading, setDemographicsLoading] = useState(true);
   const [period, setPeriod] = useState<7 | 30 | 90>(7);
+
+  // Debug用の生データ
+  const [rawAnalytics, setRawAnalytics] = useState<unknown>(null);
+  const [rawInsights, setRawInsights] = useState<unknown>(null);
+  const [rawDemographics, setRawDemographics] = useState<unknown>(null);
 
   const loadAnalytics = async () => {
     try {
@@ -80,6 +88,7 @@ export default function AnalyticsPage() {
       if (!res.ok) throw new Error("Failed to load analytics");
       const result = await res.json();
       setData(result);
+      setRawAnalytics(result);
     } catch (e) {
       console.error(e);
     } finally {
@@ -94,6 +103,7 @@ export default function AnalyticsPage() {
       if (res.ok) {
         const result = await res.json();
         setInsights(result);
+        setRawInsights(result);
       }
     } catch (e) {
       console.error("Failed to load LINE insights:", e);
@@ -102,9 +112,26 @@ export default function AnalyticsPage() {
     }
   };
 
+  const loadDemographics = async () => {
+    try {
+      setDemographicsLoading(true);
+      const res = await fetch("/api/line/demographics", { cache: "no-store" });
+      if (res.ok) {
+        const result = await res.json();
+        setDemographics(result);
+        setRawDemographics(result);
+      }
+    } catch (e) {
+      console.error("Failed to load LINE demographics:", e);
+    } finally {
+      setDemographicsLoading(false);
+    }
+  };
+
   useEffect(() => {
     loadAnalytics();
     loadInsights();
+    loadDemographics();
   }, [period]);
 
   if (loading || !data) {
@@ -203,6 +230,110 @@ export default function AnalyticsPage() {
         <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
           <p className="text-center text-sm text-slate-400">
             LINE統計情報を取得できませんでした。チャネル設定を確認してください。
+          </p>
+        </section>
+      )}
+
+      {/* ユーザー属性 */}
+      {demographics && demographics.available && (
+        <section className="rounded-lg border border-purple-800/40 bg-gradient-to-br from-purple-900/30 to-slate-900/60 p-5 shadow-lg">
+          <div className="mb-4 flex items-center gap-2">
+            <User className="h-5 w-5 text-purple-400" />
+            <h2 className="text-lg font-semibold text-white">ユーザー属性</h2>
+          </div>
+
+          <div className="space-y-6">
+            {/* 性別分布 */}
+            {demographics.genders && demographics.genders.length > 0 && (
+              <div>
+                <h3 className="mb-3 text-sm font-medium text-slate-300">性別</h3>
+                <div className="space-y-2">
+                  {demographics.genders.map((item) => (
+                    <div key={item.gender} className="flex items-center gap-3">
+                      <span className="w-16 text-xs text-slate-400">
+                        {item.gender === "male" ? "男性" : item.gender === "female" ? "女性" : "不明"}
+                      </span>
+                      <div className="flex-1">
+                        <div
+                          className="h-6 rounded bg-gradient-to-r from-purple-500/60 to-pink-500/60 transition-all"
+                          style={{ width: `${item.percentage}%` }}
+                        />
+                      </div>
+                      <span className="w-12 text-right text-sm font-medium text-slate-200">
+                        {item.percentage}%
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 年齢分布 */}
+            {demographics.ages && demographics.ages.length > 0 && (
+              <div>
+                <h3 className="mb-3 text-sm font-medium text-slate-300">年齢</h3>
+                <div className="space-y-2">
+                  {demographics.ages.map((item) => (
+                    <div key={item.age} className="flex items-center gap-3">
+                      <span className="w-16 text-xs text-slate-400">{item.age}</span>
+                      <div className="flex-1">
+                        <div
+                          className="h-6 rounded bg-gradient-to-r from-purple-500/60 to-blue-500/60 transition-all"
+                          style={{ width: `${item.percentage}%` }}
+                        />
+                      </div>
+                      <span className="w-12 text-right text-sm font-medium text-slate-200">
+                        {item.percentage}%
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 地域分布 */}
+            {demographics.areas && demographics.areas.length > 0 && (
+              <div>
+                <h3 className="mb-3 flex items-center gap-2 text-sm font-medium text-slate-300">
+                  <MapPin className="h-4 w-4" />
+                  <span>地域（上位10件）</span>
+                </h3>
+                <div className="space-y-2">
+                  {demographics.areas.slice(0, 10).map((item) => (
+                    <div key={item.area} className="flex items-center gap-3">
+                      <span className="w-20 text-xs text-slate-400">{item.area}</span>
+                      <div className="flex-1">
+                        <div
+                          className="h-6 rounded bg-gradient-to-r from-purple-500/60 to-emerald-500/60 transition-all"
+                          style={{ width: `${item.percentage}%` }}
+                        />
+                      </div>
+                      <span className="w-12 text-right text-sm font-medium text-slate-200">
+                        {item.percentage}%
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <p className="mt-4 text-xs text-slate-500">
+            ※ LINE公式APIから取得したユーザー属性の統計データです。
+          </p>
+        </section>
+      )}
+
+      {demographicsLoading && (
+        <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
+          <p className="text-center text-sm text-slate-400">ユーザー属性情報を読み込み中...</p>
+        </section>
+      )}
+
+      {!demographicsLoading && (!demographics || !demographics.available) && (
+        <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
+          <p className="text-center text-sm text-slate-400">
+            ユーザー属性情報を取得できませんでした。友だち数が一定数以上必要です。
           </p>
         </section>
       )}
@@ -350,6 +481,14 @@ export default function AnalyticsPage() {
             })}
           </div>
         </section>
+      </div>
+
+      {/* API デバッグ */}
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold text-white">API デバッグ</h2>
+        <DebugPanel title="/api/analytics" response={rawAnalytics} />
+        <DebugPanel title="/api/line/insights" response={rawInsights} />
+        <DebugPanel title="/api/line/demographics" response={rawDemographics} />
       </div>
     </div>
   );
