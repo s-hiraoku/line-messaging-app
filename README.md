@@ -123,25 +123,41 @@ npm run dev
 
 ## Webhook のセットアップ（Messaging API）
 
-1) 公開 URL を用意（ngrok 等）
+Cloudflare Tunnel（Quick Tunnels）を使ってローカルを公開する前提です。
+
+1) cloudflared を用意
+
+- macOS（Homebrew）: `brew install cloudflare/cloudflare/cloudflared`
+- 公式バイナリ（任意）: https://github.com/cloudflare/cloudflared/releases
+
+2) トンネルを起動（別ターミナル）
 
 ```bash
-# 別ターミナルで
-npx ngrok http 3000
-# 例: https://abcd-xx-xx-xx-xx.ngrok.io
+cloudflared tunnel --config /dev/null --no-autoupdate --url http://localhost:3000
 ```
 
-2) LINE Developers → 対象チャネルの Webhook 設定
-- Webhook URL: `https://<公開ドメイン>/api/line/webhook`
-- Webhook 有効化をオン
+- 数秒後、`https://xxxx-xxxx.trycloudflare.com` のような URL が表示されます
+- URL だけ抽出したい場合（任意）:
+
+```bash
+cloudflared tunnel --config /dev/null --no-autoupdate --url http://localhost:3000 \
+  2>&1 | sed -nE 's/.*(https:\/\/[a-z0-9-]+\.trycloudflare\.com).*/\1/p' | tail -n1
+```
+
+3) LINE Developers → 対象チャネルの Webhook 設定
+
+- Webhook URL: `https://<上で出たURL>/api/line/webhook`
+- 「Webhookを利用する」をオン
 - 「検証」ボタンで 200 OK を確認
 
-3) 署名検証
- - 本アプリは DB に保存されたチャネルシークレットを用い `x-line-signature` を検証します
- - 未設定/不一致の場合は 400 となります
+4) 署名検証と注意
 
-4) アクセストークンについて
- - 送信時はチャネルID/シークレットから OAuth2 Client Credentials でチャネルアクセストークンを自動発行し、メモリにキャッシュします（期限前に自動更新）。
+- 本アプリは DB に保存されたチャネルシークレットで `x-line-signature` を検証します（未設定/不一致は 400）
+- Quick Tunnels は再起動で URL が変わります。cloudflared を再起動したら Webhook URL も更新してください
+
+5) アクセストークンについて
+
+- 送信時はチャネルID/シークレットから OAuth2 Client Credentials でチャネルアクセストークンを自動発行し、メモリにキャッシュします（期限前に自動更新）
 
 ---
 
