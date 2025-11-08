@@ -57,13 +57,19 @@ export function LineConversation({ direction = "outbound", displayName = "あな
                   {message.text || <span className="text-slate-400">（テキスト未入力）</span>}
                 </div>
               ) : (
-                <div className={clsx(
-                  "relative inline-block overflow-hidden rounded-2xl border",
-                  isMe ? "border-[#06C755]" : "border-slate-300"
-                )}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={message.previewImageUrl || message.originalContentUrl} alt="image" className="max-h-64 w-full object-contain bg-black" />
-                </div>
+                (() => {
+                  const src = (message.previewImageUrl || message.originalContentUrl || '').trim();
+                  if (!src) return null; // 空なら何も表示しない
+                  return (
+                    <div className={clsx(
+                      "relative inline-block overflow-hidden rounded-2xl border",
+                      isMe ? "border-[#06C755]" : "border-slate-300"
+                    )}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={src} alt="image" className="max-h-64 w-full object-contain bg-black" />
+                    </div>
+                  );
+                })()
               )}
             </div>
             {isMe && (
@@ -77,4 +83,3 @@ export function LineConversation({ direction = "outbound", displayName = "あな
     </div>
   );
 }
-
