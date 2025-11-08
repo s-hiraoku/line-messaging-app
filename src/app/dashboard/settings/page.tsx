@@ -4,25 +4,29 @@ import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 
 const channelSteps = [
-  "LINE Developers で Messaging API チャネルを作成し、チャネル ID / シークレットを控えます。",
-  "本画面でチャネル情報を保存し、バックエンドから参照できるようにします。",
-  "インフラ側の環境変数 (LINE_CHANNEL_ID / LINE_CHANNEL_SECRET) も最新の値に更新します。",
+  "LINE Developers → 対象プロバイダ →『Messaging API』チャネルを作成/選択します（Login ではなく Messaging API）。",
+  "基本設定の『チャネルID』『チャネルシークレット』を確認します。",
+  "本画面『チャネル情報の保存』で ID / シークレットを入力して保存します（以降、アプリは DB の値を使用）。",
+  "（任意）友だち追加URL または ベーシックID を登録すると、Dev 画面で QR とリンクを生成できます。",
 ];
 
 const channelNotes = [
-  "チャネルシークレットは署名検証で使用するため、不要な共有は避けてください。",
-  "アクセストークンは別途ローテーションポリシーを設け、再発行時には本画面からシークレットも更新してください。",
+  "チャネルシークレットは Webhook 署名検証に使用します。管理・共有に注意してください。",
+  "アクセストークンは保存しません。送信時にチャネルID/シークレットから自動発行（client_credentials）します。",
 ];
 
 const webhookSteps = [
-  "公開 HTTPS 環境にアプリをデプロイし、`/api/line/webhook` を外部公開します。",
-  "LINE Developers の Webhook 設定に公開 URL を登録し、「LINE Developers からの Webhook」をオンにします。",
-  "コンソールの「検証」ボタンで疎通確認を行い、成功ステータスであることを確認します。",
+  "（ローカルの場合）Cloudflare Tunnel で公開URLを用意します: `cloudflared tunnel --url http://localhost:3000`",
+  "公開URL（例: https://xxxx.trycloudflare.com）に `/api/line/webhook` を付けた値を LINE Developers の Webhook URL に設定します。",
+  "LINE Developers の『Webhookを利用する』をオンにして『検証』を実行（200 ならOK）。",
+  "本アプリの Dev 画面『Webhook チェック』でもローカル/公開URLの両方で 200 を確認できます。",
 ];
 
 const webhookNotes = [
-  "署名検証には LINE_CHANNEL_SECRET が必要です。環境変数と保存済みの値を常に一致させてください。",
-  "Webhook がエラー応答を返し続けると自動的に無効化される場合があるため、200 OK を返す実装にしておきましょう。",
+  "署名検証は本画面で保存した『チャネルシークレット』を使用します。不一致だと 400（Invalid LINE signature）。",
+  "Cloudflare URLを公開欄に『ドメインのみ』入れた場合は `/api/line/webhook` を忘れずに。完全URLを入れても動作します。",
+  "URLが 2 重（.../api/line/webhook/api/line/webhook）になると 404 になります。Dev 画面の Selftest を使うと簡単に確認できます。",
+  "Webhook が長時間 4xx/5xx を返し続けると無効化される場合があります。基本は即時 200 を返し、処理は非同期化を検討してください。",
 ];
 
 const webhookUrlHint = "https://your-domain.example/api/line/webhook";
@@ -280,6 +284,12 @@ export default function SettingsPage() {
                 <li key={note}>{note}</li>
               ))}
             </ul>
+            <div className="mt-3 rounded-lg border border-slate-800 bg-slate-900 p-3">
+              <p className="mb-1 text-xs font-semibold text-slate-300">推奨 Webhook URL 形式</p>
+              <code className="block overflow-x-auto rounded bg-slate-950 px-3 py-2 text-[11px] text-slate-200">https://&lt;あなたの公開URL&gt;/api/line/webhook</code>
+              <p className="mt-1 text-[11px] text-slate-400">例: https://xxxx-xxxx.trycloudflare.com/api/line/webhook</p>
+              <p className="mt-2 text-[11px] text-slate-400">Dev 画面の「Webhook チェック」でローカル/公開URLの疎通（200）も確認できます。</p>
+            </div>
           </div>
         </section>
       </div>
