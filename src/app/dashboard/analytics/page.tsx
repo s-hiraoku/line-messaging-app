@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TrendingUp, TrendingDown, MessageSquare, Users, Clock, Calendar, UserPlus, UserMinus, Target } from "lucide-react";
+import { TrendingUp, TrendingDown, MessageSquare, Users, Clock, Calendar, UserPlus, UserMinus, Target, User, MapPin } from "lucide-react";
 
 type AnalyticsData = {
   period: {
@@ -48,6 +48,22 @@ type LineInsights = {
     status: string;
     success?: number;
   }> | null;
+};
+
+type LineDemographics = {
+  available: boolean;
+  genders?: Array<{
+    gender: string;
+    percentage: number;
+  }>;
+  ages?: Array<{
+    age: string;
+    percentage: number;
+  }>;
+  areas?: Array<{
+    area: string;
+    percentage: number;
+  }>;
 };
 
 export default function AnalyticsPage() {
