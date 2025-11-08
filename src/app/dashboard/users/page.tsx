@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { DebugPanel, toCurl } from "../_components/debug-panel";
 
 type User = {
   id: string;
@@ -18,6 +19,8 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(false);
   const [cursor, setCursor] = useState<string | null>(null);
   const [showRawIds, setShowRawIds] = useState(false);
+  const [lastUrl, setLastUrl] = useState<string>("");
+  const [lastResponse, setLastResponse] = useState<unknown>();
 
   const load = async (initial = false) => {
     setLoading(true);
@@ -26,8 +29,10 @@ export default function UsersPage() {
       if (q.trim()) url.searchParams.set("q", q.trim());
       if (!initial && cursor) url.searchParams.set("cursor", cursor);
       url.searchParams.set("take", "50");
+      setLastUrl(url.toString());
       const res = await fetch(url);
       const data = (await res.json()) as { items: User[]; nextCursor?: string | null };
+      setLastResponse(data);
       setItems((prev) => (initial ? data.items : [...prev, ...data.items]));
       setCursor(data.nextCursor ?? null);
     } finally {
@@ -106,6 +111,13 @@ export default function UsersPage() {
           {loading ? "読み込み中..." : hasMore ? "さらに読み込む" : "すべて取得済み"}
         </button>
       </div>
+
+      <DebugPanel
+        title="ユーザー一覧 API デバッグ"
+        request={{ url: lastUrl }}
+        response={lastResponse}
+        curl={lastUrl ? toCurl({ url: lastUrl }) : null}
+      />
     </div>
   );
 }

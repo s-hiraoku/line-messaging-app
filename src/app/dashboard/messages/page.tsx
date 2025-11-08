@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRealtimeEvents } from "@/lib/realtime/use-events";
+import { DebugPanel, toCurl } from "../_components/debug-panel";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -22,6 +23,8 @@ export default function MessagesPage() {
   const [items, setItems] = useState<Msg[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [lastRequest, setLastRequest] = useState<unknown>();
+  const [lastResponse, setLastResponse] = useState<unknown>();
 
   const load = async (initial = false) => {
     setLoading(true);
@@ -72,6 +75,7 @@ export default function MessagesPage() {
 
     try {
       const payload = { to: lineUserId, messages: [{ type: "text", text: message }] };
+      setLastRequest(payload);
       const response = await fetch("/api/line/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -79,8 +83,11 @@ export default function MessagesPage() {
       });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
+        setLastResponse(data);
         throw new Error(data.error ?? "メッセージの送信に失敗しました");
       }
+      const data = await response.json().catch(() => ({}));
+      setLastResponse(data);
       setStatus("success");
       setMessage("");
     } catch (err) {
@@ -149,6 +156,13 @@ export default function MessagesPage() {
           </button>
         </div>
       </section>
+
+      <DebugPanel
+        title="送信 API デバッグ"
+        request={lastRequest}
+        response={lastResponse}
+        curl={toCurl({ url: new URL('/api/line/send', location.origin).toString(), method: 'POST', headers: { 'Content-Type': 'application/json' }, body: lastRequest })}
+      />
     </div>
   );
 }
