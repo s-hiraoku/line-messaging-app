@@ -249,10 +249,20 @@ export default function DevPage() {
             )}
           </section>
           <div className="md:col-span-2">
-            <DebugPanel title="/api/dev/info (raw)" response={info} />
+            <DebugPanel
+              title="/api/dev/info (raw)"
+              request={{}}
+              curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/dev/info`, method: 'GET' })}
+              response={info}
+            />
           </div>
           <div className="md:col-span-2">
-            <DebugPanel title="Webhook Selftest" request={wbReq} response={wbRes} />
+            <DebugPanel
+              title="Webhook Selftest"
+              request={wbReq}
+              curl={wbReq ? toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/dev/webhook/selftest`, method: 'POST', headers: { 'Content-Type': 'application/json' }, body: wbReq }) : undefined}
+              response={wbRes}
+            />
           </div>
           <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm md:col-span-2">
             <div className="mb-2 flex items-center justify-between">
@@ -328,31 +338,37 @@ export default function DevPage() {
             </div>
             <DebugPanel
               title="/api/dev/logs"
+              request={{}}
               curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/dev/logs`, method: 'GET' })}
               response={rawLogs}
             />
             <DebugPanel
               title="/api/settings/channel"
+              request={{}}
               curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/settings/channel`, method: 'GET' })}
               response={rawChannel}
             />
             <DebugPanel
               title="/api/analytics?days=7"
+              request={{ days: 7 }}
               curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/analytics?days=7`, method: 'GET' })}
               response={rawAnalytics}
             />
             <DebugPanel
               title="/api/line/insights"
+              request={{}}
               curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/line/insights`, method: 'GET' })}
               response={rawInsights}
             />
             <DebugPanel
               title="/api/line/demographics"
+              request={{}}
               curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/line/demographics`, method: 'GET' })}
               response={rawDemographics}
             />
             <DebugPanel
               title="/api/dashboard/stats"
+              request={{}}
               curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/dashboard/stats`, method: 'GET' })}
               response={rawDashboard}
             />

@@ -259,6 +259,7 @@ export default function DashboardPage() {
         <h2 className="text-lg font-semibold text-white">API デバッグ</h2>
         <DebugPanel
           title="/api/dashboard/stats"
+          request={{}}
           curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/dashboard/stats`, method: 'GET' })}
           response={rawStats}
         />

@@ -488,16 +488,19 @@ export default function AnalyticsPage() {
         <h2 className="text-lg font-semibold text-white">API デバッグ</h2>
         <DebugPanel
           title="/api/analytics"
+          request={{ days: period }}
           curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/analytics?days=${period}`, method: 'GET' })}
           response={rawAnalytics}
         />
         <DebugPanel
           title="/api/line/insights"
+          request={{}}
           curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/line/insights`, method: 'GET' })}
           response={rawInsights}
         />
         <DebugPanel
           title="/api/line/demographics"
+          request={{}}
           curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/line/demographics`, method: 'GET' })}
           response={rawDemographics}
         />
