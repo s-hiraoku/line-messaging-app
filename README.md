@@ -9,8 +9,7 @@ LINE Messaging API を活用した統合メッセージング管理アプリ（P
 - Webhook 署名検証とフォロー/テキストイベントの保存
 - ユーザー一覧・詳細、タグ更新 API
 - テンプレート作成/一覧 API
-- NextAuth v5 + PrismaAdapter によるログイン土台（LINE ログイン）
-- 環境変数ベースのチャネル設定（UI は読み取り専用）
+- チャネル設定（ID/シークレット）は UI から保存（アクセストークンは自動発行）
 - 最小リアルタイム通知（EventEmitter + Upstash Redis publish）
 
 ---
@@ -19,7 +18,7 @@ LINE Messaging API を活用した統合メッセージング管理アプリ（P
 - 使い方（クイックスタート）
 - 環境変数
 - データベースと Prisma
-- 認証（NextAuth v5 / LINE）
+- 認証（なし）
 - Webhook のセットアップ
 - メッセージ送信の試験（UI/CLI）
 - API リファレンス（サンプル付き）
@@ -28,7 +27,6 @@ LINE Messaging API を活用した統合メッセージング管理アプリ（P
 - ディレクトリ構成
 - トラブルシュート
 - セキュリティ注意事項
- - アクセス制御（middleware）
 
 ---
 
@@ -91,10 +89,6 @@ npm run dev
 
 最低限必要な値（ローカル検証）
 - `DATABASE_URL` 例: `postgresql://postgres:postgres@localhost:5432/line_app?schema=public`
-- `NEXTAUTH_SECRET` ランダム長文字列
-- `NEXTAUTH_URL` `http://localhost:3000`
-- （任意）`ADMIN_USERNAME` / `ADMIN_PASSWORD`（未設定時は admin/admin）
-  - 認証は Credentials Provider を既定とし、LINE 用の認証情報は画面から登録します
 
 オプション
 - `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`（設定するとリアルタイムイベントを publish）
@@ -103,7 +97,6 @@ npm run dev
 
 注意
 - 本 POC は「チャネル設定（チャネルID/シークレット）は 画面（設定→チャネル情報）から保存」します。アクセストークンは保存せず、送信時に自動発行（OAuth2 Client Credentials）しメモリにキャッシュします。
-- NextAuth の認証は Credentials Provider を既定とし、LINE ログインは任意（`.env` に `LINE_CHANNEL_ID/SECRET` を設定した場合のみ有効）。
 
 ---
 
@@ -119,25 +112,12 @@ npm run dev
 - `User`（`lineUserId`, `displayName`, `isFollowing`）
 - `Message`（`type`, `content`, `direction`, `userId`, `deliveryStatus`）
 - `Template` / `Broadcast` / `Tag` / `UserTag`
-- NextAuth: `Account`, `Session`, `VerificationToken`
 
 ---
 
-## 認証（NextAuth v5 / Credentials + 任意で LINE）
+## 認証
 
-- 実装: `src/lib/auth/auth.ts`（App Router ハンドラ）
-- 既定: Credentials Provider（`ADMIN_USERNAME`/`ADMIN_PASSWORD` で検証。未設定時は admin/admin）
-- 任意: `.env` に `LINE_CHANNEL_ID`/`LINE_CHANNEL_SECRET` を設定すると LINE ログインも追加
-- 事前準備
-  - `.env` または `.env.local` に `NEXTAUTH_URL`, `NEXTAUTH_SECRET` を設定
-
-### アクセス制御（middleware）
-
-- `middleware.ts` により以下のパスはサインインが必須です。
-  - `/dashboard/*`
-  - `/api/users/*`, `/api/messages`, `/api/templates/*`
-  - `/api/line/send`, `/api/line/broadcast`, `/api/events`
-  - Webhook `/api/line/webhook` は公開（署名検証あり）
+この POC にはアプリ内認証は含めていません（デモ用途）。公開環境では必ずリバースプロキシや社内VPN等でアクセス制御してください。
 
 ---
 
