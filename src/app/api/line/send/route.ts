@@ -5,17 +5,26 @@ import { pushMessage } from "@/lib/line/client";
 import { prisma } from "@/lib/prisma";
 import { realtime } from "@/lib/realtime/bus";
 
-const payloadSchema = z.object({
-  to: z.string().min(1),
-  message: z.string().min(1),
-});
+const textMessage = z.object({ type: z.literal("text"), text: z.string().min(1) });
+
+const payloadSchema = z
+  .object({ to: z.string().min(1), text: z.string().min(1) })
+  .or(
+    z.object({
+      to: z.string().min(1),
+      messages: z.array(textMessage).min(1),
+    }),
+  );
 
 export async function POST(req: NextRequest) {
   try {
     const json = await req.json();
-    const { to, message } = payloadSchema.parse(json);
+    const parsed = payloadSchema.parse(json);
 
-    await pushMessage(to, { type: "text", text: message });
+    const to = (parsed as any).to as string;
+    const messages = "messages" in parsed ? parsed.messages : [{ type: "text", text: (parsed as any).text }];
+
+    await pushMessage(to, messages as any);
 
     // Persist outbound message and ensure user exists
     const user = await prisma.user.upsert({
@@ -28,21 +37,24 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const msg = await prisma.message.create({
-      data: {
-        type: "TEXT",
-        content: { text: message },
-        direction: "OUTBOUND",
-        userId: user.id,
-        deliveryStatus: "SENT",
-      },
-    });
+    // persist each text message
+    for (const m of messages as Array<{ type: "text"; text: string }>) {
+      const msg = await prisma.message.create({
+        data: {
+          type: "TEXT",
+          content: { text: m.text },
+          direction: "OUTBOUND",
+          userId: user.id,
+          deliveryStatus: "SENT",
+        },
+      });
 
-    await realtime().emit("message:outbound", {
-      userId: user.id,
-      text: message,
-      createdAt: msg.createdAt.toISOString(),
-    });
+      await realtime().emit("message:outbound", {
+        userId: user.id,
+        text: m.text,
+        createdAt: msg.createdAt.toISOString(),
+      });
+    }
 
     return NextResponse.json({ status: "sent" });
   } catch (error) {

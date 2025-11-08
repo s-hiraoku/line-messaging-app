@@ -16,6 +16,7 @@ type Msg = {
 export default function MessagesPage() {
   const [lineUserId, setLineUserId] = useState("");
   const [message, setMessage] = useState("");
+  const [msgType] = useState<"text">("text"); // 将来的に拡張（image, video, ...）
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
   const [items, setItems] = useState<Msg[]>([]);
@@ -70,10 +71,11 @@ export default function MessagesPage() {
     setError(null);
 
     try {
+      const payload = { to: lineUserId, messages: [{ type: "text", text: message }] };
       const response = await fetch("/api/line/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ to: lineUserId, message }),
+        body: JSON.stringify(payload),
       });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
@@ -103,11 +105,20 @@ export default function MessagesPage() {
             className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
             placeholder="Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" required />
         </div>
-        <div className="space-y-2">
-          <label htmlFor="message" className="text-sm font-medium text-slate-700">メッセージ本文</label>
-          <textarea id="message" value={message} onChange={(e) => setMessage(e.target.value)}
-            className="h-24 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
-            placeholder="こんにちは！" required />
+        <div className="grid gap-2 sm:grid-cols-[160px_1fr] items-start">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-slate-700">メッセージタイプ</label>
+            <select value={msgType} disabled className="w-full rounded-md border border-slate-300 bg-slate-100 px-3 py-2 text-sm">
+              <option value="text">text（実装済）</option>
+            </select>
+            <p className="text-xs text-slate-500">他タイプ（image, video, audio, location, sticker, imagemap, template, flex）は順次対応予定。</p>
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="message" className="text-sm font-medium text-slate-700">メッセージ本文</label>
+            <textarea id="message" value={message} onChange={(e) => setMessage(e.target.value)}
+              className="h-24 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+              placeholder="こんにちは！" required />
+          </div>
         </div>
         <button type="submit" className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60" disabled={status === "sending"}>
           {status === "sending" ? "送信中..." : "送信"}
