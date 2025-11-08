@@ -98,7 +98,7 @@ export default function UsersPage() {
             ))}
             {items.length === 0 && (
               <tr>
-                <td className="px-4 py-8 text-center text-slate-500" colSpan={4}>ユーザーが見つかりません</td>
+                <td className="px-4 py-8 text-center text-slate-500" colSpan={5}>ユーザーが見つかりません</td>
               </tr>
             )}
           </tbody>

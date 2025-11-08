@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import pkg from "../../../../package.json" assert { type: "json" };
+import * as fs from "fs";
+import * as path from "path";
 
 export async function GET() {
   try {
@@ -13,6 +14,11 @@ export async function GET() {
     }
 
     const cfg = await prisma.channelConfig.findUnique({ where: { id: "primary" } });
+
+    // Read package.json
+    const pkgPath = path.join(process.cwd(), "package.json");
+    const pkgContent = fs.readFileSync(pkgPath, "utf-8");
+    const pkg = JSON.parse(pkgContent);
 
     const info = {
       app: {
