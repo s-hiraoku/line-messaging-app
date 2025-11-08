@@ -39,6 +39,7 @@ enum MessageType {
   IMAGE
   VIDEO
   AUDIO
+  LOCATION
   FLEX
   TEMPLATE
 }
