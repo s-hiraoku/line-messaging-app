@@ -5,24 +5,76 @@ import { pushMessage } from "@/lib/line/client";
 import { prisma } from "@/lib/prisma";
 import { realtime } from "@/lib/realtime/bus";
 
-const payloadSchema = z.object({
+const textPayloadSchema = z.object({
   to: z.string().min(1),
   message: z.string().min(1),
+  type: z.literal("text").optional(),
 });
+
+const stickerPayloadSchema = z.object({
+  to: z.string().min(1),
+  type: z.literal("sticker"),
+  packageId: z.string().min(1),
+  stickerId: z.string().min(1),
+});
+
+const audioPayloadSchema = z.object({
+  to: z.string().min(1),
+  type: z.literal("audio"),
+  audioUrl: z.string().url(),
+  duration: z.number().min(1).max(60000),
+});
+
+const payloadSchema = z.union([textPayloadSchema, stickerPayloadSchema, audioPayloadSchema]);
 
 export async function POST(req: NextRequest) {
   try {
     const json = await req.json();
-    const { to, message } = payloadSchema.parse(json);
+    const payload = payloadSchema.parse(json);
 
-    await pushMessage(to, { type: "text", text: message });
+    let lineMessage: any;
+    let messageType: "TEXT" | "STICKER" | "AUDIO";
+    let messageContent: any;
+
+    if ("type" in payload && payload.type === "sticker") {
+      // Sticker message
+      lineMessage = {
+        type: "sticker" as const,
+        packageId: payload.packageId,
+        stickerId: payload.stickerId,
+      };
+      messageType = "STICKER";
+      messageContent = {
+        packageId: payload.packageId,
+        stickerId: payload.stickerId,
+      };
+    } else if ("type" in payload && payload.type === "audio") {
+      // Audio message
+      lineMessage = {
+        type: "audio" as const,
+        originalContentUrl: payload.audioUrl,
+        duration: payload.duration,
+      };
+      messageType = "AUDIO";
+      messageContent = {
+        audioUrl: payload.audioUrl,
+        duration: payload.duration,
+      };
+    } else {
+      // Text message
+      lineMessage = { type: "text" as const, text: payload.message };
+      messageType = "TEXT";
+      messageContent = { text: payload.message };
+    }
+
+    await pushMessage(payload.to, lineMessage);
 
     // Persist outbound message and ensure user exists
     const user = await prisma.user.upsert({
-      where: { lineUserId: to },
+      where: { lineUserId: payload.to },
       update: {},
       create: {
-        lineUserId: to,
+        lineUserId: payload.to,
         displayName: "",
         isFollowing: true,
       },
@@ -30,8 +82,8 @@ export async function POST(req: NextRequest) {
 
     const msg = await prisma.message.create({
       data: {
-        type: "TEXT",
-        content: { text: message },
+        type: messageType,
+        content: messageContent,
         direction: "OUTBOUND",
         userId: user.id,
         deliveryStatus: "SENT",
@@ -40,7 +92,7 @@ export async function POST(req: NextRequest) {
 
     await realtime().emit("message:outbound", {
       userId: user.id,
-      text: message,
+      text: messageType === "TEXT" ? payload.message : undefined,
       createdAt: msg.createdAt.toISOString(),
     });
 
