@@ -5,32 +5,94 @@ import { pushMessage } from "@/lib/line/client";
 import { prisma } from "@/lib/prisma";
 import { realtime } from "@/lib/realtime/bus";
 
+// Message types
 const textMessage = z.object({ type: z.literal("text"), text: z.string().min(1) });
+const stickerMessage = z.object({
+  type: z.literal("sticker"),
+  packageId: z.string().min(1),
+  stickerId: z.string().min(1),
+});
 const imageMessage = z.object({
   type: z.literal("image"),
   originalContentUrl: z.string().url(),
   previewImageUrl: z.string().url().optional(),
 });
 
-const anyMessage = z.discriminatedUnion("type", [textMessage, imageMessage]);
+const anyMessage = z.discriminatedUnion("type", [textMessage, stickerMessage, imageMessage]);
 
-const payloadSchema = z
-  .object({ to: z.string().min(1), text: z.string().min(1) }) // simple text
-  .or(
-    z.object({
-      to: z.string().min(1),
-      messages: z.array(anyMessage).min(1),
-    })
-  );
+// Support multiple payload formats:
+// 1. Legacy text: {to, message, type?: "text"}
+// 2. Legacy sticker: {to, type: "sticker", packageId, stickerId}
+// 3. Simple text: {to, text}
+// 4. Array format: {to, messages: [{type, ...}]}
+const legacyTextPayloadSchema = z.object({
+  to: z.string().min(1),
+  message: z.string().min(1),
+  type: z.literal("text").optional(),
+});
+
+const stickerPayloadSchema = z.object({
+  to: z.string().min(1),
+  type: z.literal("sticker"),
+  packageId: z.string().min(1),
+  stickerId: z.string().min(1),
+});
+
+const simpleTextPayloadSchema = z.object({
+  to: z.string().min(1),
+  text: z.string().min(1),
+});
+
+const arrayPayloadSchema = z.object({
+  to: z.string().min(1),
+  messages: z.array(anyMessage).min(1),
+});
+
+const payloadSchema = z.union([
+  legacyTextPayloadSchema,
+  stickerPayloadSchema,
+  arrayPayloadSchema,
+  simpleTextPayloadSchema,
+]);
 
 export async function POST(req: NextRequest) {
   try {
     const json = await req.json();
-    const parsed = payloadSchema.parse(json);
+    const payload = payloadSchema.parse(json);
 
-    const to = (parsed as any).to as string;
-    const messages = "messages" in parsed ? parsed.messages : [{ type: "text", text: (parsed as any).text }];
+    // Normalize all formats to messages array
+    let messages: Array<
+      | { type: "text"; text: string }
+      | { type: "sticker"; packageId: string; stickerId: string }
+      | { type: "image"; originalContentUrl: string; previewImageUrl?: string }
+    >;
+    let to: string;
 
+    if ("messages" in payload) {
+      // Array format: {to, messages}
+      to = payload.to;
+      messages = payload.messages;
+    } else if ("type" in payload && payload.type === "sticker") {
+      // Sticker format: {to, type: "sticker", packageId, stickerId}
+      to = payload.to;
+      messages = [
+        {
+          type: "sticker",
+          packageId: payload.packageId,
+          stickerId: payload.stickerId,
+        },
+      ];
+    } else if ("text" in payload) {
+      // Simple text format: {to, text}
+      to = payload.to;
+      messages = [{ type: "text", text: payload.text }];
+    } else {
+      // Legacy text format: {to, message}
+      to = payload.to;
+      messages = [{ type: "text", text: payload.message }];
+    }
+
+    // Send messages to LINE
     await pushMessage(to, messages as any);
 
     // Persist outbound message and ensure user exists
@@ -44,8 +106,8 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // persist each text message
-    for (const m of messages as Array<any>) {
+    // Persist each message and emit events
+    for (const m of messages) {
       if (m.type === "text") {
         const msg = await prisma.message.create({
           data: {
@@ -59,6 +121,24 @@ export async function POST(req: NextRequest) {
         await realtime().emit("message:outbound", {
           userId: user.id,
           text: m.text,
+          createdAt: msg.createdAt.toISOString(),
+        });
+      } else if (m.type === "sticker") {
+        const msg = await prisma.message.create({
+          data: {
+            type: "STICKER",
+            content: {
+              packageId: m.packageId,
+              stickerId: m.stickerId,
+            },
+            direction: "OUTBOUND",
+            userId: user.id,
+            deliveryStatus: "SENT",
+          },
+        });
+        await realtime().emit("message:outbound", {
+          userId: user.id,
+          text: undefined,
           createdAt: msg.createdAt.toISOString(),
         });
       } else if (m.type === "image") {
