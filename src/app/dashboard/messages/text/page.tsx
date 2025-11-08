@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRealtimeEvents } from "@/lib/realtime/use-events";
 import { DebugPanel, toCurl } from "../../_components/debug-panel";
+import { MessagePreview } from "../_components/message-preview";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -112,6 +113,7 @@ export default function MessagesTextPage() {
             className="h-24 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
             placeholder="こんにちは！" required />
         </div>
+        <MessagePreview type="text" text={message} direction="outbound" />
         <button type="submit" className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90" disabled={status === "sending"}>
           {status === "sending" ? "送信中..." : "送信"}
         </button>
@@ -151,4 +153,3 @@ export default function MessagesTextPage() {
     </div>
   );
 }
-

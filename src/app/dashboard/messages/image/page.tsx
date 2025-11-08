@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { DebugPanel, toCurl } from "../../_components/debug-panel";
+import { MessagePreview } from "../_components/message-preview";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -137,6 +138,7 @@ export default function MessagesImagePage() {
             )}
           </div>
         )}
+        <MessagePreview type="image" originalContentUrl={originalUrl} previewImageUrl={previewUrl || (linkPreview ? originalUrl : undefined)} direction="outbound" />
         <button
           type="submit"
           className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
