@@ -5,12 +5,20 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 
 import { prisma } from "@/lib/prisma";
 
-function requiredEnv(key: string): string {
-  const value = process.env[key];
-  if (!value) {
-    throw new Error(`Missing required environment variable: ${key}`);
-  }
-  return value;
+// Build providers array conditionally
+const providers = [];
+
+// Add LINE provider only if credentials are configured
+const lineChannelId = process.env.LINE_CHANNEL_ID;
+const lineChannelSecret = process.env.LINE_CHANNEL_SECRET;
+
+if (lineChannelId && lineChannelSecret) {
+  providers.push(
+    LineProvider({
+      clientId: lineChannelId,
+      clientSecret: lineChannelSecret,
+    })
+  );
 }
 
 const config: NextAuthOptions = {
@@ -18,12 +26,7 @@ const config: NextAuthOptions = {
   session: {
     strategy: "database",
   },
-  providers: [
-    LineProvider({
-      clientId: requiredEnv("LINE_CHANNEL_ID"),
-      clientSecret: requiredEnv("LINE_CHANNEL_SECRET"),
-    }),
-  ],
+  providers,
   callbacks: {
     async jwt({ token, user }) {
       if (user) {

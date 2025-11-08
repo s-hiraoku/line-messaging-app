@@ -21,7 +21,7 @@ export async function GET() {
 export async function PUT() {
   // Managed via env; prevent writes from API.
   return NextResponse.json(
-    { error: "チャネル情報は環境変数で管理されています。`.env.local` を更新してください。" },
+    { error: "チャネル情報は環境変数（.env または .env.local）で管理されています。ファイルを更新してください。" },
     { status: 405 },
   );
 }

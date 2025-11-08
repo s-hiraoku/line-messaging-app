@@ -65,7 +65,7 @@ export default function SettingsPage() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setMessage("本環境ではチャネル設定は .env で管理されています。`.env.local` を更新し、サーバーを再起動してください。");
+    setMessage("本環境ではチャネル設定は環境変数（.env または .env.local）で管理されています。ファイルを更新し、サーバーを再起動してください。");
     setSaveState("saved");
     setTimeout(() => setSaveState("idle"), 2000);
   };
@@ -106,7 +106,7 @@ export default function SettingsPage() {
 
             <div className="space-y-1 text-xs text-slate-400">
               <p>チャネルシークレット: {secretConfigured ? "設定済み" : "未設定"}</p>
-              <p className="text-slate-500">※ 値の更新は `.env.local` を編集して行ってください。</p>
+              <p className="text-slate-500">※ 値の更新は `.env` または `.env.local` を編集して行ってください。</p>
             </div>
 
             <button

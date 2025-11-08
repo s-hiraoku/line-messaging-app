@@ -45,8 +45,11 @@ npm install
 2) 環境変数ファイルを作成し必須値を設定
 
 ```bash
-cp .env.example .env.local
-# .env.local を編集（下記「環境変数」を参照）
+# どちらでも可（推奨は .env.local を Git で除外）
+cp .env.example .env
+# もしくは
+# cp .env.example .env.local
+# .env / .env.local を編集（下記「環境変数」を参照）
 ```
 
 3) データベースを起動（ローカル Postgres）
@@ -77,7 +80,7 @@ npm run dev
 
 ---
 
-## 環境変数（.env.local）
+## 環境変数（.env / .env.local）
 
 最低限必要な値（ローカル検証）
 - `DATABASE_URL` 例: `postgresql://postgres:postgres@localhost:5432/line_app?schema=public`
@@ -93,7 +96,7 @@ npm run dev
 - `SENTRY_DSN` ほか監視系
 
 注意
-- 本 POC は「チャネル設定は環境変数がソース・オブ・トゥルース」です。ダッシュボード設定画面は読み取り専用で、値の更新は `.env.local` 編集＋再起動で反映されます。
+- 本 POC は「チャネル設定は環境変数がソース・オブ・トゥルース」です。ダッシュボード設定画面は読み取り専用で、値の更新は `.env` または `.env.local` 編集＋再起動で反映されます。
 - 実運用では「ログイン用 LINE チャネル」と「Messaging API チャネル」を分けることが多いです。現状は同一の `LINE_CHANNEL_ID/SECRET` を利用する前提です（分離する場合はコード/ENV を調整してください）。
 
 ---
@@ -121,7 +124,7 @@ npm run dev
 - 事前準備
   - `LINE_CHANNEL_ID` と `LINE_CHANNEL_SECRET` を設定
   - LINE Developers の Callback URL に `http://localhost:3000/api/auth/callback/line` を登録
-  - `.env.local` に `NEXTAUTH_URL`, `NEXTAUTH_SECRET` を設定
+  - `.env` または `.env.local` に `NEXTAUTH_URL`, `NEXTAUTH_SECRET` を設定
 
 ### アクセス制御（middleware）
 
@@ -272,7 +275,7 @@ src/
 
 ## セキュリティ注意事項
 
-- `.env.local` に秘密情報を置き、Git にコミットしない
+- `.env` または `.env.local` に秘密情報を置き、Git にコミットしない（`.gitignore` は両方を除外）
 - アクセストークン/シークレットは定期ローテーション
 - ログに個人情報やトークンを出力しない
 - 本 POC のエラーハンドリングは簡易実装。運用時は監視/通知を追加
