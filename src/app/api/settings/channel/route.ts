@@ -5,7 +5,6 @@ import { prisma } from "@/lib/prisma";
 const updateSchema = z.object({
   channelId: z.string().trim().min(1, "チャネルIDを入力してください"),
   channelSecret: z.string().trim().min(1, "チャネルシークレットを入力してください").optional(),
-  channelAccessToken: z.string().trim().min(1, "アクセストークンを入力してください").optional(),
 });
 
 const CHANNEL_CONFIG_ID = "primary";
@@ -16,7 +15,6 @@ export async function GET() {
     return NextResponse.json({
       channelId: config?.channelId ?? "",
       channelSecretConfigured: Boolean(config?.channelSecret),
-      channelAccessTokenConfigured: Boolean(config?.channelAccessToken),
     });
   } catch (error) {
     console.error("Failed to load channel config", error);
@@ -30,13 +28,12 @@ export async function GET() {
 export async function PUT(req: NextRequest) {
   try {
     const json = await req.json();
-    const { channelId, channelSecret, channelAccessToken } = updateSchema.parse(json);
+    const { channelId, channelSecret } = updateSchema.parse(json);
 
-    const dataToUpdate: { channelId: string; channelSecret?: string | null; channelAccessToken?: string | null } = {
+    const dataToUpdate: { channelId: string; channelSecret?: string | null } = {
       channelId,
     };
     if (typeof channelSecret === "string") dataToUpdate.channelSecret = channelSecret;
-    if (typeof channelAccessToken === "string") dataToUpdate.channelAccessToken = channelAccessToken;
 
     const updated = await prisma.channelConfig.upsert({
       where: { id: CHANNEL_CONFIG_ID },
@@ -44,19 +41,16 @@ export async function PUT(req: NextRequest) {
         id: CHANNEL_CONFIG_ID,
         channelId: dataToUpdate.channelId,
         channelSecret: dataToUpdate.channelSecret ?? null,
-        channelAccessToken: dataToUpdate.channelAccessToken ?? null,
       },
       update: {
         channelId: dataToUpdate.channelId,
         ...(dataToUpdate.channelSecret !== undefined ? { channelSecret: dataToUpdate.channelSecret } : {}),
-        ...(dataToUpdate.channelAccessToken !== undefined ? { channelAccessToken: dataToUpdate.channelAccessToken } : {}),
       },
     });
 
     return NextResponse.json({
       channelId: updated.channelId ?? "",
       channelSecretConfigured: Boolean(updated.channelSecret),
-      channelAccessTokenConfigured: Boolean(updated.channelAccessToken),
     });
   } catch (error) {
     if (error instanceof z.ZodError) {

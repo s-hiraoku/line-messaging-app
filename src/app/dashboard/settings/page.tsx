@@ -35,9 +35,8 @@ export default function SettingsPage() {
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [channelId, setChannelId] = useState("");
   const [channelSecret, setChannelSecret] = useState("");
-  const [channelAccessToken, setChannelAccessToken] = useState("");
   const [secretConfigured, setSecretConfigured] = useState(false);
-  const [accessTokenConfigured, setAccessTokenConfigured] = useState(false);
+  // アクセストークンは自動発行のため、設定フラグは不要
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -47,10 +46,9 @@ export default function SettingsPage() {
         if (!response.ok) {
           throw new Error("チャネル設定の取得に失敗しました");
         }
-        const data: { channelId?: string; channelSecretConfigured?: boolean; channelAccessTokenConfigured?: boolean } = await response.json();
+        const data: { channelId?: string; channelSecretConfigured?: boolean } = await response.json();
         setChannelId(data.channelId ?? "");
         setSecretConfigured(Boolean(data.channelSecretConfigured));
-        setAccessTokenConfigured(Boolean(data.channelAccessTokenConfigured));
         setFetchState("ready");
       } catch (error) {
         console.error("Failed to load channel config", error);
@@ -75,11 +73,10 @@ export default function SettingsPage() {
     setMessage(null);
 
     try {
-      const payload: { channelId: string; channelSecret?: string; channelAccessToken?: string } = {
+      const payload: { channelId: string; channelSecret?: string } = {
         channelId: channelId.trim(),
       };
       if (channelSecret.trim()) payload.channelSecret = channelSecret.trim();
-      if (channelAccessToken.trim()) payload.channelAccessToken = channelAccessToken.trim();
 
       const response = await fetch("/api/settings/channel", {
         method: "PUT",
@@ -90,7 +87,6 @@ export default function SettingsPage() {
       const data = (await response.json().catch(() => null)) as {
         channelId?: string;
         channelSecretConfigured?: boolean;
-        channelAccessTokenConfigured?: boolean;
         error?: string;
       } | null;
 
@@ -98,9 +94,7 @@ export default function SettingsPage() {
 
       setChannelId(data?.channelId ?? "");
       setSecretConfigured(Boolean(data?.channelSecretConfigured));
-      setAccessTokenConfigured(Boolean(data?.channelAccessTokenConfigured));
       setChannelSecret("");
-      setChannelAccessToken("");
       setSaveState("saved");
       setMessage("チャネル情報を保存しました。");
       setTimeout(() => setSaveState("idle"), 2000);
@@ -160,20 +154,13 @@ export default function SettingsPage() {
               </span>
             </label>
 
-            <label className="block space-y-2 text-sm text-slate-300">
-              <span>チャネルアクセストークン</span>
-              <input
-                type="password"
-                value={channelAccessToken}
-                onChange={(event) => setChannelAccessToken(event.target.value)}
-                placeholder={accessTokenConfigured ? "更新する場合のみ入力" : "xxxxxxxxxxxxxxxx"}
-                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-white outline-none focus:border-blue-500"
-                disabled={isBusy}
-              />
-              <span className="block text-xs text-slate-500">
-                {accessTokenConfigured ? "既に登録済みです。更新時のみ入力してください。" : "Messaging API のチャネルアクセストークンを入力してください。"}
-              </span>
-            </label>
+            <div className="rounded-xl border border-slate-800/70 bg-slate-950/70 p-4 text-xs text-slate-400"> 
+              <p className="mb-1 font-semibold text-slate-200">実装メモ</p>
+              <ul className="list-disc space-y-1 pl-4">
+                <li>チャネルアクセストークンの手動入力は不要です。本アプリがチャネルID/シークレットから自動発行します。</li>
+                <li>トークンはメモリキャッシュされ、期限が近づくと自動で再取得されます。</li>
+              </ul>
+            </div>
 
             <button
               type="submit"
