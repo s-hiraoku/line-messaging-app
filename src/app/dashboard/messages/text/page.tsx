@@ -25,6 +25,7 @@ export default function MessagesTextPage() {
   const [loading, setLoading] = useState(false);
   const [lastRequest, setLastRequest] = useState<unknown>();
   const [lastResponse, setLastResponse] = useState<unknown>();
+  const [previewSide, setPreviewSide] = useState<'left' | 'right'>('left');
 
   const load = async (initial = false) => {
     setLoading(true);
@@ -107,13 +108,18 @@ export default function MessagesTextPage() {
             className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
             placeholder="Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" required />
         </div>
+        <div className="flex items-center gap-3 text-xs text-slate-300">
+          <span>プレビュー方向:</span>
+          <label className="inline-flex items-center gap-1"><input type="radio" name="pvdir" checked={previewSide==='left'} onChange={()=>setPreviewSide('left')} /> 左</label>
+          <label className="inline-flex items-center gap-1"><input type="radio" name="pvdir" checked={previewSide==='right'} onChange={()=>setPreviewSide('right')} /> 右</label>
+        </div>
         <div className="space-y-2">
           <label htmlFor="message" className="text-sm font-medium text-slate-300">メッセージ本文</label>
           <textarea id="message" value={message} onChange={(e) => setMessage(e.target.value)}
             className="h-24 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
             placeholder="こんにちは！" required />
         </div>
-        <LineConversation direction="outbound" displayName="あなた" message={{ type: 'text', text: message }} />
+        <LineConversation direction={previewSide==='left' ? 'inbound' : 'outbound'} displayName={previewSide==='left' ? 'hiraoku' : 'あなた'} message={{ type: 'text', text: message }} />
         <button type="submit" className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90" disabled={status === "sending"}>
           {status === "sending" ? "送信中..." : "送信"}
         </button>

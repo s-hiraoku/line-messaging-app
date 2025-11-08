@@ -259,19 +259,24 @@ export default function DevPage() {
               <h2 className="text-sm font-semibold text-slate-300">開発ログ（Webhook）</h2>
               <div className="flex items-center gap-2">
                 <button
-                  className="rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 hover:border-slate-500"
+                  className="rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 hover:border-slate-500 cursor-pointer"
                   onClick={async () => {
                     setLogsLoading(true);
                     try {
                       const r = await fetch('/api/dev/logs', { cache: 'no-store' });
                       const j = await r.json().catch(() => ({ items: [] }));
+                      setRawLogs(j);
                       if (Array.isArray(j.items)) setLogs(j.items);
                     } finally { setLogsLoading(false); }
                   }}
                 >再読込</button>
                 <button
-                  className="rounded-md bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
-                  onClick={async () => { await fetch('/api/dev/logs', { method: 'DELETE' }); setLogs([]); }}
+                  className="rounded-md bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
+                  onClick={async () => {
+                    await fetch('/api/dev/logs', { method: 'DELETE' });
+                    setLogs([]);
+                    setRawLogs({ items: [] });
+                  }}
                 >クリア</button>
               </div>
             </div>
@@ -308,6 +313,25 @@ export default function DevPage() {
               <li>Webhook は https の公開URLが必要（例: Cloudflare Tunnel）。再起動でURLが変わる場合はLINE側URLも更新します。</li>
               <li>署名検証はチャネルシークレットを使用。不一致だと 400 になるため、設定の値と LINE Developers の値を必ず一致させてください。</li>
             </ul>
+          </section>
+
+          {/* API デバッグ */}
+          <section className="md:col-span-2 space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-white">API デバッグ</h2>
+              <button
+                className="rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 hover:border-slate-500 cursor-pointer"
+                onClick={loadAllDebugData}
+              >
+                全て再読込
+              </button>
+            </div>
+            <DebugPanel title="/api/dev/logs" response={rawLogs} />
+            <DebugPanel title="/api/settings/channel" response={rawChannel} />
+            <DebugPanel title="/api/analytics?days=7" response={rawAnalytics} />
+            <DebugPanel title="/api/line/insights" response={rawInsights} />
+            <DebugPanel title="/api/line/demographics" response={rawDemographics} />
+            <DebugPanel title="/api/dashboard/stats" response={rawDashboard} />
           </section>
         </div>
       )}
