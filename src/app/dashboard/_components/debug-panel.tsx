@@ -7,11 +7,13 @@ export function DebugPanel({
   request,
   response,
   curl,
+  docsUrl,
 }: {
   title?: string;
   request?: unknown;
   response?: unknown;
   curl?: string | null;
+  docsUrl?: string;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -30,7 +32,20 @@ export function DebugPanel({
         className="flex w-full items-center justify-between px-4 py-2 text-left text-sm font-semibold text-slate-200 cursor-pointer"
         onClick={() => setOpen((v) => !v)}
       >
-        <span>{title}</span>
+        <div className="flex items-center gap-2">
+          <span>{title}</span>
+          {docsUrl && (
+            <a
+              href={docsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-blue-400 hover:text-blue-300 cursor-pointer"
+              onClick={(e) => e.stopPropagation()}
+            >
+              📖 公式ドキュメント
+            </a>
+          )}
+        </div>
         <span className="text-xs text-slate-400">{open ? '▼' : '▶'}</span>
       </button>
       {open && (
