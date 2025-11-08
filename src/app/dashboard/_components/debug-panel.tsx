@@ -24,10 +24,10 @@ export function DebugPanel({
   };
 
   return (
-    <div className="rounded-lg border border-slate-300/80 bg-white">
+    <div className="rounded-lg border border-slate-800/60 bg-slate-900/60">
       <button
         type="button"
-        className="flex w-full items-center justify-between px-4 py-2 text-left text-sm font-semibold text-slate-700"
+        className="flex w-full items-center justify-between px-4 py-2 text-left text-sm font-semibold text-slate-200"
         onClick={() => setOpen((v) => !v)}
       >
         <span>{title}</span>
@@ -38,10 +38,10 @@ export function DebugPanel({
           {curl && (
             <div>
               <div className="mb-1 flex items-center justify-between">
-                <p className="text-xs font-semibold text-slate-600">cURL</p>
-                <button className="text-xs text-blue-600" onClick={() => copy(curl)}>copy</button>
+                <p className="text-xs font-semibold text-slate-300">cURL</p>
+                <button className="text-xs text-blue-300 hover:text-blue-200" onClick={() => copy(curl)}>copy</button>
               </div>
-              <pre className="overflow-auto rounded bg-slate-50 p-2 text-[11px] leading-relaxed text-slate-700">
+              <pre className="overflow-auto rounded bg-slate-950/70 p-2 text-[11px] leading-relaxed text-slate-200">
 {curl}
               </pre>
             </div>
@@ -49,10 +49,10 @@ export function DebugPanel({
           {request !== undefined && (
             <div>
               <div className="mb-1 flex items-center justify-between">
-                <p className="text-xs font-semibold text-slate-600">Request</p>
-                <button className="text-xs text-blue-600" onClick={() => copy(JSON.stringify(request, null, 2))}>copy</button>
+                <p className="text-xs font-semibold text-slate-300">Request</p>
+                <button className="text-xs text-blue-300 hover:text-blue-200" onClick={() => copy(JSON.stringify(request, null, 2))}>copy</button>
               </div>
-              <pre className="overflow-auto rounded bg-slate-50 p-2 text-[11px] leading-relaxed text-slate-700">
+              <pre className="overflow-auto rounded bg-slate-950/70 p-2 text-[11px] leading-relaxed text-slate-200">
 {JSON.stringify(request, null, 2)}
               </pre>
             </div>
@@ -60,10 +60,10 @@ export function DebugPanel({
           {response !== undefined && (
             <div>
               <div className="mb-1 flex items-center justify-between">
-                <p className="text-xs font-semibold text-slate-600">Response</p>
-                <button className="text-xs text-blue-600" onClick={() => copy(JSON.stringify(response, null, 2))}>copy</button>
+                <p className="text-xs font-semibold text-slate-300">Response</p>
+                <button className="text-xs text-blue-300 hover:text-blue-200" onClick={() => copy(JSON.stringify(response, null, 2))}>copy</button>
               </div>
-              <pre className="overflow-auto rounded bg-slate-50 p-2 text-[11px] leading-relaxed text-slate-700">
+              <pre className="overflow-auto rounded bg-slate-950/70 p-2 text-[11px] leading-relaxed text-slate-200">
 {JSON.stringify(response, null, 2)}
               </pre>
             </div>
@@ -90,4 +90,3 @@ export function toCurl({ url, method = 'GET', headers, body }: { url: string; me
   }
   return parts.join(' ');
 }
-

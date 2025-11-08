@@ -105,45 +105,45 @@ export default function MessagesPage() {
         <p className="text-sm text-slate-500">送受信履歴と簡易送信の検証ができます。</p>
       </header>
 
-      <form onSubmit={handleSubmit} className="space-y-4 max-w-xl rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <form onSubmit={handleSubmit} className="space-y-4 max-w-xl rounded-lg border border-slate-800/60 bg-slate-900/60 p-6 shadow-sm text-slate-100">
         <div className="space-y-2">
           <label htmlFor="lineUserId" className="text-sm font-medium text-slate-700">LINE ユーザー ID</label>
           <input id="lineUserId" type="text" value={lineUserId} onChange={(e) => setLineUserId(e.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+            className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
             placeholder="Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" required />
         </div>
         <div className="grid gap-2 sm:grid-cols-[160px_1fr] items-start">
           <div className="space-y-2">
             <label className="text-sm font-medium text-slate-700">メッセージタイプ</label>
-            <select value={msgType} disabled className="w-full rounded-md border border-slate-300 bg-slate-100 px-3 py-2 text-sm">
+            <select value={msgType} disabled className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-300">
               <option value="text">text（実装済）</option>
             </select>
-            <p className="text-xs text-slate-500">他タイプ（image, video, audio, location, sticker, imagemap, template, flex）は順次対応予定。</p>
+            <p className="text-xs text-slate-400">他タイプ（image, video, audio, location, sticker, imagemap, template, flex）は順次対応予定。</p>
           </div>
           <div className="space-y-2">
-            <label htmlFor="message" className="text-sm font-medium text-slate-700">メッセージ本文</label>
+            <label htmlFor="message" className="text-sm font-medium text-slate-300">メッセージ本文</label>
             <textarea id="message" value={message} onChange={(e) => setMessage(e.target.value)}
-              className="h-24 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+              className="h-24 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
               placeholder="こんにちは！" required />
           </div>
         </div>
-        <button type="submit" className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60" disabled={status === "sending"}>
+        <button type="submit" className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90" disabled={status === "sending"}>
           {status === "sending" ? "送信中..." : "送信"}
         </button>
         {status === "success" && <p className="text-sm text-green-600">メッセージを送信しました。</p>}
         {status === "error" && error && <p className="text-sm text-red-600">{error}</p>}
       </form>
 
-      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-        <h2 className="mb-3 text-sm font-semibold text-slate-600">最近のメッセージ</h2>
+      <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm">
+        <h2 className="mb-3 text-sm font-semibold text-slate-300">最近のメッセージ</h2>
         <ul className="divide-y divide-slate-100">
           {items.map((m) => (
             <li key={m.id} className="flex items-start justify-between gap-3 py-3">
               <div className="min-w-0">
-                <p className="truncate text-sm text-slate-800">{m.content?.text ?? "(非テキスト)"}</p>
-                <p className="mt-1 text-xs text-slate-500">{m.direction === "INBOUND" ? "受信" : "送信"} ・ {new Date(m.createdAt).toLocaleString()}</p>
+                <p className="truncate text-sm text-slate-200">{m.content?.text ?? "(非テキスト)"}</p>
+                <p className="mt-1 text-xs text-slate-400">{m.direction === "INBOUND" ? "受信" : "送信"} ・ {new Date(m.createdAt).toLocaleString()}</p>
               </div>
-              <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs ${m.direction === "INBOUND" ? "bg-emerald-50 text-emerald-700" : "bg-blue-50 text-blue-700"}`}>
+              <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs ${m.direction === "INBOUND" ? "bg-emerald-500/20 text-emerald-200" : "bg-blue-500/20 text-blue-200"}`}>
                 {m.direction === "INBOUND" ? "IN" : "OUT"}
               </span>
             </li>
@@ -151,7 +151,7 @@ export default function MessagesPage() {
         </ul>
         <div className="mt-3">
           <button onClick={() => load(false)} disabled={!hasMore || loading}
-            className="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 disabled:cursor-not-allowed disabled:opacity-50">
+            className="rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 hover:border-slate-500 disabled:cursor-not-allowed disabled:opacity-60 disabled:text-slate-300">
             {loading ? "読み込み中..." : hasMore ? "さらに読み込む" : "すべて取得済み"}
           </button>
         </div>

@@ -37,9 +37,9 @@ export default function DevPage() {
 
       {info && (
         <div className="grid gap-4 md:grid-cols-2">
-          <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-            <h2 className="mb-2 text-sm font-semibold text-slate-700">アプリ</h2>
-            <ul className="text-sm text-slate-700">
+          <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm">
+            <h2 className="mb-2 text-sm font-semibold text-slate-300">アプリ</h2>
+            <ul className="text-sm text-slate-200">
               <li>name: <code className="text-xs">{info.app.name}</code></li>
               <li>version: {info.app.version}</li>
               <li>node: {info.app.node}</li>
@@ -48,18 +48,18 @@ export default function DevPage() {
             </ul>
           </section>
 
-          <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-            <h2 className="mb-2 text-sm font-semibold text-slate-700">ランタイム</h2>
-            <ul className="text-sm text-slate-700">
+          <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm">
+            <h2 className="mb-2 text-sm font-semibold text-slate-300">ランタイム</h2>
+            <ul className="text-sm text-slate-200">
               <li>databaseConnected: {info.runtime.databaseConnected ? "true" : "false"}</li>
               <li>redisConfigured: {info.runtime.redisConfigured ? "true" : "false"}</li>
               <li>sseEndpoint: <code className="text-xs">{info.runtime.sseEndpoint}</code></li>
             </ul>
           </section>
 
-          <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm md:col-span-2">
-            <h2 className="mb-2 text-sm font-semibold text-slate-700">チャネル</h2>
-            <ul className="text-sm text-slate-700">
+          <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm md:col-span-2">
+            <h2 className="mb-2 text-sm font-semibold text-slate-300">チャネル</h2>
+            <ul className="text-sm text-slate-200">
               <li>channelId: <code className="text-xs">{info.channel.channelId || "(未設定)"}</code></li>
               <li>channelSecretConfigured: {info.channel.channelSecretConfigured ? "true" : "false"}</li>
               <li>webhookPath: <code className="text-xs">{info.channel.webhookPath}</code></li>

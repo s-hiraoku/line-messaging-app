@@ -63,20 +63,20 @@ export default function TemplatesPage() {
         <p className="text-sm text-slate-500">テキストテンプレートの作成と一覧</p>
       </header>
 
-      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm text-slate-100">
         <div className="grid gap-3 sm:grid-cols-[240px_1fr_auto]">
           <input placeholder="テンプレート名" value={name} onChange={(e) => setName(e.target.value)}
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" />
+            className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
           <input placeholder="本文 (TEXT)" value={text} onChange={(e) => setText(e.target.value)}
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" />
+            className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
           <button onClick={create} disabled={saving || !name || !text}
-            className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50">{saving ? "作成中..." : "作成"}</button>
+            className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90">{saving ? "作成中..." : "作成"}</button>
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+      <div className="overflow-hidden rounded-lg border border-slate-800/60 bg-slate-900/60 text-slate-100">
         <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-slate-600">
+          <thead className="bg-slate-800/60 text-slate-300">
             <tr>
               <th className="px-4 py-2">名前</th>
               <th className="px-4 py-2">タイプ</th>
@@ -89,8 +89,8 @@ export default function TemplatesPage() {
               <tr key={t.id} className="border-t">
                 <td className="px-4 py-2">{t.name}</td>
                 <td className="px-4 py-2">{t.type}</td>
-                <td className="px-4 py-2 truncate max-w-[360px]">{t.content?.text ?? ""}</td>
-                <td className="px-4 py-2">{new Date(t.createdAt).toLocaleString()}</td>
+                <td className="px-4 py-2 truncate max-w-[360px] text-slate-300">{t.content?.text ?? ""}</td>
+                <td className="px-4 py-2 text-slate-300">{new Date(t.createdAt).toLocaleString()}</td>
               </tr>
             ))}
             {items.length === 0 && (

@@ -40,15 +40,15 @@ export default function BroadcastsPage() {
         <p className="text-sm text-slate-500">テキストの一斉送信を試験できます。</p>
       </header>
 
-      <div className="max-w-xl space-y-3 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="max-w-xl space-y-3 rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm text-slate-100">
         <input
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="配信メッセージ"
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+          className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
         />
         <button onClick={send} disabled={!message || status === "sending"}
-          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50">
+          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90">
           {status === "sending" ? "送信中..." : "配信する"}
         </button>
         {status === "sent" && <p className="text-sm text-emerald-600">配信しました。</p>}
