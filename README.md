@@ -28,6 +28,7 @@ LINE Messaging API を活用した統合メッセージング管理アプリ（P
 - ディレクトリ構成
 - トラブルシュート
 - セキュリティ注意事項
+ - アクセス制御（middleware）
 
 ---
 
@@ -121,6 +122,14 @@ npm run dev
   - `LINE_CHANNEL_ID` と `LINE_CHANNEL_SECRET` を設定
   - LINE Developers の Callback URL に `http://localhost:3000/api/auth/callback/line` を登録
   - `.env.local` に `NEXTAUTH_URL`, `NEXTAUTH_SECRET` を設定
+
+### アクセス制御（middleware）
+
+- `middleware.ts` により以下のパスはサインインが必須です。
+  - `/dashboard/*`
+  - `/api/users/*`, `/api/messages`, `/api/templates/*`
+  - `/api/line/send`, `/api/line/broadcast`, `/api/events`
+  - Webhook `/api/line/webhook` は公開（署名検証あり）
 
 ---
 
