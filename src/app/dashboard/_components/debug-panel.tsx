@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { ExternalLink } from 'lucide-react';
 
 export function DebugPanel({
   title = 'Debug',
@@ -39,10 +40,11 @@ export function DebugPanel({
               href={docsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-blue-400 hover:text-blue-300 cursor-pointer"
+              className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 cursor-pointer"
               onClick={(e) => e.stopPropagation()}
             >
-              📖 公式ドキュメント
+              <ExternalLink className="h-3 w-3" />
+              <span>公式ドキュメント</span>
             </a>
           )}
         </div>
