@@ -153,6 +153,7 @@ export default function MessagesImagePage() {
         request={lastRequest}
         response={lastResponse}
         curl={toCurl({ url: new URL('/api/line/send', location.origin).toString(), method: 'POST', headers: { 'Content-Type': 'application/json' }, body: lastRequest })}
+        docsUrl="https://developers.line.biz/ja/reference/messaging-api/#send-push-message"
       />
     </div>
   );

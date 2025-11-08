@@ -171,6 +171,7 @@ export default function UsersPage() {
           request={bfRequest}
           response={bfResponse}
           curl={toCurl({ url: new URL('/api/line/followers/backfill', location.origin).toString(), method: 'POST', headers: { 'Content-Type': 'application/json' }, body: bfRequest })}
+          docsUrl="https://developers.line.biz/ja/reference/messaging-api/#get-follower-ids"
         />
       </div>
     </div>

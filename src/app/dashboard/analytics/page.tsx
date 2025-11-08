@@ -497,12 +497,14 @@ export default function AnalyticsPage() {
           request={{}}
           curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/line/insights`, method: 'GET' })}
           response={rawInsights}
+          docsUrl="https://developers.line.biz/ja/reference/messaging-api/#get-insight"
         />
         <DebugPanel
           title="/api/line/demographics"
           request={{}}
           curl={toCurl({ url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/line/demographics`, method: 'GET' })}
           response={rawDemographics}
+          docsUrl="https://developers.line.biz/ja/reference/messaging-api/#get-demographic"
         />
       </div>
     </div>

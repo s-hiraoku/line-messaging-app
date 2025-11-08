@@ -60,6 +60,7 @@ export default function BroadcastsPage() {
         request={lastRequest}
         response={lastResponse}
         curl={toCurl({ url: new URL('/api/line/broadcast', location.origin).toString(), method: 'POST', headers: { 'Content-Type': 'application/json' }, body: lastRequest })}
+        docsUrl="https://developers.line.biz/ja/reference/messaging-api/#send-broadcast-message"
       />
     </div>
   );
