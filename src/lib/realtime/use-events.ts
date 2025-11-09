@@ -20,7 +20,6 @@ export function useRealtimeEvents(handlers: Handlers) {
       es.addEventListener(event as string, (e) => {
         try {
           const data = JSON.parse((e as MessageEvent).data);
-          // @ts-expect-error generic handler map
           handler(data);
         } catch {
           // ignore parse errors

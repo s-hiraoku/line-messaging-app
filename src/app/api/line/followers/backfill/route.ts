@@ -58,7 +58,6 @@ export async function POST(req: NextRequest) {
           try {
             const p = await client.getProfile(lineUserId);
             displayName = p.displayName ?? "";
-            // @ts-expect-error pictureUrl may be undefined on typings
             pictureUrl = (p.pictureUrl as string | undefined) ?? null;
           } catch {
             // ignore profile errors

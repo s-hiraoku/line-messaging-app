@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createHmac } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = 'force-dynamic';
+
 /**
  * POST /api/dev/webhook/selftest
  * body: { mode: 'local' | 'public', publicUrl?: string }

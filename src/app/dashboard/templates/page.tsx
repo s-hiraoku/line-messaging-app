@@ -23,7 +23,7 @@ export default function TemplatesPage() {
   const [lastCreateResponse, setLastCreateResponse] = useState<unknown>();
 
   const load = async () => {
-    const url = new URL("/api/templates", location.origin).toString();
+    const url = new URL("/api/templates", typeof window !== 'undefined' ? location.origin : 'http://localhost:3000').toString();
     setLastListUrl(url);
     const res = await fetch(url);
     const data = (await res.json()) as { items: Template[] };
@@ -107,7 +107,7 @@ export default function TemplatesPage() {
           title="テンプレート作成 API デバッグ"
           request={lastCreateRequest}
           response={lastCreateResponse}
-          curl={toCurl({ url: new URL('/api/templates', location.origin).toString(), method: 'POST', headers: { 'Content-Type': 'application/json' }, body: lastCreateRequest })}
+          curl={toCurl({ url: new URL('/api/templates', typeof window !== 'undefined' ? location.origin : 'http://localhost:3000').toString(), method: 'POST', headers: { 'Content-Type': 'application/json' }, body: lastCreateRequest })}
         />
         <DebugPanel
           title="テンプレート一覧 API デバッグ"

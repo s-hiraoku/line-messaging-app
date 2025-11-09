@@ -31,7 +31,7 @@ export default function UsersPage() {
   const load = async (initial = false) => {
     setLoading(true);
     try {
-      const url = new URL("/api/users", location.origin);
+      const url = new URL("/api/users", typeof window !== 'undefined' ? location.origin : 'http://localhost:3000');
       if (q.trim()) url.searchParams.set("q", q.trim());
       if (!initial && cursor) url.searchParams.set("cursor", cursor);
       url.searchParams.set("take", "50");
@@ -170,7 +170,7 @@ export default function UsersPage() {
           title="バックフィル API デバッグ"
           request={bfRequest}
           response={bfResponse}
-          curl={toCurl({ url: new URL('/api/line/followers/backfill', location.origin).toString(), method: 'POST', headers: { 'Content-Type': 'application/json' }, body: bfRequest })}
+          curl={toCurl({ url: new URL('/api/line/followers/backfill', typeof window !== 'undefined' ? location.origin : 'http://localhost:3000').toString(), method: 'POST', headers: { 'Content-Type': 'application/json' }, body: bfRequest })}
           docsUrl="https://developers.line.biz/ja/reference/messaging-api/#get-follower-ids"
         />
       </div>
