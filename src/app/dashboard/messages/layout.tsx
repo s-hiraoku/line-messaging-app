@@ -1,55 +1,65 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import clsx from "clsx";
 
 const tabs = [
-  {
-    name: "テキスト",
-    href: "/dashboard/messages",
-  },
-  {
-    name: "テンプレート",
-    href: "/dashboard/messages/template",
-  },
+  { href: "/dashboard/messages/text", label: "テキスト", enabled: true },
+  { href: "/dashboard/messages/image", label: "画像", enabled: true },
+  { href: "/dashboard/messages/video", label: "動画", enabled: false },
+  { href: "/dashboard/messages/audio", label: "音声", enabled: false },
+  { href: "/dashboard/messages/location", label: "位置情報", enabled: false },
+  { href: "/dashboard/messages/sticker", label: "スタンプ", enabled: true },
+  { href: "/dashboard/messages/imagemap", label: "イメージマップ", enabled: false },
+  { href: "/dashboard/messages/template", label: "テンプレート", enabled: true },
+  { href: "/dashboard/messages/flex", label: "Flex", enabled: false },
+  { href: "/dashboard/messages/coupon", label: "クーポン", enabled: false },
+  { href: "/dashboard/messages/richmenu", label: "リッチメニュー", enabled: false },
 ];
 
 export default function MessagesLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-
   return (
     <div className="space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold text-white">メッセージ送信</h1>
-        <p className="text-sm text-slate-400">
-          LINE ユーザーに様々な形式のメッセージを送信できます。
-        </p>
-      </header>
-
-      {/* Tabs */}
-      <div className="border-b border-slate-700/50">
-        <nav className="-mb-px flex gap-6">
-          {tabs.map((tab) => {
-            const isActive = pathname === tab.href;
+      <header className="space-y-2">
+        <h1 className="text-2xl font-semibold text-white">メッセージ</h1>
+        <p className="text-sm text-slate-400">メッセージタイプごとに送信を検証できます。</p>
+        <nav className="mt-3 flex flex-wrap items-center gap-2">
+          {tabs.map((t) => {
+            const active = pathname?.startsWith(t.href);
+            if (!t.enabled) {
+              return (
+                <span
+                  key={t.href}
+                  className={clsx(
+                    "cursor-not-allowed rounded-full border border-slate-800 bg-slate-900 px-3 py-1.5 text-xs",
+                    "text-slate-500"
+                  )}
+                  title="準備中"
+                >
+                  {t.label}
+                </span>
+              );
+            }
             return (
               <Link
-                key={tab.href}
-                href={tab.href}
-                className={`border-b-2 px-1 py-3 text-sm font-medium transition ${
-                  isActive
-                    ? "border-blue-500 text-blue-400"
-                    : "border-transparent text-slate-400 hover:border-slate-600 hover:text-slate-300"
-                }`}
+                key={t.href}
+                href={t.href}
+                className={clsx(
+                  "rounded-full border px-3 py-1.5 text-xs transition",
+                  active
+                    ? "border-blue-500/60 bg-blue-500/10 text-blue-200"
+                    : "border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-600"
+                )}
               >
-                {tab.name}
+                {t.label}
               </Link>
             );
           })}
         </nav>
-      </div>
-
-      {/* Content */}
+      </header>
       {children}
     </div>
   );
