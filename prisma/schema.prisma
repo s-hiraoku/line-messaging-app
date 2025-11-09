@@ -25,6 +25,7 @@ model User {
   broadcasts   Broadcast[] @relation("BroadcastAudience")
   accounts     Account[]
   sessions     Session[]
+  richMenuId   String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
