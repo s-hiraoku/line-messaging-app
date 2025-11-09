@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { User as UserIcon } from "lucide-react";
+import { useToast } from "@/components/ui/Toast";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 interface User {
   id: string;
@@ -23,6 +25,7 @@ export default function UsersPage() {
   const [richMenus, setRichMenus] = useState<RichMenu[]>([]);
   const [loading, setLoading] = useState(true);
   const [settingMenu, setSettingMenu] = useState<string | null>(null);
+  const toast = useToast();
 
   const loadUsers = async () => {
     try {
@@ -71,13 +74,14 @@ export default function UsersPage() {
 
       if (response.ok) {
         await loadUsers();
+        toast.success("リッチメニューを設定しました");
       } else {
         const data = await response.json();
-        alert(data.error || "リッチメニューの設定に失敗しました");
+        toast.error(data.error || "リッチメニューの設定に失敗しました");
       }
     } catch (error) {
       console.error("Failed to set rich menu:", error);
-      alert("リッチメニューの設定に失敗しました");
+      toast.error("リッチメニューの設定に失敗しました");
     } finally {
       setSettingMenu(null);
     }
@@ -92,13 +96,14 @@ export default function UsersPage() {
 
       if (response.ok) {
         await loadUsers();
+        toast.success("リッチメニューの設定を解除しました");
       } else {
         const data = await response.json();
-        alert(data.error || "リッチメニューの解除に失敗しました");
+        toast.error(data.error || "リッチメニューの解除に失敗しました");
       }
     } catch (error) {
       console.error("Failed to unlink rich menu:", error);
-      alert("リッチメニューの解除に失敗しました");
+      toast.error("リッチメニューの解除に失敗しました");
     } finally {
       setSettingMenu(null);
     }
@@ -118,9 +123,7 @@ export default function UsersPage() {
       </header>
 
       {loading ? (
-        <div className="flex items-center justify-center py-12">
-          <div className="text-slate-400">読み込み中...</div>
-        </div>
+        <LoadingSpinner text="読み込み中..." />
       ) : users.length === 0 ? (
         <div className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-12 text-center shadow-lg backdrop-blur-sm">
           <UserIcon className="mx-auto h-12 w-12 text-slate-600" />
