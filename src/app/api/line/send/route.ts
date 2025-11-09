@@ -38,6 +38,81 @@ const templateActionSchema = z.discriminatedUnion("type", [
     data: z.string().min(1).max(300),
     text: z.string().max(300).optional(),
   }),
+  z.object({
+    type: z.literal("datetimepicker"),
+    label: z.string().min(1).max(20),
+    data: z.string().min(1).max(300),
+    mode: z.enum(["date", "time", "datetime"]),
+    initial: z.string().optional(),
+    max: z.string().optional(),
+    min: z.string().optional(),
+  }),
+  z.object({
+    type: z.literal("camera"),
+    label: z.string().min(1).max(20),
+  }),
+  z.object({
+    type: z.literal("cameraRoll"),
+    label: z.string().min(1).max(20),
+  }),
+  z.object({
+    type: z.literal("location"),
+    label: z.string().min(1).max(20),
+  }),
+]);
+
+// Template column for carousel
+const carouselColumnSchema = z.object({
+  thumbnailImageUrl: z.string().url().optional(),
+  imageBackgroundColor: z.string().optional(),
+  title: z.string().max(40).optional(),
+  text: z.string().min(1).max(160),
+  defaultAction: templateActionSchema.optional(),
+  actions: z.array(templateActionSchema).min(1).max(3),
+});
+
+// Template column for image carousel
+const imageCarouselColumnSchema = z.object({
+  imageUrl: z.string().url(),
+  action: templateActionSchema,
+});
+
+// Template schemas for each type
+const buttonsTemplateSchema = z.object({
+  type: z.literal("buttons"),
+  text: z.string().min(1).max(160),
+  actions: z.array(templateActionSchema).min(1).max(4),
+  thumbnailImageUrl: z.string().url().optional(),
+  imageAspectRatio: z.enum(["rectangle", "square"]).optional(),
+  imageSize: z.enum(["cover", "contain"]).optional(),
+  imageBackgroundColor: z.string().optional(),
+  title: z.string().max(40).optional(),
+  defaultAction: templateActionSchema.optional(),
+});
+
+const confirmTemplateSchema = z.object({
+  type: z.literal("confirm"),
+  text: z.string().min(1).max(240),
+  actions: z.array(templateActionSchema).length(2),
+});
+
+const carouselTemplateSchema = z.object({
+  type: z.literal("carousel"),
+  columns: z.array(carouselColumnSchema).min(1).max(10),
+  imageAspectRatio: z.enum(["rectangle", "square"]).optional(),
+  imageSize: z.enum(["cover", "contain"]).optional(),
+});
+
+const imageCarouselTemplateSchema = z.object({
+  type: z.literal("image_carousel"),
+  columns: z.array(imageCarouselColumnSchema).min(1).max(10),
+});
+
+const templateSchema = z.discriminatedUnion("type", [
+  buttonsTemplateSchema,
+  confirmTemplateSchema,
+  carouselTemplateSchema,
+  imageCarouselTemplateSchema,
 ]);
 
 // Support multiple payload formats:
@@ -73,16 +148,7 @@ const templatePayloadSchema = z.object({
   to: z.string().min(1),
   type: z.literal("template"),
   altText: z.string().min(1).max(400),
-  template: z.object({
-    type: z.literal("buttons"),
-    text: z.string().min(1).max(160),
-    actions: z.array(templateActionSchema).min(1).max(4),
-    thumbnailImageUrl: z.string().url().optional(),
-    imageAspectRatio: z.enum(["rectangle", "square"]).optional(),
-    imageSize: z.enum(["cover", "contain"]).optional(),
-    imageBackgroundColor: z.string().optional(),
-    title: z.string().max(40).optional(),
-  }),
+  template: templateSchema,
 });
 
 const payloadSchema = z.union([

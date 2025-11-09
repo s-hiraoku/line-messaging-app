@@ -4,6 +4,8 @@ import { useState } from "react";
 
 type Status = "idle" | "sending" | "success" | "error";
 
+type TemplateType = "buttons" | "confirm";
+
 type ActionType = "uri" | "message" | "postback";
 
 interface TemplateAction {
@@ -16,6 +18,7 @@ interface TemplateAction {
 
 export default function TemplateMessagePage() {
   const [lineUserId, setLineUserId] = useState("");
+  const [templateType, setTemplateType] = useState<TemplateType>("buttons");
   const [altText, setAltText] = useState("");
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
@@ -32,18 +35,21 @@ export default function TemplateMessagePage() {
     setError(null);
 
     try {
+      // Build template based on type
       const template: any = {
-        type: "buttons",
+        type: templateType,
         text,
         actions,
       };
 
-      if (title) {
-        template.title = title;
-      }
-
-      if (thumbnailImageUrl) {
-        template.thumbnailImageUrl = thumbnailImageUrl;
+      // Add optional fields only for buttons template
+      if (templateType === "buttons") {
+        if (title) {
+          template.title = title;
+        }
+        if (thumbnailImageUrl) {
+          template.thumbnailImageUrl = thumbnailImageUrl;
+        }
       }
 
       const response = await fetch("/api/line/send", {
@@ -72,8 +78,9 @@ export default function TemplateMessagePage() {
   };
 
   const addAction = () => {
-    if (actions.length >= 4) {
-      setError("アクションは最大4個までです");
+    const maxActions = templateType === "confirm" ? 2 : 4;
+    if (actions.length >= maxActions) {
+      setError(`アクションは最大${maxActions}個までです`);
       return;
     }
     setActions([
@@ -83,6 +90,13 @@ export default function TemplateMessagePage() {
   };
 
   const removeAction = (index: number) => {
+    const minActions = templateType === "confirm" ? 2 : 1;
+    if (actions.length <= minActions) {
+      setError(
+        `${templateType === "confirm" ? "確認テンプレートには2つのアクションが必要です" : "最低1つのアクションが必要です"}`
+      );
+      return;
+    }
     setActions(actions.filter((_, i) => i !== index));
   };
 
@@ -139,6 +153,38 @@ export default function TemplateMessagePage() {
         </div>
 
         <div className="space-y-2">
+          <label htmlFor="templateType" className="text-sm font-medium text-slate-300">
+            テンプレートタイプ <span className="text-red-400">*</span>
+          </label>
+          <select
+            id="templateType"
+            value={templateType}
+            onChange={(event) => {
+              const newType = event.target.value as TemplateType;
+              setTemplateType(newType);
+              // Adjust actions count based on template type
+              if (newType === "confirm" && actions.length > 2) {
+                setActions(actions.slice(0, 2));
+              } else if (newType === "confirm" && actions.length < 2) {
+                setActions([
+                  ...actions,
+                  { type: "uri", label: "ボタン", uri: "https://example.com" },
+                ]);
+              }
+            }}
+            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          >
+            <option value="buttons">ボタン (Buttons)</option>
+            <option value="confirm">確認 (Confirm)</option>
+          </select>
+          <p className="text-xs text-slate-500">
+            {templateType === "buttons"
+              ? "最大4つのアクションボタンを含むテンプレート"
+              : "2つのアクションボタンで確認を促すテンプレート"}
+          </p>
+        </div>
+
+        <div className="space-y-2">
           <label htmlFor="altText" className="text-sm font-medium text-slate-300">
             代替テキスト <span className="text-red-400">*</span>
           </label>
@@ -155,21 +201,23 @@ export default function TemplateMessagePage() {
           <p className="text-xs text-slate-500">最大400文字</p>
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="title" className="text-sm font-medium text-slate-300">
-            タイトル
-          </label>
-          <input
-            id="title"
-            type="text"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            maxLength={40}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            placeholder="メニュー"
-          />
-          <p className="text-xs text-slate-500">オプション、最大40文字</p>
-        </div>
+        {templateType === "buttons" && (
+          <div className="space-y-2">
+            <label htmlFor="title" className="text-sm font-medium text-slate-300">
+              タイトル
+            </label>
+            <input
+              id="title"
+              type="text"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              maxLength={40}
+              className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              placeholder="メニュー"
+            />
+            <p className="text-xs text-slate-500">オプション、最大40文字</p>
+          </div>
+        )}
 
         <div className="space-y-2">
           <label htmlFor="text" className="text-sm font-medium text-slate-300">
@@ -179,28 +227,32 @@ export default function TemplateMessagePage() {
             id="text"
             value={text}
             onChange={(event) => setText(event.target.value)}
-            maxLength={160}
+            maxLength={templateType === "confirm" ? 240 : 160}
             className="h-24 w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             placeholder="以下からお選びください"
             required
           />
-          <p className="text-xs text-slate-500">最大160文字</p>
+          <p className="text-xs text-slate-500">
+            最大{templateType === "confirm" ? "240" : "160"}文字
+          </p>
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="thumbnailImageUrl" className="text-sm font-medium text-slate-300">
-            サムネイル画像URL
-          </label>
-          <input
-            id="thumbnailImageUrl"
-            type="url"
-            value={thumbnailImageUrl}
-            onChange={(event) => setThumbnailImageUrl(event.target.value)}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            placeholder="https://example.com/image.jpg"
-          />
-          <p className="text-xs text-slate-500">オプション、HTTPS、最大1024x1024px、JPEG/PNG</p>
-        </div>
+        {templateType === "buttons" && (
+          <div className="space-y-2">
+            <label htmlFor="thumbnailImageUrl" className="text-sm font-medium text-slate-300">
+              サムネイル画像URL
+            </label>
+            <input
+              id="thumbnailImageUrl"
+              type="url"
+              value={thumbnailImageUrl}
+              onChange={(event) => setThumbnailImageUrl(event.target.value)}
+              className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              placeholder="https://example.com/image.jpg"
+            />
+            <p className="text-xs text-slate-500">オプション、HTTPS、最大1024x1024px、JPEG/PNG</p>
+          </div>
+        )}
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
