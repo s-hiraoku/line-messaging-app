@@ -17,7 +17,6 @@ export async function GET(req: NextRequest) {
               OR: [
                 { displayName: { contains: q } },
                 { lineUserId: { contains: q } },
-                { email: { contains: q } },
               ],
             }
           : {}),

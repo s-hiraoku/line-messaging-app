@@ -29,7 +29,7 @@ export default function MessagesTextPage() {
   const load = async (initial = false) => {
     setLoading(true);
     try {
-      const url = new URL("/api/messages", location.origin);
+      const url = new URL("/api/messages", typeof window !== 'undefined' ? location.origin : 'http://localhost:3000');
       url.searchParams.set("take", "20");
       if (!initial && cursor) url.searchParams.set("cursor", cursor);
       const res = await fetch(url);
@@ -148,7 +148,7 @@ export default function MessagesTextPage() {
         title="送信 API デバッグ"
         request={lastRequest}
         response={lastResponse}
-        curl={toCurl({ url: new URL('/api/line/send', location.origin).toString(), method: 'POST', headers: { 'Content-Type': 'application/json' }, body: lastRequest })}
+        curl={toCurl({ url: new URL('/api/line/send', typeof window !== 'undefined' ? location.origin : 'http://localhost:3000').toString(), method: 'POST', headers: { 'Content-Type': 'application/json' }, body: lastRequest })}
         docsUrl="https://developers.line.biz/ja/reference/messaging-api/#send-push-message"
       />
     </div>

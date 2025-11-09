@@ -11,7 +11,7 @@ const createSchema = z.object({
   name: z.string().min(1),
   type: z.enum(["TEXT", "IMAGE", "VIDEO", "AUDIO", "FLEX", "TEMPLATE"]).default("TEXT"),
   content: z.any(),
-  variables: z.record(z.any()).default({}),
+  variables: z.record(z.string(), z.any()).default({}),
   category: z.string().default("default"),
   isActive: z.boolean().default(true),
 });
