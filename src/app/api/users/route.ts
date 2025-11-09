@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
           : {}),
         ...(cursorDate ? { createdAt: { lt: cursorDate } } : {}),
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       select: {
         id: true,
         lineUserId: true,
@@ -46,7 +46,8 @@ export async function GET(req: NextRequest) {
 
     const nextCursor = users.length === take ? users[users.length - 1].createdAt.toISOString() : null;
     return NextResponse.json({ items, nextCursor });
-  } catch {
-    return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
+  } catch (error) {
+    console.error('[GET /api/users] Error:', error);
+    return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
   }
 }
