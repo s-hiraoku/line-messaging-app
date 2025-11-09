@@ -17,6 +17,7 @@ export default function RichMenuPage() {
   const [richMenus, setRichMenus] = useState<RichMenu[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [settingDefault, setSettingDefault] = useState<string | null>(null);
 
   const loadRichMenus = async () => {
     setLoading(true);
@@ -54,6 +55,48 @@ export default function RichMenuPage() {
       alert("削除に失敗しました");
     } finally {
       setDeleting(null);
+    }
+  };
+
+  const handleSetDefault = async (id: string) => {
+    setSettingDefault(id);
+    try {
+      const response = await fetch(`/api/line/richmenu/${id}/default`, {
+        method: "POST",
+      });
+
+      if (response.ok) {
+        await loadRichMenus();
+      } else {
+        const data = await response.json();
+        alert(data.error || "デフォルト設定に失敗しました");
+      }
+    } catch (error) {
+      console.error("Failed to set default rich menu:", error);
+      alert("デフォルト設定に失敗しました");
+    } finally {
+      setSettingDefault(null);
+    }
+  };
+
+  const handleCancelDefault = async (id: string) => {
+    setSettingDefault(id);
+    try {
+      const response = await fetch(`/api/line/richmenu/${id}/default`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        await loadRichMenus();
+      } else {
+        const data = await response.json();
+        alert(data.error || "デフォルト解除に失敗しました");
+      }
+    } catch (error) {
+      console.error("Failed to cancel default rich menu:", error);
+      alert("デフォルト解除に失敗しました");
+    } finally {
+      setSettingDefault(null);
     }
   };
 
@@ -146,20 +189,33 @@ export default function RichMenuPage() {
                     <div>バーテキスト: {menu.chatBarText}</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Link
-                    href={`/dashboard/richmenu/${menu.id}`}
-                    className="flex-1 rounded border border-slate-600 bg-slate-900/60 px-3 py-2 text-center text-sm text-slate-300 transition hover:bg-slate-800/60"
-                  >
-                    編集
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(menu.id)}
-                    disabled={deleting === menu.id}
-                    className="rounded border border-red-600/50 bg-red-600/10 px-3 py-2 text-sm text-red-400 transition hover:bg-red-600/20 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {deleting === menu.id ? "削除中..." : "削除"}
-                  </button>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    {menu.selected ? (
+                      <button
+                        onClick={() => handleCancelDefault(menu.id)}
+                        disabled={settingDefault === menu.id}
+                        className="flex-1 rounded border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-slate-300 transition hover:bg-slate-800/60 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {settingDefault === menu.id ? "解除中..." : "デフォルト解除"}
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleSetDefault(menu.id)}
+                        disabled={settingDefault === menu.id}
+                        className="flex-1 rounded border border-blue-600/50 bg-blue-600/10 px-3 py-2 text-sm text-blue-400 transition hover:bg-blue-600/20 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {settingDefault === menu.id ? "設定中..." : "デフォルト設定"}
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleDelete(menu.id)}
+                      disabled={deleting === menu.id}
+                      className="rounded border border-red-600/50 bg-red-600/10 px-3 py-2 text-sm text-red-400 transition hover:bg-red-600/20 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {deleting === menu.id ? "削除中..." : "削除"}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
