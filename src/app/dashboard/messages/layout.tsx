@@ -11,7 +11,7 @@ const tabs = [
   { href: "/dashboard/messages/video", label: "動画", enabled: false },
   { href: "/dashboard/messages/audio", label: "音声", enabled: false },
   { href: "/dashboard/messages/location", label: "位置情報", enabled: false },
-  { href: "/dashboard/messages/sticker", label: "スタンプ", enabled: false },
+  { href: "/dashboard/messages/sticker", label: "スタンプ", enabled: true },
   { href: "/dashboard/messages/imagemap", label: "イメージマップ", enabled: false },
   { href: "/dashboard/messages/template", label: "テンプレート", enabled: false },
   { href: "/dashboard/messages/flex", label: "Flex", enabled: false },

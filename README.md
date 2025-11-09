@@ -67,7 +67,7 @@ npx prisma generate
 
 ```bash
 npm run dev
-# http://localhost:3000 を開く
+# <http://localhost:3000> を開く
 ```
 
 6) チャネル情報の登録（画面から）
@@ -79,9 +79,9 @@ npm run dev
 
 7) 動作確認（任意）
 
-- ダッシュボード: http://localhost:3000/dashboard
-- 送信フォーム: http://localhost:3000/dashboard/messages
-- 設定（読み取り）: http://localhost:3000/dashboard/settings
+- ダッシュボード: <http://localhost:3000/dashboard>
+- 送信フォーム: <http://localhost:3000/dashboard/messages>
+- 設定（読み取り）: <http://localhost:3000/dashboard/settings>
 
 ---
 
@@ -262,7 +262,7 @@ curl -X POST http://localhost:3000/api/line/broadcast \
 
 ## 開発コマンド
 
-- `npm run dev` 開発サーバー起動（http://localhost:3000）
+- `npm run dev` 開発サーバー起動（<http://localhost:3000>）
 - `npm run build` 本番ビルド / `npm start` 起動
 - `npm run lint` ESLint（Next core-web-vitals + TS）
 - `npm test` / `npm run test:watch` テスト実行
