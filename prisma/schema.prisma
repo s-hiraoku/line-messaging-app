@@ -36,6 +36,7 @@ enum MessageType {
   STICKER
   FLEX
   TEMPLATE
+  COUPON
 }
 
 model Message {

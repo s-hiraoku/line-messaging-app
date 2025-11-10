@@ -24,12 +24,17 @@ const flexMessage = z.object({
     .object({ type: z.enum(["bubble", "carousel"]) })
     .passthrough(), // Flex Message JSON structure - validates type and allows additional properties
 });
+const couponMessage = z.object({
+  type: z.literal("coupon"),
+  couponId: z.string().min(1),
+});
 
 const anyMessage = z.discriminatedUnion("type", [
   textMessage,
   stickerMessage,
   imageMessage,
   flexMessage,
+  couponMessage,
 ]);
 
 // Support multiple payload formats:
@@ -37,7 +42,8 @@ const anyMessage = z.discriminatedUnion("type", [
 // 2. Legacy sticker: {to, type: "sticker", packageId, stickerId}
 // 3. Simple text: {to, text}
 // 4. Flex: {to, type: "flex", altText, contents}
-// 5. Array format: {to, messages: [{type, ...}]}
+// 5. Coupon: {to, type: "coupon", couponId}
+// 6. Array format: {to, messages: [{type, ...}]}
 const legacyTextPayloadSchema = z.object({
   to: z.string().min(1),
   message: z.string().min(1),
@@ -65,6 +71,12 @@ const flexPayloadSchema = z.object({
     .passthrough(),
 });
 
+const couponPayloadSchema = z.object({
+  to: z.string().min(1),
+  type: z.literal("coupon"),
+  couponId: z.string().min(1),
+});
+
 const arrayPayloadSchema = z.object({
   to: z.string().min(1),
   messages: z.array(anyMessage).min(1),
@@ -74,6 +86,7 @@ const payloadSchema = z.union([
   legacyTextPayloadSchema,
   stickerPayloadSchema,
   flexPayloadSchema,
+  couponPayloadSchema,
   arrayPayloadSchema,
   simpleTextPayloadSchema,
 ]);
@@ -89,6 +102,7 @@ export async function POST(req: NextRequest) {
       | { type: "sticker"; packageId: string; stickerId: string }
       | { type: "image"; originalContentUrl: string; previewImageUrl?: string }
       | { type: "flex"; altText: string; contents: any }
+      | { type: "coupon"; couponId: string }
     >;
     let to: string;
 
@@ -114,6 +128,15 @@ export async function POST(req: NextRequest) {
           type: "flex",
           altText: payload.altText,
           contents: payload.contents,
+        },
+      ];
+    } else if ("type" in payload && payload.type === "coupon") {
+      // Coupon format: {to, type: "coupon", couponId}
+      to = payload.to;
+      messages = [
+        {
+          type: "coupon",
+          couponId: payload.couponId,
         },
       ];
     } else if ("text" in payload) {
@@ -209,6 +232,23 @@ export async function POST(req: NextRequest) {
         await realtime().emit("message:outbound", {
           userId: user.id,
           text: `📊 ${m.altText}`,
+          createdAt: msg.createdAt.toISOString(),
+        });
+      } else if (m.type === "coupon") {
+        const msg = await prisma.message.create({
+          data: {
+            type: "COUPON",
+            content: {
+              couponId: m.couponId,
+            },
+            direction: "OUTBOUND",
+            userId: user.id,
+            deliveryStatus: "SENT",
+          },
+        });
+        await realtime().emit("message:outbound", {
+          userId: user.id,
+          text: `🎫 Coupon: ${m.couponId}`,
           createdAt: msg.createdAt.toISOString(),
         });
       }
