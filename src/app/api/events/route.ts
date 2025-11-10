@@ -8,10 +8,18 @@ export async function GET(_req: NextRequest) {
 
   const stream = new ReadableStream<Uint8Array>({
     start(controller) {
+      let isClosed = false;
+
       const write = (event: string, data: unknown) => {
-        controller.enqueue(
-          encoder.encode(`event: ${event}\n` + `data: ${JSON.stringify(data)}\n\n`),
-        );
+        if (isClosed) return;
+        try {
+          controller.enqueue(
+            encoder.encode(`event: ${event}\n` + `data: ${JSON.stringify(data)}\n\n`),
+          );
+        } catch (error) {
+          // Controller is closed, mark as closed to prevent further writes
+          isClosed = true;
+        }
       };
 
       const bus = realtime();
@@ -29,13 +37,16 @@ export async function GET(_req: NextRequest) {
       write("connected", { ok: true });
 
       return () => {
+        isClosed = true;
         clearInterval(heartbeat);
         bus.off("message:inbound", onInbound);
         bus.off("message:outbound", onOutbound);
         bus.off("dev:log", onDevLog);
       };
     },
-    cancel() {},
+    cancel() {
+      // Cleanup is handled in the return function of start()
+    },
   });
 
   return new Response(stream, {
