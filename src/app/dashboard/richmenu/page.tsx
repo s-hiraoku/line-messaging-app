@@ -1,6 +1,6 @@
-import { RichMenuList } from "./_components/RichMenuList";
+"use client";
 
-export const dynamic = "force-dynamic";
+import { RichMenuList } from "./_components/RichMenuList";
 
 export default function RichMenuPage() {
   return <RichMenuList />;
