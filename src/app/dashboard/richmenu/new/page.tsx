@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { ImageUpload } from "@/components/richmenu/ImageUpload";
 import { VisualEditor } from "@/components/richmenu/VisualEditor";
 
+export const dynamic = "force-dynamic";
+
 type SizeType = "full" | "half";
 
 interface TapArea {

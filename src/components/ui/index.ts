@@ -52,5 +52,5 @@ export type { EmptyStateProps } from './EmptyState';
 
 // Feedback Components
 export { LoadingSpinner } from './LoadingSpinner';
-export { Toast, ToastProvider, useToast } from './Toast';
-export { ConfirmDialog, ConfirmDialogProvider, useConfirmDialog } from './ConfirmDialog';
+export { ToastProvider, useToast } from './Toast';
+export { ConfirmDialogProvider, useConfirm } from './ConfirmDialog';
