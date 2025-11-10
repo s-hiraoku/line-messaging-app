@@ -47,7 +47,7 @@ export default function NewRichMenuPage() {
     setAreas([
       ...areas,
       {
-        bounds: { x: 0, y: 0, width: 833, height: 843 },
+        bounds: { x: 0, y: 0, width: 833, height: sizeInfo.height },
         action: { type: "uri", uri: "https://example.com" },
       },
     ]);

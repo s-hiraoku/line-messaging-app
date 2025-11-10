@@ -4,10 +4,10 @@ import { prisma } from "@/lib/prisma";
 // DELETE - Delete rich menu
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     // Check if rich menu exists
     const richMenu = await prisma.richMenu.findUnique({
@@ -44,10 +44,10 @@ export async function DELETE(
 // GET - Get single rich menu
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     const richMenu = await prisma.richMenu.findUnique({
       where: { id },

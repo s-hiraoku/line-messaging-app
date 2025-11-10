@@ -93,11 +93,13 @@ describe("POST /api/line/send - Flex Messages", () => {
     expect(data).toEqual({ status: "sent" });
 
     // Verify LINE API was called
-    expect(mockPushMessage).toHaveBeenCalledWith("U1234567890abcdef1234567890abcdef", {
-      type: "flex",
-      altText: "Flex Message",
-      contents: flexContents,
-    });
+    expect(mockPushMessage).toHaveBeenCalledWith("U1234567890abcdef1234567890abcdef", [
+      {
+        type: "flex",
+        altText: "Flex Message",
+        contents: flexContents,
+      },
+    ]);
 
     // Verify realtime event was emitted
     expect(mockRealtimeEmit).toHaveBeenCalledWith("message:outbound", {
