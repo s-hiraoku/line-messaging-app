@@ -31,7 +31,9 @@ export default function MessagesLayout({ children }: { children: ReactNode }) {
       <div className="border-b border-slate-700/50">
         <nav className="-mb-px flex gap-6">
           {tabs.map((tab) => {
-            const isActive = pathname === tab.href;
+            const isActive = tab.href === "/dashboard/messages"
+              ? pathname === tab.href
+              : pathname.startsWith(tab.href);
             return (
               <Link
                 key={tab.href}

@@ -268,4 +268,64 @@ describe("POST /api/line/send - Flex Messages", () => {
     expect(response.status).toBe(200);
     expect(data).toEqual({ status: "sent" });
   });
+
+  it("should reject invalid contents type (string)", async () => {
+    const request = new Request("http://localhost/api/line/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        to: "U1234567890abcdef1234567890abcdef",
+        type: "flex",
+        altText: "Test Message",
+        contents: "invalid string",
+      }),
+    });
+
+    const response = await POST(request as any);
+    const data = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(data.error).toBe("Invalid request body");
+    expect(mockPushMessage).not.toHaveBeenCalled();
+  });
+
+  it("should reject invalid contents type (missing type field)", async () => {
+    const request = new Request("http://localhost/api/line/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        to: "U1234567890abcdef1234567890abcdef",
+        type: "flex",
+        altText: "Test Message",
+        contents: { body: { type: "box" } }, // Missing required 'type' field
+      }),
+    });
+
+    const response = await POST(request as any);
+    const data = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(data.error).toBe("Invalid request body");
+    expect(mockPushMessage).not.toHaveBeenCalled();
+  });
+
+  it("should reject invalid contents type (invalid enum value)", async () => {
+    const request = new Request("http://localhost/api/line/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        to: "U1234567890abcdef1234567890abcdef",
+        type: "flex",
+        altText: "Test Message",
+        contents: { type: "invalid_type" }, // Invalid type value
+      }),
+    });
+
+    const response = await POST(request as any);
+    const data = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(data.error).toBe("Invalid request body");
+    expect(mockPushMessage).not.toHaveBeenCalled();
+  });
 });

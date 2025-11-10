@@ -15,7 +15,9 @@ const flexPayloadSchema = z.object({
   to: z.string().min(1),
   type: z.literal("flex"),
   altText: z.string().min(1).max(400),
-  contents: z.any(), // Flex Message JSON structure - can be bubble, carousel, etc.
+  contents: z
+    .object({ type: z.enum(["bubble", "carousel"]) })
+    .passthrough(), // Flex Message JSON structure - validates type and allows additional properties
 });
 
 const payloadSchema = z.union([textPayloadSchema, flexPayloadSchema]);
