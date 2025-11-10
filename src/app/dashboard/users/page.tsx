@@ -1,179 +1,235 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { DebugPanel, toCurl } from "../_components/debug-panel";
+import { useState, useEffect } from "react";
+import { User as UserIcon } from "lucide-react";
+import { useToast } from "@/components/ui/Toast";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
-type User = {
+interface User {
   id: string;
   lineUserId: string;
   displayName: string;
-  pictureUrl: string | null;
-  isFollowing: boolean;
+  pictureUrl?: string;
+  richMenuId?: string;
   createdAt: string;
-  lastMessageAt: string | null;
-};
+}
+
+interface RichMenu {
+  id: string;
+  richMenuId: string;
+  name: string;
+}
 
 export default function UsersPage() {
-  const [q, setQ] = useState("");
-  const [items, setItems] = useState<User[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [cursor, setCursor] = useState<string | null>(null);
-  const [showRawIds, setShowRawIds] = useState(false);
-  const [lastUrl, setLastUrl] = useState<string>("");
-  const [lastResponse, setLastResponse] = useState<unknown>();
-  const [bfSaving, setBfSaving] = useState(false);
-  const [bfLimit, setBfLimit] = useState(1000);
-  const [bfPages, setBfPages] = useState(1);
-  const [bfSyncProfile, setBfSyncProfile] = useState(false);
-  const [bfRequest, setBfRequest] = useState<unknown>();
-  const [bfResponse, setBfResponse] = useState<unknown>();
+  const [users, setUsers] = useState<User[]>([]);
+  const [richMenus, setRichMenus] = useState<RichMenu[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [settingMenu, setSettingMenu] = useState<string | null>(null);
+  const toast = useToast();
 
-  const load = async (initial = false) => {
-    setLoading(true);
+  const loadUsers = async () => {
     try {
-      const url = new URL("/api/users", typeof window !== 'undefined' ? location.origin : 'http://localhost:3000');
-      if (q.trim()) url.searchParams.set("q", q.trim());
-      if (!initial && cursor) url.searchParams.set("cursor", cursor);
-      url.searchParams.set("take", "50");
-      setLastUrl(url.toString());
-      const res = await fetch(url);
-      const data = (await res.json()) as { items: User[]; nextCursor?: string | null };
-      setLastResponse(data);
-      setItems((prev) => (initial ? data.items : [...prev, ...data.items]));
-      setCursor(data.nextCursor ?? null);
+      const response = await fetch("/api/line/users");
+      if (response.ok) {
+        const data = await response.json();
+        setUsers(data.users || []);
+      }
+    } catch (error) {
+      console.error("Failed to load users:", error);
+    }
+  };
+
+  const loadRichMenus = async () => {
+    try {
+      const response = await fetch("/api/line/richmenu");
+      if (response.ok) {
+        const data = await response.json();
+        setRichMenus(
+          data.richMenus
+            .filter((menu: any) => menu.richMenuId)
+            .map((menu: any) => ({
+              id: menu.id,
+              richMenuId: menu.richMenuId,
+              name: menu.name,
+            }))
+        );
+      }
+    } catch (error) {
+      console.error("Failed to load rich menus:", error);
+    }
+  };
+
+  const loadData = async () => {
+    setLoading(true);
+    await Promise.all([loadUsers(), loadRichMenus()]);
+    setLoading(false);
+  };
+
+  const handleSetRichMenu = async (userId: string, richMenuId: string) => {
+    setSettingMenu(userId);
+    try {
+      const response = await fetch(`/api/line/richmenu/${richMenuId}/users/${userId}`, {
+        method: "POST",
+      });
+
+      if (response.ok) {
+        await loadUsers();
+        toast.success("リッチメニューを設定しました");
+      } else {
+        const data = await response.json();
+        toast.error(data.error || "リッチメニューの設定に失敗しました");
+      }
+    } catch (error) {
+      console.error("Failed to set rich menu:", error);
+      toast.error("リッチメニューの設定に失敗しました");
     } finally {
-      setLoading(false);
+      setSettingMenu(null);
+    }
+  };
+
+  const handleUnlinkRichMenu = async (userId: string, richMenuId: string) => {
+    setSettingMenu(userId);
+    try {
+      const response = await fetch(`/api/line/richmenu/${richMenuId}/users/${userId}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        await loadUsers();
+        toast.success("リッチメニューの設定を解除しました");
+      } else {
+        const data = await response.json();
+        toast.error(data.error || "リッチメニューの解除に失敗しました");
+      }
+    } catch (error) {
+      console.error("Failed to unlink rich menu:", error);
+      toast.error("リッチメニューの解除に失敗しました");
+    } finally {
+      setSettingMenu(null);
     }
   };
 
   useEffect(() => {
-    load(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    loadData();
   }, []);
-
-  const hasMore = useMemo(() => Boolean(cursor), [cursor]);
 
   return (
     <div className="space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold">ユーザー</h1>
-        <p className="text-sm text-slate-500">友だち一覧と検索</p>
+        <h1 className="text-2xl font-semibold text-white">ユーザー管理</h1>
+        <p className="text-sm text-slate-400">
+          LINEユーザーの一覧とリッチメニュー設定を管理します。
+        </p>
       </header>
 
-      <div className="flex flex-wrap items-center gap-2">
-        <input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && load(true)}
-          placeholder="displayName / lineUserId / email"
-          className="w-64 rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
-        />
-        <button onClick={() => load(true)} disabled={loading} className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 hover:border-slate-500 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-slate-300">{loading ? "検索中..." : "検索"}</button>
-        <label className="ml-2 inline-flex items-center gap-2 text-xs text-slate-400 cursor-pointer">
-          <input type="checkbox" checked={showRawIds} onChange={(e) => setShowRawIds(e.target.checked)} className="cursor-pointer" />
-          lineUserId を生表示
-        </label>
-      </div>
-
-      <div className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 text-slate-100">
-        <h2 className="mb-2 text-sm font-semibold text-slate-300">フォロワー取り込み（バックフィル）</h2>
-        <div className="grid gap-3 sm:grid-cols-[140px_140px_1fr_auto] items-end">
-          <label className="text-xs">
-            <span className="mb-1 block text-slate-400">最大件数/ページ</span>
-            <input type="number" min={1} max={1000} value={bfLimit} onChange={(e) => setBfLimit(Number(e.target.value) || 1000)}
-              className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
-          </label>
-          <label className="text-xs">
-            <span className="mb-1 block text-slate-400">ページ数</span>
-            <input type="number" min={1} max={50} value={bfPages} onChange={(e) => setBfPages(Number(e.target.value) || 1)}
-              className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
-          </label>
-          <label className="inline-flex items-center gap-2 text-xs text-slate-400 cursor-pointer">
-            <input type="checkbox" checked={bfSyncProfile} onChange={(e) => setBfSyncProfile(e.target.checked)} className="cursor-pointer" /> プロフィールも取得
-          </label>
-          <button
-            onClick={async () => {
-              setBfSaving(true);
-              const payload = { limitPerPage: bfLimit, maxPages: bfPages, syncProfile: bfSyncProfile };
-              setBfRequest(payload);
-              try {
-                const res = await fetch('/api/line/followers/backfill', {
-                  method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-                });
-                const data = await res.json().catch(() => ({}));
-                setBfResponse(data);
-                if (!res.ok) throw new Error('バックフィルに失敗しました');
-                await load(true);
-              } catch (e) {
-                // eslint-disable-next-line no-console
-                console.error(e);
-              } finally { setBfSaving(false); }
-            }}
-            disabled={bfSaving}
-            className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
-          >{bfSaving ? '実行中...' : '取り込む'}</button>
+      {loading ? (
+        <LoadingSpinner text="読み込み中..." />
+      ) : users.length === 0 ? (
+        <div className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-12 text-center shadow-lg backdrop-blur-sm">
+          <UserIcon className="mx-auto h-12 w-12 text-slate-600" />
+          <h3 className="mt-4 text-lg font-medium text-white">ユーザーがいません</h3>
+          <p className="mt-2 text-sm text-slate-400">
+            LINEでボットを友だち追加したユーザーがここに表示されます。
+          </p>
         </div>
-      </div>
-
-      <div className="overflow-hidden rounded-lg border border-slate-800/60 bg-slate-900/60 text-slate-100">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-slate-800/60 text-slate-300">
-            <tr>
-              <th className="px-4 py-2">表示名</th>
-              <th className="px-4 py-2">LINE UserId</th>
-              <th className="px-4 py-2">フォロー</th>
-              <th className="px-4 py-2">作成日時</th>
-              <th className="px-4 py-2">最終メッセージ</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((u) => (
-              <tr key={u.id} className="border-t">
-                <td className="px-4 py-2">{u.displayName || "-"}</td>
-                <td className="px-4 py-2 font-mono text-xs">
-                  {showRawIds ? (
-                    u.lineUserId
-                  ) : (
-                    <span>{u.lineUserId.slice(0, 6)}***{u.lineUserId.slice(-4)}</span>
-                  )}
-                </td>
-                <td className="px-4 py-2">{u.isFollowing ? "✔" : "✕"}</td>
-                <td className="px-4 py-2 text-slate-300">{new Date(u.createdAt).toLocaleString()}</td>
-                <td className="px-4 py-2 text-slate-300">{u.lastMessageAt ? new Date(u.lastMessageAt).toLocaleString() : "—"}</td>
-              </tr>
-            ))}
-            {items.length === 0 && (
+      ) : (
+        <div className="overflow-hidden rounded-lg border border-slate-700/50 bg-slate-800/40 shadow-lg backdrop-blur-sm">
+          <table className="w-full">
+            <thead className="border-b border-slate-700/50 bg-slate-900/40">
               <tr>
-                <td className="px-4 py-8 text-center text-slate-500" colSpan={5}>ユーザーが見つかりません</td>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400">
+                  ユーザー
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400">
+                  登録日
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400">
+                  リッチメニュー
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-slate-400">
+                  操作
+                </th>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className="divide-y divide-slate-700/50">
+              {users.map((user) => {
+                const currentMenu = richMenus.find((m) => m.richMenuId === user.richMenuId);
 
-      <div>
-        <button onClick={() => load(false)} disabled={!hasMore || loading}
-          className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 hover:border-slate-500 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-slate-300">
-          {loading ? "読み込み中..." : hasMore ? "さらに読み込む" : "すべて取得済み"}
-        </button>
-      </div>
-
-      <DebugPanel
-        title="ユーザー一覧 API デバッグ"
-        request={{ url: lastUrl }}
-        response={lastResponse}
-        curl={lastUrl ? toCurl({ url: lastUrl }) : null}
-      />
-
-      <div className="mt-4">
-        <DebugPanel
-          title="バックフィル API デバッグ"
-          request={bfRequest}
-          response={bfResponse}
-          curl={toCurl({ url: new URL('/api/line/followers/backfill', typeof window !== 'undefined' ? location.origin : 'http://localhost:3000').toString(), method: 'POST', headers: { 'Content-Type': 'application/json' }, body: bfRequest })}
-          docsUrl="https://developers.line.biz/ja/reference/messaging-api/#get-follower-ids"
-        />
-      </div>
+                return (
+                  <tr key={user.id} className="hover:bg-slate-900/20">
+                    <td className="whitespace-nowrap px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        {user.pictureUrl ? (
+                          <img
+                            src={user.pictureUrl}
+                            alt={user.displayName}
+                            className="h-10 w-10 rounded-full"
+                          />
+                        ) : (
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-700">
+                            <UserIcon className="h-5 w-5 text-slate-400" />
+                          </div>
+                        )}
+                        <div>
+                          <div className="font-medium text-white">{user.displayName}</div>
+                          <div className="text-xs text-slate-500">{user.lineUserId}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-400">
+                      {new Date(user.createdAt).toLocaleDateString("ja-JP")}
+                    </td>
+                    <td className="px-6 py-4">
+                      {currentMenu ? (
+                        <div className="flex items-center gap-2">
+                          <select
+                            value={currentMenu.id}
+                            onChange={(e) => handleSetRichMenu(user.id, e.target.value)}
+                            disabled={settingMenu === user.id}
+                            className="rounded border border-slate-600 bg-slate-900/60 px-2 py-1 text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            {richMenus.map((menu) => (
+                              <option key={menu.id} value={menu.id}>
+                                {menu.name}
+                              </option>
+                            ))}
+                          </select>
+                          <button
+                            onClick={() => handleUnlinkRichMenu(user.id, currentMenu.id)}
+                            disabled={settingMenu === user.id}
+                            className="rounded border border-red-600/50 bg-red-600/10 px-2 py-1 text-xs text-red-400 transition hover:bg-red-600/20 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            {settingMenu === user.id ? "解除中..." : "解除"}
+                          </button>
+                        </div>
+                      ) : (
+                        <select
+                          value=""
+                          onChange={(e) => handleSetRichMenu(user.id, e.target.value)}
+                          disabled={settingMenu === user.id || richMenus.length === 0}
+                          className="rounded border border-slate-600 bg-slate-900/60 px-2 py-1 text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          <option value="">メニューを選択...</option>
+                          {richMenus.map((menu) => (
+                            <option key={menu.id} value={menu.id}>
+                              {menu.name}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+                    </td>
+                    <td className="whitespace-nowrap px-6 py-4 text-right text-sm">
+                      {settingMenu === user.id && (
+                        <span className="text-slate-400">設定中...</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
