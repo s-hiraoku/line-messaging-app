@@ -27,6 +27,13 @@ const audioMessage = z.object({
   originalContentUrl: z.string().url(),
   duration: z.number().min(1).max(60000),
 });
+const locationMessage = z.object({
+  type: z.literal("location"),
+  title: z.string().min(1).max(100),
+  address: z.string().min(1).max(100),
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
+});
 
 const anyMessage = z.discriminatedUnion("type", [
   textMessage,
@@ -34,6 +41,7 @@ const anyMessage = z.discriminatedUnion("type", [
   imageMessage,
   videoMessage,
   audioMessage,
+  locationMessage,
 ]);
 
 // Support multiple payload formats:
@@ -41,8 +49,9 @@ const anyMessage = z.discriminatedUnion("type", [
 // 2. Legacy sticker: {to, type: "sticker", packageId, stickerId}
 // 3. Legacy video: {to, type: "video", videoUrl, previewUrl}
 // 4. Legacy audio: {to, type: "audio", audioUrl, duration}
-// 5. Simple text: {to, text}
-// 6. Array format: {to, messages: [{type, ...}]}
+// 5. Location: {to, type: "location", title, address, latitude, longitude}
+// 6. Simple text: {to, text}
+// 7. Array format: {to, messages: [{type, ...}]}
 const legacyTextPayloadSchema = z.object({
   to: z.string().min(1),
   message: z.string().min(1),
@@ -70,6 +79,15 @@ const audioPayloadSchema = z.object({
   duration: z.number().min(1).max(60000),
 });
 
+const locationPayloadSchema = z.object({
+  to: z.string().min(1),
+  type: z.literal("location"),
+  title: z.string().min(1).max(100),
+  address: z.string().min(1).max(100),
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
+});
+
 const simpleTextPayloadSchema = z.object({
   to: z.string().min(1),
   text: z.string().min(1),
@@ -85,6 +103,7 @@ const payloadSchema = z.union([
   stickerPayloadSchema,
   videoPayloadSchema,
   audioPayloadSchema,
+  locationPayloadSchema,
   arrayPayloadSchema,
   simpleTextPayloadSchema,
 ]);
@@ -101,6 +120,13 @@ export async function POST(req: NextRequest) {
       | { type: "image"; originalContentUrl: string; previewImageUrl?: string }
       | { type: "video"; originalContentUrl: string; previewImageUrl: string }
       | { type: "audio"; originalContentUrl: string; duration: number }
+      | {
+          type: "location";
+          title: string;
+          address: string;
+          latitude: number;
+          longitude: number;
+        }
     >;
     let to: string;
 
@@ -136,6 +162,18 @@ export async function POST(req: NextRequest) {
           type: "audio",
           originalContentUrl: payload.audioUrl,
           duration: payload.duration,
+        },
+      ];
+    } else if ("type" in payload && payload.type === "location") {
+      // Location format: {to, type: "location", title, address, latitude, longitude}
+      to = payload.to;
+      messages = [
+        {
+          type: "location",
+          title: payload.title,
+          address: payload.address,
+          latitude: payload.latitude,
+          longitude: payload.longitude,
         },
       ];
     } else if ("text" in payload) {
@@ -249,6 +287,26 @@ export async function POST(req: NextRequest) {
         await realtime().emit("message:outbound", {
           userId: user.id,
           text: undefined,
+          createdAt: msg.createdAt.toISOString(),
+        });
+      } else if (m.type === "location") {
+        const msg = await prisma.message.create({
+          data: {
+            type: "LOCATION",
+            content: {
+              title: m.title,
+              address: m.address,
+              latitude: m.latitude,
+              longitude: m.longitude,
+            },
+            direction: "OUTBOUND",
+            userId: user.id,
+            deliveryStatus: "SENT",
+          },
+        });
+        await realtime().emit("message:outbound", {
+          userId: user.id,
+          text: `📍 ${m.title}`,
           createdAt: msg.createdAt.toISOString(),
         });
       }
