@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ImageUpload } from "@/components/richmenu/ImageUpload";
-import { VisualEditor } from "@/components/richmenu/VisualEditor";
 
 type SizeType = "full" | "half";
 
@@ -131,6 +130,29 @@ export default function NewRichMenuPage() {
           onUploadComplete={setImageUrl}
           currentImageUrl={imageUrl}
         />
+
+        {/* Tap Areas */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-slate-300">
+              タップエリア <span className="text-red-400">*</span>
+            </label>
+            <button
+              type="button"
+              onClick={addArea}
+              className="inline-flex items-center gap-1 rounded-md border border-slate-600 bg-slate-900/60 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-slate-800/60"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              エリアを追加
+            </button>
+          </div>
 
         <VisualEditor imageUrl={imageUrl} size={size} areas={areas} onAreasChange={setAreas} />
 
