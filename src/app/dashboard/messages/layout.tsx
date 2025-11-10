@@ -14,8 +14,8 @@ const tabs = [
   { href: "/dashboard/messages/sticker", label: "スタンプ", enabled: true },
   { href: "/dashboard/messages/imagemap", label: "イメージマップ", enabled: true },
   { href: "/dashboard/messages/template", label: "テンプレート", enabled: false },
-  { href: "/dashboard/messages/flex", label: "Flex", enabled: false },
-  { href: "/dashboard/messages/coupon", label: "クーポン", enabled: false },
+  { href: "/dashboard/messages/flex", label: "Flex", enabled: true },
+  { href: "/dashboard/messages/coupon", label: "クーポン", enabled: true },
   { href: "/dashboard/messages/richmenu", label: "リッチメニュー", enabled: false },
 ];
 
