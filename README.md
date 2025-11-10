@@ -9,8 +9,7 @@ LINE Messaging API を活用した統合メッセージング管理アプリ（P
 - Webhook 署名検証とフォロー/テキストイベントの保存
 - ユーザー一覧・詳細、タグ更新 API
 - テンプレート作成/一覧 API
-- NextAuth v5 + PrismaAdapter によるログイン土台（LINE ログイン）
-- 環境変数ベースのチャネル設定（UI は読み取り専用）
+- チャネル設定（ID/シークレット）は UI から保存（アクセストークンは自動発行）
 - 最小リアルタイム通知（EventEmitter + Upstash Redis publish）
 
 ---
@@ -19,7 +18,7 @@ LINE Messaging API を活用した統合メッセージング管理アプリ（P
 - 使い方（クイックスタート）
 - 環境変数
 - データベースと Prisma
-- 認証（NextAuth v5 / LINE）
+- 認証（なし）
 - Webhook のセットアップ
 - メッセージ送信の試験（UI/CLI）
 - API リファレンス（サンプル付き）
@@ -44,8 +43,11 @@ npm install
 2) 環境変数ファイルを作成し必須値を設定
 
 ```bash
-cp .env.example .env.local
-# .env.local を編集（下記「環境変数」を参照）
+# どちらでも可（推奨は .env.local を Git で除外）
+cp .env.example .env
+# もしくは
+# cp .env.example .env.local
+# .env / .env.local を編集（下記「環境変数」を参照）
 ```
 
 3) データベースを起動（ローカル Postgres）
@@ -65,26 +67,28 @@ npx prisma generate
 
 ```bash
 npm run dev
-# http://localhost:3000 を開く
+# <http://localhost:3000> を開く
 ```
 
-6) 動作確認（任意）
+6) チャネル情報の登録（画面から）
 
-- ダッシュボード: http://localhost:3000/dashboard
-- 送信フォーム: http://localhost:3000/dashboard/messages
-- 設定（読み取り）: http://localhost:3000/dashboard/settings
+- ダッシュボード → 設定 → 「チャネル情報の保存」で以下を入力し保存
+  - チャネルID（LINE Developers で確認）
+  - チャネルシークレット
+  - チャネルアクセストークンの入力は不要（本アプリが自動発行します）
+
+7) 動作確認（任意）
+
+- ダッシュボード: <http://localhost:3000/dashboard>
+- 送信フォーム: <http://localhost:3000/dashboard/messages>
+- 設定（読み取り）: <http://localhost:3000/dashboard/settings>
 
 ---
 
-## 環境変数（.env.local）
+## 環境変数（.env / .env.local）
 
 最低限必要な値（ローカル検証）
 - `DATABASE_URL` 例: `postgresql://postgres:postgres@localhost:5432/line_app?schema=public`
-- `NEXTAUTH_SECRET` ランダム長文字列
-- `NEXTAUTH_URL` `http://localhost:3000`
-- `LINE_CHANNEL_ID` LINE のチャネル ID（本リポでは NextAuth/LINE ログインでも使用）
-- `LINE_CHANNEL_SECRET` LINE のチャネルシークレット（署名検証・ログイン）
-- `LINE_CHANNEL_ACCESS_TOKEN` LINE Messaging API のチャネルアクセストークン（送信/ブロードキャスト）
 
 オプション
 - `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`（設定するとリアルタイムイベントを publish）
@@ -92,8 +96,7 @@ npm run dev
 - `SENTRY_DSN` ほか監視系
 
 注意
-- 本 POC は「チャネル設定は環境変数がソース・オブ・トゥルース」です。ダッシュボード設定画面は読み取り専用で、値の更新は `.env.local` 編集＋再起動で反映されます。
-- 実運用では「ログイン用 LINE チャネル」と「Messaging API チャネル」を分けることが多いです。現状は同一の `LINE_CHANNEL_ID/SECRET` を利用する前提です（分離する場合はコード/ENV を調整してください）。
+- 本 POC は「チャネル設定（チャネルID/シークレット）は 画面（設定→チャネル情報）から保存」します。アクセストークンは保存せず、送信時に自動発行（OAuth2 Client Credentials）しメモリにキャッシュします。
 
 ---
 
@@ -104,44 +107,93 @@ npm run dev
 - ログ: `npm run db:logs`
 - psql: `npm run db:psql`
 - リセット: `npm run db:reset`
+- **Prisma Studio（GUI）**: `npx prisma studio`
+  - ブラウザベースのデータベース管理ツール
+  - http://localhost:5555 で起動
+  - テーブルデータの閲覧・作成・編集・削除が可能
 
 主要モデル（抜粋）
 - `User`（`lineUserId`, `displayName`, `isFollowing`）
 - `Message`（`type`, `content`, `direction`, `userId`, `deliveryStatus`）
 - `Template` / `Broadcast` / `Tag` / `UserTag`
-- NextAuth: `Account`, `Session`, `VerificationToken`
 
 ---
 
-## 認証（NextAuth v5 / LINE）
+## 認証
 
-- 実装: `src/lib/auth/auth.ts`（App Router ハンドラ）
-- Adapter: PrismaAdapter（`User` に `name`/`image`/`emailVerified` を追加済み）
-- 事前準備
-  - `LINE_CHANNEL_ID` と `LINE_CHANNEL_SECRET` を設定
-  - LINE Developers の Callback URL に `http://localhost:3000/api/auth/callback/line` を登録
-  - `.env.local` に `NEXTAUTH_URL`, `NEXTAUTH_SECRET` を設定
+この POC にはアプリ内認証は含めていません（デモ用途）。公開環境では必ずリバースプロキシや社内VPN等でアクセス制御してください。
 
 ---
 
 ## Webhook のセットアップ（Messaging API）
 
-1) 公開 URL を用意（ngrok 等）
+Cloudflare Tunnel（Quick Tunnels）を使ってローカルを公開する前提です。
+
+1) cloudflared を用意
+
+- macOS（Homebrew）: `brew install cloudflare/cloudflare/cloudflared`
+- 公式バイナリ（任意）: https://github.com/cloudflare/cloudflared/releases
+
+2) トンネルを起動（別ターミナル）
 
 ```bash
-# 別ターミナルで
-npx ngrok http 3000
-# 例: https://abcd-xx-xx-xx-xx.ngrok.io
+cloudflared tunnel --config /dev/null --no-autoupdate --url http://localhost:3000
 ```
 
-2) LINE Developers → 対象チャネルの Webhook 設定
-- Webhook URL: `https://<公開ドメイン>/api/line/webhook`
-- Webhook 有効化をオン
+- 数秒後、`https://xxxx-xxxx.trycloudflare.com` のような URL が表示されます
+- URL だけ抽出したい場合（任意）:
+
+```bash
+cloudflared tunnel --config /dev/null --no-autoupdate --url http://localhost:3000 \
+  2>&1 | sed -nE 's/.*(https:\/\/[a-z0-9-]+\.trycloudflare\.com).*/\1/p' | tail -n1
+```
+
+3) LINE Developers → 対象チャネルの Webhook 設定
+
+- Webhook URL: `https://<上で出たURL>/api/line/webhook`
+- 「Webhookを利用する」をオン
 - 「検証」ボタンで 200 OK を確認
 
-3) 署名検証
-- 本アプリは `LINE_CHANNEL_SECRET` を用い `x-line-signature` を検証します
-- 値が不一致だと 400 になります
+4) 署名検証と注意
+
+- 本アプリは DB に保存されたチャネルシークレットで `x-line-signature` を検証します（未設定/不一致は 400）
+- Quick Tunnels は再起動で URL が変わります。cloudflared を再起動したら Webhook URL も更新してください
+
+5) アクセストークンについて
+
+- 送信時はチャネルID/シークレットから OAuth2 Client Credentials でチャネルアクセストークンを自動発行し、メモリにキャッシュします（期限前に自動更新）
+
+### Webhook の自己診断（Selftest）
+
+- 画面: `/dashboard/dev` → 「Webhook チェック」
+- ローカルに送る: アプリ内で `/api/line/webhook` に署名付きで自己呼び出し（200 ならアプリ実装と署名検証はOK）
+- 公開URLに送る: Cloudflare Tunnel の URL を入力して実行（ドメインのみ or `/api/line/webhook` までの完全URLのどちらでも可）
+  - 200: トンネル経由もOK（LINE → 公開URL → アプリ の流れと同等）
+  - 400: 署名不一致/シークレット未設定など。`/dashboard/settings` の値を再確認
+  - ERR: fetch失敗。URLのミスやトンネル停止を確認
+
+Selftest の結果はボタン下に表示され、ページ下部の DebugPanel に raw の `url/status/body` も表示されます。
+
+### 友だち追加リンク／QR の表示
+
+- `/dashboard/settings` に「ベーシックID（@なし推奨）」または「友だち追加URL（lin.ee 等）」を保存
+- `/dashboard/dev` に「友だち追加QR」とリンクが表示されます（コピー可）
+
+### E2E 動作確認のチェックリスト
+
+1) 友だち追加QRからボットを追加し、ブロックしていないことを確認
+2) あなたのLINEからボットに「こんにちは」等のテキストを送信
+   - 期待: すぐに「メッセージありがとうございます！」と自動返信
+   - `/dashboard/messages` に IN（受信）が1件追加
+   - `/dashboard/users` にユーザーが表示（最終メッセージ時刻も更新）
+3) こちらからの送信確認
+   - `/dashboard/messages` で `lineUserId` と本文を入力 → 送信
+   - 期待: OUT（送信）が表示され、相手のLINEに届く
+
+うまくいかない場合
+- Selftest（ローカル/公開）を再度実行して 200 を確認（トンネルURLが変わるとLINE側URLも更新が必要）
+- 友だち追加・ブロック状態を確認
+- 署名検証（チャネルシークレット）が一致しているか `/dashboard/settings` の値と LINE Developers の値を照合
 
 ---
 
@@ -210,11 +262,12 @@ curl -X POST http://localhost:3000/api/line/broadcast \
 
 ## 開発コマンド
 
-- `npm run dev` 開発サーバー起動（http://localhost:3000）
+- `npm run dev` 開発サーバー起動（<http://localhost:3000>）
 - `npm run build` 本番ビルド / `npm start` 起動
 - `npm run lint` ESLint（Next core-web-vitals + TS）
 - `npm test` / `npm run test:watch` テスト実行
 - DB: `npm run db:up | db:down | db:logs | db:psql | db:reset`
+- Prisma Studio: `npx prisma studio` ブラウザでデータベースを管理（http://localhost:5555）
 
 ---
 
@@ -263,7 +316,7 @@ src/
 
 ## セキュリティ注意事項
 
-- `.env.local` に秘密情報を置き、Git にコミットしない
+- `.env` または `.env.local` に秘密情報を置き、Git にコミットしない（`.gitignore` は両方を除外）
 - アクセストークン/シークレットは定期ローテーション
 - ログに個人情報やトークンを出力しない
 - 本 POC のエラーハンドリングは簡易実装。運用時は監視/通知を追加

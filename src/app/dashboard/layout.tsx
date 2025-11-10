@@ -57,6 +57,12 @@ const primaryNav = [
     description: "チャネル & Webhook",
     icon: <Settings2 className="h-4 w-4" />,
   },
+  {
+    href: "/dashboard/dev",
+    label: "開発",
+    description: "ランタイム情報",
+    icon: <Activity className="h-4 w-4" />,
+  },
 ];
 
 export default function DashboardLayout({
