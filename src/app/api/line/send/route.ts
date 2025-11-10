@@ -314,10 +314,10 @@ export async function POST(req: NextRequest) {
 
     // Persist outbound message and ensure user exists
     const user = await prisma.user.upsert({
-      where: { lineUserId: to },
+      where: { lineUserId: payload.to },
       update: {},
       create: {
-        lineUserId: to,
+        lineUserId: payload.to,
         displayName: "",
         isFollowing: true,
       },
