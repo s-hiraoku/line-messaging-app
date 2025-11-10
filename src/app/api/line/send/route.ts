@@ -101,6 +101,101 @@ const anyMessage = z.discriminatedUnion("type", [
   imagemapMessage,
 ]);
 
+// Template action schema
+const templateActionSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("uri"),
+    label: z.string().min(1).max(20),
+    uri: z.string().url(),
+  }),
+  z.object({
+    type: z.literal("message"),
+    label: z.string().min(1).max(20),
+    text: z.string().min(1).max(300),
+  }),
+  z.object({
+    type: z.literal("postback"),
+    label: z.string().min(1).max(20),
+    data: z.string().min(1).max(300),
+    text: z.string().max(300).optional(),
+  }),
+  z.object({
+    type: z.literal("datetimepicker"),
+    label: z.string().min(1).max(20),
+    data: z.string().min(1).max(300),
+    mode: z.enum(["date", "time", "datetime"]),
+    initial: z.string().optional(),
+    max: z.string().optional(),
+    min: z.string().optional(),
+  }),
+  z.object({
+    type: z.literal("camera"),
+    label: z.string().min(1).max(20),
+  }),
+  z.object({
+    type: z.literal("cameraRoll"),
+    label: z.string().min(1).max(20),
+  }),
+  z.object({
+    type: z.literal("location"),
+    label: z.string().min(1).max(20),
+  }),
+]);
+
+// Template column for carousel
+const carouselColumnSchema = z.object({
+  thumbnailImageUrl: z.string().url().optional(),
+  imageBackgroundColor: z.string().optional(),
+  title: z.string().max(40).optional(),
+  text: z.string().min(1).max(160),
+  defaultAction: templateActionSchema.optional(),
+  actions: z.array(templateActionSchema).min(1).max(3),
+});
+
+// Template column for image carousel
+const imageCarouselColumnSchema = z.object({
+  imageUrl: z.string().url(),
+  action: templateActionSchema,
+});
+
+// Template schemas for each type
+const buttonsTemplateSchema = z.object({
+  type: z.literal("buttons"),
+  text: z.string().min(1).max(160),
+  actions: z.array(templateActionSchema).min(1).max(4),
+  thumbnailImageUrl: z.string().url().optional(),
+  imageAspectRatio: z.enum(["rectangle", "square"]).optional(),
+  imageSize: z.enum(["cover", "contain"]).optional(),
+  imageBackgroundColor: z.string().optional(),
+  title: z.string().max(40).optional(),
+  defaultAction: templateActionSchema.optional(),
+});
+
+const confirmTemplateSchema = z.object({
+  type: z.literal("confirm"),
+  text: z.string().min(1).max(240),
+  actions: z.array(templateActionSchema).length(2),
+});
+
+const carouselTemplateSchema = z.object({
+  type: z.literal("carousel"),
+  columns: z.array(carouselColumnSchema).min(1).max(10),
+  imageAspectRatio: z.enum(["rectangle", "square"]).optional(),
+  imageSize: z.enum(["cover", "contain"]).optional(),
+});
+
+const imageCarouselTemplateSchema = z.object({
+  type: z.literal("image_carousel"),
+  columns: z.array(imageCarouselColumnSchema).min(1).max(10),
+});
+
+const templateSchema = z.discriminatedUnion("type", [
+  buttonsTemplateSchema,
+  confirmTemplateSchema,
+  carouselTemplateSchema,
+  imageCarouselTemplateSchema,
+]);
+
 // Support multiple payload formats:
 // 1. Legacy text: {to, message, type?: "text"}
 // 2. Legacy sticker: {to, type: "sticker", packageId, stickerId}
@@ -190,6 +285,13 @@ const arrayPayloadSchema = z.object({
   messages: z.array(anyMessage).min(1),
 });
 
+const templatePayloadSchema = z.object({
+  to: z.string().min(1),
+  type: z.literal("template"),
+  altText: z.string().min(1).max(400),
+  template: templateSchema,
+});
+
 const payloadSchema = z.union([
   legacyTextPayloadSchema,
   stickerPayloadSchema,
@@ -199,6 +301,7 @@ const payloadSchema = z.union([
   imagemapPayloadSchema,
   arrayPayloadSchema,
   simpleTextPayloadSchema,
+  templatePayloadSchema,
 ]);
 
 export async function POST(req: NextRequest) {
@@ -314,59 +417,105 @@ export async function POST(req: NextRequest) {
 
     // Persist outbound message and ensure user exists
     const user = await prisma.user.upsert({
-      where: { lineUserId: to },
+      where: { lineUserId: payload.to },
       update: {},
       create: {
-        lineUserId: to,
+        lineUserId: payload.to,
         displayName: "",
         isFollowing: true,
       },
     });
 
-    // Persist each message and emit events
-    for (const m of messages) {
-      if (m.type === "text") {
-        const msg = await prisma.message.create({
-          data: {
-            type: "TEXT",
-            content: { text: m.text },
-            direction: "OUTBOUND",
-            userId: user.id,
-            deliveryStatus: "SENT",
+    // Handle different message types
+    if ("type" in payload && payload.type === "template") {
+      // Send template message
+      await pushMessage(payload.to, {
+        type: "template",
+        altText: payload.altText,
+        template: payload.template,
+      });
+
+      // Persist template message
+      const msg = await prisma.message.create({
+        data: {
+          type: "TEMPLATE",
+          content: {
+            altText: payload.altText,
+            template: payload.template,
           },
-        });
-        await realtime().emit("message:outbound", {
+          direction: "OUTBOUND",
           userId: user.id,
-          text: m.text,
-          createdAt: msg.createdAt.toISOString(),
-        });
-      } else if (m.type === "sticker") {
-        const msg = await prisma.message.create({
-          data: {
-            type: "STICKER",
-            content: {
-              packageId: m.packageId,
-              stickerId: m.stickerId,
-            },
-            direction: "OUTBOUND",
-            userId: user.id,
-            deliveryStatus: "SENT",
+          deliveryStatus: "SENT",
+        },
+      });
+
+      await realtime().emit("message:outbound", {
+        userId: user.id,
+        text: `📋 ${payload.altText}`,
+        createdAt: msg.createdAt.toISOString(),
+      });
+    } else {
+      // Normalize all formats to messages array
+      let messages: Array<
+        | { type: "text"; text: string }
+        | { type: "sticker"; packageId: string; stickerId: string }
+        | { type: "image"; originalContentUrl: string; previewImageUrl?: string }
+      >;
+
+      if ("messages" in payload) {
+        // Array format: {to, messages}
+        messages = payload.messages;
+      } else if ("type" in payload && payload.type === "sticker") {
+        // Sticker format: {to, type: "sticker", packageId, stickerId}
+        messages = [
+          {
+            type: "sticker",
+            packageId: payload.packageId,
+            stickerId: payload.stickerId,
           },
-        });
-        await realtime().emit("message:outbound", {
-          userId: user.id,
-          text: undefined,
-          createdAt: msg.createdAt.toISOString(),
-        });
-      } else if (m.type === "image") {
-        const msg = await prisma.message.create({
-          data: {
-            type: "IMAGE",
-            content: {
-              originalContentUrl: m.originalContentUrl,
-              previewImageUrl: m.previewImageUrl ?? null,
+        ];
+      } else if ("text" in payload) {
+        // Simple text format: {to, text}
+        messages = [{ type: "text", text: payload.text }];
+      } else {
+        // Legacy text format: {to, message}
+        messages = [{ type: "text", text: payload.message }];
+      }
+
+      // Send messages to LINE
+      await pushMessage(payload.to, messages as any);
+
+      // Persist each message and emit events
+      for (const m of messages) {
+        if (m.type === "text") {
+          const msg = await prisma.message.create({
+            data: {
+              type: "TEXT",
+              content: { text: m.text },
+              direction: "OUTBOUND",
+              userId: user.id,
+              deliveryStatus: "SENT",
             },
-            direction: "OUTBOUND",
+          });
+          await realtime().emit("message:outbound", {
+            userId: user.id,
+            text: m.text,
+            createdAt: msg.createdAt.toISOString(),
+          });
+        } else if (m.type === "sticker") {
+          const msg = await prisma.message.create({
+            data: {
+              type: "STICKER",
+              content: {
+                packageId: m.packageId,
+                stickerId: m.stickerId,
+              },
+              direction: "OUTBOUND",
+              userId: user.id,
+              deliveryStatus: "SENT",
+            },
+          });
+          await realtime().emit("message:outbound", {
             userId: user.id,
             deliveryStatus: "SENT",
           },
