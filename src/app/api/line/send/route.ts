@@ -19,8 +19,30 @@ const imageMessage = z.object({
 });
 const videoMessage = z.object({
   type: z.literal("video"),
-  originalContentUrl: z.string().url(),
-  previewImageUrl: z.string().url(),
+  originalContentUrl: z
+    .string()
+    .url()
+    .refine((url) => url.startsWith("https://"), {
+      message: "Video URL must use HTTPS",
+    })
+    .refine((url) => url.toLowerCase().endsWith(".mp4"), {
+      message: "Video URL must end with .mp4",
+    }),
+  previewImageUrl: z
+    .string()
+    .url()
+    .refine((url) => url.startsWith("https://"), {
+      message: "Preview URL must use HTTPS",
+    })
+    .refine(
+      (url) => {
+        const lower = url.toLowerCase();
+        return lower.endsWith(".jpg") || lower.endsWith(".jpeg");
+      },
+      {
+        message: "Preview URL must end with .jpg or .jpeg",
+      }
+    ),
 });
 const audioMessage = z.object({
   type: z.literal("audio"),
@@ -104,8 +126,30 @@ const stickerPayloadSchema = z.object({
 const videoPayloadSchema = z.object({
   to: z.string().min(1),
   type: z.literal("video"),
-  videoUrl: z.string().url(),
-  previewUrl: z.string().url(),
+  videoUrl: z
+    .string()
+    .url()
+    .refine((url) => url.startsWith("https://"), {
+      message: "Video URL must use HTTPS",
+    })
+    .refine((url) => url.toLowerCase().endsWith(".mp4"), {
+      message: "Video URL must end with .mp4",
+    }),
+  previewUrl: z
+    .string()
+    .url()
+    .refine((url) => url.startsWith("https://"), {
+      message: "Preview URL must use HTTPS",
+    })
+    .refine(
+      (url) => {
+        const lower = url.toLowerCase();
+        return lower.endsWith(".jpg") || lower.endsWith(".jpeg");
+      },
+      {
+        message: "Preview URL must end with .jpg or .jpeg",
+      }
+    ),
 });
 
 const audioPayloadSchema = z.object({
