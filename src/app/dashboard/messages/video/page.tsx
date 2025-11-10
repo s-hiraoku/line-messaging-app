@@ -10,9 +10,73 @@ export default function VideoMessagePage() {
   const [previewUrl, setPreviewUrl] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [videoUrlError, setVideoUrlError] = useState<string | null>(null);
+  const [previewUrlError, setPreviewUrlError] = useState<string | null>(null);
+
+  const validateVideoUrl = (url: string): string | null => {
+    if (!url) return null;
+
+    try {
+      const urlObj = new URL(url);
+
+      if (urlObj.protocol !== "https:") {
+        return "動画URLはHTTPSで始まる必要があります";
+      }
+
+      if (!url.toLowerCase().endsWith(".mp4")) {
+        return "動画URLは.mp4で終わる必要があります";
+      }
+
+      return null;
+    } catch {
+      return "有効なURLを入力してください";
+    }
+  };
+
+  const validatePreviewUrl = (url: string): string | null => {
+    if (!url) return null;
+
+    try {
+      const urlObj = new URL(url);
+
+      if (urlObj.protocol !== "https:") {
+        return "プレビュー画像URLはHTTPSで始まる必要があります";
+      }
+
+      const lower = url.toLowerCase();
+      if (!lower.endsWith(".jpg") && !lower.endsWith(".jpeg")) {
+        return "プレビュー画像URLは.jpgまたは.jpegで終わる必要があります";
+      }
+
+      return null;
+    } catch {
+      return "有効なURLを入力してください";
+    }
+  };
+
+  const handleVideoUrlChange = (value: string) => {
+    setVideoUrl(value);
+    setVideoUrlError(validateVideoUrl(value));
+  };
+
+  const handlePreviewUrlChange = (value: string) => {
+    setPreviewUrl(value);
+    setPreviewUrlError(validatePreviewUrl(value));
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    // Final validation before submission
+    const videoError = validateVideoUrl(videoUrl);
+    const previewError = validatePreviewUrl(previewUrl);
+
+    if (videoError || previewError) {
+      setVideoUrlError(videoError);
+      setPreviewUrlError(previewError);
+      return;
+    }
+
     setStatus("sending");
     setError(null);
 
@@ -41,6 +105,13 @@ export default function VideoMessagePage() {
       setError(err instanceof Error ? err.message : "不明なエラーが発生しました");
     }
   };
+
+  const isFormValid =
+    lineUserId &&
+    videoUrl &&
+    previewUrl &&
+    !videoUrlError &&
+    !previewUrlError;
 
   return (
     <div className="max-w-4xl space-y-6">
@@ -78,11 +149,16 @@ export default function VideoMessagePage() {
             id="videoUrl"
             type="url"
             value={videoUrl}
-            onChange={(event) => setVideoUrl(event.target.value)}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            onChange={(event) => handleVideoUrlChange(event.target.value)}
+            className={`w-full rounded-md border ${
+              videoUrlError ? "border-red-500" : "border-slate-600"
+            } bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
             placeholder="https://example.com/video.mp4"
             required
           />
+          {videoUrlError && (
+            <p className="text-xs text-red-400">{videoUrlError}</p>
+          )}
           <p className="text-xs text-slate-500">
             MP4形式、HTTPS必須、最大200MB
           </p>
@@ -96,11 +172,16 @@ export default function VideoMessagePage() {
             id="previewUrl"
             type="url"
             value={previewUrl}
-            onChange={(event) => setPreviewUrl(event.target.value)}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            onChange={(event) => handlePreviewUrlChange(event.target.value)}
+            className={`w-full rounded-md border ${
+              previewUrlError ? "border-red-500" : "border-slate-600"
+            } bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
             placeholder="https://example.com/preview.jpg"
             required
           />
+          {previewUrlError && (
+            <p className="text-xs text-red-400">{previewUrlError}</p>
+          )}
           <p className="text-xs text-slate-500">
             JPEG形式、HTTPS必須、最大1MB
           </p>
@@ -110,7 +191,7 @@ export default function VideoMessagePage() {
           <button
             type="submit"
             className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-            disabled={status === "sending" || !lineUserId || !videoUrl || !previewUrl}
+            disabled={status === "sending" || !isFormValid}
           >
             {status === "sending" ? "送信中..." : "送信"}
           </button>
@@ -122,7 +203,7 @@ export default function VideoMessagePage() {
       </form>
 
       {/* Preview Section */}
-      {videoUrl && previewUrl && (
+      {videoUrl && previewUrl && !videoUrlError && !previewUrlError && (
         <div className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-6 shadow-lg backdrop-blur-sm">
           <h2 className="mb-4 text-lg font-semibold text-white">プレビュー</h2>
           <div className="flex justify-end">
@@ -162,7 +243,7 @@ export default function VideoMessagePage() {
       )}
 
       {/* Debug Panel */}
-      {videoUrl && previewUrl && (
+      {videoUrl && previewUrl && !videoUrlError && !previewUrlError && (
         <details className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-4 shadow-lg backdrop-blur-sm">
           <summary className="cursor-pointer text-sm font-medium text-slate-300">
             デバッグ情報
