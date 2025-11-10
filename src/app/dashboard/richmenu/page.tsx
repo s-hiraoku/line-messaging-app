@@ -6,8 +6,6 @@ import { useToast } from "@/components/ui/Toast";
 import { useConfirm } from "@/components/ui/ConfirmDialog";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
-export const dynamic = "force-dynamic";
-
 interface RichMenu {
   id: string;
   name: string;
