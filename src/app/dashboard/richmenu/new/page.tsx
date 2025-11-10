@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ImageUpload } from "@/components/richmenu/ImageUpload";
+import { VisualEditor } from "@/components/richmenu/VisualEditor";
 
 type SizeType = "full" | "half";
 
