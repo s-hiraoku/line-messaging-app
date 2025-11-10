@@ -4,8 +4,9 @@ import { prisma } from '@/lib/prisma';
 
 const schema = z.object({ tags: z.array(z.string().min(1)).default([]) });
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const json = await req.json();
     const { tags } = schema.parse(json);
 
@@ -17,14 +18,14 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     );
 
     // reset user tags to provided set
-    await prisma.userTag.deleteMany({ where: { userId: params.id } });
+    await prisma.userTag.deleteMany({ where: { userId: id } });
     await prisma.userTag.createMany({
-      data: tagRecords.map((t) => ({ userId: params.id, tagId: t.id })),
+      data: tagRecords.map((t) => ({ userId: id, tagId: t.id })),
       skipDuplicates: true,
     });
 
     const updated = await prisma.user.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: { tags: { include: { tag: true } } },
     });
 
