@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ImageUpload } from "@/components/richmenu/ImageUpload";
 
 type SizeType = "full" | "half";
 
@@ -192,22 +193,11 @@ export default function NewRichMenuPage() {
           <p className="text-xs text-slate-500">最大14文字（{chatBarText.length}/14）</p>
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="imageUrl" className="text-sm font-medium text-slate-300">
-            画像URL
-          </label>
-          <input
-            id="imageUrl"
-            type="url"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            placeholder="https://example.com/richmenu.jpg"
-          />
-          <p className="text-xs text-slate-500">
-            画像サイズ: {sizeInfo.width}x{sizeInfo.height}px、JPEG/PNG形式
-          </p>
-        </div>
+        <ImageUpload
+          size={size}
+          onUploadComplete={setImageUrl}
+          currentImageUrl={imageUrl}
+        />
 
         {/* Tap Areas */}
         <div className="space-y-4">
