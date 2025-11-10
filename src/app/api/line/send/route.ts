@@ -406,10 +406,14 @@ export async function POST(req: NextRequest) {
       // Simple text format: {to, text}
       to = payload.to;
       messages = [{ type: "text", text: payload.text }];
-    } else {
+    } else if ("message" in payload) {
       // Legacy text format: {to, message}
       to = payload.to;
       messages = [{ type: "text", text: payload.message }];
+    } else {
+      // Fallback - should not reach here
+      to = payload.to;
+      messages = [{ type: "text", text: "" }];
     }
 
     // Send messages to LINE
@@ -460,6 +464,33 @@ export async function POST(req: NextRequest) {
         | { type: "text"; text: string }
         | { type: "sticker"; packageId: string; stickerId: string }
         | { type: "image"; originalContentUrl: string; previewImageUrl?: string }
+        | { type: "video"; originalContentUrl: string; previewImageUrl: string }
+        | { type: "audio"; originalContentUrl: string; duration: number }
+        | {
+            type: "location";
+            title: string;
+            address: string;
+            latitude: number;
+            longitude: number;
+          }
+        | {
+            type: "imagemap";
+            baseUrl: string;
+            altText: string;
+            baseSize: { width: number; height: number };
+            actions: Array<
+              | {
+                  type: "uri";
+                  linkUri: string;
+                  area: { x: number; y: number; width: number; height: number };
+                }
+              | {
+                  type: "message";
+                  text: string;
+                  area: { x: number; y: number; width: number; height: number };
+                }
+            >;
+          }
       >;
 
       if ("messages" in payload) {
@@ -477,9 +508,12 @@ export async function POST(req: NextRequest) {
       } else if ("text" in payload) {
         // Simple text format: {to, text}
         messages = [{ type: "text", text: payload.text }];
-      } else {
+      } else if ("message" in payload) {
         // Legacy text format: {to, message}
         messages = [{ type: "text", text: payload.message }];
+      } else {
+        // Fallback - should not reach here
+        messages = [{ type: "text", text: "" }];
       }
 
       // Send messages to LINE
@@ -517,14 +551,9 @@ export async function POST(req: NextRequest) {
           });
           await realtime().emit("message:outbound", {
             userId: user.id,
-            deliveryStatus: "SENT",
-          },
-        });
-        await realtime().emit("message:outbound", {
-          userId: user.id,
-          text: undefined,
-          createdAt: msg.createdAt.toISOString(),
-        });
+            text: undefined,
+            createdAt: msg.createdAt.toISOString(),
+          });
       } else if (m.type === "video") {
         const msg = await prisma.message.create({
           data: {
@@ -602,6 +631,7 @@ export async function POST(req: NextRequest) {
           createdAt: msg.createdAt.toISOString(),
         });
       }
+    }
     }
 
     return NextResponse.json({ status: "sent" });

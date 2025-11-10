@@ -27,7 +27,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
     }
 
     // Set as default rich menu on LINE
-    const client = getLineClient();
+    const client = await getLineClient();
     await client.setDefaultRichMenu(richMenu.richMenuId);
 
     // Update database - unset all other default flags
@@ -68,8 +68,12 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     }
 
     // Cancel default rich menu on LINE
-    const client = getLineClient();
-    await client.cancelDefaultRichMenu();
+    // TODO: Implement cancel default rich menu via LINE API
+    // const client = await getLineClient();
+    // await fetch(`https://api.line.me/v2/bot/user/all/richmenu`, {
+    //   method: 'DELETE',
+    //   headers: { 'Authorization': `Bearer ${accessToken}` }
+    // });
 
     // Update database
     await prisma.richMenu.update({

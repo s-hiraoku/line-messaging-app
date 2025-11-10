@@ -36,7 +36,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
     }
 
     // Link rich menu to user on LINE
-    const client = getLineClient();
+    const client = await getLineClient();
     await client.linkRichMenuToUser(user.lineUserId, richMenu.richMenuId);
 
     // Update database
@@ -75,7 +75,7 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     }
 
     // Unlink rich menu from user on LINE
-    const client = getLineClient();
+    const client = await getLineClient();
     await client.unlinkRichMenuFromUser(user.lineUserId);
 
     // Update database

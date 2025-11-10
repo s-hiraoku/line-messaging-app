@@ -33,6 +33,16 @@ export default function NewRichMenuPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const addArea = () => {
+    setAreas([
+      ...areas,
+      {
+        bounds: { x: 0, y: 0, width: 100, height: 100 },
+        action: { type: "uri", label: "", uri: "" },
+      },
+    ]);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
@@ -155,7 +165,8 @@ export default function NewRichMenuPage() {
             </button>
           </div>
 
-        <VisualEditor imageUrl={imageUrl} size={size} areas={areas} onAreasChange={setAreas} />
+          <VisualEditor imageUrl={imageUrl} size={size} areas={areas} onAreasChange={setAreas} />
+        </div>
 
         {error && (
           <div className="rounded-md bg-red-500/10 border border-red-500/50 px-4 py-3 text-sm text-red-400">
