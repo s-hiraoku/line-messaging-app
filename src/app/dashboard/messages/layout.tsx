@@ -16,7 +16,6 @@ const tabs = [
   { href: "/dashboard/messages/template", label: "テンプレート", enabled: true },
   { href: "/dashboard/messages/flex", label: "Flex", enabled: true },
   { href: "/dashboard/messages/coupon", label: "クーポン", enabled: true },
-  { href: "/dashboard/messages/richmenu", label: "リッチメニュー", enabled: false },
 ];
 
 export default function MessagesLayout({ children }: { children: ReactNode }) {
