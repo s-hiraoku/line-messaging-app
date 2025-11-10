@@ -4,6 +4,7 @@ import { getRedis } from "@/lib/redis/client";
 type Events = {
   "message:inbound": { userId: string; text?: string; createdAt: string };
   "message:outbound": { userId: string; text?: string; createdAt: string };
+  "dev:log": { time: string; level: string; message: string; data?: any };
 };
 
 class RealtimeBus {
@@ -30,4 +31,3 @@ export function realtime() {
   if (!instance) instance = new RealtimeBus();
   return instance;
 }
-
