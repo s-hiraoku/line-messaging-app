@@ -17,14 +17,27 @@ const imageMessage = z.object({
   originalContentUrl: z.string().url(),
   previewImageUrl: z.string().url().optional(),
 });
+const flexMessage = z.object({
+  type: z.literal("flex"),
+  altText: z.string().min(1).max(400),
+  contents: z
+    .object({ type: z.enum(["bubble", "carousel"]) })
+    .passthrough(), // Flex Message JSON structure - validates type and allows additional properties
+});
 
-const anyMessage = z.discriminatedUnion("type", [textMessage, stickerMessage, imageMessage]);
+const anyMessage = z.discriminatedUnion("type", [
+  textMessage,
+  stickerMessage,
+  imageMessage,
+  flexMessage,
+]);
 
 // Support multiple payload formats:
 // 1. Legacy text: {to, message, type?: "text"}
 // 2. Legacy sticker: {to, type: "sticker", packageId, stickerId}
 // 3. Simple text: {to, text}
-// 4. Array format: {to, messages: [{type, ...}]}
+// 4. Flex: {to, type: "flex", altText, contents}
+// 5. Array format: {to, messages: [{type, ...}]}
 const legacyTextPayloadSchema = z.object({
   to: z.string().min(1),
   message: z.string().min(1),
@@ -43,6 +56,15 @@ const simpleTextPayloadSchema = z.object({
   text: z.string().min(1),
 });
 
+const flexPayloadSchema = z.object({
+  to: z.string().min(1),
+  type: z.literal("flex"),
+  altText: z.string().min(1).max(400),
+  contents: z
+    .object({ type: z.enum(["bubble", "carousel"]) })
+    .passthrough(),
+});
+
 const arrayPayloadSchema = z.object({
   to: z.string().min(1),
   messages: z.array(anyMessage).min(1),
@@ -51,6 +73,7 @@ const arrayPayloadSchema = z.object({
 const payloadSchema = z.union([
   legacyTextPayloadSchema,
   stickerPayloadSchema,
+  flexPayloadSchema,
   arrayPayloadSchema,
   simpleTextPayloadSchema,
 ]);
@@ -65,6 +88,7 @@ export async function POST(req: NextRequest) {
       | { type: "text"; text: string }
       | { type: "sticker"; packageId: string; stickerId: string }
       | { type: "image"; originalContentUrl: string; previewImageUrl?: string }
+      | { type: "flex"; altText: string; contents: any }
     >;
     let to: string;
 
@@ -80,6 +104,16 @@ export async function POST(req: NextRequest) {
           type: "sticker",
           packageId: payload.packageId,
           stickerId: payload.stickerId,
+        },
+      ];
+    } else if ("type" in payload && payload.type === "flex") {
+      // Flex format: {to, type: "flex", altText, contents}
+      to = payload.to;
+      messages = [
+        {
+          type: "flex",
+          altText: payload.altText,
+          contents: payload.contents,
         },
       ];
     } else if ("text" in payload) {
@@ -157,6 +191,24 @@ export async function POST(req: NextRequest) {
         await realtime().emit("message:outbound", {
           userId: user.id,
           text: undefined,
+          createdAt: msg.createdAt.toISOString(),
+        });
+      } else if (m.type === "flex") {
+        const msg = await prisma.message.create({
+          data: {
+            type: "FLEX",
+            content: {
+              altText: m.altText,
+              contents: m.contents,
+            },
+            direction: "OUTBOUND",
+            userId: user.id,
+            deliveryStatus: "SENT",
+          },
+        });
+        await realtime().emit("message:outbound", {
+          userId: user.id,
+          text: `📊 ${m.altText}`,
           createdAt: msg.createdAt.toISOString(),
         });
       }
