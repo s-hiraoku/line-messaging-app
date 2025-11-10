@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useToast } from "@/components/ui/Toast";
+import { useConfirm } from "@/components/ui/ConfirmDialog";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 interface RichMenu {
   id: string;
@@ -17,6 +20,9 @@ export default function RichMenuPage() {
   const [richMenus, setRichMenus] = useState<RichMenu[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [settingDefault, setSettingDefault] = useState<string | null>(null);
+  const toast = useToast();
+  const { confirm } = useConfirm();
 
   const loadRichMenus = async () => {
     setLoading(true);
@@ -34,7 +40,14 @@ export default function RichMenuPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("このリッチメニューを削除しますか？")) {
+    const confirmed = await confirm({
+      title: "リッチメニューを削除",
+      message: "このリッチメニューを削除してもよろしいですか？この操作は取り消せません。",
+      confirmText: "削除",
+      type: "danger",
+    });
+
+    if (!confirmed) {
       return;
     }
 
@@ -46,14 +59,59 @@ export default function RichMenuPage() {
 
       if (response.ok) {
         await loadRichMenus();
+        toast.success("リッチメニューを削除しました");
       } else {
-        alert("削除に失敗しました");
+        toast.error("削除に失敗しました");
       }
     } catch (error) {
       console.error("Failed to delete rich menu:", error);
-      alert("削除に失敗しました");
+      toast.error("削除に失敗しました");
     } finally {
       setDeleting(null);
+    }
+  };
+
+  const handleSetDefault = async (id: string) => {
+    setSettingDefault(id);
+    try {
+      const response = await fetch(`/api/line/richmenu/${id}/default`, {
+        method: "POST",
+      });
+
+      if (response.ok) {
+        await loadRichMenus();
+        toast.success("デフォルトメニューに設定しました");
+      } else {
+        const data = await response.json();
+        toast.error(data.error || "デフォルト設定に失敗しました");
+      }
+    } catch (error) {
+      console.error("Failed to set default rich menu:", error);
+      toast.error("デフォルト設定に失敗しました");
+    } finally {
+      setSettingDefault(null);
+    }
+  };
+
+  const handleCancelDefault = async (id: string) => {
+    setSettingDefault(id);
+    try {
+      const response = await fetch(`/api/line/richmenu/${id}/default`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        await loadRichMenus();
+        toast.success("デフォルト設定を解除しました");
+      } else {
+        const data = await response.json();
+        toast.error(data.error || "デフォルト解除に失敗しました");
+      }
+    } catch (error) {
+      console.error("Failed to cancel default rich menu:", error);
+      toast.error("デフォルト解除に失敗しました");
+    } finally {
+      setSettingDefault(null);
     }
   };
 
@@ -87,9 +145,7 @@ export default function RichMenuPage() {
       </header>
 
       {loading ? (
-        <div className="flex items-center justify-center py-12">
-          <div className="text-slate-400">読み込み中...</div>
-        </div>
+        <LoadingSpinner text="読み込み中..." />
       ) : richMenus.length === 0 ? (
         <div className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-12 text-center shadow-lg backdrop-blur-sm">
           <svg
@@ -146,20 +202,33 @@ export default function RichMenuPage() {
                     <div>バーテキスト: {menu.chatBarText}</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Link
-                    href={`/dashboard/richmenu/${menu.id}`}
-                    className="flex-1 rounded border border-slate-600 bg-slate-900/60 px-3 py-2 text-center text-sm text-slate-300 transition hover:bg-slate-800/60"
-                  >
-                    編集
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(menu.id)}
-                    disabled={deleting === menu.id}
-                    className="rounded border border-red-600/50 bg-red-600/10 px-3 py-2 text-sm text-red-400 transition hover:bg-red-600/20 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {deleting === menu.id ? "削除中..." : "削除"}
-                  </button>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    {menu.selected ? (
+                      <button
+                        onClick={() => handleCancelDefault(menu.id)}
+                        disabled={settingDefault === menu.id}
+                        className="flex-1 rounded border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-slate-300 transition hover:bg-slate-800/60 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {settingDefault === menu.id ? "解除中..." : "デフォルト解除"}
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleSetDefault(menu.id)}
+                        disabled={settingDefault === menu.id}
+                        className="flex-1 rounded border border-blue-600/50 bg-blue-600/10 px-3 py-2 text-sm text-blue-400 transition hover:bg-blue-600/20 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {settingDefault === menu.id ? "設定中..." : "デフォルト設定"}
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleDelete(menu.id)}
+                      disabled={deleting === menu.id}
+                      className="rounded border border-red-600/50 bg-red-600/10 px-3 py-2 text-sm text-red-400 transition hover:bg-red-600/20 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {deleting === menu.id ? "削除中..." : "削除"}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
