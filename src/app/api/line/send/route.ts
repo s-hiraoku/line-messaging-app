@@ -35,6 +35,40 @@ const locationMessage = z.object({
   longitude: z.number().min(-180).max(180),
 });
 
+const imagemapActionSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("uri"),
+    linkUri: z.string().url(),
+    area: z.object({
+      x: z.number().min(0),
+      y: z.number().min(0),
+      width: z.number().min(1),
+      height: z.number().min(1),
+    }),
+  }),
+  z.object({
+    type: z.literal("message"),
+    text: z.string().min(1),
+    area: z.object({
+      x: z.number().min(0),
+      y: z.number().min(0),
+      width: z.number().min(1),
+      height: z.number().min(1),
+    }),
+  }),
+]);
+
+const imagemapMessage = z.object({
+  type: z.literal("imagemap"),
+  baseUrl: z.string().url(),
+  altText: z.string().min(1).max(400),
+  baseSize: z.object({
+    width: z.number().min(1).max(2500),
+    height: z.number().min(1).max(2500),
+  }),
+  actions: z.array(imagemapActionSchema).min(1),
+});
+
 const anyMessage = z.discriminatedUnion("type", [
   textMessage,
   stickerMessage,
@@ -42,6 +76,7 @@ const anyMessage = z.discriminatedUnion("type", [
   videoMessage,
   audioMessage,
   locationMessage,
+  imagemapMessage,
 ]);
 
 // Support multiple payload formats:
@@ -50,8 +85,9 @@ const anyMessage = z.discriminatedUnion("type", [
 // 3. Legacy video: {to, type: "video", videoUrl, previewUrl}
 // 4. Legacy audio: {to, type: "audio", audioUrl, duration}
 // 5. Location: {to, type: "location", title, address, latitude, longitude}
-// 6. Simple text: {to, text}
-// 7. Array format: {to, messages: [{type, ...}]}
+// 6. Imagemap: {to, type: "imagemap", baseUrl, altText, baseSize, actions}
+// 7. Simple text: {to, text}
+// 8. Array format: {to, messages: [{type, ...}]}
 const legacyTextPayloadSchema = z.object({
   to: z.string().min(1),
   message: z.string().min(1),
@@ -88,6 +124,18 @@ const locationPayloadSchema = z.object({
   longitude: z.number().min(-180).max(180),
 });
 
+const imagemapPayloadSchema = z.object({
+  to: z.string().min(1),
+  type: z.literal("imagemap"),
+  baseUrl: z.string().url(),
+  altText: z.string().min(1).max(400),
+  baseSize: z.object({
+    width: z.number().min(1).max(2500),
+    height: z.number().min(1).max(2500),
+  }),
+  actions: z.array(imagemapActionSchema).min(1),
+});
+
 const simpleTextPayloadSchema = z.object({
   to: z.string().min(1),
   text: z.string().min(1),
@@ -104,6 +152,7 @@ const payloadSchema = z.union([
   videoPayloadSchema,
   audioPayloadSchema,
   locationPayloadSchema,
+  imagemapPayloadSchema,
   arrayPayloadSchema,
   simpleTextPayloadSchema,
 ]);
@@ -126,6 +175,24 @@ export async function POST(req: NextRequest) {
           address: string;
           latitude: number;
           longitude: number;
+        }
+      | {
+          type: "imagemap";
+          baseUrl: string;
+          altText: string;
+          baseSize: { width: number; height: number };
+          actions: Array<
+            | {
+                type: "uri";
+                linkUri: string;
+                area: { x: number; y: number; width: number; height: number };
+              }
+            | {
+                type: "message";
+                text: string;
+                area: { x: number; y: number; width: number; height: number };
+              }
+          >;
         }
     >;
     let to: string;
@@ -174,6 +241,18 @@ export async function POST(req: NextRequest) {
           address: payload.address,
           latitude: payload.latitude,
           longitude: payload.longitude,
+        },
+      ];
+    } else if ("type" in payload && payload.type === "imagemap") {
+      // Imagemap format: {to, type: "imagemap", baseUrl, altText, baseSize, actions}
+      to = payload.to;
+      messages = [
+        {
+          type: "imagemap",
+          baseUrl: payload.baseUrl,
+          altText: payload.altText,
+          baseSize: payload.baseSize,
+          actions: payload.actions,
         },
       ];
     } else if ("text" in payload) {
@@ -307,6 +386,26 @@ export async function POST(req: NextRequest) {
         await realtime().emit("message:outbound", {
           userId: user.id,
           text: `📍 ${m.title}`,
+          createdAt: msg.createdAt.toISOString(),
+        });
+      } else if (m.type === "imagemap") {
+        const msg = await prisma.message.create({
+          data: {
+            type: "IMAGEMAP",
+            content: {
+              baseUrl: m.baseUrl,
+              altText: m.altText,
+              baseSize: m.baseSize,
+              actions: m.actions,
+            },
+            direction: "OUTBOUND",
+            userId: user.id,
+            deliveryStatus: "SENT",
+          },
+        });
+        await realtime().emit("message:outbound", {
+          userId: user.id,
+          text: `🗺️ ${m.altText}`,
           createdAt: msg.createdAt.toISOString(),
         });
       }
