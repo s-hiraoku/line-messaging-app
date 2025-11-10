@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useToast } from "@/components/ui/Toast";
+import { useConfirm } from "@/components/ui/ConfirmDialog";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 interface RichMenu {
   id: string;
@@ -18,6 +21,8 @@ export default function RichMenuPage() {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [settingDefault, setSettingDefault] = useState<string | null>(null);
+  const toast = useToast();
+  const { confirm } = useConfirm();
 
   const loadRichMenus = async () => {
     setLoading(true);
@@ -35,7 +40,14 @@ export default function RichMenuPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("このリッチメニューを削除しますか？")) {
+    const confirmed = await confirm({
+      title: "リッチメニューを削除",
+      message: "このリッチメニューを削除してもよろしいですか？この操作は取り消せません。",
+      confirmText: "削除",
+      type: "danger",
+    });
+
+    if (!confirmed) {
       return;
     }
 
@@ -47,12 +59,13 @@ export default function RichMenuPage() {
 
       if (response.ok) {
         await loadRichMenus();
+        toast.success("リッチメニューを削除しました");
       } else {
-        alert("削除に失敗しました");
+        toast.error("削除に失敗しました");
       }
     } catch (error) {
       console.error("Failed to delete rich menu:", error);
-      alert("削除に失敗しました");
+      toast.error("削除に失敗しました");
     } finally {
       setDeleting(null);
     }
@@ -67,13 +80,14 @@ export default function RichMenuPage() {
 
       if (response.ok) {
         await loadRichMenus();
+        toast.success("デフォルトメニューに設定しました");
       } else {
         const data = await response.json();
-        alert(data.error || "デフォルト設定に失敗しました");
+        toast.error(data.error || "デフォルト設定に失敗しました");
       }
     } catch (error) {
       console.error("Failed to set default rich menu:", error);
-      alert("デフォルト設定に失敗しました");
+      toast.error("デフォルト設定に失敗しました");
     } finally {
       setSettingDefault(null);
     }
@@ -88,13 +102,14 @@ export default function RichMenuPage() {
 
       if (response.ok) {
         await loadRichMenus();
+        toast.success("デフォルト設定を解除しました");
       } else {
         const data = await response.json();
-        alert(data.error || "デフォルト解除に失敗しました");
+        toast.error(data.error || "デフォルト解除に失敗しました");
       }
     } catch (error) {
       console.error("Failed to cancel default rich menu:", error);
-      alert("デフォルト解除に失敗しました");
+      toast.error("デフォルト解除に失敗しました");
     } finally {
       setSettingDefault(null);
     }
@@ -130,9 +145,7 @@ export default function RichMenuPage() {
       </header>
 
       {loading ? (
-        <div className="flex items-center justify-center py-12">
-          <div className="text-slate-400">読み込み中...</div>
-        </div>
+        <LoadingSpinner text="読み込み中..." />
       ) : richMenus.length === 0 ? (
         <div className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-12 text-center shadow-lg backdrop-blur-sm">
           <svg
