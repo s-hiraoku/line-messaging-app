@@ -5,6 +5,13 @@ import { useRealtimeEvents } from "@/lib/realtime/use-events";
 import Link from "next/link";
 import { ArrowUpRight, MessageSquare, Users, Send, FileText } from "lucide-react";
 import { DebugPanel, toCurl } from "./_components/debug-panel";
+import { MessageTypeDistribution } from "./_components/message-type-distribution";
+import { UserGrowthChart } from "./_components/user-growth-chart";
+import { TopActiveUsers } from "./_components/top-active-users";
+import { RichMenuUsage } from "./_components/rich-menu-usage";
+import { UserSegmentation } from "./_components/user-segmentation";
+import { BroadcastOverview } from "./_components/broadcast-overview";
+import { WeeklyActivityChart } from "./_components/weekly-activity-chart";
 
 type DashboardStats = {
   today: {
@@ -39,8 +46,62 @@ type DashboardStats = {
   }>;
 };
 
+type ExtendedStats = {
+  messageTypeDistribution: Array<{
+    type: string;
+    count: number;
+  }>;
+  userGrowth: Array<{
+    date: string;
+    count: number;
+  }>;
+  topUsers: Array<{
+    id: string;
+    displayName: string;
+    pictureUrl: string | null;
+    messageCount: number;
+  }>;
+  richMenuStats: Array<{
+    id: string;
+    name: string;
+    selected: boolean;
+    userCount: number;
+  }>;
+  userSegmentation: Array<{
+    id: string;
+    name: string;
+    color: string;
+    userCount: number;
+  }>;
+  broadcastStats: Array<{
+    status: string;
+    count: number;
+  }>;
+  recentBroadcasts: Array<{
+    id: string;
+    title: string;
+    status: string;
+    scheduledAt: string | null;
+    createdAt: string;
+  }>;
+  weeklyActivity: Array<{
+    date: string;
+    inbound: number;
+    outbound: number;
+  }>;
+  newUsersCount: number;
+  topTemplates: Array<{
+    id: string;
+    name: string;
+    category: string | null;
+    isActive: boolean;
+    usageCount: number;
+  }>;
+};
+
 export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [extendedStats, setExtendedStats] = useState<ExtendedStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -50,11 +111,20 @@ export default function DashboardPage() {
   const loadStats = async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/dashboard/stats", { cache: "no-store" });
-      if (!res.ok) throw new Error("Failed to load stats");
-      const data = await res.json();
-      setStats(data);
-      setRawStats(data);
+      const [statsRes, extendedStatsRes] = await Promise.all([
+        fetch("/api/dashboard/stats", { cache: "no-store" }),
+        fetch("/api/dashboard/extended-stats", { cache: "no-store" }),
+      ]);
+
+      if (!statsRes.ok) throw new Error("Failed to load stats");
+      if (!extendedStatsRes.ok) throw new Error("Failed to load extended stats");
+
+      const statsData = await statsRes.json();
+      const extendedStatsData = await extendedStatsRes.json();
+
+      setStats(statsData);
+      setExtendedStats(extendedStatsData);
+      setRawStats({ stats: statsData, extendedStats: extendedStatsData });
       setError(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load dashboard");
@@ -162,6 +232,33 @@ export default function DashboardPage() {
           </article>
         </Link>
       </section>
+
+      {/* 拡張統計ウィジェット */}
+      {extendedStats && (
+        <>
+          {/* 週間アクティビティと新規ユーザー */}
+          <section className="grid gap-4 md:grid-cols-2">
+            <WeeklyActivityChart data={extendedStats.weeklyActivity} />
+            <UserGrowthChart data={extendedStats.userGrowth} />
+          </section>
+
+          {/* メッセージタイプ分布とブロードキャスト概要 */}
+          <section className="grid gap-4 md:grid-cols-2">
+            <MessageTypeDistribution data={extendedStats.messageTypeDistribution} />
+            <BroadcastOverview
+              statusData={extendedStats.broadcastStats}
+              recentBroadcasts={extendedStats.recentBroadcasts}
+            />
+          </section>
+
+          {/* トップアクティブユーザー、リッチメニュー、ユーザーセグメント */}
+          <section className="grid gap-4 md:grid-cols-3">
+            <TopActiveUsers data={extendedStats.topUsers} />
+            <RichMenuUsage data={extendedStats.richMenuStats} />
+            <UserSegmentation data={extendedStats.userSegmentation} />
+          </section>
+        </>
+      )}
 
       {/* 最近のアクティビティ */}
       <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5 shadow-sm">
