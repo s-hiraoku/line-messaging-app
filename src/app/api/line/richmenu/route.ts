@@ -53,22 +53,10 @@ const createRichMenuSchema = z.object({
         z.object({
           type: z.literal("datetimepicker"),
           data: z.string().min(1),
-          mode: z.enum(["date", "time", "datetime"]).optional(),
+          mode: z.enum(["date", "time", "datetime"]),
           initial: z.string().optional(),
           max: z.string().optional(),
           min: z.string().optional(),
-        }),
-        z.object({
-          type: z.literal("camera"),
-          label: z.string().optional(),
-        }),
-        z.object({
-          type: z.literal("cameraRoll"),
-          label: z.string().optional(),
-        }),
-        z.object({
-          type: z.literal("location"),
-          label: z.string().optional(),
         }),
         z.object({
           type: z.literal("richmenuswitch"),

@@ -17,7 +17,7 @@ interface TapArea {
     height: number;
   };
   action: {
-    type: "uri" | "message" | "postback" | "datetimepicker" | "camera" | "cameraRoll" | "location" | "richmenuswitch";
+    type: "uri" | "message" | "postback" | "datetimepicker" | "richmenuswitch";
     label?: string;
     uri?: string;
     text?: string;
@@ -38,9 +38,10 @@ const LAYOUT_TEMPLATES: Record<string, { name: string; description: string; area
     description: "上下2つのエリアに分割",
     areas: (size) => {
       const height = size === "full" ? 1686 : 843;
+      const areaHeight = Math.floor(height / 2);
       return [
-        { bounds: { x: 0, y: 0, width: 2500, height: height / 2 }, action: { type: "uri", uri: "https://example.com" } },
-        { bounds: { x: 0, y: height / 2, width: 2500, height: height / 2 }, action: { type: "uri", uri: "https://example.com" } },
+        { bounds: { x: 0, y: 0, width: 2500, height: areaHeight }, action: { type: "uri", uri: "https://example.com" } },
+        { bounds: { x: 0, y: areaHeight, width: 2500, height: height - areaHeight }, action: { type: "uri", uri: "https://example.com" } },
       ];
     },
   },
