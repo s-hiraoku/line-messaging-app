@@ -93,15 +93,79 @@ npm run dev
 
 - `DATABASE_URL` 例: `postgresql://postgres:postgres@localhost:5432/line_app?schema=public`
 
-オプション
+オプション（機能別に必要）
 
-- `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`（設定するとリアルタイムイベントを publish）
-- `CLOUDINARY_*`（将来のメディア管理用）
+- `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`
+  - リアルタイムイベント通知を使う場合に必要
+- `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
+  - **画像メッセージ送信**または**リッチメニュー作成**を使う場合に必須
+  - 無料プランで開始可能（詳細は後述）
 - `SENTRY_DSN` ほか監視系
+  - エラー監視を使う場合に必要
 
 注意
 
 - 本 POC は「チャネル設定（チャネル ID/シークレット）は 画面（設定 → チャネル情報）から保存」します。アクセストークンは保存せず、送信時に自動発行（OAuth2 Client Credentials）しメモリにキャッシュします。
+
+---
+
+## Cloudinary セットアップ（画像機能を使う場合）
+
+Cloudinaryは画像のアップロード・保存・配信を行うクラウドサービスです。
+
+### 必要な機能
+
+以下の機能を使う場合、Cloudinaryの設定が必須です：
+
+- **画像メッセージの送信** (`/dashboard/messages/image`)
+- **リッチメニューの作成** (`/dashboard/richmenu/new`)
+
+### セットアップ手順
+
+1. **アカウント作成（無料）**
+   - https://cloudinary.com/ にアクセス
+   - 「Sign up for free」をクリック
+   - メールアドレスで登録（Googleアカウントでも可）
+
+2. **APIキーの取得**
+   - ログイン後、ダッシュボードに表示される以下の情報をコピー：
+     - **Cloud Name** (例: `dxxxxxxxxxxxxx`)
+     - **API Key** (例: `123456789012345`)
+     - **API Secret** (例: `abcdefghijklmnopqrstuvwxyz123`)
+
+3. **環境変数に設定**
+
+`.env`ファイルに以下を追加：
+
+```env
+# File Storage (Cloudinary)
+CLOUDINARY_CLOUD_NAME=あなたのcloud_name
+CLOUDINARY_API_KEY=あなたのapi_key
+CLOUDINARY_API_SECRET=あなたのapi_secret
+```
+
+4. **開発サーバーを再起動**
+
+```bash
+# 停止して再起動
+npm run dev
+```
+
+### 料金について
+
+- **無料プラン**: 月25クレジット、25GB ストレージ、25GB 帯域幅
+  - 開発・テスト環境には十分です
+- 有料プランは必要に応じてアップグレード可能
+
+### 代替手段
+
+Cloudinaryを使わない場合、以下の選択肢があります：
+
+- **AWS S3**: Amazon Web Servicesのストレージサービス
+- **Supabase Storage**: オープンソースのストレージサービス
+- **ローカルストレージ**: 開発環境のみ（本番環境には非推奨）
+
+これらを使う場合は、`/api/upload/richmenu-image/route.ts` と `/api/uploads/image/route.ts` の実装を変更する必要があります。
 
 ---
 
