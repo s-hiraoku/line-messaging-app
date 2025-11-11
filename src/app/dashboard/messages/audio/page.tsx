@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { LineConversation } from "../_components/line-conversation";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -132,39 +133,13 @@ export default function AudioMessagePage() {
 
       {/* Preview Section */}
       {audioUrl && isValidDuration && (
-        <div className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-6 shadow-lg backdrop-blur-sm">
-          <h2 className="mb-4 text-lg font-semibold text-white">プレビュー</h2>
-          <div className="flex justify-end">
-            <div className="max-w-xs space-y-2">
-              <div className="rounded-2xl bg-blue-600 px-4 py-3 text-white shadow-md">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
-                    <svg
-                      className="h-5 w-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15.536a5 5 0 001.414 1.414m0 0a5 5 0 007.072 0"
-                      />
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-xs opacity-80">音声メッセージ</div>
-                    <div className="text-sm font-medium">{(durationMs / 1000).toFixed(1)}秒</div>
-                  </div>
-                </div>
-              </div>
-              <div className="text-right text-xs text-slate-500">
-                {(durationMs / 1000).toFixed(1)}秒
-              </div>
-            </div>
-          </div>
-        </div>
+        <LineConversation
+          message={{
+            type: "audio",
+            audioUrl,
+            duration: durationMs,
+          }}
+        />
       )}
 
       {/* Debug Panel */}

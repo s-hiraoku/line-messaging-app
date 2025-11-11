@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { LineConversation } from "../_components/line-conversation";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -225,30 +226,15 @@ export default function LocationMessagePage() {
 
       {/* Map Preview */}
       {isValidCoordinates && (
-        <div className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-6 shadow-lg backdrop-blur-sm">
-          <h2 className="mb-4 text-lg font-semibold text-white">プレビュー</h2>
-          <div className="flex justify-end">
-            <div className="max-w-xs space-y-2">
-              <div className="overflow-hidden rounded-2xl bg-blue-600 shadow-md">
-                <div className="relative h-48 w-full bg-slate-700">
-                  <iframe
-                    src={`https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`}
-                    className="h-full w-full"
-                    style={{ border: 0 }}
-                    loading="lazy"
-                  />
-                </div>
-                <div className="bg-white p-3 text-slate-900">
-                  <div className="font-medium">{title}</div>
-                  <div className="text-sm text-slate-600">{address}</div>
-                </div>
-              </div>
-              <div className="text-right text-xs text-slate-500">
-                {lat.toFixed(6)}, {lng.toFixed(6)}
-              </div>
-            </div>
-          </div>
-        </div>
+        <LineConversation
+          message={{
+            type: "location",
+            title,
+            address,
+            latitude: lat,
+            longitude: lng,
+          }}
+        />
       )}
 
       {/* Debug Panel */}
