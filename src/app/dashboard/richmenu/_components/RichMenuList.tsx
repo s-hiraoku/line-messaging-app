@@ -31,6 +31,21 @@ export function RichMenuList() {
   const [lastEndpoint, setLastEndpoint] = useState<string>("");
   const [lastMethod, setLastMethod] = useState<string>("GET");
 
+  const formatSize = (size: string) => {
+    const sizeMap: Record<string, string> = {
+      "2500x1686": "大・フル (2500×1686px)",
+      "2500x843": "大・ハーフ (2500×843px)",
+      "1200x810": "中・フル (1200×810px)",
+      "1200x405": "中・ハーフ (1200×405px)",
+      "800x540": "小・フル (800×540px)",
+      "800x270": "小・ハーフ (800×270px)",
+      // Legacy support
+      "full": "フル (2500×1686px)",
+      "half": "ハーフ (2500×843px)",
+    };
+    return sizeMap[size] || size;
+  };
+
   const loadRichMenus = async () => {
     setLoading(true);
     try {
@@ -166,8 +181,7 @@ export function RichMenuList() {
                     )}
                   </div>
                   <p className="mt-1 text-sm text-slate-400">
-                    サイズ: {menu.size === "full" ? "フル" : "ハーフ"} ・
-                    チャットバー: {menu.chatBarText}
+                    サイズ: {formatSize(menu.size)} ・ チャットバー: {menu.chatBarText}
                   </p>
                 </div>
                 <div className="flex gap-2">

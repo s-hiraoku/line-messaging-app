@@ -19,16 +19,28 @@ interface TapArea {
   };
 }
 
+type RichMenuSize =
+  | "2500x1686"
+  | "2500x843"
+  | "1200x810"
+  | "1200x405"
+  | "800x540"
+  | "800x270";
+
 interface VisualEditorProps {
   imageUrl: string;
-  size: "full" | "half";
+  size: RichMenuSize;
   areas: TapArea[];
   onAreasChange: (areas: TapArea[]) => void;
 }
 
-const RICHMENU_SIZES = {
-  full: { width: 2500, height: 1686 },
-  half: { width: 2500, height: 843 },
+const RICHMENU_SIZES: Record<RichMenuSize, { width: number; height: number }> = {
+  "2500x1686": { width: 2500, height: 1686 },
+  "2500x843": { width: 2500, height: 843 },
+  "1200x810": { width: 1200, height: 810 },
+  "1200x405": { width: 1200, height: 405 },
+  "800x540": { width: 800, height: 540 },
+  "800x270": { width: 800, height: 270 },
 };
 
 const COLORS = [

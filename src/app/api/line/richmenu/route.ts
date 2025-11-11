@@ -22,7 +22,7 @@ export async function GET() {
 // POST - Create new rich menu
 const createRichMenuSchema = z.object({
   name: z.string().min(1),
-  size: z.enum(["full", "half"]),
+  size: z.enum(["2500x1686", "2500x843", "1200x810", "1200x405", "800x540", "800x270"]),
   chatBarText: z.string().min(1).max(14),
   imageUrl: z.string().url().optional().or(z.literal("")),
   areas: z.array(

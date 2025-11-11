@@ -8,7 +8,13 @@ import { DebugPanel, toCurl } from "../../_components/debug-panel";
 
 export const dynamic = "force-dynamic";
 
-type SizeType = "full" | "half";
+type SizeType =
+  | "2500x1686"  // Large Full
+  | "2500x843"   // Large Half
+  | "1200x810"   // Medium Full
+  | "1200x405"   // Medium Half
+  | "800x540"    // Small Full
+  | "800x270";   // Small Half
 
 interface TapArea {
   bounds: {
@@ -29,7 +35,7 @@ interface TapArea {
 export default function NewRichMenuPage() {
   const router = useRouter();
   const [name, setName] = useState("");
-  const [size, setSize] = useState<SizeType>("full");
+  const [size, setSize] = useState<SizeType>("2500x1686");
   const [chatBarText, setChatBarText] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [areas, setAreas] = useState<TapArea[]>([]);
@@ -127,9 +133,22 @@ export default function NewRichMenuPage() {
             className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             required
           >
-            <option value="full">フル (2500x1686px)</option>
-            <option value="half">ハーフ (2500x843px)</option>
+            <optgroup label="大サイズ (2500px幅)">
+              <option value="2500x1686">フル - 2500×1686px</option>
+              <option value="2500x843">ハーフ - 2500×843px</option>
+            </optgroup>
+            <optgroup label="中サイズ (1200px幅)">
+              <option value="1200x810">フル - 1200×810px</option>
+              <option value="1200x405">ハーフ - 1200×405px</option>
+            </optgroup>
+            <optgroup label="小サイズ (800px幅)">
+              <option value="800x540">フル - 800×540px</option>
+              <option value="800x270">ハーフ - 800×270px</option>
+            </optgroup>
           </select>
+          <p className="text-xs text-slate-500">
+            画像は指定サイズに合わせて作成してください（JPEG/PNG、最大1MB）
+          </p>
         </div>
 
         <div className="space-y-2">
