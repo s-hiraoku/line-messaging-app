@@ -52,15 +52,19 @@ const COLORS = [
   "rgba(236, 72, 153, 0.3)", // pink
 ];
 
+type DragMode = 'none' | 'draw' | 'move' | 'resize-n' | 'resize-s' | 'resize-e' | 'resize-w' | 'resize-ne' | 'resize-nw' | 'resize-se' | 'resize-sw';
+
 export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEditorProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [selectedAreaIndex, setSelectedAreaIndex] = useState<number | null>(null);
-  const [isDrawing, setIsDrawing] = useState(false);
-  const [drawStart, setDrawStart] = useState<{ x: number; y: number } | null>(null);
-  const [currentDraw, setCurrentDraw] = useState<{ x: number; y: number } | null>(null);
+  const [dragMode, setDragMode] = useState<DragMode>('none');
+  const [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(null);
+  const [currentDrag, setCurrentDrag] = useState<{ x: number; y: number } | null>(null);
+  const [originalBounds, setOriginalBounds] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
   const [scale, setScale] = useState(1);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
+  const [cursor, setCursor] = useState<string>('crosshair');
 
   const richMenuSize = RICHMENU_SIZES[size];
 
@@ -152,6 +156,27 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
         area.bounds.height * scale
       );
 
+      // Draw resize handles for selected area
+      if (isSelected) {
+        const handleSize = 8;
+        const x = area.bounds.x * scale;
+        const y = area.bounds.y * scale;
+        const w = area.bounds.width * scale;
+        const h = area.bounds.height * scale;
+
+        ctx.fillStyle = "#3b82f6";
+        // Corners
+        ctx.fillRect(x - handleSize / 2, y - handleSize / 2, handleSize, handleSize);
+        ctx.fillRect(x + w - handleSize / 2, y - handleSize / 2, handleSize, handleSize);
+        ctx.fillRect(x - handleSize / 2, y + h - handleSize / 2, handleSize, handleSize);
+        ctx.fillRect(x + w - handleSize / 2, y + h - handleSize / 2, handleSize, handleSize);
+        // Edges
+        ctx.fillRect(x + w / 2 - handleSize / 2, y - handleSize / 2, handleSize, handleSize);
+        ctx.fillRect(x + w / 2 - handleSize / 2, y + h - handleSize / 2, handleSize, handleSize);
+        ctx.fillRect(x - handleSize / 2, y + h / 2 - handleSize / 2, handleSize, handleSize);
+        ctx.fillRect(x + w - handleSize / 2, y + h / 2 - handleSize / 2, handleSize, handleSize);
+      }
+
       // Draw label
       ctx.fillStyle = "#ffffff";
       ctx.font = `bold ${14 * scale}px sans-serif`;
@@ -162,12 +187,12 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
       );
     });
 
-    // Draw current drawing area
-    if (isDrawing && drawStart && currentDraw) {
-      const x = Math.min(drawStart.x, currentDraw.x);
-      const y = Math.min(drawStart.y, currentDraw.y);
-      const width = Math.abs(currentDraw.x - drawStart.x);
-      const height = Math.abs(currentDraw.y - drawStart.y);
+    // Draw current drawing/dragging area
+    if (dragMode === 'draw' && dragStart && currentDrag) {
+      const x = Math.min(dragStart.x, currentDrag.x);
+      const y = Math.min(dragStart.y, currentDrag.y);
+      const width = Math.abs(currentDrag.x - dragStart.x);
+      const height = Math.abs(currentDrag.y - dragStart.y);
 
       ctx.fillStyle = "rgba(59, 130, 246, 0.3)";
       ctx.fillRect(x, y, width, height);
@@ -175,7 +200,7 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
       ctx.lineWidth = 2;
       ctx.strokeRect(x, y, width, height);
     }
-  }, [image, areas, selectedAreaIndex, isDrawing, drawStart, currentDraw, scale, richMenuSize]);
+  }, [image, areas, selectedAreaIndex, dragMode, dragStart, currentDrag, scale, richMenuSize]);
 
   const getCanvasCoordinates = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
@@ -188,71 +213,183 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
     };
   };
 
+  const getHitTest = (x: number, y: number, areaIndex: number): DragMode => {
+    const area = areas[areaIndex];
+    const ax = area.bounds.x * scale;
+    const ay = area.bounds.y * scale;
+    const aw = area.bounds.width * scale;
+    const ah = area.bounds.height * scale;
+    const handleSize = 8;
+    const threshold = 12;
+
+    // Check corners
+    if (Math.abs(x - ax) < threshold && Math.abs(y - ay) < threshold) return 'resize-nw';
+    if (Math.abs(x - (ax + aw)) < threshold && Math.abs(y - ay) < threshold) return 'resize-ne';
+    if (Math.abs(x - ax) < threshold && Math.abs(y - (ay + ah)) < threshold) return 'resize-sw';
+    if (Math.abs(x - (ax + aw)) < threshold && Math.abs(y - (ay + ah)) < threshold) return 'resize-se';
+
+    // Check edges
+    if (Math.abs(y - ay) < threshold && x > ax && x < ax + aw) return 'resize-n';
+    if (Math.abs(y - (ay + ah)) < threshold && x > ax && x < ax + aw) return 'resize-s';
+    if (Math.abs(x - ax) < threshold && y > ay && y < ay + ah) return 'resize-w';
+    if (Math.abs(x - (ax + aw)) < threshold && y > ay && y < ay + ah) return 'resize-e';
+
+    // Check inside area for move
+    if (x >= ax && x <= ax + aw && y >= ay && y <= ay + ah) return 'move';
+
+    return 'none';
+  };
+
+  const getCursorForMode = (mode: DragMode): string => {
+    const cursorMap: Record<DragMode, string> = {
+      'none': 'crosshair',
+      'draw': 'crosshair',
+      'move': 'move',
+      'resize-n': 'ns-resize',
+      'resize-s': 'ns-resize',
+      'resize-e': 'ew-resize',
+      'resize-w': 'ew-resize',
+      'resize-ne': 'nesw-resize',
+      'resize-sw': 'nesw-resize',
+      'resize-nw': 'nwse-resize',
+      'resize-se': 'nwse-resize',
+    };
+    return cursorMap[mode] || 'crosshair';
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const coords = getCanvasCoordinates(e);
+
+    if (dragMode === 'none') {
+      // Update cursor based on hover
+      if (selectedAreaIndex !== null) {
+        const mode = getHitTest(coords.x, coords.y, selectedAreaIndex);
+        setCursor(getCursorForMode(mode));
+      } else {
+        setCursor('crosshair');
+      }
+      return;
+    }
+
+    if (!dragStart || !originalBounds) return;
+    setCurrentDrag(coords);
+
+    const dx = coords.x - dragStart.x;
+    const dy = coords.y - dragStart.y;
+
+    if (selectedAreaIndex === null) return;
+
+    const newAreas = [...areas];
+    const area = newAreas[selectedAreaIndex];
+
+    if (dragMode === 'move') {
+      area.bounds.x = Math.round(originalBounds.x + dx / scale);
+      area.bounds.y = Math.round(originalBounds.y + dy / scale);
+    } else if (dragMode.startsWith('resize-')) {
+      let newX = originalBounds.x;
+      let newY = originalBounds.y;
+      let newW = originalBounds.width;
+      let newH = originalBounds.height;
+
+      if (dragMode.includes('n')) {
+        newY = originalBounds.y + dy / scale;
+        newH = originalBounds.height - dy / scale;
+      }
+      if (dragMode.includes('s')) {
+        newH = originalBounds.height + dy / scale;
+      }
+      if (dragMode.includes('w')) {
+        newX = originalBounds.x + dx / scale;
+        newW = originalBounds.width - dx / scale;
+      }
+      if (dragMode.includes('e')) {
+        newW = originalBounds.width + dx / scale;
+      }
+
+      // Minimum size constraint
+      if (newW >= 50 && newH >= 50) {
+        area.bounds.x = Math.round(newX);
+        area.bounds.y = Math.round(newY);
+        area.bounds.width = Math.round(newW);
+        area.bounds.height = Math.round(newH);
+      }
+    }
+
+    onAreasChange(newAreas);
+  };
+
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const coords = getCanvasCoordinates(e);
 
-    // Check if clicking on existing area
-    const clickedIndex = areas.findIndex((area) => {
-      const x = area.bounds.x * scale;
-      const y = area.bounds.y * scale;
-      const w = area.bounds.width * scale;
-      const h = area.bounds.height * scale;
-      return coords.x >= x && coords.x <= x + w && coords.y >= y && coords.y <= y + h;
-    });
+    // Check if clicking on selected area first
+    if (selectedAreaIndex !== null) {
+      const mode = getHitTest(coords.x, coords.y, selectedAreaIndex);
+      if (mode !== 'none') {
+        setDragMode(mode);
+        setDragStart(coords);
+        setCurrentDrag(coords);
+        setOriginalBounds({ ...areas[selectedAreaIndex].bounds });
+        return;
+      }
+    }
 
-    if (clickedIndex !== -1) {
-      setSelectedAreaIndex(clickedIndex);
-      return;
+    // Check if clicking on any area
+    for (let i = 0; i < areas.length; i++) {
+      const mode = getHitTest(coords.x, coords.y, i);
+      if (mode !== 'none') {
+        setSelectedAreaIndex(i);
+        setDragMode(mode);
+        setDragStart(coords);
+        setCurrentDrag(coords);
+        setOriginalBounds({ ...areas[i].bounds });
+        return;
+      }
     }
 
     // Start drawing new area
     setSelectedAreaIndex(null);
-    setIsDrawing(true);
-    setDrawStart(coords);
-    setCurrentDraw(coords);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDrawing) return;
-    setCurrentDraw(getCanvasCoordinates(e));
+    setDragMode('draw');
+    setDragStart(coords);
+    setCurrentDrag(coords);
   };
 
   const handleMouseUp = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDrawing || !drawStart) return;
+    if (dragMode === 'draw' && dragStart) {
+      const coords = getCanvasCoordinates(e);
 
-    const coords = getCanvasCoordinates(e);
+      // Calculate canvas pixel size (scaled size)
+      const canvasWidth = Math.abs(coords.x - dragStart.x);
+      const canvasHeight = Math.abs(coords.y - dragStart.y);
 
-    // Calculate canvas pixel size (scaled size)
-    const canvasWidth = Math.abs(coords.x - drawStart.x);
-    const canvasHeight = Math.abs(coords.y - drawStart.y);
+      // Only add area if it has meaningful size (at least 30x30 pixels on canvas)
+      if (canvasWidth >= 30 && canvasHeight >= 30) {
+        // Convert to rich menu coordinates
+        const x = Math.min(dragStart.x, coords.x) / scale;
+        const y = Math.min(dragStart.y, coords.y) / scale;
+        const width = canvasWidth / scale;
+        const height = canvasHeight / scale;
 
-    // Only add area if it has meaningful size (at least 30x30 pixels on canvas)
-    if (canvasWidth >= 30 && canvasHeight >= 30) {
-      // Convert to rich menu coordinates
-      const x = Math.min(drawStart.x, coords.x) / scale;
-      const y = Math.min(drawStart.y, coords.y) / scale;
-      const width = canvasWidth / scale;
-      const height = canvasHeight / scale;
-
-      const newArea: TapArea = {
-        bounds: {
-          x: Math.round(x),
-          y: Math.round(y),
-          width: Math.round(width),
-          height: Math.round(height),
-        },
-        action: {
-          type: "uri",
-          uri: "https://example.com",
-        },
-      };
-      onAreasChange([...areas, newArea]);
-      setSelectedAreaIndex(areas.length);
+        const newArea: TapArea = {
+          bounds: {
+            x: Math.round(x),
+            y: Math.round(y),
+            width: Math.round(width),
+            height: Math.round(height),
+          },
+          action: {
+            type: "uri",
+            uri: "https://example.com",
+          },
+        };
+        onAreasChange([...areas, newArea]);
+        setSelectedAreaIndex(areas.length);
+      }
     }
 
-    setIsDrawing(false);
-    setDrawStart(null);
-    setCurrentDraw(null);
+    setDragMode('none');
+    setDragStart(null);
+    setCurrentDrag(null);
+    setOriginalBounds(null);
   };
 
   const handleDeleteArea = (index: number) => {
@@ -285,7 +422,7 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
           タップ領域 <span className="text-red-400">*</span>
         </label>
         <div className="flex items-center gap-4 text-xs text-slate-500">
-          <span>画像上をドラッグして領域を作成、クリックして選択</span>
+          <span>ドラッグで新規作成、エリア内をドラッグで移動、境界線をドラッグでリサイズ</span>
           <span className="text-slate-600">
             スケール: {(scale * 100).toFixed(0)}% |
             キャンバス: {Math.round(richMenuSize.width * scale)}×{Math.round(richMenuSize.height * scale)}px
@@ -300,18 +437,20 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={() => {
-            if (isDrawing) {
-              setIsDrawing(false);
-              setDrawStart(null);
-              setCurrentDraw(null);
+            if (dragMode !== 'none') {
+              setDragMode('none');
+              setDragStart(null);
+              setCurrentDrag(null);
+              setOriginalBounds(null);
             }
           }}
           style={{
             width: `${richMenuSize.width * scale}px`,
             height: `${richMenuSize.height * scale}px`,
             maxWidth: '100%',
+            cursor: cursor,
           }}
-          className="cursor-crosshair rounded border border-slate-600"
+          className="rounded border border-slate-600"
         />
       </div>
 
@@ -432,7 +571,8 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
         {areas.length === 0 && (
           <div className="rounded-lg border border-dashed border-slate-600 bg-slate-900/40 p-8 text-center">
             <Plus className="mx-auto h-8 w-8 text-slate-500 mb-2" />
-            <p className="text-sm text-slate-400">画像上をドラッグしてタップ領域を作成</p>
+            <p className="text-sm text-slate-400">画像上をドラッグしてタップ領域を作成してください</p>
+            <p className="text-xs text-slate-500 mt-2">作成後、エリアをドラッグで移動、境界線をドラッグでサイズ変更できます</p>
           </div>
         )}
       </div>
