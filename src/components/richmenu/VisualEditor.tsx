@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Trash2, Edit2, Plus } from "lucide-react";
 
 interface TapArea {
@@ -64,12 +64,12 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
 
   const richMenuSize = RICHMENU_SIZES[size];
 
-  const updateScale = useCallback(() => {
+  const updateScale = () => {
     if (!containerRef.current) return;
     const containerWidth = containerRef.current.clientWidth;
     const newScale = Math.min(containerWidth / richMenuSize.width, 1);
     setScale(newScale);
-  }, [richMenuSize.width]);
+  };
 
   // Load image
   useEffect(() => {
@@ -85,19 +85,19 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
       updateScale();
     };
     img.src = imageUrl;
-  }, [imageUrl, updateScale]);
+  }, [imageUrl]);
 
   // Update scale when size changes
   useEffect(() => {
     updateScale();
-  }, [size, updateScale]);
+  }, [size]);
 
   // Update scale when container size changes
   useEffect(() => {
     const handleResize = () => updateScale();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [updateScale]);
+  }, []);
 
   // Draw canvas
   useEffect(() => {
