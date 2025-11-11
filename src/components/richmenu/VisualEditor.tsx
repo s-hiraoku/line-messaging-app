@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Trash2, Edit2, Plus } from "lucide-react";
+import { Trash2, Edit2, Plus, Copy, XCircle } from "lucide-react";
 
 interface TapArea {
   bounds: {
@@ -11,11 +11,22 @@ interface TapArea {
     height: number;
   };
   action: {
-    type: "uri" | "message" | "postback";
+    type: "uri" | "message" | "postback" | "datetimepicker" | "camera" | "cameraRoll" | "location" | "richmenuswitch";
     label?: string;
+    // URI action
     uri?: string;
+    // Message action
     text?: string;
+    // Postback action
     data?: string;
+    displayText?: string;
+    // Datetimepicker action
+    mode?: "date" | "time" | "datetime";
+    initial?: string;
+    max?: string;
+    min?: string;
+    // Richmenu switch action
+    richMenuAliasId?: string;
   };
 }
 
@@ -224,6 +235,27 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
     }
   };
 
+  const handleDuplicateArea = (index: number) => {
+    const areaToDuplicate = areas[index];
+    const newArea = {
+      ...areaToDuplicate,
+      bounds: {
+        ...areaToDuplicate.bounds,
+        x: Math.min(areaToDuplicate.bounds.x + 50, richMenuSize.width - areaToDuplicate.bounds.width),
+        y: Math.min(areaToDuplicate.bounds.y + 50, richMenuSize.height - areaToDuplicate.bounds.height),
+      },
+    };
+    onAreasChange([...areas, newArea]);
+    setSelectedAreaIndex(areas.length);
+  };
+
+  const handleClearAllAreas = () => {
+    if (confirm("全てのタップエリアをクリアしますか？")) {
+      onAreasChange([]);
+      setSelectedAreaIndex(null);
+    }
+  };
+
   const handleUpdateArea = (index: number, updates: Partial<TapArea>) => {
     const newAreas = [...areas];
     newAreas[index] = { ...newAreas[index], ...updates };
@@ -243,9 +275,22 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
       <div className="flex items-center justify-between">
         <label className="text-sm font-medium text-slate-300">
           タップ領域 <span className="text-red-400">*</span>
+          <span className="ml-2 text-xs text-slate-500">({areas.length}/20)</span>
         </label>
-        <div className="text-xs text-slate-500">
-          画像上をドラッグして領域を作成、クリックして選択
+        <div className="flex items-center gap-2">
+          {areas.length > 0 && (
+            <button
+              type="button"
+              onClick={handleClearAllAreas}
+              className="inline-flex items-center gap-1 rounded-md border border-red-600/50 bg-red-600/10 px-2 py-1 text-xs font-medium text-red-400 transition hover:bg-red-600/20"
+            >
+              <XCircle className="h-3 w-3" />
+              全てクリア
+            </button>
+          )}
+          <div className="text-xs text-slate-500">
+            画像上をドラッグして領域を作成
+          </div>
         </div>
       </div>
 
@@ -294,21 +339,36 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
                 <div className="space-y-2">
                   <select
                     value={area.action.type}
-                    onChange={(e) =>
-                      handleUpdateArea(index, {
-                        action: {
-                          type: e.target.value as "uri" | "message" | "postback",
-                          ...(e.target.value === "uri" && { uri: "https://example.com" }),
-                          ...(e.target.value === "message" && { text: "メッセージ" }),
-                          ...(e.target.value === "postback" && { data: "action=example" }),
-                        },
-                      })
-                    }
+                    onChange={(e) => {
+                      const type = e.target.value as TapArea["action"]["type"];
+                      const baseAction: TapArea["action"] = { type };
+
+                      if (type === "uri") {
+                        baseAction.uri = "https://example.com";
+                      } else if (type === "message") {
+                        baseAction.text = "メッセージ";
+                      } else if (type === "postback") {
+                        baseAction.data = "action=example";
+                      } else if (type === "datetimepicker") {
+                        baseAction.data = "action=datetime";
+                        baseAction.mode = "datetime";
+                      } else if (type === "richmenuswitch") {
+                        baseAction.richMenuAliasId = "";
+                        baseAction.data = "richmenu_switch";
+                      }
+
+                      handleUpdateArea(index, { action: baseAction });
+                    }}
                     className="w-full rounded border border-slate-600 bg-slate-900/60 px-2 py-1.5 text-sm text-white"
                   >
                     <option value="uri">リンク (URI)</option>
                     <option value="message">メッセージ</option>
                     <option value="postback">ポストバック</option>
+                    <option value="datetimepicker">日時選択</option>
+                    <option value="camera">カメラ</option>
+                    <option value="cameraRoll">カメラロール</option>
+                    <option value="location">位置情報</option>
+                    <option value="richmenuswitch">リッチメニュー切り替え</option>
                   </select>
 
                   {area.action.type === "uri" && (
@@ -342,18 +402,111 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
                   )}
 
                   {area.action.type === "postback" && (
-                    <input
-                      type="text"
-                      value={area.action.data || ""}
-                      onChange={(e) =>
-                        handleUpdateArea(index, {
-                          action: { ...area.action, data: e.target.value },
-                        })
-                      }
-                      className="w-full rounded border border-slate-600 bg-slate-900/60 px-2 py-1.5 text-sm text-white placeholder-slate-500"
-                      placeholder="action=example&id=123"
-                      required
-                    />
+                    <>
+                      <input
+                        type="text"
+                        value={area.action.data || ""}
+                        onChange={(e) =>
+                          handleUpdateArea(index, {
+                            action: { ...area.action, data: e.target.value },
+                          })
+                        }
+                        className="w-full rounded border border-slate-600 bg-slate-900/60 px-2 py-1.5 text-sm text-white placeholder-slate-500"
+                        placeholder="action=example&id=123"
+                        required
+                      />
+                      <input
+                        type="text"
+                        value={area.action.displayText || ""}
+                        onChange={(e) =>
+                          handleUpdateArea(index, {
+                            action: { ...area.action, displayText: e.target.value },
+                          })
+                        }
+                        className="w-full rounded border border-slate-600 bg-slate-900/60 px-2 py-1.5 text-sm text-white placeholder-slate-500"
+                        placeholder="表示テキスト（オプション）"
+                      />
+                    </>
+                  )}
+
+                  {area.action.type === "datetimepicker" && (
+                    <>
+                      <select
+                        value={area.action.mode || "datetime"}
+                        onChange={(e) =>
+                          handleUpdateArea(index, {
+                            action: { ...area.action, mode: e.target.value as "date" | "time" | "datetime" },
+                          })
+                        }
+                        className="w-full rounded border border-slate-600 bg-slate-900/60 px-2 py-1.5 text-sm text-white"
+                      >
+                        <option value="date">日付</option>
+                        <option value="time">時刻</option>
+                        <option value="datetime">日時</option>
+                      </select>
+                      <input
+                        type="text"
+                        value={area.action.data || ""}
+                        onChange={(e) =>
+                          handleUpdateArea(index, {
+                            action: { ...area.action, data: e.target.value },
+                          })
+                        }
+                        className="w-full rounded border border-slate-600 bg-slate-900/60 px-2 py-1.5 text-sm text-white placeholder-slate-500"
+                        placeholder="データ（action=datetime）"
+                        required
+                      />
+                      <input
+                        type="text"
+                        value={area.action.initial || ""}
+                        onChange={(e) =>
+                          handleUpdateArea(index, {
+                            action: { ...area.action, initial: e.target.value },
+                          })
+                        }
+                        className="w-full rounded border border-slate-600 bg-slate-900/60 px-2 py-1.5 text-sm text-white placeholder-slate-500"
+                        placeholder="初期値（例: 2024-01-01 または 10:00）"
+                      />
+                    </>
+                  )}
+
+                  {(area.action.type === "camera" || area.action.type === "cameraRoll" || area.action.type === "location") && (
+                    <div className="rounded bg-slate-800/60 px-3 py-2 text-xs text-slate-400">
+                      <p>このアクションは追加設定不要です。ユーザーがタップすると{" "}
+                        {area.action.type === "camera" && "カメラが起動"}
+                        {area.action.type === "cameraRoll" && "カメラロールが開き"}
+                        {area.action.type === "location" && "位置情報送信"}
+                        します。
+                      </p>
+                    </div>
+                  )}
+
+                  {area.action.type === "richmenuswitch" && (
+                    <>
+                      <input
+                        type="text"
+                        value={area.action.richMenuAliasId || ""}
+                        onChange={(e) =>
+                          handleUpdateArea(index, {
+                            action: { ...area.action, richMenuAliasId: e.target.value },
+                          })
+                        }
+                        className="w-full rounded border border-slate-600 bg-slate-900/60 px-2 py-1.5 text-sm text-white placeholder-slate-500"
+                        placeholder="切り替え先のリッチメニューエイリアス"
+                        required
+                      />
+                      <input
+                        type="text"
+                        value={area.action.data || ""}
+                        onChange={(e) =>
+                          handleUpdateArea(index, {
+                            action: { ...area.action, data: e.target.value },
+                          })
+                        }
+                        className="w-full rounded border border-slate-600 bg-slate-900/60 px-2 py-1.5 text-sm text-white placeholder-slate-500"
+                        placeholder="データ（オプション）"
+                      />
+                    </>
                   )}
                 </div>
               </div>
@@ -366,6 +519,15 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
                   title="選択"
                 >
                   <Edit2 className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDuplicateArea(index)}
+                  className="p-2 text-slate-400 hover:text-green-400 transition-colors"
+                  title="複製"
+                  disabled={areas.length >= 20}
+                >
+                  <Copy className="h-4 w-4" />
                 </button>
                 <button
                   type="button"

@@ -22,8 +22,11 @@ export async function GET() {
 // POST - Create new rich menu
 const createRichMenuSchema = z.object({
   name: z.string().min(1),
+  alias: z.string().optional(),
   size: z.enum(["full", "half"]),
   chatBarText: z.string().min(1).max(14),
+  barDisplayed: z.boolean().optional().default(true),
+  isDefault: z.boolean().optional().default(false),
   imageUrl: z.string().url().optional().or(z.literal("")),
   areas: z.array(
     z.object({
@@ -45,11 +48,36 @@ const createRichMenuSchema = z.object({
         z.object({
           type: z.literal("postback"),
           data: z.string().min(1),
-          text: z.string().optional(),
+          displayText: z.string().optional(),
+        }),
+        z.object({
+          type: z.literal("datetimepicker"),
+          data: z.string().min(1),
+          mode: z.enum(["date", "time", "datetime"]).optional(),
+          initial: z.string().optional(),
+          max: z.string().optional(),
+          min: z.string().optional(),
+        }),
+        z.object({
+          type: z.literal("camera"),
+          label: z.string().optional(),
+        }),
+        z.object({
+          type: z.literal("cameraRoll"),
+          label: z.string().optional(),
+        }),
+        z.object({
+          type: z.literal("location"),
+          label: z.string().optional(),
+        }),
+        z.object({
+          type: z.literal("richmenuswitch"),
+          richMenuAliasId: z.string().min(1),
+          data: z.string().min(1),
         }),
       ]),
     })
-  ).min(1),
+  ).min(1).max(20),
 });
 
 export async function POST(req: NextRequest) {
@@ -62,8 +90,11 @@ export async function POST(req: NextRequest) {
     const richMenu = await prisma.richMenu.create({
       data: {
         name: data.name,
+        alias: data.alias || null,
         size: data.size,
         chatBarText: data.chatBarText,
+        barDisplayed: data.barDisplayed ?? true,
+        isDefault: data.isDefault ?? false,
         imageUrl: data.imageUrl || null,
         areas: data.areas,
         selected: false,
