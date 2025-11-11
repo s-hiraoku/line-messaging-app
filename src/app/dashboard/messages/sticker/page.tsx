@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { LineConversation } from "../_components/line-conversation";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -184,21 +185,14 @@ export default function StickerMessagePage() {
 
       {/* Preview Section */}
       {packageId && stickerId && (
-        <div className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-6 shadow-lg backdrop-blur-sm">
-          <h2 className="mb-4 text-lg font-semibold text-white">プレビュー</h2>
-          <div className="flex justify-end">
-            <div className="max-w-xs space-y-2">
-              <div className="rounded-2xl bg-blue-600 px-4 py-3 text-white shadow-md">
-                <div className="flex items-center justify-center text-6xl">
-                  {selectedPackage?.stickers.find((s) => s.id === stickerId)?.emoji}
-                </div>
-              </div>
-              <div className="text-right text-xs text-slate-500">
-                Package: {packageId} / Sticker: {stickerId}
-              </div>
-            </div>
-          </div>
-        </div>
+        <LineConversation
+          message={{
+            type: "sticker",
+            packageId,
+            stickerId,
+            emoji: selectedPackage?.stickers.find((s) => s.id === stickerId)?.emoji,
+          }}
+        />
       )}
 
       {/* Debug Panel */}
