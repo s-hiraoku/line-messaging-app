@@ -6,8 +6,9 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ userId: string }> }
 ) {
+  const resolvedParams = await params;
   try {
-    const { userId } = await params;
+    const { userId } = resolvedParams;
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -34,7 +35,10 @@ export async function POST(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Failed to refresh user profile:", error);
+    console.error("[POST /api/line/users/[userId]/refresh] Failed to refresh user profile:", {
+      error,
+      userId: resolvedParams.userId,
+    });
     return NextResponse.json(
       {
         error:

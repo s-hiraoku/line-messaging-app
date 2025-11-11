@@ -16,8 +16,9 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
   try {
-    const { id } = await params;
+    const { id } = resolvedParams;
 
     // Get rich menu from database
     const richMenu = await prisma.richMenu.findUnique({
@@ -56,15 +57,14 @@ export async function POST(
       );
     }
 
-    const createResponse = await client.createRichMenu({
+    // createRichMenu returns the richMenuId directly as a string
+    const lineRichMenuId = await client.createRichMenu({
       size: richMenuSize,
       selected: richMenu.selected,
       name: richMenu.name,
       chatBarText: richMenu.chatBarText,
       areas: richMenu.areas as any,
     });
-
-    const lineRichMenuId = createResponse.richMenuId;
 
     // Step 2: Upload image to LINE API
     const imageResponse = await fetch(richMenu.imageUrl);
@@ -94,7 +94,12 @@ export async function POST(
       },
     });
   } catch (error) {
-    console.error("Failed to publish rich menu:", error);
+    console.error("[POST /api/line/richmenu/[id]/publish] Failed to publish rich menu:", {
+      error,
+      richMenuId: resolvedParams.id,
+      url: req.url,
+      method: req.method,
+    });
     return NextResponse.json(
       {
         error: "公開に失敗しました",

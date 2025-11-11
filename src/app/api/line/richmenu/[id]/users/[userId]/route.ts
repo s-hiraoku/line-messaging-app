@@ -7,8 +7,9 @@ interface RouteContext {
 }
 
 export async function POST(request: NextRequest, context: RouteContext) {
+  const resolvedParams = await context.params;
   try {
-    const { id, userId } = await context.params;
+    const { id, userId } = resolvedParams;
 
     // Find the rich menu
     const richMenu = await prisma.richMenu.findUnique({
@@ -50,7 +51,13 @@ export async function POST(request: NextRequest, context: RouteContext) {
       message: "ユーザーにリッチメニューを設定しました",
     });
   } catch (error) {
-    console.error("Link rich menu error:", error);
+    console.error("[POST /api/line/richmenu/[id]/users/[userId]] Link rich menu error:", {
+      error,
+      richMenuId: resolvedParams.id,
+      userId: resolvedParams.userId,
+      url: request.url,
+      method: request.method,
+    });
     return NextResponse.json(
       {
         error:
@@ -62,8 +69,9 @@ export async function POST(request: NextRequest, context: RouteContext) {
 }
 
 export async function DELETE(request: NextRequest, context: RouteContext) {
+  const resolvedParams = await context.params;
   try {
-    const { userId } = await context.params;
+    const { userId } = resolvedParams;
 
     // Find the user
     const user = await prisma.user.findUnique({
@@ -89,7 +97,13 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
       message: "ユーザーのリッチメニュー設定を解除しました",
     });
   } catch (error) {
-    console.error("Unlink rich menu error:", error);
+    console.error("[DELETE /api/line/richmenu/[id]/users/[userId]] Unlink rich menu error:", {
+      error,
+      richMenuId: resolvedParams.id,
+      userId: resolvedParams.userId,
+      url: request.url,
+      method: request.method,
+    });
     return NextResponse.json(
       {
         error:

@@ -25,7 +25,10 @@ export async function POST() {
         });
         successCount++;
       } catch (error) {
-        console.error(`Failed to update user ${user.lineUserId}:`, error);
+        console.error(`[POST /api/line/users/refresh-all] Failed to update user ${user.lineUserId}:`, {
+          error,
+          userId: user.lineUserId,
+        });
         errorCount++;
       }
     }
@@ -37,7 +40,9 @@ export async function POST() {
       total: users.length,
     });
   } catch (error) {
-    console.error("Failed to refresh all user profiles:", error);
+    console.error("[POST /api/line/users/refresh-all] Failed to refresh all user profiles:", {
+      error,
+    });
     return NextResponse.json(
       {
         error:

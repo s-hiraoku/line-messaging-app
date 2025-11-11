@@ -98,7 +98,11 @@ export async function POST(request: NextRequest) {
       height: uploadResponse.height,
     });
   } catch (error) {
-    console.error("Upload error:", error);
+    console.error("[POST /api/upload/richmenu-image] Upload error:", {
+      error,
+      url: request.url,
+      method: request.method,
+    });
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "アップロードに失敗しました" },
       { status: 500 }

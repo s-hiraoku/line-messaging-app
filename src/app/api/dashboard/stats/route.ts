@@ -98,7 +98,9 @@ export async function GET() {
 
     return NextResponse.json(stats);
   } catch (error) {
-    console.error("Failed to fetch dashboard stats:", error);
+    console.error("[GET /api/dashboard/stats] Failed to fetch dashboard stats:", {
+      error,
+    });
     return NextResponse.json(
       { error: "Failed to fetch dashboard stats" },
       { status: 500 }

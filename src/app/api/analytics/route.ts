@@ -122,7 +122,11 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(analytics);
   } catch (error) {
-    console.error("Failed to fetch analytics:", error);
+    console.error("[GET /api/analytics] Failed to fetch analytics:", {
+      error,
+      url: req.url,
+      method: req.method,
+    });
     return NextResponse.json(
       { error: "Failed to fetch analytics" },
       { status: 500 }

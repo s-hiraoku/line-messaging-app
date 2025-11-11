@@ -61,6 +61,7 @@ export function RichMenuList() {
       setLastResponse(data);
 
       if (!response.ok) throw new Error("Failed to load rich menus");
+      console.log("Rich menus loaded:", data.richMenus);
       setRichMenus(data.richMenus || []);
     } catch (error) {
       setLastResponse({ error: String(error) });

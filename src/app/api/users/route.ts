@@ -47,7 +47,11 @@ export async function GET(req: NextRequest) {
     const nextCursor = users.length === take ? users[users.length - 1].createdAt.toISOString() : null;
     return NextResponse.json({ items, nextCursor });
   } catch (error) {
-    console.error('[GET /api/users] Error:', error);
+    console.error('[GET /api/users] Error:', {
+      error,
+      url: req.url,
+      method: req.method,
+    });
     return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
   }
 }

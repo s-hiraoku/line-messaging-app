@@ -60,7 +60,10 @@ export async function POST(req: NextRequest) {
             displayName = p.displayName ?? "";
             pictureUrl = (p.pictureUrl as string | undefined) ?? null;
           } catch (error) {
-            console.error(`[Backfill] Failed to fetch profile for ${lineUserId}:`, error);
+            console.error(`[POST /api/line/followers/backfill] Failed to fetch profile for ${lineUserId}:`, {
+              error,
+              lineUserId,
+            });
             // Continue with empty profile data
           }
         }
@@ -85,7 +88,11 @@ export async function POST(req: NextRequest) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: "Invalid request body", issues: error.flatten() }, { status: 400 });
     }
-    console.error('[POST /api/line/followers/backfill] Error:', error);
+    console.error('[POST /api/line/followers/backfill] Error:', {
+      error,
+      url: req.url,
+      method: req.method,
+    });
     return NextResponse.json({ error: "Backfill failed" }, { status: 500 });
   }
 }

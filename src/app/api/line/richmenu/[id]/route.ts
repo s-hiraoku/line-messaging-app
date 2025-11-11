@@ -6,8 +6,9 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
   try {
-    const { id } = await params;
+    const { id } = resolvedParams;
 
     // Check if rich menu exists
     const richMenu = await prisma.richMenu.findUnique({
@@ -33,7 +34,12 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Failed to delete rich menu:", error);
+    console.error("[DELETE /api/line/richmenu/[id]] Failed to delete rich menu:", {
+      error,
+      richMenuId: resolvedParams.id,
+      url: req.url,
+      method: req.method,
+    });
     return NextResponse.json(
       { error: "Failed to delete rich menu" },
       { status: 500 }
@@ -46,8 +52,9 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
   try {
-    const { id } = await params;
+    const { id } = resolvedParams;
 
     const richMenu = await prisma.richMenu.findUnique({
       where: { id },
@@ -62,7 +69,12 @@ export async function GET(
 
     return NextResponse.json({ richMenu });
   } catch (error) {
-    console.error("Failed to fetch rich menu:", error);
+    console.error("[GET /api/line/richmenu/[id]] Failed to fetch rich menu:", {
+      error,
+      richMenuId: resolvedParams.id,
+      url: req.url,
+      method: req.method,
+    });
     return NextResponse.json(
       { error: "Failed to fetch rich menu" },
       { status: 500 }

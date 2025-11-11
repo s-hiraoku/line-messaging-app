@@ -11,7 +11,9 @@ export async function GET() {
 
     return NextResponse.json({ richMenus });
   } catch (error) {
-    console.error("Failed to fetch rich menus:", error);
+    console.error("[GET /api/line/richmenu] Failed to fetch rich menus:", {
+      error,
+    });
     return NextResponse.json(
       { error: "Failed to fetch rich menus" },
       { status: 500 }
@@ -79,7 +81,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.error("Failed to create rich menu:", error);
+    console.error("[POST /api/line/richmenu] Failed to create rich menu:", {
+      error,
+      url: req.url,
+      method: req.method,
+    });
     return NextResponse.json(
       { error: "Failed to create rich menu" },
       { status: 500 }
