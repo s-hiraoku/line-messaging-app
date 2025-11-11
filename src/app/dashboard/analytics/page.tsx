@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TrendingUp, TrendingDown, MessageSquare, Users, Clock, Calendar, UserPlus, UserMinus, Target, User, MapPin } from "lucide-react";
+import { TrendingUp, TrendingDown, MessageSquare, Users, Clock, Calendar, UserPlus, UserMinus, Target, User, MapPin, Tag as TagIcon, Send, Download, FileType, Image, Video, Music, MapPinned, Sticker, FileText } from "lucide-react";
 import { DebugPanel, toCurl } from "../_components/debug-panel";
 
 type AnalyticsData = {
@@ -18,6 +18,45 @@ type AnalyticsData = {
     newUsers: number;
     totalUsers: number;
     followingUsers: number;
+  };
+  comparison: {
+    totalMessages: {
+      current: number;
+      previous: number;
+      change: number;
+    };
+    inbound: {
+      current: number;
+      previous: number;
+      change: number;
+    };
+    outbound: {
+      current: number;
+      previous: number;
+      change: number;
+    };
+    newUsers: {
+      current: number;
+      previous: number;
+      change: number;
+    };
+  };
+  messageTypes: Array<{
+    type: string;
+    count: number;
+  }>;
+  tags: Array<{
+    tagId: string;
+    tagName: string;
+    userCount: number;
+  }>;
+  broadcasts: {
+    total: number;
+    scheduled: number;
+    byStatus: Array<{
+      status: string;
+      count: number;
+    }>;
   };
   daily: Array<{
     date: string;
@@ -146,6 +185,64 @@ export default function AnalyticsPage() {
   const maxHourly = Math.max(...data.hourly.map((h) => h.inbound + h.outbound), 1);
   const maxWeekday = Math.max(...data.weekday.map((w) => w.inbound + w.outbound), 1);
 
+  // メッセージタイプのアイコンマッピング
+  const getMessageTypeIcon = (type: string) => {
+    switch (type) {
+      case "TEXT": return <FileText className="h-4 w-4" />;
+      case "IMAGE": return <Image className="h-4 w-4" />;
+      case "VIDEO": return <Video className="h-4 w-4" />;
+      case "AUDIO": return <Music className="h-4 w-4" />;
+      case "LOCATION": return <MapPinned className="h-4 w-4" />;
+      case "STICKER": return <Sticker className="h-4 w-4" />;
+      default: return <FileType className="h-4 w-4" />;
+    }
+  };
+
+  // メッセージタイプの日本語名
+  const getMessageTypeLabel = (type: string) => {
+    switch (type) {
+      case "TEXT": return "テキスト";
+      case "IMAGE": return "画像";
+      case "VIDEO": return "動画";
+      case "AUDIO": return "音声";
+      case "LOCATION": return "位置情報";
+      case "STICKER": return "スタンプ";
+      case "IMAGEMAP": return "イメージマップ";
+      case "FLEX": return "Flexメッセージ";
+      case "TEMPLATE": return "テンプレート";
+      default: return type;
+    }
+  };
+
+  // 配信ステータスの日本語名
+  const getBroadcastStatusLabel = (status: string) => {
+    switch (status) {
+      case "DRAFT": return "下書き";
+      case "SCHEDULED": return "予約済み";
+      case "SENDING": return "送信中";
+      case "SENT": return "送信済み";
+      default: return status;
+    }
+  };
+
+  // CSVエクスポート機能
+  const exportToCSV = () => {
+    const rows = [
+      ["日付", "受信", "送信", "合計"],
+      ...data.daily.map(d => [d.date, d.inbound, d.outbound, d.total]),
+    ];
+    const csvContent = rows.map(row => row.join(",")).join("\n");
+    const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `analytics-${period}days.csv`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="space-y-6">
       <header className="flex items-center justify-between">
@@ -154,6 +251,13 @@ export default function AnalyticsPage() {
           <p className="text-sm text-slate-400">メッセージとユーザーの統計情報</p>
         </div>
         <div className="flex gap-2">
+          <button
+            onClick={exportToCSV}
+            className="flex items-center gap-2 rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm font-medium text-slate-300 transition hover:border-slate-500"
+          >
+            <Download className="h-4 w-4" />
+            <span>CSV出力</span>
+          </button>
           {([7, 30, 90] as const).map((d) => (
             <button
               key={d}
@@ -346,9 +450,23 @@ export default function AnalyticsPage() {
             <MessageSquare className="h-4 w-4 text-slate-500" />
           </div>
           <p className="mt-3 text-3xl font-semibold text-white">{data.summary.total}</p>
-          <div className="mt-2 flex gap-3 text-xs text-slate-400">
-            <span className="text-emerald-400">受信: {data.summary.totalInbound}</span>
-            <span className="text-blue-400">送信: {data.summary.totalOutbound}</span>
+          <div className="mt-2 flex items-center justify-between text-xs">
+            <div className="flex gap-3 text-slate-400">
+              <span className="text-emerald-400">受信: {data.summary.totalInbound}</span>
+              <span className="text-blue-400">送信: {data.summary.totalOutbound}</span>
+            </div>
+            {data.comparison && (
+              <span className={`flex items-center gap-1 font-medium ${
+                data.comparison.totalMessages.change >= 0 ? "text-emerald-400" : "text-red-400"
+              }`}>
+                {data.comparison.totalMessages.change >= 0 ? (
+                  <TrendingUp className="h-3 w-3" />
+                ) : (
+                  <TrendingDown className="h-3 w-3" />
+                )}
+                {Math.abs(data.comparison.totalMessages.change)}%
+              </span>
+            )}
           </div>
         </article>
 
@@ -364,10 +482,24 @@ export default function AnalyticsPage() {
         <article className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-medium text-slate-400">新規ユーザー</h2>
-            <Users className="h-4 w-4 text-slate-500" />
+            <UserPlus className="h-4 w-4 text-slate-500" />
           </div>
           <p className="mt-3 text-3xl font-semibold text-white">{data.summary.newUsers}</p>
-          <p className="mt-2 text-xs text-slate-400">期間内の新規登録</p>
+          <div className="mt-2 flex items-center justify-between">
+            <p className="text-xs text-slate-400">期間内の新規登録</p>
+            {data.comparison && (
+              <span className={`flex items-center gap-1 text-xs font-medium ${
+                data.comparison.newUsers.change >= 0 ? "text-emerald-400" : "text-red-400"
+              }`}>
+                {data.comparison.newUsers.change >= 0 ? (
+                  <TrendingUp className="h-3 w-3" />
+                ) : (
+                  <TrendingDown className="h-3 w-3" />
+                )}
+                {Math.abs(data.comparison.newUsers.change)}%
+              </span>
+            )}
+          </div>
         </article>
 
         <article className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
@@ -482,6 +614,116 @@ export default function AnalyticsPage() {
           </div>
         </section>
       </div>
+
+      {/* メッセージタイプ別分析 */}
+      {data.messageTypes && data.messageTypes.length > 0 && (
+        <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
+          <div className="mb-4 flex items-center gap-2">
+            <FileType className="h-5 w-5 text-slate-400" />
+            <h2 className="text-lg font-semibold text-white">メッセージタイプ別</h2>
+          </div>
+          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+            {data.messageTypes.map((item) => {
+              const total = data.messageTypes.reduce((sum, t) => sum + t.count, 0);
+              const percentage = total > 0 ? ((item.count / total) * 100).toFixed(1) : "0";
+              return (
+                <article key={item.type} className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="text-slate-400">{getMessageTypeIcon(item.type)}</div>
+                      <h3 className="text-sm font-medium text-slate-300">{getMessageTypeLabel(item.type)}</h3>
+                    </div>
+                    <span className="text-xs text-slate-500">{percentage}%</span>
+                  </div>
+                  <p className="mt-2 text-2xl font-semibold text-white">{item.count.toLocaleString()}</p>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* タグ別分析 */}
+      {data.tags && data.tags.length > 0 && (
+        <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
+          <div className="mb-4 flex items-center gap-2">
+            <TagIcon className="h-5 w-5 text-slate-400" />
+            <h2 className="text-lg font-semibold text-white">タグ別ユーザー数</h2>
+          </div>
+          <div className="space-y-2">
+            {data.tags.slice(0, 10).map((tag) => {
+              const maxUsers = Math.max(...data.tags.map(t => t.userCount), 1);
+              const percentage = (tag.userCount / maxUsers) * 100;
+              return (
+                <div key={tag.tagId} className="flex items-center gap-3">
+                  <span className="w-32 truncate text-sm text-slate-300">{tag.tagName}</span>
+                  <div className="flex-1">
+                    <div
+                      className="h-7 rounded bg-gradient-to-r from-indigo-500/60 to-purple-500/60 transition-all"
+                      style={{ width: `${percentage}%` }}
+                    />
+                  </div>
+                  <span className="w-16 text-right text-sm font-medium text-slate-200">
+                    {tag.userCount.toLocaleString()}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+          {data.tags.length === 0 && (
+            <p className="py-8 text-center text-sm text-slate-400">タグが登録されていません</p>
+          )}
+        </section>
+      )}
+
+      {/* 配信分析 */}
+      {data.broadcasts && (
+        <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
+          <div className="mb-4 flex items-center gap-2">
+            <Send className="h-5 w-5 text-slate-400" />
+            <h2 className="text-lg font-semibold text-white">配信統計</h2>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-3">
+              <article className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-4">
+                <h3 className="text-xs font-medium text-slate-400">総配信数</h3>
+                <p className="mt-2 text-2xl font-semibold text-white">{data.broadcasts.total.toLocaleString()}</p>
+              </article>
+              <article className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-4">
+                <h3 className="text-xs font-medium text-slate-400">予約済み</h3>
+                <p className="mt-2 text-2xl font-semibold text-white">{data.broadcasts.scheduled.toLocaleString()}</p>
+              </article>
+            </div>
+            <div>
+              <h3 className="mb-3 text-sm font-medium text-slate-300">ステータス別</h3>
+              <div className="space-y-2">
+                {data.broadcasts.byStatus.map((item) => {
+                  const percentage = data.broadcasts.total > 0
+                    ? ((item.count / data.broadcasts.total) * 100).toFixed(1)
+                    : "0";
+                  return (
+                    <div key={item.status} className="flex items-center gap-3">
+                      <span className="w-20 text-xs text-slate-400">{getBroadcastStatusLabel(item.status)}</span>
+                      <div className="flex-1">
+                        <div
+                          className="h-6 rounded bg-gradient-to-r from-blue-500/60 to-cyan-500/60 transition-all"
+                          style={{ width: `${percentage}%` }}
+                        />
+                      </div>
+                      <span className="w-16 text-right text-sm font-medium text-slate-200">
+                        {item.count} ({percentage}%)
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+              {data.broadcasts.byStatus.length === 0 && (
+                <p className="py-8 text-center text-sm text-slate-400">配信がありません</p>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* API デバッグ */}
       <div className="space-y-4">
