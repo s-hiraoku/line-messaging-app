@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Trash2, Edit2, Plus } from "lucide-react";
 
 interface TapArea {
@@ -64,6 +64,13 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
 
   const richMenuSize = RICHMENU_SIZES[size];
 
+  const updateScale = useCallback(() => {
+    if (!containerRef.current) return;
+    const containerWidth = containerRef.current.clientWidth;
+    const newScale = Math.min(containerWidth / richMenuSize.width, 1);
+    setScale(newScale);
+  }, [richMenuSize.width]);
+
   // Load image
   useEffect(() => {
     if (!imageUrl) {
@@ -78,21 +85,19 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
       updateScale();
     };
     img.src = imageUrl;
-  }, [imageUrl]);
+  }, [imageUrl, updateScale]);
+
+  // Update scale when size changes
+  useEffect(() => {
+    updateScale();
+  }, [size, updateScale]);
 
   // Update scale when container size changes
   useEffect(() => {
     const handleResize = () => updateScale();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const updateScale = () => {
-    if (!containerRef.current) return;
-    const containerWidth = containerRef.current.clientWidth;
-    const newScale = Math.min(containerWidth / richMenuSize.width, 1);
-    setScale(newScale);
-  };
+  }, [updateScale]);
 
   // Draw canvas
   useEffect(() => {
@@ -204,8 +209,8 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
     const width = Math.abs(coords.x - drawStart.x) / scale;
     const height = Math.abs(coords.y - drawStart.y) / scale;
 
-    // Only add area if it has meaningful size
-    if (width > 10 && height > 10) {
+    // Only add area if it has meaningful size (at least 50x50 pixels in actual size)
+    if (width >= 50 && height >= 50) {
       const newArea: TapArea = {
         bounds: {
           x: Math.round(x),
