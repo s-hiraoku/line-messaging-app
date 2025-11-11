@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { DebugPanel, toCurl } from "../../_components/debug-panel";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -33,6 +34,8 @@ export default function ImagemapMessagePage() {
   ]);
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [lastRequest, setLastRequest] = useState<unknown>();
+  const [lastResponse, setLastResponse] = useState<unknown>();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -40,13 +43,9 @@ export default function ImagemapMessagePage() {
     setError(null);
 
     try {
-      const response = await fetch("/api/line/send", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          to: lineUserId,
+      const payload = {
+        to: lineUserId,
+        messages: [{
           type: "imagemap",
           baseUrl,
           altText,
@@ -55,14 +54,25 @@ export default function ImagemapMessagePage() {
             height: parseInt(height),
           },
           actions,
-        }),
+        }],
+      };
+      setLastRequest(payload);
+      const response = await fetch("/api/line/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
+        setLastResponse(data);
         throw new Error(data.error ?? "イメージマップメッセージの送信に失敗しました");
       }
 
+      const data = await response.json().catch(() => ({}));
+      setLastResponse(data);
       setStatus("success");
     } catch (err) {
       setStatus("error");
@@ -401,34 +411,18 @@ export default function ImagemapMessagePage() {
         </div>
       )}
 
-      {/* Debug Panel */}
-      <details className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-4 shadow-lg backdrop-blur-sm">
-        <summary className="cursor-pointer text-sm font-medium text-slate-300">
-          デバッグ情報
-        </summary>
-        <div className="mt-4 space-y-3">
-          <div>
-            <div className="mb-1 text-xs font-medium text-slate-400">Request Body</div>
-            <pre className="overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-300">
-              {JSON.stringify(
-                {
-                  to: lineUserId || "Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-                  type: "imagemap",
-                  baseUrl,
-                  altText,
-                  baseSize: {
-                    width: parseInt(width) || 1040,
-                    height: parseInt(height) || 1040,
-                  },
-                  actions,
-                },
-                null,
-                2
-              )}
-            </pre>
-          </div>
-        </div>
-      </details>
+      <DebugPanel
+        title="イメージマップ API デバッグ"
+        request={lastRequest}
+        response={lastResponse}
+        curl={toCurl({
+          url: new URL('/api/line/send', typeof window !== 'undefined' ? location.origin : 'http://localhost:3000').toString(),
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: lastRequest
+        })}
+        docsUrl="https://developers.line.biz/ja/reference/messaging-api/#imagemap-message"
+      />
     </div>
   );
 }

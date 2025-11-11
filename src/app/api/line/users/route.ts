@@ -22,7 +22,9 @@ export async function GET() {
 
     return NextResponse.json({ users });
   } catch (error) {
-    console.error("Failed to fetch users:", error);
+    console.error("[GET /api/line/users] Failed to fetch users:", {
+      error,
+    });
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "ユーザーの取得に失敗しました" },
       { status: 500 }

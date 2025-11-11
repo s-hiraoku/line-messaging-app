@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
       dailyStats[dateStr] = { inbound: 0, outbound: 0, total: 0 };
     }
 
-    messages.forEach((msg) => {
+    messages.forEach((msg: { createdAt: Date; direction: string }) => {
       const dateStr = msg.createdAt.toISOString().split("T")[0];
       if (dailyStats[dateStr]) {
         dailyStats[dateStr].total++;
@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
       outbound: 0,
     }));
 
-    messages.forEach((msg) => {
+    messages.forEach((msg: { createdAt: Date; direction: string }) => {
       const hour = msg.createdAt.getHours();
       if (msg.direction === "INBOUND") {
         hourlyDistribution[hour].inbound++;
@@ -71,7 +71,7 @@ export async function GET(req: NextRequest) {
       outbound: 0,
     }));
 
-    messages.forEach((msg) => {
+    messages.forEach((msg: { createdAt: Date; direction: string }) => {
       const day = msg.createdAt.getDay();
       if (msg.direction === "INBOUND") {
         weekdayDistribution[day].inbound++;
@@ -81,8 +81,8 @@ export async function GET(req: NextRequest) {
     });
 
     // 総計
-    const totalInbound = messages.filter((m) => m.direction === "INBOUND").length;
-    const totalOutbound = messages.filter((m) => m.direction === "OUTBOUND").length;
+    const totalInbound = messages.filter((m: { direction: string }) => m.direction === "INBOUND").length;
+    const totalOutbound = messages.filter((m: { direction: string }) => m.direction === "OUTBOUND").length;
 
     // ユーザー増減（期間内の新規ユーザー）
     const newUsers = await prisma.user.count({
@@ -100,6 +100,99 @@ export async function GET(req: NextRequest) {
     // 応答率（受信メッセージに対する送信メッセージの割合）
     const responseRate = totalInbound > 0 ? ((totalOutbound / totalInbound) * 100).toFixed(1) : "0";
 
+    // メッセージタイプ別の分析
+    const messageTypes = await prisma.message.groupBy({
+      by: ['type'],
+      where: {
+        createdAt: { gte: startDate },
+      },
+      _count: {
+        id: true,
+      },
+    });
+
+    const messageTypeStats = messageTypes.map((item: { type: string; _count: { id: number } }) => ({
+      type: item.type,
+      count: item._count.id,
+    }));
+
+    // タグ別ユーザー数
+    const tagStats = await prisma.tag.findMany({
+      select: {
+        id: true,
+        name: true,
+        _count: {
+          select: {
+            users: true,
+          },
+        },
+      },
+      orderBy: {
+        users: {
+          _count: 'desc',
+        },
+      },
+    });
+
+    const tagData = tagStats.map((tag: { id: string; name: string; _count: { users: number } }) => ({
+      tagId: tag.id,
+      tagName: tag.name,
+      userCount: tag._count.users,
+    }));
+
+    // 配信統計
+    const broadcastStats = await prisma.broadcast.groupBy({
+      by: ['status'],
+      _count: {
+        id: true,
+      },
+    });
+
+    const broadcastData = broadcastStats.map((item: { status: string; _count: { id: number } }) => ({
+      status: item.status,
+      count: item._count.id,
+    }));
+
+    const totalBroadcasts = await prisma.broadcast.count();
+    const scheduledBroadcasts = await prisma.broadcast.count({
+      where: { status: 'SCHEDULED' },
+    });
+
+    // 前期間のデータを取得して比較
+    const previousStartDate = new Date(startDate);
+    previousStartDate.setDate(previousStartDate.getDate() - days);
+
+    const previousMessages = await prisma.message.findMany({
+      where: {
+        createdAt: {
+          gte: previousStartDate,
+          lt: startDate,
+        },
+      },
+      select: {
+        direction: true,
+      },
+    });
+
+    const previousInbound = previousMessages.filter((m: { direction: string }) => m.direction === "INBOUND").length;
+    const previousOutbound = previousMessages.filter((m: { direction: string }) => m.direction === "OUTBOUND").length;
+    const previousTotal = previousInbound + previousOutbound;
+
+    const previousNewUsers = await prisma.user.count({
+      where: {
+        createdAt: {
+          gte: previousStartDate,
+          lt: startDate,
+        },
+      },
+    });
+
+    // 変化率の計算
+    const calculateChange = (current: number, previous: number) => {
+      if (previous === 0) return current > 0 ? 100 : 0;
+      return parseFloat((((current - previous) / previous) * 100).toFixed(1));
+    };
+
     const analytics = {
       period: {
         days,
@@ -115,6 +208,35 @@ export async function GET(req: NextRequest) {
         totalUsers,
         followingUsers,
       },
+      comparison: {
+        totalMessages: {
+          current: totalInbound + totalOutbound,
+          previous: previousTotal,
+          change: calculateChange(totalInbound + totalOutbound, previousTotal),
+        },
+        inbound: {
+          current: totalInbound,
+          previous: previousInbound,
+          change: calculateChange(totalInbound, previousInbound),
+        },
+        outbound: {
+          current: totalOutbound,
+          previous: previousOutbound,
+          change: calculateChange(totalOutbound, previousOutbound),
+        },
+        newUsers: {
+          current: newUsers,
+          previous: previousNewUsers,
+          change: calculateChange(newUsers, previousNewUsers),
+        },
+      },
+      messageTypes: messageTypeStats,
+      tags: tagData,
+      broadcasts: {
+        total: totalBroadcasts,
+        scheduled: scheduledBroadcasts,
+        byStatus: broadcastData,
+      },
       daily: dailyData,
       hourly: hourlyDistribution,
       weekday: weekdayDistribution,
@@ -122,7 +244,11 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(analytics);
   } catch (error) {
-    console.error("Failed to fetch analytics:", error);
+    console.error("[GET /api/analytics] Failed to fetch analytics:", {
+      error,
+      url: req.url,
+      method: req.method,
+    });
     return NextResponse.json(
       { error: "Failed to fetch analytics" },
       { status: 500 }

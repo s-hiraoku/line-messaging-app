@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { LineConversation } from "../_components/line-conversation";
+import { DebugPanel, toCurl } from "../../_components/debug-panel";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -389,41 +391,16 @@ export default function TemplateMessagePage() {
       </form>
 
       {/* Preview */}
-      <div className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-6 shadow-lg backdrop-blur-sm">
-        <h2 className="mb-4 text-lg font-semibold text-white">プレビュー</h2>
-        <div className="flex justify-end">
-          <div className="max-w-xs space-y-2">
-            <div className="overflow-hidden rounded-2xl bg-white shadow-md">
-              {thumbnailImageUrl && (
-                <img
-                  src={thumbnailImageUrl}
-                  alt={title || "Thumbnail"}
-                  className="h-48 w-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                  }}
-                />
-              )}
-              <div className="p-4">
-                {title && <div className="mb-2 font-semibold text-slate-900">{title}</div>}
-                <div className="mb-3 text-sm text-slate-700">{text || "本文を入力してください"}</div>
-                <div className="space-y-2">
-                  {actions.map((action, index) => (
-                    <button
-                      key={index}
-                      className="w-full rounded border border-blue-500 bg-white py-2 text-sm font-medium text-blue-500 transition hover:bg-blue-50"
-                      type="button"
-                    >
-                      {action.label || "ボタン"}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="text-right text-xs text-slate-500">{altText || "代替テキスト"}</div>
-          </div>
-        </div>
-      </div>
+      <LineConversation
+        message={{
+          type: "template",
+          altText,
+          title,
+          text: text || "本文を入力してください",
+          thumbnailImageUrl,
+          actions,
+        }}
+      />
 
       {/* Debug Panel */}
       <details className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-4 shadow-lg backdrop-blur-sm">

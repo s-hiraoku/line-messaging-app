@@ -4,10 +4,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ImageUpload } from "@/components/richmenu/ImageUpload";
 import { VisualEditor } from "@/components/richmenu/VisualEditor";
+import { DebugPanel, toCurl } from "../../_components/debug-panel";
 
 export const dynamic = "force-dynamic";
 
-type SizeType = "full" | "half";
+type SizeType =
+  | "2500x1686"  // Large Full
+  | "2500x843"   // Large Half
+  | "1200x810"   // Medium Full
+  | "1200x405"   // Medium Half
+  | "800x540"    // Small Full
+  | "800x270";   // Small Half
 
 interface TapArea {
   bounds: {
@@ -112,7 +119,7 @@ export default function NewRichMenuPage() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [alias, setAlias] = useState("");
-  const [size, setSize] = useState<SizeType>("full");
+  const [size, setSize] = useState<SizeType>("2500x1686");
   const [chatBarText, setChatBarText] = useState("");
   const [barDisplayed, setBarDisplayed] = useState(true);
   const [isDefault, setIsDefault] = useState(false);
@@ -120,6 +127,10 @@ export default function NewRichMenuPage() {
   const [areas, setAreas] = useState<TapArea[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Debug state
+  const [lastRequest, setLastRequest] = useState<unknown>();
+  const [lastResponse, setLastResponse] = useState<unknown>();
 
   const addArea = () => {
     setAreas([
@@ -144,6 +155,15 @@ export default function NewRichMenuPage() {
     setError(null);
 
     try {
+      const payload = {
+        name,
+        size,
+        chatBarText,
+        imageUrl,
+        areas,
+      };
+      setLastRequest(payload);
+
       const response = await fetch("/api/line/richmenu", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -159,13 +179,16 @@ export default function NewRichMenuPage() {
         }),
       });
 
+      const data = await response.json().catch(() => ({}));
+      setLastResponse(data);
+
       if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
         throw new Error(data.error || "リッチメニューの作成に失敗しました");
       }
 
       router.push("/dashboard/richmenu");
     } catch (err) {
+      setLastResponse({ error: String(err) });
       setError(err instanceof Error ? err.message : "不明なエラーが発生しました");
     } finally {
       setSubmitting(false);
@@ -227,9 +250,22 @@ export default function NewRichMenuPage() {
             className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             required
           >
-            <option value="full">フル (2500x1686px)</option>
-            <option value="half">ハーフ (2500x843px)</option>
+            <optgroup label="大サイズ (2500px幅)">
+              <option value="2500x1686">フル - 2500×1686px</option>
+              <option value="2500x843">ハーフ - 2500×843px</option>
+            </optgroup>
+            <optgroup label="中サイズ (1200px幅)">
+              <option value="1200x810">フル - 1200×810px</option>
+              <option value="1200x405">ハーフ - 1200×405px</option>
+            </optgroup>
+            <optgroup label="小サイズ (800px幅)">
+              <option value="800x540">フル - 800×540px</option>
+              <option value="800x270">ハーフ - 800×270px</option>
+            </optgroup>
           </select>
+          <p className="text-xs text-slate-500">
+            画像は指定サイズに合わせて作成してください（JPEG/PNG、最大1MB）
+          </p>
         </div>
 
         <div className="space-y-2">
@@ -348,6 +384,19 @@ export default function NewRichMenuPage() {
           </button>
         </div>
       </form>
+
+      <DebugPanel
+        title="リッチメニュー作成 API デバッグ"
+        request={lastRequest}
+        response={lastResponse}
+        curl={toCurl({
+          url: new URL('/api/line/richmenu', typeof window !== 'undefined' ? location.origin : 'http://localhost:3000').toString(),
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: lastRequest,
+        })}
+        docsUrl="https://developers.line.biz/ja/reference/messaging-api/#create-rich-menu"
+      />
     </div>
   );
 }

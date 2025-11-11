@@ -21,7 +21,9 @@ export async function GET() {
       friendUrl: config?.friendUrl ?? "",
     });
   } catch (error) {
-    console.error("Failed to load channel config", error);
+    console.error("[GET /api/settings/channel] Failed to load channel config:", {
+      error,
+    });
     return NextResponse.json(
       { error: "チャネル設定の取得に失敗しました" },
       { status: 500 },
@@ -71,7 +73,11 @@ export async function PUT(req: NextRequest) {
         { status: 400 },
       );
     }
-    console.error("Failed to update channel config", error);
+    console.error("[PUT /api/settings/channel] Failed to update channel config:", {
+      error,
+      url: req.url,
+      method: req.method,
+    });
     return NextResponse.json(
       { error: "チャネル設定の保存に失敗しました" },
       { status: 500 },

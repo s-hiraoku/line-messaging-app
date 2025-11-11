@@ -11,7 +11,9 @@ export async function GET() {
 
     return NextResponse.json({ richMenus });
   } catch (error) {
-    console.error("Failed to fetch rich menus:", error);
+    console.error("[GET /api/line/richmenu] Failed to fetch rich menus:", {
+      error,
+    });
     return NextResponse.json(
       { error: "Failed to fetch rich menus" },
       { status: 500 }
@@ -23,7 +25,7 @@ export async function GET() {
 const createRichMenuSchema = z.object({
   name: z.string().min(1),
   alias: z.string().optional(),
-  size: z.enum(["full", "half"]),
+  size: z.enum(["2500x1686", "2500x843", "1200x810", "1200x405", "800x540", "800x270"]),
   chatBarText: z.string().min(1).max(14),
   barDisplayed: z.boolean().optional().default(true),
   isDefault: z.boolean().optional().default(false),
@@ -98,7 +100,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.error("Failed to create rich menu:", error);
+    console.error("[POST /api/line/richmenu] Failed to create rich menu:", {
+      error,
+      url: req.url,
+      method: req.method,
+    });
     return NextResponse.json(
       { error: "Failed to create rich menu" },
       { status: 500 }

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { LineConversation } from "../_components/line-conversation";
+import { DebugPanel, toCurl } from "../../_components/debug-panel";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -204,42 +206,13 @@ export default function VideoMessagePage() {
 
       {/* Preview Section */}
       {videoUrl && previewUrl && !videoUrlError && !previewUrlError && (
-        <div className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-6 shadow-lg backdrop-blur-sm">
-          <h2 className="mb-4 text-lg font-semibold text-white">プレビュー</h2>
-          <div className="flex justify-end">
-            <div className="max-w-xs space-y-2">
-              <div className="relative overflow-hidden rounded-2xl bg-blue-600 shadow-md">
-                <img
-                  src={previewUrl}
-                  alt="Video preview"
-                  className="h-48 w-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                    e.currentTarget.nextElementSibling?.classList.remove("hidden");
-                  }}
-                />
-                <div className="hidden flex h-48 items-center justify-center bg-slate-700 text-slate-400">
-                  <div className="text-center text-sm">
-                    <div>プレビュー画像</div>
-                    <div className="text-xs opacity-60">読み込めません</div>
-                  </div>
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/90">
-                    <svg
-                      className="h-8 w-8 text-blue-600"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div className="text-right text-xs text-slate-500">動画メッセージ</div>
-            </div>
-          </div>
-        </div>
+        <LineConversation
+          message={{
+            type: "video",
+            videoUrl,
+            previewUrl,
+          }}
+        />
       )}
 
       {/* Debug Panel */}

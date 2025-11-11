@@ -74,11 +74,34 @@ async function handleEvent(event: WebhookEvent) {
         // store inbound
         if (event.source.type === "user" && event.source.userId) {
           addLog('info', 'webhook:event:message', { userId: event.source.userId, text: event.message.text?.slice(0,120) });
-          const user = await prisma.user.upsert({
-            where: { lineUserId: event.source.userId },
-            update: {},
-            create: { lineUserId: event.source.userId, displayName: "", isFollowing: true },
-          });
+
+          // Try to get profile information for new or existing users
+          let user;
+          try {
+            const profile = await client.getProfile(event.source.userId);
+            user = await prisma.user.upsert({
+              where: { lineUserId: event.source.userId },
+              update: {
+                displayName: profile.displayName ?? "",
+                pictureUrl: profile.pictureUrl ?? null,
+              },
+              create: {
+                lineUserId: event.source.userId,
+                displayName: profile.displayName ?? "",
+                pictureUrl: profile.pictureUrl ?? null,
+                isFollowing: true,
+              },
+            });
+          } catch (e) {
+            addLog('warn', 'webhook:message:profile:error', { userId: event.source.userId, error: e instanceof Error ? e.message : String(e) });
+            // Fallback: create/update without profile info
+            user = await prisma.user.upsert({
+              where: { lineUserId: event.source.userId },
+              update: {},
+              create: { lineUserId: event.source.userId, displayName: "", isFollowing: true },
+            });
+          }
+
           const msg = await prisma.message.create({
             data: {
               type: "TEXT",

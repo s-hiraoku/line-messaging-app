@@ -7,8 +7,9 @@ interface RouteContext {
 }
 
 export async function POST(request: NextRequest, context: RouteContext) {
+  const resolvedParams = await context.params;
   try {
-    const { id } = await context.params;
+    const { id } = resolvedParams;
 
     // Find the rich menu in database
     const richMenu = await prisma.richMenu.findUnique({
@@ -44,7 +45,12 @@ export async function POST(request: NextRequest, context: RouteContext) {
 
     return NextResponse.json({ success: true, message: "デフォルトメニューに設定しました" });
   } catch (error) {
-    console.error("Set default rich menu error:", error);
+    console.error("[POST /api/line/richmenu/[id]/default] Set default rich menu error:", {
+      error,
+      richMenuId: resolvedParams.id,
+      url: request.url,
+      method: request.method,
+    });
     return NextResponse.json(
       {
         error: error instanceof Error ? error.message : "デフォルトメニューの設定に失敗しました",
@@ -55,8 +61,9 @@ export async function POST(request: NextRequest, context: RouteContext) {
 }
 
 export async function DELETE(request: NextRequest, context: RouteContext) {
+  const resolvedParams = await context.params;
   try {
-    const { id } = await context.params;
+    const { id } = resolvedParams;
 
     // Find the rich menu in database
     const richMenu = await prisma.richMenu.findUnique({
@@ -83,7 +90,12 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
 
     return NextResponse.json({ success: true, message: "デフォルト設定を解除しました" });
   } catch (error) {
-    console.error("Cancel default rich menu error:", error);
+    console.error("[DELETE /api/line/richmenu/[id]/default] Cancel default rich menu error:", {
+      error,
+      richMenuId: resolvedParams.id,
+      url: request.url,
+      method: request.method,
+    });
     return NextResponse.json(
       {
         error:

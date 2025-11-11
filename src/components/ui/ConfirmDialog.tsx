@@ -78,40 +78,40 @@ export function ConfirmDialogProvider({ children }: { children: ReactNode }) {
     info: "bg-blue-600 hover:bg-blue-700",
   };
 
-  if (!isOpen || !options) return <>{children}</>;
-
   return (
     <ConfirmDialogContext.Provider value={{ confirm }}>
       {children}
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-        <div className="w-full max-w-md rounded-lg border border-slate-700/50 bg-slate-800/95 p-6 shadow-2xl">
-          <div className="mb-4 flex items-start gap-3">
-            <div
-              className={`rounded-full border p-2 ${typeStyles[options.type || "info"]}`}
-            >
-              <AlertCircle className="h-5 w-5" />
+      {isOpen && options && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-lg border border-slate-700/50 bg-slate-800/95 p-6 shadow-2xl">
+            <div className="mb-4 flex items-start gap-3">
+              <div
+                className={`rounded-full border p-2 ${typeStyles[options.type || "info"]}`}
+              >
+                <AlertCircle className="h-5 w-5" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-white">{options.title}</h3>
+                <p className="mt-2 text-sm text-slate-400">{options.message}</p>
+              </div>
             </div>
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold text-white">{options.title}</h3>
-              <p className="mt-2 text-sm text-slate-400">{options.message}</p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={handleCancel}
+                className="rounded-md border border-slate-600 bg-slate-900/60 px-4 py-2 text-sm font-semibold text-slate-300 transition hover:bg-slate-800/60"
+              >
+                {options.cancelText || "キャンセル"}
+              </button>
+              <button
+                onClick={handleConfirm}
+                className={`rounded-md px-4 py-2 text-sm font-semibold text-white transition ${buttonStyles[options.type || "info"]}`}
+              >
+                {options.confirmText || "確認"}
+              </button>
             </div>
-          </div>
-          <div className="flex justify-end gap-3">
-            <button
-              onClick={handleCancel}
-              className="rounded-md border border-slate-600 bg-slate-900/60 px-4 py-2 text-sm font-semibold text-slate-300 transition hover:bg-slate-800/60"
-            >
-              {options.cancelText || "キャンセル"}
-            </button>
-            <button
-              onClick={handleConfirm}
-              className={`rounded-md px-4 py-2 text-sm font-semibold text-white transition ${buttonStyles[options.type || "info"]}`}
-            >
-              {options.confirmText || "確認"}
-            </button>
           </div>
         </div>
-      </div>
+      )}
     </ConfirmDialogContext.Provider>
   );
 }

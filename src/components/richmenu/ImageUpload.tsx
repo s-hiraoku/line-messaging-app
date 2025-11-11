@@ -3,8 +3,16 @@
 import { useState, useRef } from "react";
 import { Upload, X, Loader2, CheckCircle2 } from "lucide-react";
 
+type RichMenuSize =
+  | "2500x1686"
+  | "2500x843"
+  | "1200x810"
+  | "1200x405"
+  | "800x540"
+  | "800x270";
+
 interface ImageUploadProps {
-  size: "full" | "half";
+  size: RichMenuSize;
   onUploadComplete: (url: string) => void;
   currentImageUrl?: string;
 }
@@ -16,7 +24,7 @@ export function ImageUpload({ size, onUploadComplete, currentImageUrl }: ImageUp
   const [previewUrl, setPreviewUrl] = useState<string | null>(currentImageUrl || null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const expectedSize = size === "full" ? "2500x1686" : "2500x843";
+  const expectedSize = size;
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();

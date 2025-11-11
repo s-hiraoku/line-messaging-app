@@ -2,23 +2,54 @@ import { NextRequest, NextResponse } from "next/server";
 import { cloudinary } from "@/lib/cloudinary/client";
 import sharp from "sharp";
 
-const RICHMENU_SIZES = {
+type RichMenuSize =
+  | "2500x1686"
+  | "2500x843"
+  | "1200x810"
+  | "1200x405"
+  | "800x540"
+  | "800x270"
+  | "full"  // Legacy support
+  | "half"; // Legacy support
+
+const RICHMENU_SIZES: Record<RichMenuSize, { width: number; height: number }> = {
+  "2500x1686": { width: 2500, height: 1686 },
+  "2500x843": { width: 2500, height: 843 },
+  "1200x810": { width: 1200, height: 810 },
+  "1200x405": { width: 1200, height: 405 },
+  "800x540": { width: 800, height: 540 },
+  "800x270": { width: 800, height: 270 },
+  // Legacy support
   full: { width: 2500, height: 1686 },
   half: { width: 2500, height: 843 },
 };
+
+const VALID_SIZES: RichMenuSize[] = [
+  "2500x1686",
+  "2500x843",
+  "1200x810",
+  "1200x405",
+  "800x540",
+  "800x270",
+  "full",
+  "half",
+];
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File | null;
-    const size = formData.get("size") as "full" | "half" | null;
+    const size = formData.get("size") as string | null;
 
     if (!file) {
       return NextResponse.json({ error: "ファイルが必要です" }, { status: 400 });
     }
 
-    if (!size || !["full", "half"].includes(size)) {
-      return NextResponse.json({ error: "サイズ指定が必要です (full or half)" }, { status: 400 });
+    if (!size || !VALID_SIZES.includes(size as RichMenuSize)) {
+      return NextResponse.json(
+        { error: "サイズ指定が必要です (2500x1686, 2500x843, 1200x810, 1200x405, 800x540, 800x270)" },
+        { status: 400 }
+      );
     }
 
     // Convert file to buffer
@@ -33,7 +64,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "画像ファイルではありません" }, { status: 400 });
     }
 
-    const expectedSize = RICHMENU_SIZES[size];
+    const expectedSize = RICHMENU_SIZES[size as RichMenuSize];
     if (metadata.width !== expectedSize.width || metadata.height !== expectedSize.height) {
       return NextResponse.json(
         {
@@ -67,7 +98,11 @@ export async function POST(request: NextRequest) {
       height: uploadResponse.height,
     });
   } catch (error) {
-    console.error("Upload error:", error);
+    console.error("[POST /api/upload/richmenu-image] Upload error:", {
+      error,
+      url: request.url,
+      method: request.method,
+    });
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "アップロードに失敗しました" },
       { status: 500 }

@@ -50,7 +50,11 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(insights);
   } catch (error) {
-    console.error("Failed to fetch LINE insights:", error);
+    console.error("[GET /api/line/insights] Failed to fetch LINE insights:", {
+      error,
+      url: req.url,
+      method: req.method,
+    });
     return NextResponse.json(
       {
         error: "Failed to fetch insights",
