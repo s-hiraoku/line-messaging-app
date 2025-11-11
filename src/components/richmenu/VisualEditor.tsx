@@ -71,7 +71,7 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
       const newScale = Math.min(containerWidth / richMenuSize.width, 1);
       setScale(newScale);
     }
-  }, []);
+  }, [richMenuSize.width]);
 
   // Load image and update scale
   useEffect(() => {
@@ -221,13 +221,19 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
     if (!isDrawing || !drawStart) return;
 
     const coords = getCanvasCoordinates(e);
-    const x = Math.min(drawStart.x, coords.x) / scale;
-    const y = Math.min(drawStart.y, coords.y) / scale;
-    const width = Math.abs(coords.x - drawStart.x) / scale;
-    const height = Math.abs(coords.y - drawStart.y) / scale;
 
-    // Only add area if it has meaningful size (at least 50x50 pixels in actual size)
-    if (width >= 50 && height >= 50) {
+    // Calculate canvas pixel size (scaled size)
+    const canvasWidth = Math.abs(coords.x - drawStart.x);
+    const canvasHeight = Math.abs(coords.y - drawStart.y);
+
+    // Only add area if it has meaningful size (at least 30x30 pixels on canvas)
+    if (canvasWidth >= 30 && canvasHeight >= 30) {
+      // Convert to rich menu coordinates
+      const x = Math.min(drawStart.x, coords.x) / scale;
+      const y = Math.min(drawStart.y, coords.y) / scale;
+      const width = canvasWidth / scale;
+      const height = canvasHeight / scale;
+
       const newArea: TapArea = {
         bounds: {
           x: Math.round(x),
@@ -278,8 +284,12 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
         <label className="text-sm font-medium text-slate-300">
           タップ領域 <span className="text-red-400">*</span>
         </label>
-        <div className="text-xs text-slate-500">
-          画像上をドラッグして領域を作成、クリックして選択
+        <div className="flex items-center gap-4 text-xs text-slate-500">
+          <span>画像上をドラッグして領域を作成、クリックして選択</span>
+          <span className="text-slate-600">
+            スケール: {(scale * 100).toFixed(0)}% |
+            キャンバス: {Math.round(richMenuSize.width * scale)}×{Math.round(richMenuSize.height * scale)}px
+          </span>
         </div>
       </div>
 
@@ -296,7 +306,12 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
               setCurrentDraw(null);
             }
           }}
-          className="w-full cursor-crosshair rounded border border-slate-600"
+          style={{
+            width: `${richMenuSize.width * scale}px`,
+            height: `${richMenuSize.height * scale}px`,
+            maxWidth: '100%',
+          }}
+          className="cursor-crosshair rounded border border-slate-600"
         />
       </div>
 
