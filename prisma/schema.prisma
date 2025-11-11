@@ -119,11 +119,14 @@ model RichMenu {
   id           String          @id @default(cuid())
   richMenuId   String?         @unique
   name         String
+  alias        String?  @unique              // リッチメニューエイリアス
   size         String
   chatBarText  String
   imageUrl     String?
   areas        Json
   selected     Boolean         @default(false)
+  barDisplayed Boolean         @default(true)       // チャットバーを表示するか
+  isDefault    Boolean         @default(false)      // メニューが初期状態で開いているか
   status       RichMenuStatus  @default(DRAFT)
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt

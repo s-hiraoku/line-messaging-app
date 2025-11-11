@@ -24,19 +24,105 @@ interface TapArea {
     height: number;
   };
   action: {
-    type: "uri" | "message" | "postback";
+    type: "uri" | "message" | "postback" | "datetimepicker" | "richmenuswitch";
     label?: string;
     uri?: string;
     text?: string;
     data?: string;
+    displayText?: string;
+    mode?: "date" | "time" | "datetime";
+    initial?: string;
+    max?: string;
+    min?: string;
+    richMenuAliasId?: string;
   };
 }
+
+// Layout templates
+const LAYOUT_TEMPLATES: Record<string, { name: string; description: string; areas: (size: "full" | "half") => TapArea[] }> = {
+  "2-horizontal": {
+    name: "2分割（横）",
+    description: "上下2つのエリアに分割",
+    areas: (size) => {
+      const height = size === "full" ? 1686 : 843;
+      const areaHeight = Math.floor(height / 2);
+      return [
+        { bounds: { x: 0, y: 0, width: 2500, height: areaHeight }, action: { type: "uri", uri: "https://example.com" } },
+        { bounds: { x: 0, y: areaHeight, width: 2500, height: height - areaHeight }, action: { type: "uri", uri: "https://example.com" } },
+      ];
+    },
+  },
+  "2-vertical": {
+    name: "2分割（縦）",
+    description: "左右2つのエリアに分割",
+    areas: (size) => {
+      const height = size === "full" ? 1686 : 843;
+      return [
+        { bounds: { x: 0, y: 0, width: 1250, height }, action: { type: "uri", uri: "https://example.com" } },
+        { bounds: { x: 1250, y: 0, width: 1250, height }, action: { type: "uri", uri: "https://example.com" } },
+      ];
+    },
+  },
+  "3-horizontal": {
+    name: "3分割（横）",
+    description: "上下3つのエリアに分割",
+    areas: (size) => {
+      const height = size === "full" ? 1686 : 843;
+      const areaHeight = Math.floor(height / 3);
+      return [
+        { bounds: { x: 0, y: 0, width: 2500, height: areaHeight }, action: { type: "uri", uri: "https://example.com" } },
+        { bounds: { x: 0, y: areaHeight, width: 2500, height: areaHeight }, action: { type: "uri", uri: "https://example.com" } },
+        { bounds: { x: 0, y: areaHeight * 2, width: 2500, height: height - areaHeight * 2 }, action: { type: "uri", uri: "https://example.com" } },
+      ];
+    },
+  },
+  "3-vertical": {
+    name: "3分割（縦）",
+    description: "左右3つのエリアに分割",
+    areas: (size) => {
+      const height = size === "full" ? 1686 : 843;
+      const areaWidth = Math.floor(2500 / 3);
+      return [
+        { bounds: { x: 0, y: 0, width: areaWidth, height }, action: { type: "uri", uri: "https://example.com" } },
+        { bounds: { x: areaWidth, y: 0, width: areaWidth, height }, action: { type: "uri", uri: "https://example.com" } },
+        { bounds: { x: areaWidth * 2, y: 0, width: 2500 - areaWidth * 2, height }, action: { type: "uri", uri: "https://example.com" } },
+      ];
+    },
+  },
+  "6-grid": {
+    name: "6分割（グリッド）",
+    description: "3x2のグリッドレイアウト",
+    areas: (size) => {
+      const height = size === "full" ? 1686 : 843;
+      const areaWidth = Math.floor(2500 / 3);
+      const areaHeight = Math.floor(height / 2);
+      const result: TapArea[] = [];
+      for (let row = 0; row < 2; row++) {
+        for (let col = 0; col < 3; col++) {
+          result.push({
+            bounds: {
+              x: col * areaWidth,
+              y: row * areaHeight,
+              width: col === 2 ? 2500 - areaWidth * 2 : areaWidth,
+              height: row === 1 ? height - areaHeight : areaHeight,
+            },
+            action: { type: "uri", uri: "https://example.com" },
+          });
+        }
+      }
+      return result;
+    },
+  },
+};
 
 export default function NewRichMenuPage() {
   const router = useRouter();
   const [name, setName] = useState("");
+  const [alias, setAlias] = useState("");
   const [size, setSize] = useState<SizeType>("2500x1686");
   const [chatBarText, setChatBarText] = useState("");
+  const [barDisplayed, setBarDisplayed] = useState(true);
+  const [isDefault, setIsDefault] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
   const [areas, setAreas] = useState<TapArea[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -54,6 +140,13 @@ export default function NewRichMenuPage() {
         action: { type: "uri", label: "", uri: "" },
       },
     ]);
+  };
+
+  const applyTemplate = (templateKey: string) => {
+    const template = LAYOUT_TEMPLATES[templateKey];
+    if (template) {
+      setAreas(template.areas(size));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -74,7 +167,16 @@ export default function NewRichMenuPage() {
       const response = await fetch("/api/line/richmenu", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          name,
+          alias: alias || undefined,
+          size,
+          chatBarText,
+          barDisplayed,
+          isDefault,
+          imageUrl,
+          areas,
+        }),
       });
 
       const data = await response.json().catch(() => ({}));
@@ -123,6 +225,21 @@ export default function NewRichMenuPage() {
         </div>
 
         <div className="space-y-2">
+          <label htmlFor="alias" className="text-sm font-medium text-slate-300">
+            エイリアス
+          </label>
+          <input
+            id="alias"
+            type="text"
+            value={alias}
+            onChange={(e) => setAlias(e.target.value)}
+            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            placeholder="menu_alias"
+          />
+          <p className="text-xs text-slate-500">リッチメニュー切り替えで使用するエイリアス（オプション）</p>
+        </div>
+
+        <div className="space-y-2">
           <label htmlFor="size" className="text-sm font-medium text-slate-300">
             サイズ <span className="text-red-400">*</span>
           </label>
@@ -168,11 +285,55 @@ export default function NewRichMenuPage() {
           <p className="text-xs text-slate-500">最大14文字（{chatBarText.length}/14）</p>
         </div>
 
+        <div className="space-y-3">
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={barDisplayed}
+              onChange={(e) => setBarDisplayed(e.target.checked)}
+              className="h-4 w-4 rounded border-slate-600 bg-slate-900/60 text-blue-600 focus:ring-blue-500"
+            />
+            <span className="text-sm text-slate-300">チャットバーを表示する</span>
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={isDefault}
+              onChange={(e) => setIsDefault(e.target.checked)}
+              className="h-4 w-4 rounded border-slate-600 bg-slate-900/60 text-blue-600 focus:ring-blue-500"
+            />
+            <span className="text-sm text-slate-300">メニューを初期状態で開く</span>
+          </label>
+        </div>
+
         <ImageUpload
           size={size}
           onUploadComplete={setImageUrl}
           currentImageUrl={imageUrl}
         />
+
+        {/* Layout Templates */}
+        <div className="space-y-3">
+          <label className="text-sm font-medium text-slate-300">
+            レイアウトテンプレート
+          </label>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            {Object.entries(LAYOUT_TEMPLATES).map(([key, template]) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => applyTemplate(key)}
+                className="rounded-lg border border-slate-600 bg-slate-900/60 p-3 text-left transition hover:border-blue-500 hover:bg-slate-800/60"
+              >
+                <div className="text-sm font-medium text-slate-300">{template.name}</div>
+                <div className="mt-1 text-xs text-slate-500">{template.description}</div>
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-slate-400">
+            ※ テンプレートを選択すると現在のタップエリアが置き換えられます
+          </p>
+        </div>
 
         {/* Tap Areas */}
         <div className="space-y-4">
