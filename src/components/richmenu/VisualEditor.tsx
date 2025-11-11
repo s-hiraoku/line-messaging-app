@@ -64,14 +64,16 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
 
   const richMenuSize = RICHMENU_SIZES[size];
 
-  const updateScale = () => {
-    if (!containerRef.current) return;
-    const containerWidth = containerRef.current.clientWidth;
-    const newScale = Math.min(containerWidth / richMenuSize.width, 1);
-    setScale(newScale);
-  };
+  // Initial scale setup
+  useEffect(() => {
+    if (containerRef.current) {
+      const containerWidth = containerRef.current.clientWidth;
+      const newScale = Math.min(containerWidth / richMenuSize.width, 1);
+      setScale(newScale);
+    }
+  }, []);
 
-  // Load image
+  // Load image and update scale
   useEffect(() => {
     if (!imageUrl) {
       setImage(null);
@@ -82,22 +84,37 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
     img.crossOrigin = "anonymous";
     img.onload = () => {
       setImage(img);
-      updateScale();
+      // Update scale after image loads
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.clientWidth;
+        const newScale = Math.min(containerWidth / richMenuSize.width, 1);
+        setScale(newScale);
+      }
     };
     img.src = imageUrl;
-  }, [imageUrl]);
+  }, [imageUrl, richMenuSize.width]);
 
   // Update scale when size changes
   useEffect(() => {
-    updateScale();
-  }, [size]);
+    if (containerRef.current) {
+      const containerWidth = containerRef.current.clientWidth;
+      const newScale = Math.min(containerWidth / richMenuSize.width, 1);
+      setScale(newScale);
+    }
+  }, [size, richMenuSize.width]);
 
   // Update scale when container size changes
   useEffect(() => {
-    const handleResize = () => updateScale();
+    const handleResize = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.clientWidth;
+        const newScale = Math.min(containerWidth / richMenuSize.width, 1);
+        setScale(newScale);
+      }
+    };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [richMenuSize.width]);
 
   // Draw canvas
   useEffect(() => {
