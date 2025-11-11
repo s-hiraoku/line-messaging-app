@@ -56,6 +56,7 @@ export function Combobox({
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
+  const errorId = React.useId();
 
   // オプションを統合（通常のoptionsとgroupsの両方をサポート）
   const allOptions = React.useMemo(() => {
@@ -77,6 +78,8 @@ export function Combobox({
             role="combobox"
             aria-expanded={open}
             aria-haspopup="listbox"
+            aria-invalid={!!error}
+            aria-describedby={error ? errorId : undefined}
             disabled={disabled}
             className={cn(
               "flex h-10 w-full items-center justify-between rounded-lg border bg-slate-900/50 px-4 py-2 text-sm transition-all duration-200",
@@ -229,7 +232,11 @@ export function Combobox({
       </PopoverPrimitive.Root>
 
       {/* エラーメッセージ */}
-      {error && <p className="mt-1.5 text-sm text-red-400">{error}</p>}
+      {error && (
+        <p id={errorId} className="mt-1.5 text-sm text-red-400">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

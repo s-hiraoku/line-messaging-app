@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo, useId } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { ChevronDown, Search, Check, X } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -107,6 +107,8 @@ export function Dropdown({
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const listboxId = useId();
+  const errorId = useId();
 
   const hasError = !!error;
   const effectiveVariant = hasError ? 'error' : variant;
@@ -154,6 +156,18 @@ export function Dropdown({
     }
     return value ? [value as string] : [];
   }, [value, multiple]);
+
+  // アクティブなオプションのIDを計算
+  const activeOptionId = useMemo(() => {
+    if (!isOpen) return undefined;
+    const displayedOptions = groups.length > 0
+      ? filteredGroups.flatMap(g => g.options)
+      : filteredOptions;
+    if (highlightedIndex >= 0 && highlightedIndex < displayedOptions.length) {
+      return `${listboxId}-option-${highlightedIndex}`;
+    }
+    return undefined;
+  }, [isOpen, highlightedIndex, filteredOptions, filteredGroups, groups.length, listboxId]);
 
   // 選択されたオプションのラベルを取得
   const selectedLabel = useMemo(() => {
@@ -284,10 +298,12 @@ export function Dropdown({
   const renderOption = (option: DropdownOption, index: number) => {
     const selected = isSelected(option.value);
     const highlighted = index === highlightedIndex;
+    const optionId = `${listboxId}-option-${index}`;
 
     return (
       <div
         key={option.value}
+        id={optionId}
         onClick={() => !option.disabled && handleSelect(option.value)}
         className={clsx(
           'px-4 py-2.5 cursor-pointer transition-all duration-150 flex items-center justify-between gap-3',
@@ -342,6 +358,10 @@ export function Dropdown({
         role="combobox"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
+        aria-controls={listboxId}
+        aria-activedescendant={activeOptionId}
+        aria-invalid={!!error}
+        aria-describedby={error ? errorId : undefined}
         aria-disabled={disabled}
         tabIndex={disabled ? -1 : 0}
       >
@@ -373,6 +393,7 @@ export function Dropdown({
       {/* ドロップダウンメニュー */}
       {isOpen && (
         <div
+          id={listboxId}
           className={menuVariants({ variant: effectiveVariant })}
           role="listbox"
           aria-multiselectable={multiple}
@@ -437,7 +458,9 @@ export function Dropdown({
 
       {/* エラーメッセージ */}
       {error && (
-        <p className="mt-1.5 text-sm text-red-400">{error}</p>
+        <p id={errorId} className="mt-1.5 text-sm text-red-400">
+          {error}
+        </p>
       )}
 
       {/* カスタムスクロールバーのスタイル */}
