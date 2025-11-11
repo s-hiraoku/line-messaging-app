@@ -61,7 +61,7 @@ export default function UsersPage() {
         const data = await response.json();
         setRichMenus(
           data.richMenus
-            .filter((menu: any) => menu.richMenuId)
+            .filter((menu: any) => menu.richMenuId && menu.status === "PUBLISHED")
             .map((menu: any) => ({
               id: menu.id,
               richMenuId: menu.richMenuId,

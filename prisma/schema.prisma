@@ -110,17 +110,23 @@ model ChannelConfig {
   updatedAt     DateTime @updatedAt
 }
 
+enum RichMenuStatus {
+  DRAFT
+  PUBLISHED
+}
+
 model RichMenu {
-  id           String   @id @default(cuid())
-  richMenuId   String?  @unique
+  id           String          @id @default(cuid())
+  richMenuId   String?         @unique
   name         String
   size         String
   chatBarText  String
   imageUrl     String?
   areas        Json
-  selected     Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  selected     Boolean         @default(false)
+  status       RichMenuStatus  @default(DRAFT)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
 }
 
 model Account {

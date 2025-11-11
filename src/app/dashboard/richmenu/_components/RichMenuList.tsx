@@ -14,6 +14,7 @@ interface RichMenu {
   chatBarText: string;
   imageUrl?: string;
   selected: boolean;
+  status: "DRAFT" | "PUBLISHED";
   createdAt: string;
 }
 
@@ -22,6 +23,7 @@ export function RichMenuList() {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [settingDefault, setSettingDefault] = useState<string | null>(null);
+  const [publishing, setPublishing] = useState<string | null>(null);
   const toast = useToast();
   const { confirm } = useConfirm();
 
@@ -134,6 +136,43 @@ export function RichMenuList() {
     }
   };
 
+  const handlePublish = async (id: string, name: string) => {
+    const confirmed = await confirm({
+      title: `「${name}」を公開しますか？`,
+      message: "LINE APIに登録され、ユーザーに設定できるようになります。",
+      type: "info",
+    });
+
+    if (!confirmed) return;
+
+    setPublishing(id);
+    try {
+      const endpoint = `/api/line/richmenu/${id}/publish`;
+      setLastEndpoint(endpoint);
+      setLastMethod("POST");
+      setLastRequest(undefined);
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+      });
+
+      const data = await response.json();
+      setLastResponse(data);
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to publish");
+      }
+
+      toast.success(`「${name}」を公開しました`);
+      await loadRichMenus();
+    } catch (error) {
+      setLastResponse({ error: String(error) });
+      toast.error(error instanceof Error ? error.message : "公開に失敗しました");
+    } finally {
+      setPublishing(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -174,6 +213,15 @@ export function RichMenuList() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="text-lg font-semibold text-white">{menu.name}</h3>
+                    {menu.status === "DRAFT" ? (
+                      <span className="rounded-full bg-slate-500/20 px-2 py-0.5 text-xs text-slate-300">
+                        下書き
+                      </span>
+                    ) : (
+                      <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-xs text-green-300">
+                        公開済み
+                      </span>
+                    )}
                     {menu.selected && (
                       <span className="rounded-full bg-blue-500/20 px-2 py-0.5 text-xs text-blue-300">
                         デフォルト
@@ -185,7 +233,17 @@ export function RichMenuList() {
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  {!menu.selected && (
+                  {menu.status === "DRAFT" && (
+                    <button
+                      onClick={() => handlePublish(menu.id, menu.name)}
+                      disabled={publishing === menu.id || !menu.imageUrl}
+                      className="rounded-md border border-green-600/50 bg-green-900/20 px-3 py-1.5 text-sm text-green-300 transition hover:bg-green-900/40 disabled:cursor-not-allowed disabled:opacity-50"
+                      title={!menu.imageUrl ? "画像が設定されていません" : ""}
+                    >
+                      {publishing === menu.id ? "公開中..." : "公開"}
+                    </button>
+                  )}
+                  {menu.status === "PUBLISHED" && !menu.selected && (
                     <button
                       onClick={() => handleSetDefault(menu.id, menu.name)}
                       disabled={settingDefault === menu.id}
