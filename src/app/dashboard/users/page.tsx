@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { User as UserIcon } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { DebugPanel, toCurl } from "../_components/debug-panel";
 
 interface User {
   id: string;
@@ -27,15 +28,29 @@ export default function UsersPage() {
   const [settingMenu, setSettingMenu] = useState<string | null>(null);
   const toast = useToast();
 
+  // Debug state
+  const [lastRequest, setLastRequest] = useState<unknown>();
+  const [lastResponse, setLastResponse] = useState<unknown>();
+  const [lastEndpoint, setLastEndpoint] = useState<string>("");
+  const [lastMethod, setLastMethod] = useState<string>("GET");
+
   const loadUsers = async () => {
     try {
-      const response = await fetch("/api/line/users");
+      const endpoint = "/api/line/users";
+      setLastEndpoint(endpoint);
+      setLastMethod("GET");
+      setLastRequest(undefined);
+
+      const response = await fetch(endpoint);
+      const data = await response.json();
+      setLastResponse(data);
+
       if (response.ok) {
-        const data = await response.json();
         setUsers(data.users || []);
       }
     } catch (error) {
       console.error("Failed to load users:", error);
+      setLastResponse({ error: String(error) });
     }
   };
 
@@ -68,19 +83,27 @@ export default function UsersPage() {
   const handleSetRichMenu = async (userId: string, richMenuId: string) => {
     setSettingMenu(userId);
     try {
-      const response = await fetch(`/api/line/richmenu/${richMenuId}/users/${userId}`, {
+      const endpoint = `/api/line/richmenu/${richMenuId}/users/${userId}`;
+      setLastEndpoint(endpoint);
+      setLastMethod("POST");
+      setLastRequest(undefined);
+
+      const response = await fetch(endpoint, {
         method: "POST",
       });
+
+      const data = await response.json();
+      setLastResponse(data);
 
       if (response.ok) {
         await loadUsers();
         toast.success("リッチメニューを設定しました");
       } else {
-        const data = await response.json();
         toast.error(data.error || "リッチメニューの設定に失敗しました");
       }
     } catch (error) {
       console.error("Failed to set rich menu:", error);
+      setLastResponse({ error: String(error) });
       toast.error("リッチメニューの設定に失敗しました");
     } finally {
       setSettingMenu(null);
@@ -90,19 +113,27 @@ export default function UsersPage() {
   const handleUnlinkRichMenu = async (userId: string, richMenuId: string) => {
     setSettingMenu(userId);
     try {
-      const response = await fetch(`/api/line/richmenu/${richMenuId}/users/${userId}`, {
+      const endpoint = `/api/line/richmenu/${richMenuId}/users/${userId}`;
+      setLastEndpoint(endpoint);
+      setLastMethod("DELETE");
+      setLastRequest(undefined);
+
+      const response = await fetch(endpoint, {
         method: "DELETE",
       });
+
+      const data = await response.json();
+      setLastResponse(data);
 
       if (response.ok) {
         await loadUsers();
         toast.success("リッチメニューの設定を解除しました");
       } else {
-        const data = await response.json();
         toast.error(data.error || "リッチメニューの解除に失敗しました");
       }
     } catch (error) {
       console.error("Failed to unlink rich menu:", error);
+      setLastResponse({ error: String(error) });
       toast.error("リッチメニューの解除に失敗しました");
     } finally {
       setSettingMenu(null);
@@ -230,6 +261,19 @@ export default function UsersPage() {
           </table>
         </div>
       )}
+
+      <DebugPanel
+        title="ユーザー管理 API デバッグ"
+        request={lastRequest}
+        response={lastResponse}
+        curl={toCurl({
+          url: new URL(lastEndpoint, typeof window !== 'undefined' ? location.origin : 'http://localhost:3000').toString(),
+          method: lastMethod,
+          headers: lastRequest ? { 'Content-Type': 'application/json' } : undefined,
+          body: lastRequest,
+        })}
+        docsUrl="https://developers.line.biz/ja/reference/messaging-api/#get-profile"
+      />
     </div>
   );
 }

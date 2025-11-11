@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Check, Copy } from 'lucide-react';
 
 export function DebugPanel({
   title = 'Debug',
@@ -17,10 +17,13 @@ export function DebugPanel({
   docsUrl?: string;
 }) {
   const [open, setOpen] = useState(false);
+  const [copiedSection, setCopiedSection] = useState<string | null>(null);
 
-  const copy = async (text: string) => {
+  const copy = async (text: string, section: string) => {
     try {
       await navigator.clipboard.writeText(text);
+      setCopiedSection(section);
+      setTimeout(() => setCopiedSection(null), 2000);
     } catch {
       // ignore
     }
@@ -56,7 +59,22 @@ export function DebugPanel({
             <div>
               <div className="mb-1 flex items-center justify-between">
                 <p className="text-xs font-semibold text-slate-300">cURL</p>
-                <button className="text-xs text-blue-300 hover:text-blue-200 cursor-pointer" onClick={() => copy(curl)}>copy</button>
+                <button
+                  className="flex items-center gap-1 text-xs text-blue-300 hover:text-blue-200 cursor-pointer"
+                  onClick={() => copy(curl, 'curl')}
+                >
+                  {copiedSection === 'curl' ? (
+                    <>
+                      <Check className="h-3 w-3" />
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3 w-3" />
+                      Copy
+                    </>
+                  )}
+                </button>
               </div>
               <pre className="overflow-auto rounded bg-slate-950/70 p-2 text-[11px] leading-relaxed text-slate-200">
 {curl}
@@ -67,7 +85,22 @@ export function DebugPanel({
             <div>
               <div className="mb-1 flex items-center justify-between">
                 <p className="text-xs font-semibold text-slate-300">Request</p>
-                <button className="text-xs text-blue-300 hover:text-blue-200 cursor-pointer" onClick={() => copy(JSON.stringify(request, null, 2))}>copy</button>
+                <button
+                  className="flex items-center gap-1 text-xs text-blue-300 hover:text-blue-200 cursor-pointer"
+                  onClick={() => copy(JSON.stringify(request, null, 2), 'request')}
+                >
+                  {copiedSection === 'request' ? (
+                    <>
+                      <Check className="h-3 w-3" />
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3 w-3" />
+                      Copy
+                    </>
+                  )}
+                </button>
               </div>
               <pre className="overflow-auto rounded bg-slate-950/70 p-2 text-[11px] leading-relaxed text-slate-200">
 {JSON.stringify(request, null, 2)}
@@ -78,7 +111,22 @@ export function DebugPanel({
             <div>
               <div className="mb-1 flex items-center justify-between">
                 <p className="text-xs font-semibold text-slate-300">Response</p>
-                <button className="text-xs text-blue-300 hover:text-blue-200 cursor-pointer" onClick={() => copy(JSON.stringify(response, null, 2))}>copy</button>
+                <button
+                  className="flex items-center gap-1 text-xs text-blue-300 hover:text-blue-200 cursor-pointer"
+                  onClick={() => copy(JSON.stringify(response, null, 2), 'response')}
+                >
+                  {copiedSection === 'response' ? (
+                    <>
+                      <Check className="h-3 w-3" />
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3 w-3" />
+                      Copy
+                    </>
+                  )}
+                </button>
               </div>
               <pre className="overflow-auto rounded bg-slate-950/70 p-2 text-[11px] leading-relaxed text-slate-200">
 {JSON.stringify(response, null, 2)}

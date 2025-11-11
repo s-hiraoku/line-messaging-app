@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { LineConversation } from "../_components/line-conversation";
+import { DebugPanel, toCurl } from "../../_components/debug-panel";
 
 type Status = "idle" | "sending" | "success" | "error";
 

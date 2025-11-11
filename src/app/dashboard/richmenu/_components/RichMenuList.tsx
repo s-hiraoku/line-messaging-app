@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useToast } from "@/components/ui/Toast";
 import { useConfirm } from "@/components/ui/ConfirmDialog";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { DebugPanel, toCurl } from "../../_components/debug-panel";
 
 interface RichMenu {
   id: string;
@@ -24,14 +25,28 @@ export function RichMenuList() {
   const toast = useToast();
   const { confirm } = useConfirm();
 
+  // Debug state
+  const [lastRequest, setLastRequest] = useState<unknown>();
+  const [lastResponse, setLastResponse] = useState<unknown>();
+  const [lastEndpoint, setLastEndpoint] = useState<string>("");
+  const [lastMethod, setLastMethod] = useState<string>("GET");
+
   const loadRichMenus = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/line/richmenu");
-      if (!response.ok) throw new Error("Failed to load rich menus");
+      const endpoint = "/api/line/richmenu";
+      setLastEndpoint(endpoint);
+      setLastMethod("GET");
+      setLastRequest(undefined);
+
+      const response = await fetch(endpoint);
       const data = await response.json();
+      setLastResponse(data);
+
+      if (!response.ok) throw new Error("Failed to load rich menus");
       setRichMenus(data.richMenus || []);
     } catch (error) {
+      setLastResponse({ error: String(error) });
       toast.error("リッチメニューの読み込みに失敗しました");
     } finally {
       setLoading(false);
@@ -53,15 +68,24 @@ export function RichMenuList() {
 
     setDeleting(id);
     try {
-      const response = await fetch(`/api/line/richmenu/${id}`, {
+      const endpoint = `/api/line/richmenu/${id}`;
+      setLastEndpoint(endpoint);
+      setLastMethod("DELETE");
+      setLastRequest(undefined);
+
+      const response = await fetch(endpoint, {
         method: "DELETE",
       });
+
+      const data = await response.json();
+      setLastResponse(data);
 
       if (!response.ok) throw new Error("Failed to delete rich menu");
 
       toast.success("リッチメニューを削除しました");
       await loadRichMenus();
     } catch (error) {
+      setLastResponse({ error: String(error) });
       toast.error("削除に失敗しました");
     } finally {
       setDeleting(null);
@@ -71,15 +95,24 @@ export function RichMenuList() {
   const handleSetDefault = async (id: string, name: string) => {
     setSettingDefault(id);
     try {
-      const response = await fetch(`/api/line/richmenu/${id}/default`, {
+      const endpoint = `/api/line/richmenu/${id}/default`;
+      setLastEndpoint(endpoint);
+      setLastMethod("POST");
+      setLastRequest(undefined);
+
+      const response = await fetch(endpoint, {
         method: "POST",
       });
+
+      const data = await response.json();
+      setLastResponse(data);
 
       if (!response.ok) throw new Error("Failed to set default");
 
       toast.success(`「${name}」をデフォルトに設定しました`);
       await loadRichMenus();
     } catch (error) {
+      setLastResponse({ error: String(error) });
       toast.error("デフォルト設定に失敗しました");
     } finally {
       setSettingDefault(null);
@@ -160,6 +193,19 @@ export function RichMenuList() {
           ))}
         </div>
       )}
+
+      <DebugPanel
+        title="リッチメニュー API デバッグ"
+        request={lastRequest}
+        response={lastResponse}
+        curl={toCurl({
+          url: new URL(lastEndpoint, typeof window !== 'undefined' ? location.origin : 'http://localhost:3000').toString(),
+          method: lastMethod,
+          headers: lastRequest ? { 'Content-Type': 'application/json' } : undefined,
+          body: lastRequest,
+        })}
+        docsUrl="https://developers.line.biz/ja/reference/messaging-api/#rich-menu"
+      />
     </div>
   );
 }

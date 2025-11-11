@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { DebugPanel, toCurl } from "../../_components/debug-panel";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -19,6 +20,8 @@ export default function CouponMessagePage() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [lastRequest, setLastRequest] = useState<unknown>();
+  const [lastResponse, setLastResponse] = useState<unknown>();
 
   // Load coupons on mount
   useEffect(() => {
@@ -87,23 +90,30 @@ export default function CouponMessagePage() {
     setError(null);
 
     try {
+      const payload = {
+        to: lineUserId,
+        messages: [{
+          type: "coupon",
+          couponId,
+        }],
+      };
+      setLastRequest(payload);
       const response = await fetch("/api/line/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          to: lineUserId,
-          type: "coupon",
-          couponId,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
+        setLastResponse(data);
         throw new Error(data.error ?? "クーポンメッセージの送信に失敗しました");
       }
 
+      const data = await response.json().catch(() => ({}));
+      setLastResponse(data);
       setStatus("success");
       setCouponId("");
       setSelectedCoupon(null);
@@ -269,40 +279,18 @@ export default function CouponMessagePage() {
         </div>
       )}
 
-      {/* Debug Panel */}
-      <details className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-4 shadow-lg backdrop-blur-sm">
-        <summary className="cursor-pointer text-sm font-medium text-slate-300">
-          デバッグ情報
-        </summary>
-        <div className="mt-4 space-y-3">
-          <div>
-            <div className="mb-1 text-xs font-medium text-slate-400">Request Body</div>
-            <pre className="overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-300">
-              {JSON.stringify(
-                {
-                  to: lineUserId || "Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-                  type: "coupon",
-                  couponId: couponId || "COUPON001",
-                },
-                null,
-                2
-              )}
-            </pre>
-          </div>
-          <div>
-            <div className="mb-1 text-xs font-medium text-slate-400">cURL Command</div>
-            <pre className="overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-300">
-              {`curl -X POST http://localhost:3000/api/line/send \\
-  -H "Content-Type: application/json" \\
-  -d '${JSON.stringify({
-    to: lineUserId || "Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    type: "coupon",
-    couponId: couponId || "COUPON001",
-  })}'`}
-            </pre>
-          </div>
-        </div>
-      </details>
+      <DebugPanel
+        title="クーポン API デバッグ"
+        request={lastRequest}
+        response={lastResponse}
+        curl={toCurl({
+          url: new URL('/api/line/send', typeof window !== 'undefined' ? location.origin : 'http://localhost:3000').toString(),
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: lastRequest
+        })}
+        docsUrl="https://developers.line.biz/ja/reference/messaging-api/#coupon-message"
+      />
     </div>
   );
 }

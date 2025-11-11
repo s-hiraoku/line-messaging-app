@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ImageUpload } from "@/components/richmenu/ImageUpload";
 import { VisualEditor } from "@/components/richmenu/VisualEditor";
+import { DebugPanel, toCurl } from "../../_components/debug-panel";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +36,10 @@ export default function NewRichMenuPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Debug state
+  const [lastRequest, setLastRequest] = useState<unknown>();
+  const [lastResponse, setLastResponse] = useState<unknown>();
+
   const addArea = () => {
     setAreas([
       ...areas,
@@ -51,25 +56,31 @@ export default function NewRichMenuPage() {
     setError(null);
 
     try {
+      const payload = {
+        name,
+        size,
+        chatBarText,
+        imageUrl,
+        areas,
+      };
+      setLastRequest(payload);
+
       const response = await fetch("/api/line/richmenu", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          size,
-          chatBarText,
-          imageUrl,
-          areas,
-        }),
+        body: JSON.stringify(payload),
       });
 
+      const data = await response.json().catch(() => ({}));
+      setLastResponse(data);
+
       if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
         throw new Error(data.error || "リッチメニューの作成に失敗しました");
       }
 
       router.push("/dashboard/richmenu");
     } catch (err) {
+      setLastResponse({ error: String(err) });
       setError(err instanceof Error ? err.message : "不明なエラーが発生しました");
     } finally {
       setSubmitting(false);
@@ -193,6 +204,19 @@ export default function NewRichMenuPage() {
           </button>
         </div>
       </form>
+
+      <DebugPanel
+        title="リッチメニュー作成 API デバッグ"
+        request={lastRequest}
+        response={lastResponse}
+        curl={toCurl({
+          url: new URL('/api/line/richmenu', typeof window !== 'undefined' ? location.origin : 'http://localhost:3000').toString(),
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: lastRequest,
+        })}
+        docsUrl="https://developers.line.biz/ja/reference/messaging-api/#create-rich-menu"
+      />
     </div>
   );
 }
