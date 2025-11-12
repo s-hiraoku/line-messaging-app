@@ -15,7 +15,12 @@ interface VisualEditorProps {
   onAreasChange: (areas: TapArea[]) => void;
 }
 
-export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEditorProps) {
+export function VisualEditor({
+  imageUrl,
+  size,
+  areas,
+  onAreasChange,
+}: VisualEditorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
@@ -45,7 +50,6 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
   // Load image
   useEffect(() => {
     if (!imageUrl) {
-      setImage(null);
       return;
     }
 
@@ -59,6 +63,10 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
       setImage(null);
     };
     img.src = imageUrl;
+
+    return () => {
+      setImage(null);
+    };
   }, [imageUrl]);
 
   // Handle Escape key to delete selected area
