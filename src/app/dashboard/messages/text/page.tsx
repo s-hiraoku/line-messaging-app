@@ -90,6 +90,8 @@ export default function MessagesTextPage() {
       setLastResponse(data);
       setStatus("success");
       setMessage("");
+      // Reload messages to replace temporary message with actual DB record
+      await load(true);
     } catch (err) {
       setStatus("error");
       setError(err instanceof Error ? err.message : "不明なエラーが発生しました");

@@ -4,6 +4,7 @@ import { getLineClient } from "@/lib/line/client";
 import { prisma } from "@/lib/prisma";
 import { realtime } from "@/lib/realtime/bus";
 import { addLog } from "@/lib/dev/logger";
+import { executeAutoReply } from "@/lib/auto-reply/executor";
 
 async function verifySignature(body: string, signature: string | null): Promise<void> {
   const config = await prisma.channelConfig.findUnique({ where: { id: "primary" } });
@@ -116,15 +117,9 @@ async function handleEvent(event: WebhookEvent) {
             text: event.message.text,
             createdAt: msg.createdAt.toISOString(),
           });
-        }
-        try {
-          await client.replyMessage(event.replyToken, {
-            type: "text",
-            text: "メッセージありがとうございます！",
-          });
-          addLog('info', 'webhook:reply:ok');
-        } catch (e) {
-          addLog('error', 'webhook:reply:error', { error: e instanceof Error ? e.message : String(e) });
+
+          // Execute auto-reply system
+          await executeAutoReply(client, event, user.id);
         }
       }
       break;

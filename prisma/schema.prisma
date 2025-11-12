@@ -11,19 +11,20 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  lineUserId   String   @unique
-  displayName  String
-  pictureUrl   String?
-  isFollowing  Boolean  @default(true)
-  messages     Message[]
-  tags         UserTag[]
-  broadcasts   Broadcast[] @relation("BroadcastAudience")
-  accounts     Account[]
-  sessions     Session[]
-  richMenuId   String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id            String   @id @default(cuid())
+  lineUserId    String   @unique
+  displayName   String
+  pictureUrl    String?
+  isFollowing   Boolean  @default(true)
+  messages      Message[]
+  tags          UserTag[]
+  broadcasts    Broadcast[] @relation("BroadcastAudience")
+  accounts      Account[]
+  sessions      Session[]
+  richMenuId    String?
+  autoReplyLogs AutoReplyLog[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 enum MessageDirection {
@@ -161,4 +162,50 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum MatchType {
+  EXACT
+  CONTAINS
+  STARTS_WITH
+  ENDS_WITH
+}
+
+model AutoReply {
+  id        String    @id @default(cuid())
+  name      String
+  keywords  String[]
+  replyText String
+  priority  Int       @default(100)
+  isActive  Boolean   @default(true)
+  matchType MatchType @default(CONTAINS)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  logs      AutoReplyLog[]
+
+  @@index([isActive, priority, createdAt])
+}
+
+model AutoReplyLog {
+  id              String    @id @default(cuid())
+  autoReply       AutoReply @relation(fields: [autoReplyId], references: [id], onDelete: Cascade)
+  autoReplyId     String
+  user            User      @relation(fields: [userId], references: [id])
+  userId          String
+  inboundMessage  String
+  matchedKeyword  String?
+  replySent       Boolean   @default(true)
+  errorMessage    String?
+  createdAt       DateTime  @default(now())
+
+  @@index([createdAt])
+  @@index([autoReplyId, createdAt])
+  @@index([userId, createdAt])
+}
+
+model DefaultAutoReply {
+  id        String   @id @default("default")
+  replyText String?
+  isActive  Boolean  @default(false)
+  updatedAt DateTime @updatedAt
 }

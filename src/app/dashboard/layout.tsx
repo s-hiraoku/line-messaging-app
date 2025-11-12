@@ -8,6 +8,7 @@ import {
   Settings2,
   Users2,
   Menu,
+  Bot,
 } from "lucide-react";
 
 import { NavLink } from "./_components/nav-link";
@@ -26,6 +27,12 @@ const primaryNav = [
     label: "メッセージ",
     description: "個別チャットの送受信",
     icon: <MessagesSquare className="h-4 w-4" />,
+  },
+  {
+    href: "/dashboard/auto-reply",
+    label: "自動応答",
+    description: "キーワード応答ルール",
+    icon: <Bot className="h-4 w-4" />,
   },
   {
     href: "/dashboard/broadcasts",
@@ -56,6 +63,12 @@ const primaryNav = [
     label: "設定",
     description: "チャネル & Webhook",
     icon: <Settings2 className="h-4 w-4" />,
+  },
+  {
+    href: "/dashboard/webhook-check",
+    label: "Webhook診断",
+    description: "接続テストと設定確認",
+    icon: <Activity className="h-4 w-4" />,
   },
   {
     href: "/dashboard/dev",

@@ -1,4 +1,4 @@
-import { PrismaClient, MessageType } from '@prisma/client'
+import { PrismaClient, MessageType, MatchType } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -106,10 +106,89 @@ async function main() {
     }),
   ])
 
+  // デフォルト応答の作成
+  console.log('Creating default auto-reply...')
+  await prisma.defaultAutoReply.upsert({
+    where: { id: 'default' },
+    update: {},
+    create: {
+      id: 'default',
+      replyText: 'メッセージありがとうございます！担当者が確認次第、ご返信いたします。',
+      isActive: false,
+    },
+  })
+
+  // 自動応答ルールの作成
+  console.log('Creating auto-reply rules...')
+  const autoReplies = await Promise.all([
+    prisma.autoReply.create({
+      data: {
+        name: '営業時間の問い合わせ',
+        keywords: ['営業時間', '何時まで', '何時から', '営業日'],
+        replyText: '営業時間は平日9:00-18:00、土曜日9:00-15:00です。日曜祝日は休業しております。',
+        priority: 10,
+        isActive: true,
+        matchType: MatchType.CONTAINS,
+      },
+    }),
+    prisma.autoReply.create({
+      data: {
+        name: 'アクセス情報',
+        keywords: ['場所', 'アクセス', '住所', '行き方', '道順'],
+        replyText: '東京都渋谷区〇〇1-2-3\n最寄り駅: 渋谷駅 徒歩5分\n地図: https://example.com/map',
+        priority: 10,
+        isActive: true,
+        matchType: MatchType.CONTAINS,
+      },
+    }),
+    prisma.autoReply.create({
+      data: {
+        name: '予約方法',
+        keywords: ['予約', '予約したい', '予約方法', '予約可能'],
+        replyText: 'ご予約はお電話またはWebサイトから承っております。\n電話: 03-1234-5678\nWeb: https://example.com/booking',
+        priority: 20,
+        isActive: true,
+        matchType: MatchType.CONTAINS,
+      },
+    }),
+    prisma.autoReply.create({
+      data: {
+        name: '料金・価格の問い合わせ',
+        keywords: ['料金', '価格', '値段', 'いくら', '費用'],
+        replyText: '料金につきましては、サービス内容により異なります。詳細は以下のページをご確認ください。\nhttps://example.com/pricing',
+        priority: 20,
+        isActive: true,
+        matchType: MatchType.CONTAINS,
+      },
+    }),
+    prisma.autoReply.create({
+      data: {
+        name: '挨拶への返答',
+        keywords: ['こんにちは', 'こんばんは', 'おはよう'],
+        replyText: 'こんにちは！お問い合わせありがとうございます。ご用件をお聞かせください。',
+        priority: 50,
+        isActive: true,
+        matchType: MatchType.CONTAINS,
+      },
+    }),
+    prisma.autoReply.create({
+      data: {
+        name: '感謝への返答',
+        keywords: ['ありがとう'],
+        replyText: 'どういたしまして！またのご利用をお待ちしております。',
+        priority: 50,
+        isActive: true,
+        matchType: MatchType.CONTAINS,
+      },
+    }),
+  ])
+
   console.log('✅ Seeding completed successfully!')
   console.log(`Created:
   - ${tags.length} tags
-  - ${templates.length} templates`)
+  - ${templates.length} templates
+  - ${autoReplies.length} auto-reply rules
+  - 1 default auto-reply`)
 }
 
 main()
