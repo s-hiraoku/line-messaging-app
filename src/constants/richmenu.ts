@@ -15,9 +15,9 @@ export const AREA_COLORS = [
 ];
 
 export const MIN_AREA_SIZE = 10;
-export const LABEL_FONT_SIZE = 14;
-export const LABEL_OFFSET_X = 5;
-export const LABEL_OFFSET_Y = 20;
+export const LABEL_FONT_SIZE = 20;
+export const LABEL_OFFSET_X = 10;
+export const LABEL_OFFSET_Y = 30;
 export const SELECTED_BORDER_WIDTH = 3;
 export const DEFAULT_BORDER_WIDTH = 2;
 export const SELECTED_BORDER_COLOR = "#3b82f6";

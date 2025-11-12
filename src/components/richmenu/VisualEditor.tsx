@@ -54,16 +54,26 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
     img.onload = () => {
       setImage(img);
     };
+    img.onerror = () => {
+      console.error("Failed to load image:", imageUrl);
+      setImage(null);
+    };
     img.src = imageUrl;
   }, [imageUrl]);
 
-  if (!imageUrl) {
-    return (
-      <div className="rounded-lg border-2 border-dashed border-slate-600 bg-slate-900/40 p-12 text-center">
-        <p className="text-slate-400">画像をアップロードしてタップ領域を設定してください</p>
-      </div>
-    );
-  }
+  // Handle Escape key to delete selected area
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && selectedAreaIndex !== null) {
+        handleDeleteArea(selectedAreaIndex);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedAreaIndex, handleDeleteArea]);
 
   return (
     <div className="space-y-4">
@@ -72,7 +82,9 @@ export function VisualEditor({ imageUrl, size, areas, onAreasChange }: VisualEdi
           タップ領域 <span className="text-red-400">*</span>
         </label>
         <div className="text-xs text-slate-500">
-          画像上をドラッグして領域を作成、クリックして選択
+          {imageUrl
+            ? "画像上をドラッグして領域を作成、クリックして選択"
+            : "キャンバス上をドラッグして領域を作成できます"}
         </div>
       </div>
 

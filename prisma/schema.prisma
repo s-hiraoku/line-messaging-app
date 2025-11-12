@@ -50,6 +50,8 @@ model Message {
   direction     MessageDirection
   user          User             @relation(fields: [userId], references: [id])
   userId        String
+  template      Template?        @relation(fields: [templateId], references: [id])
+  templateId    String?
   deliveryStatus String
   createdAt     DateTime @default(now())
 }
@@ -60,8 +62,9 @@ model Template {
   type      MessageType
   content   Json
   variables Json
-  category  String
+  category  String?
   isActive  Boolean  @default(true)
+  messages  Message[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -69,6 +72,7 @@ model Template {
 model Broadcast {
   id          String    @id @default(cuid())
   name        String
+  title       String    @default("")
   content     Json
   scheduledAt DateTime?
   status      BroadcastStatus @default(DRAFT)
@@ -87,6 +91,7 @@ enum BroadcastStatus {
 model Tag {
   id        String   @id @default(cuid())
   name      String   @unique
+  color     String   @default("#3b82f6")
   createdAt DateTime @default(now())
   users     UserTag[]
 }

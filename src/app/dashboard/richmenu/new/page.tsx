@@ -142,10 +142,15 @@ export default function NewRichMenuPage() {
     ]);
   };
 
+  // Convert size string to simple type for templates
+  const getSizeType = (size: SizeType): "full" | "half" => {
+    return size.endsWith("1686") || size.endsWith("810") || size.endsWith("540") ? "full" : "half";
+  };
+
   const applyTemplate = (templateKey: string) => {
     const template = LAYOUT_TEMPLATES[templateKey];
     if (template) {
-      setAreas(template.areas(size));
+      setAreas(template.areas(getSizeType(size)));
     }
   };
 
@@ -358,7 +363,7 @@ export default function NewRichMenuPage() {
             </button>
           </div>
 
-          <VisualEditor imageUrl={imageUrl} size={size} areas={areas} onAreasChange={setAreas} />
+          <VisualEditor imageUrl={imageUrl} size={getSizeType(size)} areas={areas} onAreasChange={setAreas} />
         </div>
 
         {error && (

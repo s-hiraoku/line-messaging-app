@@ -24,11 +24,11 @@ export async function GET() {
     // ユーザー成長データ（過去30日間）
     const userGrowthData = await prisma.$queryRaw<Array<{ date: Date; count: bigint }>>`
       SELECT
-        DATE(createdAt) as date,
+        DATE("createdAt") as date,
         COUNT(*) as count
-      FROM User
-      WHERE createdAt >= ${thirtyDaysAgo}
-      GROUP BY DATE(createdAt)
+      FROM "User"
+      WHERE "createdAt" >= ${thirtyDaysAgo}
+      GROUP BY DATE("createdAt")
       ORDER BY date ASC
     `;
 
@@ -68,23 +68,28 @@ export async function GET() {
     }));
 
     // リッチメニューの使用状況
-    const richMenuUsage = await prisma.richMenu.findMany({
+    const richMenus = await prisma.richMenu.findMany({
       select: {
         id: true,
+        richMenuId: true,
         name: true,
-        selected: true,
-        _count: {
-          select: { users: true }
-        }
+        selected: true
       }
     });
 
-    const richMenuStats = richMenuUsage.map((menu: { id: string; name: string; selected: boolean; _count: { users: number } }) => ({
-      id: menu.id,
-      name: menu.name,
-      selected: menu.selected,
-      userCount: menu._count.users
-    }));
+    const richMenuStats = await Promise.all(
+      richMenus.map(async (menu) => {
+        const userCount = await prisma.user.count({
+          where: { richMenuId: menu.richMenuId }
+        });
+        return {
+          id: menu.id,
+          name: menu.name,
+          selected: menu.selected,
+          userCount
+        };
+      })
+    );
 
     // ユーザーセグメント（タグ）の概要
     const tagStats = await prisma.tag.findMany({
@@ -137,12 +142,12 @@ export async function GET() {
     // 週ごとのメッセージ活動（過去7日間）
     const weeklyActivity = await prisma.$queryRaw<Array<{ date: Date; inbound: bigint; outbound: bigint }>>`
       SELECT
-        DATE(createdAt) as date,
+        DATE("createdAt") as date,
         SUM(CASE WHEN direction = 'INBOUND' THEN 1 ELSE 0 END) as inbound,
         SUM(CASE WHEN direction = 'OUTBOUND' THEN 1 ELSE 0 END) as outbound
-      FROM Message
-      WHERE createdAt >= ${sevenDaysAgo}
-      GROUP BY DATE(createdAt)
+      FROM "Message"
+      WHERE "createdAt" >= ${sevenDaysAgo}
+      GROUP BY DATE("createdAt")
       ORDER BY date ASC
     `;
 
@@ -209,7 +214,11 @@ export async function GET() {
   } catch (error) {
     console.error("Failed to fetch extended dashboard stats:", error);
     return NextResponse.json(
-      { error: "Failed to fetch extended dashboard stats" },
+      {
+        error: "Failed to fetch extended dashboard stats",
+        details: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined
+      },
       { status: 500 }
     );
   }
