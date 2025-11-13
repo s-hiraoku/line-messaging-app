@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getLineClient } from "@/lib/line/client";
-import type { RichMenuSize } from "@line/bot-sdk";
+
+type RichMenuSize = { width: number; height: number };
 
 const RICHMENU_SIZES: Record<string, RichMenuSize> = {
   "2500x1686": { width: 2500, height: 1686 },

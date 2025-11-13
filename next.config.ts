@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         hostname: 'sprofile.line-scdn.net',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/**',
+      },
     ],
   },
 };

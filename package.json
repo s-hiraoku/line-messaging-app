@@ -16,6 +16,9 @@
     "db:reset": "docker compose down -v && docker compose up -d postgres"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@line/bot-sdk": "^10.5.0",
     "@openai/codex": "^0.56.0",
     "@prisma/client": "^6.19.0",
