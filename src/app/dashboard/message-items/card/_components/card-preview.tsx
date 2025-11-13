@@ -24,7 +24,7 @@ interface CardPreviewProps {
  */
 function ActionButton({ action }: { action: CardAction }) {
   return (
-    <div className="flex-1 rounded-md border border-slate-600 bg-slate-700/50 px-3 py-2 text-center text-xs font-medium text-slate-200 transition hover:bg-slate-700">
+    <div className="flex-1 rounded-lg border border-slate-600/60 bg-slate-700/40 px-3 py-2.5 text-center text-xs font-semibold text-slate-200 transition-all hover:bg-slate-600/50 hover:border-slate-500 hover:text-white cursor-pointer active:scale-95">
       {action.label}
     </div>
   );
@@ -122,9 +122,9 @@ function CardItem({ card, index, total }: { card: Card; index: number; total: nu
 
   return (
     <div className="min-w-[260px] max-w-[260px] flex-shrink-0 snap-start">
-      <div className="overflow-hidden rounded-lg border border-slate-600 bg-slate-800 shadow-lg">
-        {/* Card Image */}
-        <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-700">
+      <div className="overflow-hidden rounded-xl border border-slate-600/70 bg-slate-800/90 shadow-xl hover:shadow-2xl transition-shadow duration-200">
+        {/* Card Image with loading state simulation */}
+        <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-700/50">
           {card.imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element -- Preview component with user-provided URLs from various sources
             <img
@@ -133,8 +133,13 @@ function CardItem({ card, index, total }: { card: Card; index: number; total: nu
               className="h-full w-full object-cover"
             />
           ) : (
-            <div className="flex h-full items-center justify-center text-xs text-slate-500">
-              画像なし
+            <div className="flex h-full items-center justify-center">
+              <div className="text-center">
+                <svg className="w-8 h-8 mx-auto text-slate-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span className="text-xs text-slate-500">画像なし</span>
+              </div>
             </div>
           )}
         </div>
@@ -142,18 +147,22 @@ function CardItem({ card, index, total }: { card: Card; index: number; total: nu
         {/* Card Content */}
         {renderCardContent()}
 
-        {/* Action Buttons */}
+        {/* Action Buttons with improved styling */}
         {card.actions.length > 0 && (
-          <div className="space-y-1 border-t border-slate-700 p-2">
+          <div className="space-y-1.5 border-t border-slate-700/70 p-3 bg-slate-900/30">
             {card.actions.map((action, idx) => (
               <ActionButton key={idx} action={action} />
             ))}
           </div>
         )}
 
-        {/* Card Indicator */}
-        <div className="border-t border-slate-700 bg-slate-900/50 px-3 py-1.5 text-center text-xs text-slate-500">
-          {index + 1} / {total}
+        {/* Card Indicator with badge style */}
+        <div className="border-t border-slate-700/70 bg-slate-900/60 px-3 py-2 text-center">
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-700/50 text-xs font-medium text-slate-400">
+            <span className="text-slate-300">{index + 1}</span>
+            <span className="text-slate-600">/</span>
+            <span>{total}</span>
+          </span>
         </div>
       </div>
     </div>
@@ -197,29 +206,36 @@ export function CardPreview({ cards }: CardPreviewProps) {
   }
 
   return (
-    <div className="space-y-3">
-      {/* Preview Header */}
-      <div className="flex items-center justify-between">
-        <div className="text-sm font-medium text-slate-300">
-          プレビュー
+    <div className="space-y-4">
+      {/* Preview Header with better visual hierarchy */}
+      <div className="flex items-center justify-between pb-2 border-b border-slate-700/50">
+        <div>
+          <h3 className="text-base font-semibold text-white mb-1">
+            プレビュー
+          </h3>
+          <p className="text-xs text-slate-400">
+            LINE での表示イメージ
+          </p>
         </div>
-        <div className="text-xs text-slate-500">
-          {currentIndex + 1} / {cards.length}
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-700/50 border border-slate-600/50">
+          <span className="text-xs font-semibold text-slate-300">{currentIndex + 1}</span>
+          <span className="text-xs text-slate-500">/</span>
+          <span className="text-xs text-slate-400">{cards.length}</span>
         </div>
       </div>
 
-      {/* LINE-style Message Container */}
-      <div className="rounded-lg border border-slate-700/50 bg-gradient-to-b from-slate-900/40 to-slate-800/40 p-4">
+      {/* LINE-style Message Container with enhanced styling */}
+      <div className="rounded-xl border border-slate-700/50 bg-gradient-to-br from-slate-900/60 via-slate-800/40 to-slate-900/60 p-5 shadow-lg">
         {/* Mock LINE Chat Bubble */}
         <div className="flex justify-end">
           <div className="w-full max-w-[600px]">
-            {/* Carousel Container */}
+            {/* Carousel Container with improved scrollbar */}
             <div
               ref={scrollContainerRef}
-              className="flex gap-3 overflow-x-auto scroll-smooth pb-2 snap-x snap-mandatory scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-600"
+              className="flex gap-3 overflow-x-auto scroll-smooth pb-3 snap-x snap-mandatory scrollbar-thin scrollbar-track-slate-800/50 scrollbar-thumb-slate-600/80 hover:scrollbar-thumb-slate-500"
               style={{
                 scrollbarWidth: 'thin',
-                scrollbarColor: '#475569 #1e293b'
+                scrollbarColor: '#64748b #1e293b'
               }}
             >
               {cards.map((card, index) => (
@@ -232,19 +248,28 @@ export function CardPreview({ cards }: CardPreviewProps) {
               ))}
             </div>
 
-            {/* Scroll Hint */}
+            {/* Scroll Hint with better visibility */}
             {cards.length > 1 && (
-              <div className="mt-2 text-center text-xs text-slate-600">
-                左右にスクロールしてカードを確認
+              <div className="mt-2 flex items-center justify-center gap-2 text-xs text-slate-500">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+                </svg>
+                <span>左右にスクロールしてカードを確認</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
               </div>
             )}
           </div>
         </div>
       </div>
 
-      {/* Preview Info */}
-      <div className="rounded-md border border-blue-500/30 bg-blue-500/5 p-3">
-        <p className="text-xs text-slate-400">
+      {/* Preview Info with icon */}
+      <div className="flex items-start gap-3 rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
+        <svg className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p className="text-xs text-slate-300 leading-relaxed">
           このプレビューは LINE アプリでの表示イメージです。
           実際の表示は端末やアプリのバージョンにより異なる場合があります。
         </p>

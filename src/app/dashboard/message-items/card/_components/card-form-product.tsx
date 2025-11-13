@@ -172,10 +172,11 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
 
   return (
     <div className="space-y-6">
-      {/* Title Field */}
-      <div className="space-y-1.5">
-        <label htmlFor="product-title" className="text-sm font-medium text-slate-300">
-          タイトル <span className="text-red-400">*</span>
+      {/* Title Field with improved styling */}
+      <div className="space-y-2">
+        <label htmlFor="product-title" className="flex items-center gap-2 text-sm font-semibold text-slate-200">
+          <span>タイトル</span>
+          <span className="text-red-400">*</span>
         </label>
         <input
           id="product-title"
@@ -183,19 +184,35 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
           value={card.title}
           onChange={handleTitleChange}
           maxLength={40}
-          className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className={`w-full rounded-lg border bg-slate-900/60 px-4 py-2.5 text-sm text-white placeholder-slate-500 transition-all focus:outline-none focus:ring-2 ${
+            errors.title
+              ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'
+              : 'border-slate-600 focus:border-blue-500 focus:ring-blue-500/30'
+          }`}
           placeholder="商品名を入力 (最大40文字)"
         />
-        {errors.title && (
-          <p className="text-xs text-red-400">{errors.title}</p>
-        )}
-        <p className="text-xs text-slate-500">{card.title.length}/40文字</p>
+        <div className="flex items-center justify-between">
+          {errors.title ? (
+            <p className="flex items-center gap-1.5 text-xs text-red-400">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {errors.title}
+            </p>
+          ) : (
+            <p className="text-xs text-slate-500">商品のタイトルを入力してください</p>
+          )}
+          <p className={`text-xs font-medium ${card.title.length >= 35 ? 'text-yellow-400' : 'text-slate-500'}`}>
+            {card.title.length}/40
+          </p>
+        </div>
       </div>
 
-      {/* Description Field */}
-      <div className="space-y-1.5">
-        <label htmlFor="product-description" className="text-sm font-medium text-slate-300">
-          説明 <span className="text-red-400">*</span>
+      {/* Description Field with improved styling */}
+      <div className="space-y-2">
+        <label htmlFor="product-description" className="flex items-center gap-2 text-sm font-semibold text-slate-200">
+          <span>説明</span>
+          <span className="text-red-400">*</span>
         </label>
         <textarea
           id="product-description"
@@ -203,22 +220,38 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
           onChange={handleDescriptionChange}
           maxLength={60}
           rows={3}
-          className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className={`w-full rounded-lg border bg-slate-900/60 px-4 py-2.5 text-sm text-white placeholder-slate-500 transition-all focus:outline-none focus:ring-2 resize-none ${
+            errors.description
+              ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'
+              : 'border-slate-600 focus:border-blue-500 focus:ring-blue-500/30'
+          }`}
           placeholder="商品の説明を入力 (最大60文字)"
         />
-        {errors.description && (
-          <p className="text-xs text-red-400">{errors.description}</p>
-        )}
-        <p className="text-xs text-slate-500">{card.description.length}/60文字</p>
+        <div className="flex items-center justify-between">
+          {errors.description ? (
+            <p className="flex items-center gap-1.5 text-xs text-red-400">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {errors.description}
+            </p>
+          ) : (
+            <p className="text-xs text-slate-500">商品の説明を入力してください</p>
+          )}
+          <p className={`text-xs font-medium ${card.description.length >= 55 ? 'text-yellow-400' : 'text-slate-500'}`}>
+            {card.description.length}/60
+          </p>
+        </div>
       </div>
 
-      {/* Price Field (Optional) */}
-      <div className="space-y-1.5">
-        <label htmlFor="product-price" className="text-sm font-medium text-slate-300">
-          価格 (オプション)
+      {/* Price Field (Optional) with improved styling */}
+      <div className="space-y-2">
+        <label htmlFor="product-price" className="flex items-center gap-2 text-sm font-semibold text-slate-200">
+          <span>価格</span>
+          <span className="text-xs font-normal text-slate-400">(オプション)</span>
         </label>
         <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-400">
             ¥
           </span>
           <input
@@ -228,64 +261,98 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
             onChange={handlePriceChange}
             min={0}
             step={1}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 pl-8 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className={`w-full rounded-lg border bg-slate-900/60 pl-9 pr-4 py-2.5 text-sm text-white placeholder-slate-500 transition-all focus:outline-none focus:ring-2 ${
+              errors.price
+                ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'
+                : 'border-slate-600 focus:border-blue-500 focus:ring-blue-500/30'
+            }`}
             placeholder="0"
           />
         </div>
-        {errors.price && (
-          <p className="text-xs text-red-400">{errors.price}</p>
+        {errors.price ? (
+          <p className="flex items-center gap-1.5 text-xs text-red-400">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {errors.price}
+          </p>
+        ) : (
+          <p className="text-xs text-slate-500">商品の価格を入力してください（任意）</p>
         )}
-        <p className="text-xs text-slate-500">商品の価格を入力してください</p>
       </div>
 
-      {/* Image Upload */}
-      <div className="space-y-1.5">
-        <label className="text-sm font-medium text-slate-300">
-          画像 <span className="text-red-400">*</span>
+      {/* Image Upload with improved styling */}
+      <div className="space-y-2">
+        <label className="flex items-center gap-2 text-sm font-semibold text-slate-200">
+          <span>画像</span>
+          <span className="text-red-400">*</span>
         </label>
         <ImageUploader
           onImageUploaded={handleImageUploaded}
           placeholder="商品画像をアップロード (JPEG/PNG, 1024x1024px以上)"
         />
         {errors.imageUrl && (
-          <p className="text-xs text-red-400">{errors.imageUrl}</p>
+          <p className="flex items-center gap-1.5 text-xs text-red-400">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {errors.imageUrl}
+          </p>
         )}
         {card.imageUrl && (
-          <div className="rounded-lg border border-slate-700/50 bg-slate-900/40 p-3">
+          <div className="rounded-lg border border-slate-700/50 bg-slate-900/40 p-4">
+            <p className="text-xs font-medium text-slate-300 mb-2">プレビュー:</p>
             <Image
               src={card.imageUrl}
               alt="アップロード済み画像"
               width={128}
               height={128}
-              className="h-32 w-32 rounded-md object-cover"
+              className="h-32 w-32 rounded-lg object-cover border border-slate-600/50 shadow-lg"
             />
           </div>
         )}
       </div>
 
       {/* Actions Editor */}
-      <div className="space-y-1.5">
+      <div className="space-y-2">
         <ActionEditor
           actions={card.actions}
           onChange={handleActionsChange}
           maxActions={3}
         />
         {errors.actions && (
-          <p className="text-xs text-red-400">{errors.actions}</p>
+          <p className="flex items-center gap-1.5 text-xs text-red-400">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {errors.actions}
+          </p>
         )}
       </div>
 
-      {/* Validation Summary */}
+      {/* Validation Summary with improved design */}
       {Object.keys(errors).length > 0 && (
-        <div className="rounded-lg border border-yellow-500/50 bg-yellow-500/10 p-4">
-          <p className="text-sm font-medium text-yellow-400 mb-2">
-            入力内容に問題があります
-          </p>
-          <ul className="space-y-1 text-xs text-yellow-300">
-            {Object.values(errors).map((error, index) => (
-              <li key={index}>• {error}</li>
-            ))}
-          </ul>
+        <div className="rounded-xl border border-yellow-500/50 bg-yellow-500/5 p-5 animate-in fade-in slide-in-from-top-2 duration-300">
+          <div className="flex items-start gap-3">
+            <div className="rounded-full bg-yellow-500/20 p-2 flex-shrink-0">
+              <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-bold text-yellow-300 mb-2">
+                入力内容に問題があります ({Object.keys(errors).length}件)
+              </p>
+              <ul className="space-y-2 text-xs text-yellow-200">
+                {Object.values(errors).map((error, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 mt-1.5 flex-shrink-0" />
+                    <span className="flex-1">{error}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       )}
     </div>

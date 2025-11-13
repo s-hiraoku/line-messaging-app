@@ -254,20 +254,47 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
 
       {/* Bottom - Selected Card Form (Full Width) */}
       <div className="flex-1 overflow-y-auto">
-        <div className="rounded-lg border border-slate-700 bg-slate-800/60 p-6">
-          {/* Form Header */}
+        <div className="rounded-xl border border-slate-700/50 bg-gradient-to-br from-slate-800/60 via-slate-800/40 to-slate-800/60 p-6 shadow-lg">
+          {/* Form Header with improved design */}
           {selectedCard && (
             <div className="mb-6 border-b border-slate-700/50 pb-4">
-              <h2 className="text-lg font-semibold text-white">
-                カード編集
-              </h2>
-              <p className="mt-1 text-sm text-slate-400">
-                {selectedCard.type === 'product' && '商品カード'}
-                {selectedCard.type === 'location' && '場所カード'}
-                {selectedCard.type === 'person' && '人物カード'}
-                {selectedCard.type === 'image' && '画像カード'}
-                の情報を編集してください
-              </p>
+              <div className="flex items-center gap-3">
+                <div className="rounded-lg bg-blue-500/10 p-2 border border-blue-500/30">
+                  {selectedCard.type === 'product' && (
+                    <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                  )}
+                  {selectedCard.type === 'location' && (
+                    <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  )}
+                  {selectedCard.type === 'person' && (
+                    <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  )}
+                  {selectedCard.type === 'image' && (
+                    <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  )}
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-white">
+                    カード編集
+                  </h2>
+                  <p className="mt-0.5 text-sm text-slate-400">
+                    {selectedCard.type === 'product' && '商品カード'}
+                    {selectedCard.type === 'location' && '場所カード'}
+                    {selectedCard.type === 'person' && '人物カード'}
+                    {selectedCard.type === 'image' && '画像カード'}
+                    の情報を編集してください
+                  </p>
+                </div>
+              </div>
             </div>
           )}
 
