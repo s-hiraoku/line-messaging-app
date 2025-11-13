@@ -97,5 +97,8 @@ Keep this managed block so 'openspec update' can refresh the instructions.
 - Copy `.env.example` to `.env.local`; never commit secrets. Key vars: `LINE_CHANNEL_ID`, `LINE_CHANNEL_ACCESS_TOKEN`, `LINE_CHANNEL_SECRET`, `NEXTAUTH_SECRET`, `DATABASE_URL`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `CLOUDINARY_*`, `SENTRY_DSN`.
 - Rotate tokens promptly; avoid logging sensitive data. Include Prisma migrations in PRs.
 
+## LINE Messaging API References
+- [Imagemap Message Specification](https://developers.line.biz/ja/reference/messaging-api/#imagemap-message) — 画像内の特定領域にタップアクションを設定できる機能。画像を複数のタップ可能な領域に分割し、各領域に URI アクションやメッセージアクションを設定可能。
+
 ## Agent-Specific Notes
 - Keep patches focused and minimal; co-locate code with domain modules; update tests and docs together. Obey this file's conventions for all touched paths.
