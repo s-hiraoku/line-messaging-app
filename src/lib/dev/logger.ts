@@ -14,7 +14,7 @@ export function addLog(level: LogEntry['level'], message: string, data?: any) {
   if (buffer.length > MAX) buffer = buffer.slice(buffer.length - MAX);
   try {
     // Lazy import to avoid circular deps at module init
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+     
     const { realtime } = require('@/lib/realtime/bus');
     realtime().emit('dev:log', { ...entry });
   } catch {

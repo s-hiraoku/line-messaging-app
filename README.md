@@ -8,7 +8,12 @@ LINE Messaging API を活用した統合メッセージング管理アプリケ�
 
 - **メッセージ送信**
 
-  - 個別送信（テキスト・画像）
+  - 個別送信（テキスト・画像・動画・音声・位置情報・スタンプ）
+  - **リッチメッセージ（Imagemap）** ⭐ NEW
+    - 画像アップロード（Cloudinary統合）
+    - ビジュアルエリアエディタ（ドラッグで作成）
+    - タップエリアのアクション設定（URI/Message）
+  - カードタイプメッセージ（Carousel/Template）
   - ブロードキャスト配信
   - メッセージ履歴の永続化
 
@@ -68,6 +73,7 @@ LINE Messaging API を活用した統合メッセージング管理アプリケ�
 - [Cloudinary セットアップ](#cloudinary-セットアップ画像機能を使う場合)
 - [データベースと Prisma](#データベースと-prisma)
 - [Webhook のセットアップ](#webhook-のセットアップmessaging-api)
+- [リッチメッセージ（Imagemap）のテスト方法](#リッチメッセージimagemapのテスト方法)
 - [自動応答システム](#自動応答システム)
 - [メッセージ送信の試験](#メッセージ送信の試験)
 - [API リファレンス](#api-リファレンス抜粋)
@@ -112,8 +118,6 @@ npm install
 
 ```bash
 cp .env.example .env
-# または .env.local を使用（Git で除外されます）
-# cp .env.example .env.local
 ```
 
 `.env` ファイルを編集し、必須項目を設定してください（詳細は「環境変数」セクションを参照）。
@@ -192,7 +196,7 @@ SENTRY_DSN=your_sentry_dsn
 
 - チャネル設定（チャネル ID/シークレット）は画面（設定 → チャネル情報）から保存します
 - アクセストークンは保存せず、送信時に OAuth2 Client Credentials で自動発行してメモリにキャッシュします
-- `.env` と `.env.local` は Git にコミットしないでください（`.gitignore` で除外済み）
+- `.env` は Git にコミットしないでください（`.gitignore` で除外済み）
 
 ---
 
@@ -357,6 +361,73 @@ http://localhost:3000/dashboard/webhook-check にアクセスして、Webhook �
 - テスト手順
 
 が表示されます。
+
+---
+
+## リッチメッセージ（Imagemap）のテスト方法
+
+### 問題
+
+リッチメッセージ（imagemap message）は、LINEのサーバーが画像を取得するため、**公開されたHTTPS URLが必要**です。`http://localhost:3000`では動作しません。
+
+### 解決方法: Cloudflare Tunnel を使用
+
+すでにWebhookのセットアップで使用しているCloudflare Tunnelを、リッチメッセージのテストにも利用できます。
+
+### 1. Cloudflare Tunnel を起動
+
+Webhookで使用しているトンネルをそのまま利用します：
+
+```bash
+cloudflared tunnel --protocol http2 --url http://localhost:3000
+```
+
+表示されるURLをメモします：
+```
+https://xxxx-xxxx-xxxx.trycloudflare.com
+```
+
+### 2. 環境変数を設定
+
+`.env` に以下を追加：
+
+```env
+# Cloudflare Tunnel の公開URL
+NEXT_PUBLIC_BASE_URL=https://xxxx-xxxx-xxxx.trycloudflare.com
+```
+
+**カスタムドメインを設定している場合**：
+
+```env
+NEXT_PUBLIC_BASE_URL=https://your-custom-domain.com
+```
+
+### 3. 開発サーバーを再起動
+
+```bash
+# Ctrl+C でサーバーを停止
+npm run dev
+```
+
+### 4. リッチメッセージを送信
+
+`/dashboard/message-items/rich` でリッチメッセージを作成・送信します。
+
+### 注意事項
+
+- **Cloudflare Tunnel の再起動**: Quick Tunnels を使用している場合、トンネルを再起動すると URL が変わります。その都度 `.env` を更新してサーバーを再起動してください。
+- **本番環境**: Vercel などにデプロイした場合は `NEXT_PUBLIC_BASE_URL` の設定は不要です（自動的に本番URLが使用されます）。
+- **Webhook と共用**: Webhook のセットアップで使用している Cloudflare Tunnel を、リッチメッセージのテストにもそのまま使用できます。
+
+### 動作の仕組み
+
+1. 画像を Cloudinary にアップロード
+2. Cloudinary URL をプロキシ API の URL に変換
+   ```
+   https://your-tunnel.trycloudflare.com/api/imagemap-proxy/...
+   ```
+3. LINE が画像を要求する際、プロキシ API が Cloudinary にリダイレクト
+4. LINE のサーバーがサイズ別の画像（/1040, /700, /460, /300）を取得
 
 ---
 
