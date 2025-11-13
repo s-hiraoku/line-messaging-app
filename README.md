@@ -7,32 +7,38 @@ LINE Messaging API を活用した統合メッセージング管理アプリケ�
 ## 主な機能
 
 - **メッセージ送信**
+
   - 個別送信（テキスト・画像）
   - ブロードキャスト配信
   - メッセージ履歴の永続化
 
 - **自動応答システム** ⭐ NEW
+
   - キーワードマッチング（完全一致・部分一致・前方一致・正規表現）
   - 自動応答ルールの作成・編集・削除
   - 実行ログとアナリティクス
   - ルールの有効化/無効化
 
 - **Webhook 処理**
+
   - 署名検証とイベント処理
   - フォロー/アンフォローの追跡
   - メッセージの自動保存
 
 - **ユーザー管理**
+
   - ユーザー一覧・詳細
   - タグ管理
   - フォロー状態の追跡
 
 - **テンプレート管理**
+
   - メッセージテンプレートの作成
   - カテゴリ分類
   - 変数サポート
 
 - **リッチメニュー**
+
   - ビジュアルエディタ
   - 画像アップロード（Cloudinary）
   - リンク設定
@@ -92,6 +98,7 @@ colima start
 ```
 
 **注意事項**:
+
 - Colima が起動していない場合、データベースへの接続が失敗します
 - エラー: `Can't reach database server at localhost:5432` が表示される場合は、Colima を起動してください
 
@@ -203,11 +210,13 @@ Cloudinary は画像のアップロード・保存・配信を行うクラウド
 ### セットアップ手順
 
 1. **アカウント作成（無料）**
+
    - https://cloudinary.com/ にアクセス
    - 「Sign up for free」をクリック
    - メールアドレスで登録（Google アカウントでも可）
 
 2. **API キーの取得**
+
    - ログイン後、ダッシュボードに表示される以下の情報をコピー：
      - **Cloud Name** (例: `dxxxxxxxxxxxxx`)
      - **API Key** (例: `123456789012345`)
@@ -341,6 +350,7 @@ https://xxxx-xxxx-xxxx.trycloudflare.com
 http://localhost:3000/dashboard/webhook-check にアクセスして、Webhook の設定状態を確認できます。
 
 このページでは：
+
 - アプリケーション設定の確認
 - LINE 設定のチェックリスト
 - Cloudflare Tunnel のセットアップ手順
@@ -359,12 +369,14 @@ http://localhost:3000/dashboard/webhook-check にアクセスして、Webhook �
 ### 機能
 
 - **キーワードマッチング**
+
   - 完全一致: メッセージ全体が一致
   - 部分一致: メッセージ内にキーワードが含まれる
   - 前方一致: メッセージの先頭がキーワードで始まる
   - 正規表現: 高度なパターンマッチング
 
 - **優先順位制御**
+
   - 複数のルールがマッチした場合、優先順位の高いものを実行
   - 同じ優先順位の場合は作成日時が新しいものを優先
 
@@ -376,11 +388,13 @@ http://localhost:3000/dashboard/webhook-check にアクセスして、Webhook �
 ### 使い方
 
 1. **ルールの作成**
+
    - http://localhost:3000/dashboard/auto-reply/new にアクセス
    - ルール名、キーワード、マッチタイプ、応答メッセージ、優先順位を設定
    - 保存
 
 2. **ルールの管理**
+
    - http://localhost:3000/dashboard/auto-reply で一覧表示
    - 有効化/無効化の切り替え
    - 編集・削除
@@ -448,6 +462,7 @@ curl -X POST http://localhost:3000/api/line/broadcast \
 ### メッセージ送信
 
 - **POST `/api/line/send`**
+
   - Body: `{ to: string, message: string }`
   - Response: `{ status: "sent" }`
 
@@ -464,24 +479,30 @@ curl -X POST http://localhost:3000/api/line/broadcast \
 ### 自動応答
 
 - **GET `/api/auto-reply`**
+
   - Query: `filter=active|inactive|all` (デフォルト: all)
   - Response: `{ items: AutoReply[] }`
 
 - **POST `/api/auto-reply`**
+
   - Body: `{ name, keywords, matchType, replyText, priority?, isActive? }`
   - Response: `{ item: AutoReply }`
 
 - **GET `/api/auto-reply/:id`**
+
   - Response: `AutoReply`
 
 - **PUT `/api/auto-reply/:id`**
+
   - Body: `{ name?, keywords?, matchType?, replyText?, priority?, isActive? }`
   - Response: `{ item: AutoReply }`
 
 - **DELETE `/api/auto-reply/:id`**
+
   - Response: `{ success: true }`
 
 - **PATCH `/api/auto-reply/:id/toggle`**
+
   - Response: `{ item: AutoReply }`
 
 - **GET `/api/auto-reply/:id/logs`**
@@ -491,10 +512,12 @@ curl -X POST http://localhost:3000/api/line/broadcast \
 ### ユーザー
 
 - **GET `/api/users`**
+
   - Query: `q=&take=`
   - Response: `{ items: User[] }`
 
 - **GET `/api/users/:id`**
+
   - Response: `{ id, lineUserId, displayName, pictureUrl, isFollowing, tags, createdAt }`
 
 - **PUT `/api/users/:id/tags`**
@@ -510,6 +533,7 @@ curl -X POST http://localhost:3000/api/line/broadcast \
 ### テンプレート
 
 - **GET `/api/templates`**
+
   - Response: `{ items: Template[] }`
 
 - **POST `/api/templates`**
@@ -565,13 +589,13 @@ curl -X POST http://localhost:3000/api/line/broadcast \
 ### テスト例
 
 ```typescript
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
 
-describe('Component', () => {
-  it('renders correctly', () => {
+describe("Component", () => {
+  it("renders correctly", () => {
     render(<Component />);
-    expect(screen.getByText('Hello')).toBeInTheDocument();
+    expect(screen.getByText("Hello")).toBeInTheDocument();
   });
 });
 ```
@@ -642,18 +666,22 @@ prisma/
 **原因と対処法**:
 
 1. **Cloudflare Tunnel が起動していない**
+
    - `ps aux | grep cloudflared` で確認
    - HTTP/2 プロトコルで起動: `cloudflared tunnel --protocol http2 --url http://localhost:3000`
 
 2. **QUIC プロトコルで接続失敗**
+
    - エラー: `Failed to dial a quic connection`
    - 対処: HTTP/2 プロトコルで再起動（上記コマンド）
 
 3. **Webhook URL が古い**
+
    - Cloudflare Tunnel を再起動すると URL が変わります
    - LINE Developers Console で Webhook URL を更新してください
 
 4. **LINE Official Account Manager の設定ミス**
+
    - https://manager.line.biz/ にアクセス
    - 「応答設定」→「応答モード」を **「チャット」** に設定（「Bot」ではない）
    - 「応答メッセージ」を **「オフ」** に設定
@@ -663,6 +691,7 @@ prisma/
    - LINE Developers Console の値と一致していることを確認
 
 **診断ツール**:
+
 - http://localhost:3000/dashboard/webhook-check で設定状態を確認できます
 
 ### 自動応答が動作しない
@@ -672,14 +701,17 @@ prisma/
 **確認事項**:
 
 1. **ルールが有効化されているか**
+
    - `/dashboard/auto-reply` で該当ルールが「有効」になっているか確認
 
 2. **キーワードとマッチタイプが正しいか**
+
    - 完全一致: メッセージ全体が一致する必要があります
    - 部分一致: メッセージ内にキーワードが含まれていれば OK
    - 前方一致: メッセージの先頭がキーワードで始まる必要があります
 
 3. **Webhook が動作しているか**
+
    - `/dashboard/dev` でログを確認
    - `webhook:received` ログが出ているか確認
 
@@ -689,10 +721,12 @@ prisma/
 ### API エラー
 
 - **400 Invalid request**
+
   - リクエストボディの必須項目不足（zod バリデーション）
   - レスポンスのエラーメッセージを確認
 
 - **400 Invalid LINE signature（Webhook）**
+
   - チャネルシークレット不一致
   - `/dashboard/settings` と LINE Developers Console の値を照合
 
@@ -704,6 +738,7 @@ prisma/
 ### Prisma エラー
 
 - **Migration failed**
+
   - `DATABASE_URL` が正しいか確認
   - PostgreSQL が起動しているか確認: `npm run db:logs`
 
@@ -713,12 +748,14 @@ prisma/
 ### Docker / Colima エラー
 
 - **Can't reach database server at localhost:5432**
+
   - **原因**: Docker ランタイム（Colima）が起動していない
   - **確認**: `colima status` で状態確認
   - **対処**: `colima start` で起動
   - **補足**: Colima が起動していないと、PostgreSQL コンテナに接続できません
 
 - **Cannot connect to the Docker daemon**
+
   - **原因**: Docker デーモンが起動していない
   - **対処（Colima）**: `colima start`
   - **対処（Docker Desktop）**: Docker Desktop を起動
@@ -801,10 +838,12 @@ MIT
 ## 更新履歴
 
 ### 2025-11-12
+
 - 自動応答システムを追加
 - Webhook 診断ページを追加
 - Cloudflare Tunnel の HTTP/2 プロトコル対応
 - README を大幅に更新
 
 ### 2025-01-XX
+
 - 初回リリース

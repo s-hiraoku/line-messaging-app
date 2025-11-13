@@ -11,6 +11,7 @@ export function normalizePayload(payload: SendMessagePayload): {
     altText: string;
     template: any;
   };
+  messageItemType?: "richMessage" | "cardType";
 } {
   const to = payload.to;
 
@@ -112,6 +113,40 @@ export function normalizePayload(payload: SendMessagePayload): {
         },
       ],
       isTemplate: false,
+    };
+  }
+
+  // Rich Message format: {to, type: "richMessage", ...}
+  // Note: Rich messages are stored as RICH_MESSAGE in DB but sent as imagemap to LINE API
+  if ("type" in payload && payload.type === "richMessage") {
+    return {
+      to,
+      messages: [
+        {
+          type: "imagemap",
+          baseUrl: payload.baseUrl,
+          altText: payload.altText,
+          baseSize: payload.baseSize,
+          actions: payload.actions,
+        },
+      ],
+      isTemplate: false,
+      messageItemType: "richMessage" as const,
+    };
+  }
+
+  // Card-Type Message format: {to, type: "cardType", ...}
+  // Note: Card-type messages are stored as CARD_TYPE in DB but sent as template to LINE API
+  if ("type" in payload && payload.type === "cardType") {
+    return {
+      to,
+      messages: [],
+      isTemplate: true,
+      templateData: {
+        altText: payload.altText,
+        template: payload.template,
+      },
+      messageItemType: "cardType" as const,
     };
   }
 

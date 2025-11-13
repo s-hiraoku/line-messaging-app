@@ -42,6 +42,8 @@ enum MessageType {
   IMAGEMAP
   FLEX
   TEMPLATE
+  RICH_MESSAGE
+  CARD_TYPE
 }
 
 model Message {

@@ -218,6 +218,68 @@ export async function persistTemplateMessage(
 }
 
 /**
+ * Persist a rich message (message item) and emit realtime event
+ * Note: Rich messages are sent as imagemap to LINE API but stored as RICH_MESSAGE in DB
+ */
+export async function persistRichMessage(
+  userId: string,
+  baseUrl: string,
+  altText: string,
+  baseSize: { width: number; height: number },
+  actions: any[]
+): Promise<void> {
+  const msg = await prisma.message.create({
+    data: {
+      type: "RICH_MESSAGE",
+      content: {
+        baseUrl,
+        altText,
+        baseSize,
+        actions,
+      },
+      direction: "OUTBOUND",
+      userId,
+      deliveryStatus: "SENT",
+    },
+  });
+
+  await realtime().emit("message:outbound", {
+    userId,
+    text: `🎨 ${altText}`,
+    createdAt: msg.createdAt.toISOString(),
+  });
+}
+
+/**
+ * Persist a card-type message (message item) and emit realtime event
+ * Note: Card-type messages are sent as template to LINE API but stored as CARD_TYPE in DB
+ */
+export async function persistCardTypeMessage(
+  userId: string,
+  altText: string,
+  template: any
+): Promise<void> {
+  const msg = await prisma.message.create({
+    data: {
+      type: "CARD_TYPE",
+      content: {
+        altText,
+        template,
+      },
+      direction: "OUTBOUND",
+      userId,
+      deliveryStatus: "SENT",
+    },
+  });
+
+  await realtime().emit("message:outbound", {
+    userId,
+    text: `🎴 ${altText}`,
+    createdAt: msg.createdAt.toISOString(),
+  });
+}
+
+/**
  * Persist multiple messages and emit realtime events
  */
 export async function persistMessages(

@@ -301,6 +301,32 @@ export const templatePayloadSchema = z.object({
   template: templateSchema,
 });
 
+// ============================================================================
+// Message Items Schemas (LINE Manager created items)
+// ============================================================================
+// Note: These map to existing LINE API message types:
+// - richMessage → imagemap message (interactive image with tap areas)
+// - cardType → flex/template message (carousel cards)
+
+export const richMessagePayloadSchema = z.object({
+  to: z.string().min(1),
+  type: z.literal("richMessage"),
+  baseUrl: z.string().url(),
+  altText: z.string().min(1).max(400),
+  baseSize: z.object({
+    width: z.number().min(1).max(2500),
+    height: z.number().min(1).max(2500),
+  }),
+  actions: z.array(imagemapActionSchema).min(1),
+});
+
+export const cardTypePayloadSchema = z.object({
+  to: z.string().min(1),
+  type: z.literal("cardType"),
+  altText: z.string().min(1).max(400),
+  template: templateSchema,
+});
+
 export const payloadSchema = z.union([
   legacyTextPayloadSchema,
   stickerPayloadSchema,
@@ -311,6 +337,8 @@ export const payloadSchema = z.union([
   arrayPayloadSchema,
   simpleTextPayloadSchema,
   templatePayloadSchema,
+  richMessagePayloadSchema,
+  cardTypePayloadSchema,
 ]);
 
 // ============================================================================

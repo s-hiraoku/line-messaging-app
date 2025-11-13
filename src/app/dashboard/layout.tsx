@@ -9,6 +9,7 @@ import {
   Users2,
   Menu,
   Bot,
+  LayoutGrid,
 } from "lucide-react";
 
 import { NavLink } from "./_components/nav-link";
@@ -27,6 +28,12 @@ const primaryNav = [
     label: "メッセージ",
     description: "個別チャットの送受信",
     icon: <MessagesSquare className="h-4 w-4" />,
+  },
+  {
+    href: "/dashboard/message-items/rich",
+    label: "メッセージアイテム",
+    description: "リッチ & カード送信",
+    icon: <LayoutGrid className="h-4 w-4" />,
   },
   {
     href: "/dashboard/auto-reply",
