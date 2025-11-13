@@ -1,12 +1,18 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { toast } from "@/lib/toast";
 import { DebugPanel, toCurl } from "../../_components/debug-panel";
 import { UserSelector } from "../../_components/user-selector";
 import { CardEditor } from "./_components/card-editor";
 import { CardPreview } from "./_components/card-preview";
 import { useCardPersistence } from "./_components/hooks/use-card-persistence";
 import { validateCard, cardToCarouselColumn } from "./_components/utils";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/Input";
 import type { Card } from "./_components/types";
 
 type Status = "idle" | "sending" | "success" | "error";
@@ -147,13 +153,22 @@ export default function CardMessagePage() {
       setLastResponse(data);
       setStatus("success");
 
+      // Show success toast
+      toast.success("メッセージを送信しました", {
+        description: "カードメッセージが正常に送信されました。",
+      });
+
       // Clear localStorage on success
       clear();
     } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "不明なエラーが発生しました";
       setStatus("error");
-      setError(
-        err instanceof Error ? err.message : "不明なエラーが発生しました"
-      );
+      setError(errorMessage);
+
+      // Show error toast
+      toast.error("送信に失敗しました", {
+        description: errorMessage,
+      });
     }
   };
 
@@ -163,25 +178,27 @@ export default function CardMessagePage() {
 
   return (
     <div className="space-y-6">
-      {/* Info Banner with improved design */}
-      <div className="rounded-xl border border-blue-500/30 bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent p-5 shadow-sm">
+      {/* Info Banner */}
+      <Alert className="border-blue-500/30 bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent">
         <div className="flex items-start gap-4">
           <div className="rounded-lg bg-blue-500/20 p-2.5 flex-shrink-0">
             <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
           </div>
-          <div className="flex-1">
-            <h2 className="mb-2 text-sm font-bold text-blue-300">
-              カードメッセージとは？
-            </h2>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              複数のカードをカルーセル形式で表示できるインタラクティブなメッセージです。
-              各カードには画像、タイトル、説明、アクションボタン（最大3つ）を設定できます。
-              商品紹介、場所案内、人物紹介など、視覚的に情報を伝えたい場面に最適です。
-            </p>
+          <AlertDescription className="flex-1 space-y-3">
+            <div>
+              <h2 className="mb-2 text-sm font-bold text-blue-300">
+                カードメッセージとは？
+              </h2>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                複数のカードをカルーセル形式で表示できるインタラクティブなメッセージです。
+                各カードには画像、タイトル、説明、アクションボタン（最大3つ）を設定できます。
+                商品紹介、場所案内、人物紹介など、視覚的に情報を伝えたい場面に最適です。
+              </p>
+            </div>
             {hasSavedData && savedAt && (
-              <div className="mt-3 flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
+              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
                 <svg className="w-4 h-4 text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                 </svg>
@@ -191,9 +208,9 @@ export default function CardMessagePage() {
                 </span>
               </div>
             )}
-          </div>
+          </AlertDescription>
         </div>
-      </div>
+      </Alert>
 
       {/* Main Form with enhanced styling */}
       <form
@@ -220,16 +237,16 @@ export default function CardMessagePage() {
 
         {/* Alt Text Input */}
         <div className="space-y-2">
-          <label htmlFor="altText" className="text-sm font-medium text-slate-300">
+          <Label htmlFor="altText" className="text-sm font-medium text-slate-300">
             代替テキスト <span className="text-red-400">*</span>
-          </label>
-          <input
+          </Label>
+          <Input
             id="altText"
             type="text"
             value={altText}
             onChange={(event) => setAltText(event.target.value)}
             maxLength={400}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="bg-slate-900/60 border-slate-600"
             placeholder="カードメッセージ"
             required
           />
@@ -237,17 +254,12 @@ export default function CardMessagePage() {
             <p className="text-slate-500">
               プッシュ通知やトークリストに表示されるテキスト
             </p>
-            <p
-              className={`${
-                altText.length > 400
-                  ? "text-red-400"
-                  : altText.length > 350
-                  ? "text-yellow-400"
-                  : "text-slate-500"
-              }`}
+            <Badge
+              variant={altText.length > 400 ? "destructive" : altText.length > 350 ? "outline" : "secondary"}
+              className="text-xs"
             >
               {altText.length} / 400
-            </p>
+            </Badge>
           </div>
         </div>
 
@@ -288,38 +300,36 @@ export default function CardMessagePage() {
           </div>
         </div>
 
-        {/* Validation Errors with improved design */}
+        {/* Validation Errors */}
         {validationErrors.length > 0 && (
-          <div className="rounded-lg border border-red-500/50 bg-red-500/10 p-4 animate-in fade-in slide-in-from-top-2 duration-300">
-            <div className="flex items-start gap-3">
-              <div className="rounded-full bg-red-500/20 p-2 flex-shrink-0">
+          <Alert variant="destructive" className="border-red-500/50 bg-red-500/10">
+            <AlertDescription className="space-y-2">
+              <div className="flex items-center gap-2">
                 <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-              </div>
-              <div className="flex-1">
-                <h4 className="mb-2 text-sm font-bold text-red-300">
-                  入力エラー ({validationErrors.length}件)
+                <h4 className="text-sm font-bold text-red-300">
+                  入力エラー <Badge variant="destructive" className="ml-2">{validationErrors.length}件</Badge>
                 </h4>
-                <ul className="space-y-2 text-xs text-red-200">
-                  {validationErrors.map((err, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-400 mt-1.5 flex-shrink-0" />
-                      <span className="flex-1">{err}</span>
-                    </li>
-                  ))}
-                </ul>
               </div>
-            </div>
-          </div>
+              <ul className="space-y-2 text-xs text-red-200 pl-7">
+                {validationErrors.map((err, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-400 mt-1.5 flex-shrink-0" />
+                    <span className="flex-1">{err}</span>
+                  </li>
+                ))}
+              </ul>
+            </AlertDescription>
+          </Alert>
         )}
 
-        {/* Submit Button and Status with improved design */}
+        {/* Submit Button and Status */}
         <div className="flex flex-col gap-4 border-t border-slate-700/50 pt-6">
           <div className="flex items-center gap-4">
-            <button
+            <Button
               type="submit"
-              className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/30 transition-all hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-600/40 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-lg active:scale-95"
+              className="inline-flex items-center gap-2"
               disabled={status === "sending" || !isFormValid}
             >
               {status === "sending" ? (
@@ -338,69 +348,47 @@ export default function CardMessagePage() {
                   送信
                 </>
               )}
-            </button>
-
-            {/* Success Message with animation */}
-            {status === "success" && (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/10 border border-green-500/30 animate-in fade-in slide-in-from-left-2 duration-300">
-                <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p className="text-sm font-semibold text-green-400">
-                  メッセージを送信しました
-                </p>
-              </div>
-            )}
-
-            {/* Error Message with icon */}
-            {status === "error" && error && (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 animate-in fade-in slide-in-from-left-2 duration-300">
-                <svg className="w-5 h-5 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p className="text-sm font-semibold text-red-400">{error}</p>
-              </div>
-            )}
+            </Button>
           </div>
 
-          {/* Validation Hints with better styling */}
+          {/* Validation Hints */}
           {status !== "sending" && !isFormValid && (
-            <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/5 p-4">
-              <div className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                <div className="flex-1">
-                  <p className="text-sm font-semibold text-yellow-300 mb-2">送信前に以下を確認してください</p>
-                  <ul className="space-y-1.5 text-xs text-yellow-200">
-                    {!lineUserId && (
-                      <li className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
-                        送信先ユーザーを選択してください
-                      </li>
-                    )}
-                    {!altText.trim() && (
-                      <li className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
-                        代替テキストを入力してください
-                      </li>
-                    )}
-                    {altText.length > 400 && (
-                      <li className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
-                        代替テキストは400文字以内で入力してください
-                      </li>
-                    )}
-                    {cards.length === 0 && (
-                      <li className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
-                        最低1つのカードを作成してください
-                      </li>
-                    )}
-                  </ul>
+            <Alert className="border-yellow-500/30 bg-yellow-500/5">
+              <AlertDescription className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <p className="text-sm font-semibold text-yellow-300">送信前に以下を確認してください</p>
                 </div>
-              </div>
-            </div>
+                <ul className="space-y-1.5 text-xs text-yellow-200 pl-7">
+                  {!lineUserId && (
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
+                      送信先ユーザーを選択してください
+                    </li>
+                  )}
+                  {!altText.trim() && (
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
+                      代替テキストを入力してください
+                    </li>
+                  )}
+                  {altText.length > 400 && (
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
+                      代替テキストは400文字以内で入力してください
+                    </li>
+                  )}
+                  {cards.length === 0 && (
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
+                      最低1つのカードを作成してください
+                    </li>
+                  )}
+                </ul>
+              </AlertDescription>
+            </Alert>
           )}
         </div>
       </form>

@@ -2,6 +2,24 @@
 
 import { useState, useEffect } from "react";
 import { Trash2, Plus } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
+import {
+  SelectRadix as Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/SelectRadix";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
 import type { CardAction } from "./types";
 
 interface ActionEditorProps {
@@ -192,18 +210,19 @@ export function ActionEditor({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium text-slate-300">
+        <Label className="text-sm font-medium text-slate-300">
           アクション <span className="text-red-400">*</span>
-        </label>
-        <button
+        </Label>
+        <Button
           type="button"
           onClick={handleAddAction}
           disabled={actions.length >= maxActions}
-          className="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          size="sm"
+          className="inline-flex items-center gap-1.5"
         >
           <Plus className="h-3.5 w-3.5" />
           アクションを追加
-        </button>
+        </Button>
       </div>
 
       {actions.length === 0 && (
@@ -214,156 +233,199 @@ export function ActionEditor({
         </div>
       )}
 
-      {actions.map((action, index) => (
-        <div
-          key={index}
-          className="rounded-lg border border-slate-700/50 bg-slate-900/40 p-4 space-y-3"
-        >
-          <div className="flex items-start justify-between">
-            <span className="text-sm font-medium text-slate-300">
-              アクション {index + 1}
-            </span>
-            <button
-              type="button"
-              onClick={() => handleDeleteAction(index)}
-              className="p-1.5 text-slate-400 hover:text-red-400 transition-colors"
-              title="削除"
+      {actions.length > 0 && (
+        <Accordion type="multiple" className="space-y-2" defaultValue={actions.map((_, i) => `action-${i}`)}>
+          {actions.map((action, index) => (
+            <AccordionItem
+              key={index}
+              value={`action-${index}`}
+              className="rounded-lg border border-slate-700/50 bg-slate-900/40 px-4"
             >
-              <Trash2 className="h-4 w-4" />
-            </button>
-          </div>
-
-          {/* Action Type Selector */}
-          <div className="space-y-1.5">
-            <label className="text-xs text-slate-400">アクションタイプ</label>
-            <select
-              value={action.type}
-              onChange={(e) =>
-                handleActionTypeChange(
-                  index,
-                  e.target.value as CardAction["type"]
-                )
-              }
-              className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            >
-              <option value="uri">リンク (URI)</option>
-              <option value="message">メッセージ</option>
-              <option value="postback">ポストバック</option>
-            </select>
-          </div>
-
-          {/* Label Input (Common for all types) */}
-          <div className="space-y-1.5">
-            <label className="text-xs text-slate-400">
-              ラベル <span className="text-red-400">*</span>
-            </label>
-            <input
-              type="text"
-              value={action.label}
-              onChange={(e) => handleActionUpdate(index, "label", e.target.value)}
-              maxLength={20}
-              className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              placeholder="ボタンラベル (最大20文字)"
-            />
-            {errors[`${index}.label`] && (
-              <p className="text-xs text-red-400">{errors[`${index}.label`]}</p>
-            )}
-            <p className="text-xs text-slate-500">{action.label.length}/20文字</p>
-          </div>
-
-          {/* Type-specific inputs */}
-          {action.type === "uri" && (
-            <div className="space-y-1.5">
-              <label className="text-xs text-slate-400">
-                URL <span className="text-red-400">*</span>
-              </label>
-              <input
-                type="url"
-                value={action.uri}
-                onChange={(e) => handleActionUpdate(index, "uri", e.target.value)}
-                className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                placeholder="https://example.com"
-              />
-              {errors[`${index}.uri`] && (
-                <p className="text-xs text-red-400">{errors[`${index}.uri`]}</p>
-              )}
-            </div>
-          )}
-
-          {action.type === "message" && (
-            <div className="space-y-1.5">
-              <label className="text-xs text-slate-400">
-                メッセージテキスト <span className="text-red-400">*</span>
-              </label>
-              <textarea
-                value={action.text}
-                onChange={(e) => handleActionUpdate(index, "text", e.target.value)}
-                maxLength={300}
-                rows={3}
-                className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                placeholder="送信されるメッセージテキスト"
-              />
-              {errors[`${index}.text`] && (
-                <p className="text-xs text-red-400">{errors[`${index}.text`]}</p>
-              )}
-              <p className="text-xs text-slate-500">{action.text.length}/300文字</p>
-            </div>
-          )}
-
-          {action.type === "postback" && (
-            <>
-              <div className="space-y-1.5">
-                <label className="text-xs text-slate-400">
-                  ポストバックデータ <span className="text-red-400">*</span>
-                </label>
-                <textarea
-                  value={action.data}
-                  onChange={(e) => handleActionUpdate(index, "data", e.target.value)}
-                  maxLength={300}
-                  rows={2}
-                  className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  placeholder="action=buy&item_id=123"
-                />
-                {errors[`${index}.data`] && (
-                  <p className="text-xs text-red-400">{errors[`${index}.data`]}</p>
-                )}
-                <p className="text-xs text-slate-500">{action.data.length}/300文字</p>
+              <div className="flex items-center gap-2">
+                <AccordionTrigger className="flex-1 py-3 text-sm font-medium text-slate-300 hover:no-underline">
+                  <div className="flex items-center gap-3">
+                    <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/50">
+                      {index + 1}
+                    </Badge>
+                    <span className="flex-1 text-left truncate">
+                      {action.label || "未設定"}
+                    </span>
+                    <Badge variant="secondary" className="text-xs">
+                      {action.type === "uri" && "リンク"}
+                      {action.type === "message" && "メッセージ"}
+                      {action.type === "postback" && "ポストバック"}
+                    </Badge>
+                  </div>
+                </AccordionTrigger>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleDeleteAction(index)}
+                  className="cursor-pointer p-1.5 text-slate-400 hover:text-red-400 h-8 w-8"
+                  title="削除"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-xs text-slate-400">
-                  表示テキスト (オプション)
-                </label>
-                <input
-                  type="text"
-                  value={action.displayText || ""}
-                  onChange={(e) =>
-                    handleActionUpdate(index, "displayText", e.target.value)
-                  }
-                  maxLength={300}
-                  className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  placeholder="ユーザーに表示されるテキスト"
-                />
-                {errors[`${index}.displayText`] && (
-                  <p className="text-xs text-red-400">
-                    {errors[`${index}.displayText`]}
-                  </p>
+              <AccordionContent className="space-y-4 pb-4 pt-2">
+                {/* Action Type Selector */}
+                <div className="space-y-2">
+                  <Label className="text-xs text-slate-400">アクションタイプ</Label>
+                  <Select
+                    value={action.type}
+                    onValueChange={(value) =>
+                      handleActionTypeChange(index, value as CardAction["type"])
+                    }
+                  >
+                    <SelectTrigger className="w-full bg-slate-900/60 border-slate-600">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="uri">リンク (URI)</SelectItem>
+                      <SelectItem value="message">メッセージ</SelectItem>
+                      <SelectItem value="postback">ポストバック</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Label Input (Common for all types) */}
+                <div className="space-y-2">
+                  <Label className="text-xs text-slate-400">
+                    ラベル <span className="text-red-400">*</span>
+                  </Label>
+                  <Input
+                    type="text"
+                    value={action.label}
+                    onChange={(e) => handleActionUpdate(index, "label", e.target.value)}
+                    maxLength={20}
+                    className="bg-slate-900/60 border-slate-600"
+                    placeholder="ボタンラベル (最大20文字)"
+                  />
+                  {errors[`${index}.label`] && (
+                    <p className="text-xs text-red-400">{errors[`${index}.label`]}</p>
+                  )}
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-slate-500">最大20文字</span>
+                    <Badge variant="outline" className="text-xs">
+                      {action.label.length}/20
+                    </Badge>
+                  </div>
+                </div>
+
+                {/* Type-specific inputs */}
+                {action.type === "uri" && (
+                  <div className="space-y-2">
+                    <Label className="text-xs text-slate-400">
+                      URL <span className="text-red-400">*</span>
+                    </Label>
+                    <Input
+                      type="url"
+                      value={action.uri}
+                      onChange={(e) => handleActionUpdate(index, "uri", e.target.value)}
+                      className="bg-slate-900/60 border-slate-600"
+                      placeholder="https://example.com"
+                    />
+                    {errors[`${index}.uri`] && (
+                      <p className="text-xs text-red-400">{errors[`${index}.uri`]}</p>
+                    )}
+                  </div>
                 )}
-                {action.displayText && (
-                  <p className="text-xs text-slate-500">
-                    {action.displayText.length}/300文字
-                  </p>
+
+                {action.type === "message" && (
+                  <div className="space-y-2">
+                    <Label className="text-xs text-slate-400">
+                      メッセージテキスト <span className="text-red-400">*</span>
+                    </Label>
+                    <Textarea
+                      value={action.text}
+                      onChange={(e) => handleActionUpdate(index, "text", e.target.value)}
+                      maxLength={300}
+                      rows={3}
+                      className="bg-slate-900/60 border-slate-600"
+                      placeholder="送信されるメッセージテキスト"
+                    />
+                    {errors[`${index}.text`] && (
+                      <p className="text-xs text-red-400">{errors[`${index}.text`]}</p>
+                    )}
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-slate-500">最大300文字</span>
+                      <Badge variant="outline" className="text-xs">
+                        {action.text.length}/300
+                      </Badge>
+                    </div>
+                  </div>
                 )}
-              </div>
-            </>
-          )}
-        </div>
-      ))}
+
+                {action.type === "postback" && (
+                  <>
+                    <div className="space-y-2">
+                      <Label className="text-xs text-slate-400">
+                        ポストバックデータ <span className="text-red-400">*</span>
+                      </Label>
+                      <Textarea
+                        value={action.data}
+                        onChange={(e) => handleActionUpdate(index, "data", e.target.value)}
+                        maxLength={300}
+                        rows={2}
+                        className="bg-slate-900/60 border-slate-600"
+                        placeholder="action=buy&item_id=123"
+                      />
+                      {errors[`${index}.data`] && (
+                        <p className="text-xs text-red-400">{errors[`${index}.data`]}</p>
+                      )}
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-slate-500">最大300文字</span>
+                        <Badge variant="outline" className="text-xs">
+                          {action.data.length}/300
+                        </Badge>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-xs text-slate-400">
+                        表示テキスト (オプション)
+                      </Label>
+                      <Input
+                        type="text"
+                        value={action.displayText || ""}
+                        onChange={(e) =>
+                          handleActionUpdate(index, "displayText", e.target.value)
+                        }
+                        maxLength={300}
+                        className="bg-slate-900/60 border-slate-600"
+                        placeholder="ユーザーに表示されるテキスト"
+                      />
+                      {errors[`${index}.displayText`] && (
+                        <p className="text-xs text-red-400">
+                          {errors[`${index}.displayText`]}
+                        </p>
+                      )}
+                      {action.displayText && (
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-slate-500">最大300文字</span>
+                          <Badge variant="outline" className="text-xs">
+                            {action.displayText.length}/300
+                          </Badge>
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      )}
 
       {actions.length > 0 && (
-        <p className="text-xs text-slate-500">
-          {actions.length}/{maxActions} アクション使用中
-        </p>
+        <div className="flex items-center justify-between text-xs text-slate-500">
+          <span>アクション使用中</span>
+          <Badge variant="outline">
+            {actions.length}/{maxActions}
+          </Badge>
+        </div>
       )}
     </div>
   );

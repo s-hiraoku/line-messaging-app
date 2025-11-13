@@ -4,16 +4,24 @@
  * Card Type Selector Component
  *
  * Modal dialog for selecting a card type when adding a new card.
+ * Uses shadcn/ui Dialog component for improved accessibility and UX.
+ *
  * Features:
  * - 4 card type options with visual representation
  * - Type name and description for each option
  * - Click to select card type
- * - Close button and overlay click to dismiss
- * - Keyboard navigation (Escape key)
+ * - Keyboard navigation and accessibility (provided by shadcn Dialog)
  */
 
-import { useEffect } from 'react';
-import { X, ShoppingBag, MapPin, User, Image as ImageIcon } from 'lucide-react';
+import { ShoppingBag, MapPin, User, Image as ImageIcon } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { CardType } from './types';
 
 interface CardTypeSelectorProps {
@@ -72,35 +80,6 @@ const CARD_TYPES = [
  * Card Type Selector Component
  */
 export function CardTypeSelector({ isOpen, onClose, onSelect }: CardTypeSelectorProps) {
-  // Handle Escape key to close modal
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [isOpen, onClose]);
-
-  // Prevent body scroll when modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
-
-  if (!isOpen) return null;
-
   /**
    * Handle card type selection
    */
@@ -109,38 +88,20 @@ export function CardTypeSelector({ isOpen, onClose, onSelect }: CardTypeSelector
     onClose();
   };
 
-  /**
-   * Handle overlay click to close
-   */
-  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-      onClick={handleOverlayClick}
-    >
-      <div className="w-full max-w-2xl rounded-lg border border-slate-700 bg-slate-800 p-6 shadow-xl">
-        {/* Header */}
-        <div className="mb-6 flex items-start justify-between">
-          <div>
-            <h2 className="text-xl font-semibold text-white">カードタイプを選択</h2>
-            <p className="mt-1 text-sm text-slate-400">作成するカードのタイプを選んでください</p>
-          </div>
-          <button
-            onClick={onClose}
-            className="rounded-md p-1 text-slate-400 transition hover:bg-slate-700 hover:text-white"
-            aria-label="閉じる"
-          >
-            <X className="h-6 w-6" />
-          </button>
-        </div>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl bg-slate-800 border-slate-700">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-semibold text-white">
+            カードタイプを選択
+          </DialogTitle>
+          <DialogDescription className="text-sm text-slate-400">
+            作成するカードのタイプを選んでください
+          </DialogDescription>
+        </DialogHeader>
 
         {/* Card Type Grid */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 py-4">
           {CARD_TYPES.map((cardType) => {
             const Icon = cardType.icon;
             return (
@@ -148,29 +109,28 @@ export function CardTypeSelector({ isOpen, onClose, onSelect }: CardTypeSelector
                 key={cardType.type}
                 onClick={() => handleSelect(cardType.type)}
                 className={`
-                  group relative flex items-start gap-4 rounded-lg border p-4 text-left transition
+                  cursor-pointer group relative flex items-start gap-4 rounded-lg border p-4 text-left transition-all
                   ${cardType.borderColor} ${cardType.bgColor} ${cardType.hoverBg}
-                  hover:border-opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500
+                  hover:border-opacity-100 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 active:scale-100
                 `}
               >
                 {/* Icon */}
-                <div
-                  className={`
-                    flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg
-                    bg-slate-800/60 transition group-hover:scale-110
-                  `}
-                >
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-slate-800/60 transition group-hover:scale-110">
                   <Icon className={`h-6 w-6 ${cardType.color}`} />
                 </div>
 
                 {/* Content */}
                 <div className="flex-1">
-                  <h3 className={`text-lg font-semibold ${cardType.color}`}>{cardType.name}</h3>
-                  <p className="mt-1 text-sm text-slate-300">{cardType.description}</p>
+                  <h3 className={`text-lg font-semibold ${cardType.color}`}>
+                    {cardType.name}
+                  </h3>
+                  <p className="mt-1 text-sm text-slate-300 leading-relaxed">
+                    {cardType.description}
+                  </p>
                 </div>
 
                 {/* Hover Indicator */}
-                <div className="absolute right-4 top-4 opacity-0 transition group-hover:opacity-100">
+                <div className="absolute right-4 top-4 opacity-0 transition-opacity group-hover:opacity-100">
                   <div className="rounded-full bg-white/10 p-1">
                     <svg
                       className="h-4 w-4 text-white"
@@ -193,12 +153,12 @@ export function CardTypeSelector({ isOpen, onClose, onSelect }: CardTypeSelector
         </div>
 
         {/* Footer Help Text */}
-        <div className="mt-6 rounded-md border border-slate-700/50 bg-slate-900/40 p-4">
-          <p className="text-xs text-slate-400">
+        <Alert className="border-slate-700/50 bg-slate-900/40">
+          <AlertDescription className="text-xs text-slate-400">
             カードタイプは後から変更できません。用途に合わせて適切なタイプを選択してください。
-          </p>
-        </div>
-      </div>
-    </div>
+          </AlertDescription>
+        </Alert>
+      </DialogContent>
+    </Dialog>
   );
 }

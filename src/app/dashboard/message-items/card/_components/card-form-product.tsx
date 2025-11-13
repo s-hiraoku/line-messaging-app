@@ -4,6 +4,12 @@ import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { ImageUploader } from '@/app/dashboard/_components/image-uploader';
 import { ActionEditor } from './action-editor';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
+import { Badge } from '@/components/ui/Badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Separator } from '@/components/ui/separator';
 import type { ProductCard } from './types';
 
 interface ProductFormProps {
@@ -172,23 +178,18 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
 
   return (
     <div className="space-y-6">
-      {/* Title Field with improved styling */}
+      {/* Title Field */}
       <div className="space-y-2">
-        <label htmlFor="product-title" className="flex items-center gap-2 text-sm font-semibold text-slate-200">
-          <span>タイトル</span>
-          <span className="text-red-400">*</span>
-        </label>
-        <input
+        <Label htmlFor="product-title" className="text-sm font-semibold text-slate-200">
+          タイトル <span className="text-red-400">*</span>
+        </Label>
+        <Input
           id="product-title"
           type="text"
           value={card.title}
           onChange={handleTitleChange}
           maxLength={40}
-          className={`w-full rounded-lg border bg-slate-900/60 px-4 py-2.5 text-sm text-white placeholder-slate-500 transition-all focus:outline-none focus:ring-2 ${
-            errors.title
-              ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'
-              : 'border-slate-600 focus:border-blue-500 focus:ring-blue-500/30'
-          }`}
+          className={`bg-slate-900/60 ${errors.title ? 'border-red-500/50' : 'border-slate-600'}`}
           placeholder="商品名を入力 (最大40文字)"
         />
         <div className="flex items-center justify-between">
@@ -202,29 +203,26 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
           ) : (
             <p className="text-xs text-slate-500">商品のタイトルを入力してください</p>
           )}
-          <p className={`text-xs font-medium ${card.title.length >= 35 ? 'text-yellow-400' : 'text-slate-500'}`}>
+          <Badge variant={card.title.length >= 35 ? "outline" : "secondary"} className="text-xs">
             {card.title.length}/40
-          </p>
+          </Badge>
         </div>
       </div>
 
-      {/* Description Field with improved styling */}
+      <Separator className="bg-slate-700/50" />
+
+      {/* Description Field */}
       <div className="space-y-2">
-        <label htmlFor="product-description" className="flex items-center gap-2 text-sm font-semibold text-slate-200">
-          <span>説明</span>
-          <span className="text-red-400">*</span>
-        </label>
-        <textarea
+        <Label htmlFor="product-description" className="text-sm font-semibold text-slate-200">
+          説明 <span className="text-red-400">*</span>
+        </Label>
+        <Textarea
           id="product-description"
           value={card.description}
           onChange={handleDescriptionChange}
           maxLength={60}
           rows={3}
-          className={`w-full rounded-lg border bg-slate-900/60 px-4 py-2.5 text-sm text-white placeholder-slate-500 transition-all focus:outline-none focus:ring-2 resize-none ${
-            errors.description
-              ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'
-              : 'border-slate-600 focus:border-blue-500 focus:ring-blue-500/30'
-          }`}
+          className={`bg-slate-900/60 resize-none ${errors.description ? 'border-red-500/50' : 'border-slate-600'}`}
           placeholder="商品の説明を入力 (最大60文字)"
         />
         <div className="flex items-center justify-between">
@@ -238,34 +236,31 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
           ) : (
             <p className="text-xs text-slate-500">商品の説明を入力してください</p>
           )}
-          <p className={`text-xs font-medium ${card.description.length >= 55 ? 'text-yellow-400' : 'text-slate-500'}`}>
+          <Badge variant={card.description.length >= 55 ? "outline" : "secondary"} className="text-xs">
             {card.description.length}/60
-          </p>
+          </Badge>
         </div>
       </div>
 
-      {/* Price Field (Optional) with improved styling */}
+      <Separator className="bg-slate-700/50" />
+
+      {/* Price Field (Optional) */}
       <div className="space-y-2">
-        <label htmlFor="product-price" className="flex items-center gap-2 text-sm font-semibold text-slate-200">
-          <span>価格</span>
-          <span className="text-xs font-normal text-slate-400">(オプション)</span>
-        </label>
+        <Label htmlFor="product-price" className="text-sm font-semibold text-slate-200">
+          価格 <Badge variant="secondary" className="text-xs ml-2">オプション</Badge>
+        </Label>
         <div className="relative">
           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-400">
             ¥
           </span>
-          <input
+          <Input
             id="product-price"
             type="number"
             value={card.price ?? ''}
             onChange={handlePriceChange}
             min={0}
             step={1}
-            className={`w-full rounded-lg border bg-slate-900/60 pl-9 pr-4 py-2.5 text-sm text-white placeholder-slate-500 transition-all focus:outline-none focus:ring-2 ${
-              errors.price
-                ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'
-                : 'border-slate-600 focus:border-blue-500 focus:ring-blue-500/30'
-            }`}
+            className={`bg-slate-900/60 pl-9 ${errors.price ? 'border-red-500/50' : 'border-slate-600'}`}
             placeholder="0"
           />
         </div>
@@ -281,12 +276,13 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
         )}
       </div>
 
-      {/* Image Upload with improved styling */}
+      <Separator className="bg-slate-700/50" />
+
+      {/* Image Upload */}
       <div className="space-y-2">
-        <label className="flex items-center gap-2 text-sm font-semibold text-slate-200">
-          <span>画像</span>
-          <span className="text-red-400">*</span>
-        </label>
+        <Label className="text-sm font-semibold text-slate-200">
+          画像 <span className="text-red-400">*</span>
+        </Label>
         <ImageUploader
           onImageUploaded={handleImageUploaded}
           placeholder="商品画像をアップロード (JPEG/PNG, 1024x1024px以上)"
@@ -313,6 +309,8 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
         )}
       </div>
 
+      <Separator className="bg-slate-700/50" />
+
       {/* Actions Editor */}
       <div className="space-y-2">
         <ActionEditor
@@ -330,30 +328,28 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
         )}
       </div>
 
-      {/* Validation Summary with improved design */}
+      {/* Validation Summary */}
       {Object.keys(errors).length > 0 && (
-        <div className="rounded-xl border border-yellow-500/50 bg-yellow-500/5 p-5 animate-in fade-in slide-in-from-top-2 duration-300">
-          <div className="flex items-start gap-3">
-            <div className="rounded-full bg-yellow-500/20 p-2 flex-shrink-0">
+        <Alert variant="destructive" className="border-yellow-500/50 bg-yellow-500/5">
+          <AlertDescription className="space-y-2">
+            <div className="flex items-center gap-2">
               <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-bold text-yellow-300 mb-2">
+              <p className="text-sm font-bold text-yellow-300">
                 入力内容に問題があります ({Object.keys(errors).length}件)
               </p>
-              <ul className="space-y-2 text-xs text-yellow-200">
-                {Object.values(errors).map((error, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 mt-1.5 flex-shrink-0" />
-                    <span className="flex-1">{error}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
-          </div>
-        </div>
+            <ul className="space-y-2 text-xs text-yellow-200 pl-7">
+              {Object.values(errors).map((error, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 mt-1.5 flex-shrink-0" />
+                  <span className="flex-1">{error}</span>
+                </li>
+              ))}
+            </ul>
+          </AlertDescription>
+        </Alert>
       )}
     </div>
   );

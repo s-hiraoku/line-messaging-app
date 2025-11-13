@@ -1,77 +1,46 @@
-import { HTMLAttributes, forwardRef } from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { clsx } from 'clsx';
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+
+import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(
-  'inline-flex items-center gap-1.5 rounded-full font-medium transition-colors duration-200',
+  "inline-flex items-center justify-center rounded-full border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden",
   {
     variants: {
       variant: {
         default:
-          'bg-slate-800/80 text-slate-300 border border-slate-700/50',
-        primary:
-          'bg-blue-600/20 text-blue-400 border border-blue-500/30',
-        success:
-          'bg-green-600/20 text-green-400 border border-green-500/30',
-        warning:
-          'bg-yellow-600/20 text-yellow-400 border border-yellow-500/30',
-        danger:
-          'bg-red-600/20 text-red-400 border border-red-500/30',
-        info:
-          'bg-cyan-600/20 text-cyan-400 border border-cyan-500/30',
-      },
-      size: {
-        sm: 'px-2 py-0.5 text-xs',
-        md: 'px-2.5 py-1 text-sm',
-        lg: 'px-3 py-1.5 text-base',
-      },
-      dot: {
-        true: 'pl-1.5',
+          "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90",
+        secondary:
+          "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90",
+        destructive:
+          "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+        outline:
+          "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
       },
     },
     defaultVariants: {
-      variant: 'default',
-      size: 'md',
-      dot: false,
+      variant: "default",
     },
   }
-);
+)
 
-const dotVariants = cva('h-2 w-2 rounded-full', {
-  variants: {
-    variant: {
-      default: 'bg-slate-400',
-      primary: 'bg-blue-500',
-      success: 'bg-green-500',
-      warning: 'bg-yellow-500',
-      danger: 'bg-red-500',
-      info: 'bg-cyan-500',
-    },
-  },
-  defaultVariants: {
-    variant: 'default',
-  },
-});
+function Badge({
+  className,
+  variant,
+  asChild = false,
+  ...props
+}: React.ComponentProps<"span"> &
+  VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
+  const Comp = asChild ? Slot : "span"
 
-export interface BadgeProps
-  extends HTMLAttributes<HTMLSpanElement>,
-    VariantProps<typeof badgeVariants> {}
+  return (
+    <Comp
+      data-slot="badge"
+      className={cn(badgeVariants({ variant }), className)}
+      {...props}
+    />
+  )
+}
 
-export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ className, variant, size, dot, children, ...props }, ref) => {
-    return (
-      <span
-        ref={ref}
-        className={clsx(badgeVariants({ variant, size, dot }), className)}
-        {...props}
-      >
-        {dot && (
-          <span className={dotVariants({ variant })} aria-hidden="true" />
-        )}
-        {children}
-      </span>
-    );
-  }
-);
-
-Badge.displayName = 'Badge';
+export { Badge, badgeVariants }

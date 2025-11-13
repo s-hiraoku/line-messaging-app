@@ -18,7 +18,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 w-full items-center justify-between rounded-lg border border-slate-700/50 bg-slate-900/50 px-4 py-2 text-sm text-slate-100 transition-all duration-200",
+      "cursor-pointer flex h-10 w-full items-center justify-between rounded-lg border border-slate-700/50 bg-slate-900/50 px-4 py-2 text-sm text-slate-100 transition-all duration-200",
       "hover:border-slate-600/50 focus:border-blue-500/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-slate-950",
       "disabled:cursor-not-allowed disabled:opacity-50",
       "[&>span]:line-clamp-1",
@@ -41,7 +41,7 @@ const SelectScrollUpButton = React.forwardRef<
   <SelectPrimitive.ScrollUpButton
     ref={ref}
     className={cn(
-      "flex cursor-default items-center justify-center py-1",
+      "flex cursor-pointer items-center justify-center py-1",
       className
     )}
     {...props}
@@ -58,7 +58,7 @@ const SelectScrollDownButton = React.forwardRef<
   <SelectPrimitive.ScrollDownButton
     ref={ref}
     className={cn(
-      "flex cursor-default items-center justify-center py-1",
+      "flex cursor-pointer items-center justify-center py-1",
       className
     )}
     {...props}
@@ -121,7 +121,7 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-md py-2 pl-8 pr-2 text-sm outline-none transition-colors",
+      "relative flex w-full cursor-pointer select-none items-center rounded-md py-2 pl-8 pr-2 text-sm outline-none transition-colors",
       "focus:bg-blue-500/20 focus:text-blue-300",
       "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className

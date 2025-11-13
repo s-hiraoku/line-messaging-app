@@ -336,6 +336,14 @@ export async function persistMessages(
         );
         break;
 
+      case "template":
+        await persistTemplateMessage(
+          userId,
+          message.altText,
+          message.template
+        );
+        break;
+
       default:
         // Ignore unknown message types
         break;
