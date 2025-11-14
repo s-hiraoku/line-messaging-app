@@ -51,7 +51,7 @@ export interface ImageCropUploaderProps {
   maxZoom?: number;
   /** Initial zoom level (default: 1) */
   defaultZoom?: number;
-  /** Zoom step for slider (default: 0.1) */
+  /** Zoom step for slider (default: 0.01) */
   zoomStep?: number;
 
   /** Custom placeholder text */
@@ -105,7 +105,7 @@ export function ImageCropUploader({
   minZoom = 0.8,
   maxZoom = 2,
   defaultZoom = 1,
-  zoomStep = 0.1,
+  zoomStep = 0.01,
   placeholder = '画像ファイルをドラッグ&ドロップ、貼り付け（Cmd/Ctrl+V）、または選択してください',
 }: ImageCropUploaderProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -509,7 +509,7 @@ export function ImageCropUploader({
                   step={zoomStep}
                   value={zoom}
                   onChange={(e) => setZoom(Number(e.target.value))}
-                  className="w-full"
+                  className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500 hover:accent-blue-400 transition-colors"
                 />
               </div>
 

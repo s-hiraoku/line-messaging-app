@@ -416,7 +416,7 @@ export function ImageCropUploaderExample() {
               <tr className="border-b border-slate-700/50">
                 <td className="py-2 font-mono text-xs">zoomStep</td>
                 <td className="py-2 text-xs">number</td>
-                <td className="py-2 text-xs">0.1</td>
+                <td className="py-2 text-xs">0.01</td>
                 <td className="py-2 text-xs">ズームスライダーのステップ値</td>
               </tr>
             </tbody>
