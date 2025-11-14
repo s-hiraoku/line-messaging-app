@@ -177,6 +177,14 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
     }
   };
 
+  /**
+   * Handles image areas change from ImageAreaEditor
+   * Memoized to prevent infinite re-render loops
+   */
+  const handleImageAreasChange = useCallback((areas: ProductCard['imageAreas']) => {
+    onChange({ imageAreas: areas });
+  }, [onChange]);
+
   return (
     <div className="space-y-6">
       {/* Title Field */}
@@ -316,7 +324,7 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
       {/* Image Area Editor */}
       <ImageAreaEditor
         imageUrl={card.imageUrl}
-        onAreasChange={(areas) => onChange({ imageAreas: areas })}
+        onAreasChange={handleImageAreasChange}
       />
 
       <Separator className="bg-black h-[2px]" />

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { X } from 'lucide-react';
 import { ImageCropUploader } from '@/app/dashboard/_components/image-crop-uploader';
@@ -303,7 +303,7 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
       {/* Image Area Editor */}
       <ImageAreaEditor
         imageUrl={card.imageUrl}
-        onAreasChange={(areas) => onChange({ imageAreas: areas })}
+        onAreasChange={useCallback((areas: PersonCard['imageAreas']) => onChange({ imageAreas: areas }), [onChange])}
       />
 
       {/* Actions Field */}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { LocationCard } from "./types";
 import { ImageCropUploader } from "@/app/dashboard/_components/image-crop-uploader";
 import { ActionEditor } from "./action-editor";
@@ -245,7 +245,7 @@ export function LocationForm({ card, onChange }: LocationFormProps) {
       {/* Image Area Editor */}
       <ImageAreaEditor
         imageUrl={card.imageUrl}
-        onAreasChange={(areas) => onChange({ imageAreas: areas })}
+        onAreasChange={useCallback((areas: LocationCard['imageAreas']) => onChange({ imageAreas: areas }), [onChange])}
       />
 
       {/* Actions Field */}
