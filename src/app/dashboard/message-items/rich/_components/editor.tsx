@@ -103,10 +103,10 @@ export function RichMessageEditor({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium text-slate-300">
-          タップ領域 <span className="text-red-400">*</span>
+        <label className="text-sm font-bold uppercase tracking-wider text-black">
+          タップ領域 <span className="text-red-600">*</span>
         </label>
-        <div className="text-xs text-slate-500">
+        <div className="text-xs font-mono text-black/60">
           {imageUrl
             ? "画像上をドラッグして領域を作成、クリックして選択"
             : "画像をアップロードしてください"}

@@ -192,67 +192,67 @@ export function RichMenuList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-white">リッチメニュー</h1>
-          <p className="text-sm text-slate-400">
+          <h1 className="text-lg font-bold uppercase tracking-wider text-black">リッチメニュー</h1>
+          <p className="text-xs font-mono text-black/60">
             LINE上に表示されるリッチメニューを管理します。
           </p>
         </div>
         <Link
           href="/dashboard/richmenu/new"
-          className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+          className="inline-flex items-center border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
         >
           新規作成
         </Link>
       </div>
 
       {richMenus.length === 0 ? (
-        <div className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-12 text-center">
-          <p className="text-slate-400">リッチメニューが作成されていません</p>
+        <div className="border-2 border-black bg-white p-12 text-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <p className="font-mono text-black/60">リッチメニューが作成されていません</p>
         </div>
       ) : (
         <div className="grid gap-4">
           {richMenus.map((menu) => (
             <div
               key={menu.id}
-              className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-6"
+              className="border-2 border-black bg-white p-6 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-[#FFFEF5]"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="text-lg font-semibold text-white">{menu.name}</h3>
+                    <h3 className="text-lg font-bold uppercase tracking-wider text-black">{menu.name}</h3>
                     {menu.status === "DRAFT" ? (
-                      <span className="rounded-full bg-slate-500/20 px-2 py-0.5 text-xs text-slate-300">
+                      <span className="border-2 border-black bg-white px-2 py-1 text-xs font-bold uppercase text-black">
                         下書き
                       </span>
                     ) : (
-                      <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-xs text-green-300">
+                      <span className="border-2 border-black bg-[#00B900] px-2 py-1 text-xs font-bold uppercase text-white">
                         公開済み
                       </span>
                     )}
                     {menu.selected && (
-                      <span className="rounded-full bg-blue-500/20 px-2 py-0.5 text-xs text-blue-300">
+                      <span className="border-2 border-black bg-[#00B900] px-2 py-1 text-xs font-bold uppercase text-white">
                         デフォルト
                       </span>
                     )}
                     {menu.isDefault && (
-                      <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-xs text-green-300">
+                      <span className="border-2 border-black bg-[#00B900] px-2 py-1 text-xs font-bold uppercase text-white">
                         初期表示
                       </span>
                     )}
                     {menu.alias && (
-                      <span className="rounded-full bg-purple-500/20 px-2 py-0.5 text-xs text-purple-300">
+                      <span className="border-2 border-black bg-[#FFE500] px-2 py-1 text-xs font-bold uppercase text-black">
                         @{menu.alias}
                       </span>
                     )}
                   </div>
                   <div className="mt-2 space-y-1">
-                    <p className="text-sm text-slate-400">
-                      <span className="text-slate-500">サイズ:</span> {menu.size === "full" ? "フル (2500x1686)" : "ハーフ (2500x843)"}
+                    <p className="text-sm font-mono text-black">
+                      <span className="font-bold">サイズ:</span> {menu.size === "full" ? "フル (2500x1686)" : "ハーフ (2500x843)"}
                       {" "}・{" "}
-                      <span className="text-slate-500">タップエリア:</span> {menu.areas?.length || 0}個
+                      <span className="font-bold">タップエリア:</span> {menu.areas?.length || 0}個
                     </p>
-                    <p className="text-sm text-slate-400">
-                      <span className="text-slate-500">チャットバー:</span> {menu.chatBarText}
+                    <p className="text-sm font-mono text-black">
+                      <span className="font-bold">チャットバー:</span> {menu.chatBarText}
                       {menu.barDisplayed ? " (表示)" : " (非表示)"}
                     </p>
                   </div>
@@ -262,7 +262,7 @@ export function RichMenuList() {
                     <button
                       onClick={() => handlePublish(menu.id, menu.name)}
                       disabled={publishing === menu.id || !menu.imageUrl}
-                      className="rounded-md border border-green-600/50 bg-green-900/20 px-3 py-1.5 text-sm text-green-300 transition hover:bg-green-900/40 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="border-2 border-black bg-[#00B900] px-3 py-1.5 text-sm font-bold uppercase tracking-wider text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50"
                       title={!menu.imageUrl ? "画像が設定されていません" : ""}
                     >
                       {publishing === menu.id ? "公開中..." : "公開"}
@@ -272,7 +272,7 @@ export function RichMenuList() {
                     <button
                       onClick={() => handleSetDefault(menu.id, menu.name)}
                       disabled={settingDefault === menu.id}
-                      className="rounded-md border border-slate-600 bg-slate-900/60 px-3 py-1.5 text-sm text-slate-300 transition hover:bg-slate-800/60 disabled:opacity-50"
+                      className="border-2 border-black bg-white px-3 py-1.5 text-sm font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50"
                     >
                       {settingDefault === menu.id ? "設定中..." : "デフォルトに設定"}
                     </button>
@@ -280,7 +280,7 @@ export function RichMenuList() {
                   <button
                     onClick={() => handleDelete(menu.id, menu.name)}
                     disabled={deleting === menu.id}
-                    className="rounded-md border border-red-600/50 bg-red-900/20 px-3 py-1.5 text-sm text-red-300 transition hover:bg-red-900/40 disabled:opacity-50"
+                    className="border-2 border-black bg-red-600 px-3 py-1.5 text-sm font-bold uppercase tracking-wider text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50"
                   >
                     {deleting === menu.id ? "削除中..." : "削除"}
                   </button>

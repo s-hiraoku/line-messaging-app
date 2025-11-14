@@ -220,10 +220,10 @@ export function ImageUploader({
         onPaste={handlePaste}
         tabIndex={0}
         className={`
-          relative rounded-lg border-2 border-dashed p-6 text-center transition-colors
+          relative border-2 border-dashed p-6 text-center transition-all
           ${isDragging
-            ? 'border-blue-500 bg-blue-500/10'
-            : 'border-slate-700 bg-slate-900'
+            ? 'border-[#00B900] bg-[#00B900]/10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+            : 'border-black bg-white'
           }
           ${uploading ? 'cursor-wait' : 'cursor-pointer'}
         `}
@@ -242,21 +242,21 @@ export function ImageUploader({
 
         {uploadedUrl ? (
           <div className="flex flex-col items-center gap-2">
-            <CheckCircle className="h-12 w-12 text-emerald-400" />
-            <p className="text-sm font-medium text-emerald-400">
+            <CheckCircle className="h-12 w-12 text-[#00B900]" />
+            <p className="text-sm font-bold uppercase tracking-wider text-[#00B900]">
               アップロード完了
             </p>
           </div>
         ) : uploading ? (
           <div className="space-y-3">
-            <Upload className="mx-auto h-12 w-12 text-blue-400 animate-pulse" />
+            <Upload className="mx-auto h-12 w-12 text-[#00B900] animate-pulse" />
             <div className="space-y-1">
-              <p className="text-sm font-medium text-slate-300">
+              <p className="text-sm font-bold uppercase tracking-wider text-black">
                 アップロード中... {uploadProgress}%
               </p>
-              <div className="mx-auto h-2 w-48 overflow-hidden rounded-full bg-slate-800">
+              <div className="mx-auto h-3 w-48 border-2 border-black bg-white">
                 <div
-                  className="h-full bg-blue-500 transition-all duration-300"
+                  className="h-full bg-[#00B900] transition-all duration-300"
                   style={{ width: `${uploadProgress}%` }}
                 />
               </div>
@@ -264,12 +264,12 @@ export function ImageUploader({
           </div>
         ) : (
           <div className="space-y-3">
-            <Upload className="mx-auto h-12 w-12 text-slate-400" />
+            <Upload className="mx-auto h-12 w-12 text-black" />
             <div className="space-y-1">
-              <p className="text-sm text-slate-300">{placeholder}</p>
+              <p className="text-sm text-black">{placeholder}</p>
               <button
                 type="button"
-                className="inline-flex items-center rounded-md border border-slate-700 px-4 py-2 text-sm font-medium text-slate-200 transition hover:border-slate-500 hover:bg-slate-800"
+                className="inline-flex items-center border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleClick();
@@ -278,7 +278,7 @@ export function ImageUploader({
                 ファイルを選択
               </button>
             </div>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs font-mono text-black/60">
               JPEG/PNG形式、{MAX_FILE_SIZE / 1024 / 1024}MB以下、{MIN_DIMENSION}x{MIN_DIMENSION}px以上
             </p>
           </div>
@@ -287,18 +287,18 @@ export function ImageUploader({
 
       {/* Error display */}
       {error && (
-        <div className="flex items-start gap-2 rounded-md border border-red-500/50 bg-red-500/10 p-3">
-          <AlertCircle className="h-5 w-5 flex-shrink-0 text-red-400 mt-0.5" />
+        <div className="flex items-start gap-2 border-2 border-red-600 bg-red-50 p-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <AlertCircle className="h-5 w-5 flex-shrink-0 text-red-600 mt-0.5" />
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-red-400">
+            <p className="text-sm font-bold uppercase tracking-wider text-red-600">
               {error.type === 'validation' ? '検証エラー' : 'アップロードエラー'}
             </p>
-            <p className="text-sm text-red-300 mt-0.5">{error.message}</p>
+            <p className="text-sm text-red-600/80 mt-0.5">{error.message}</p>
           </div>
           <button
             type="button"
             onClick={clearError}
-            className="flex-shrink-0 rounded p-1 hover:bg-red-500/20 text-red-400"
+            className="flex-shrink-0 border-2 border-red-600 bg-white p-1 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] text-red-600 transition-all"
             aria-label="エラーを閉じる"
           >
             <X className="h-4 w-4" />

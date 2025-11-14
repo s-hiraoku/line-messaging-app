@@ -14,6 +14,8 @@ export default function VideoMessagePage() {
   const [error, setError] = useState<string | null>(null);
   const [videoUrlError, setVideoUrlError] = useState<string | null>(null);
   const [previewUrlError, setPreviewUrlError] = useState<string | null>(null);
+  const [lastRequest, setLastRequest] = useState<unknown>();
+  const [lastResponse, setLastResponse] = useState<unknown>();
 
   const validateVideoUrl = (url: string): string | null => {
     if (!url) return null;
@@ -83,24 +85,24 @@ export default function VideoMessagePage() {
     setError(null);
 
     try {
+      const payload = { to: lineUserId, type: "video", videoUrl, previewUrl };
+      setLastRequest(payload);
       const response = await fetch("/api/line/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          to: lineUserId,
-          type: "video",
-          videoUrl,
-          previewUrl,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
+        setLastResponse(data);
         throw new Error(data.error ?? "動画メッセージの送信に失敗しました");
       }
 
+      const data = await response.json().catch(() => ({}));
+      setLastResponse(data);
       setStatus("success");
     } catch (err) {
       setStatus("error");
@@ -116,147 +118,111 @@ export default function VideoMessagePage() {
     !previewUrlError;
 
   return (
-    <div className="max-w-4xl space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold text-white">動画メッセージ送信</h1>
-        <p className="text-sm text-slate-400">
-          MP4形式の動画ファイルをユーザーに送信できます（最大200MB）。
-        </p>
-      </header>
-
+    <div className="space-y-6">
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 rounded-lg border border-slate-700/50 bg-slate-800/40 p-6 shadow-lg backdrop-blur-sm"
+        className="space-y-4 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
       >
         <div className="space-y-2">
-          <label htmlFor="lineUserId" className="text-sm font-medium text-slate-300">
-            LINE ユーザー ID <span className="text-red-400">*</span>
+          <label htmlFor="lineUserId" className="text-sm font-bold uppercase tracking-wider text-black">
+            LINE ユーザー ID <span className="text-red-600">*</span>
           </label>
           <input
             id="lineUserId"
             type="text"
             value={lineUserId}
             onChange={(event) => setLineUserId(event.target.value)}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
             placeholder="Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
             required
           />
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="videoUrl" className="text-sm font-medium text-slate-300">
-            動画URL <span className="text-red-400">*</span>
+          <label htmlFor="videoUrl" className="text-sm font-bold uppercase tracking-wider text-black">
+            動画URL <span className="text-red-600">*</span>
           </label>
           <input
             id="videoUrl"
             type="url"
             value={videoUrl}
             onChange={(event) => handleVideoUrlChange(event.target.value)}
-            className={`w-full rounded-md border ${
-              videoUrlError ? "border-red-500" : "border-slate-600"
-            } bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+            className={`w-full border-2 ${
+              videoUrlError ? "border-red-600" : "border-black"
+            } bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all`}
             placeholder="https://example.com/video.mp4"
             required
           />
           {videoUrlError && (
-            <p className="text-xs text-red-400">{videoUrlError}</p>
+            <p className="text-xs text-red-600 font-bold">{videoUrlError}</p>
           )}
-          <p className="text-xs text-slate-500">
+          <p className="text-xs font-mono text-black/60">
             MP4形式、HTTPS必須、最大200MB
           </p>
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="previewUrl" className="text-sm font-medium text-slate-300">
-            プレビュー画像URL <span className="text-red-400">*</span>
+          <label htmlFor="previewUrl" className="text-sm font-bold uppercase tracking-wider text-black">
+            プレビュー画像URL <span className="text-red-600">*</span>
           </label>
           <input
             id="previewUrl"
             type="url"
             value={previewUrl}
             onChange={(event) => handlePreviewUrlChange(event.target.value)}
-            className={`w-full rounded-md border ${
-              previewUrlError ? "border-red-500" : "border-slate-600"
-            } bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+            className={`w-full border-2 ${
+              previewUrlError ? "border-red-600" : "border-black"
+            } bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all`}
             placeholder="https://example.com/preview.jpg"
             required
           />
           {previewUrlError && (
-            <p className="text-xs text-red-400">{previewUrlError}</p>
+            <p className="text-xs text-red-600 font-bold">{previewUrlError}</p>
           )}
-          <p className="text-xs text-slate-500">
+          <p className="text-xs font-mono text-black/60">
             JPEG形式、HTTPS必須、最大1MB
           </p>
         </div>
 
-        <div className="flex items-center gap-3 border-t border-slate-700/50 pt-4">
+        <LineConversation
+          direction="inbound"
+          displayName="ユーザー"
+          message={{
+            type: "video",
+            videoUrl: videoUrl || "https://example.com/video.mp4",
+            previewUrl: previewUrl || "https://example.com/preview.jpg",
+          }}
+        />
+
+        <div className="flex items-center gap-3 border-t-2 border-black pt-4">
           <button
             type="submit"
-            className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50 active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
             disabled={status === "sending" || !isFormValid}
           >
             {status === "sending" ? "送信中..." : "送信"}
           </button>
           {status === "success" && (
-            <p className="text-sm text-green-400">動画メッセージを送信しました。</p>
+            <p className="text-sm font-bold text-[#00B900]">動画メッセージを送信しました。</p>
           )}
-          {status === "error" && error && <p className="text-sm text-red-400">{error}</p>}
+          {status === "error" && error && <p className="text-sm font-bold text-red-600">{error}</p>}
         </div>
       </form>
 
-      {/* Preview Section */}
-      {videoUrl && previewUrl && !videoUrlError && !previewUrlError && (
-        <LineConversation
-          message={{
-            type: "video",
-            videoUrl,
-            previewUrl,
-          }}
-        />
-      )}
-
       {/* Debug Panel */}
       {videoUrl && previewUrl && !videoUrlError && !previewUrlError && (
-        <details className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-4 shadow-lg backdrop-blur-sm">
-          <summary className="cursor-pointer text-sm font-medium text-slate-300">
-            デバッグ情報
-          </summary>
-          <div className="mt-4 space-y-3">
-            <div>
-              <div className="mb-1 text-xs font-medium text-slate-400">cURL</div>
-              <pre className="overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-300">
-                {`curl -X POST https://api.line.me/v2/bot/message/push \\
-  -H 'Content-Type: application/json' \\
-  -H 'Authorization: Bearer {YOUR_CHANNEL_ACCESS_TOKEN}' \\
-  -d '{
-  "to": "${lineUserId || "Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}",
-  "messages": [
-    {
-      "type": "video",
-      "originalContentUrl": "${videoUrl}",
-      "previewImageUrl": "${previewUrl}"
-    }
-  ]
-}'`}
-              </pre>
-            </div>
-            <div>
-              <div className="mb-1 text-xs font-medium text-slate-400">Request Body</div>
-              <pre className="overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-300">
-                {JSON.stringify(
-                  {
-                    to: lineUserId || "Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-                    type: "video",
-                    videoUrl,
-                    previewUrl,
-                  },
-                  null,
-                  2
-                )}
-              </pre>
-            </div>
-          </div>
-        </details>
+        <DebugPanel
+          title="送信 API デバッグ"
+          request={lastRequest}
+          response={lastResponse}
+          curl={toCurl({
+            url: new URL("/api/line/send", typeof window !== "undefined" ? location.origin : "http://localhost:3000").toString(),
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: lastRequest,
+          })}
+          docsUrl="https://developers.line.biz/ja/reference/messaging-api/#send-push-message"
+        />
       )}
     </div>
   );

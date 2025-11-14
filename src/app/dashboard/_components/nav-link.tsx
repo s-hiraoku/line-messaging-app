@@ -20,19 +20,17 @@ export function NavLink({ href, label, description, icon }: NavLinkProps) {
     <Link
       href={href}
       className={clsx(
-        'group relative flex flex-col gap-1 rounded-xl border px-4 py-3 transition-all duration-200 cursor-pointer',
-        'hover:scale-[1.02] hover:border-blue-500/50 hover:bg-blue-500/10 hover:text-white hover:shadow-lg hover:shadow-blue-500/20',
-        'active:scale-[0.98]',
+        'group relative flex flex-col gap-1.5 border-2 border-black px-4 py-3 font-mono transition-all cursor-pointer',
         isActive
-          ? 'border-blue-500/60 bg-blue-500/15 text-white shadow-[0_0_30px_-10px_rgba(59,130,246,0.9)]'
-          : 'border-slate-800/50 text-slate-300 hover:border-blue-500/40'
+          ? 'bg-[#00B900] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+          : 'bg-white text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]'
       )}
     >
-      <div className="flex items-center gap-3 text-sm font-semibold">
+      <div className="flex items-center gap-3 text-sm font-bold uppercase tracking-wide">
         {icon && (
           <span className={clsx(
-            "transition-all duration-200",
-            isActive ? "text-blue-400" : "text-slate-500 group-hover:text-blue-300"
+            "transition-colors",
+            isActive ? "text-white" : "text-black"
           )}>
             {icon}
           </span>
@@ -41,8 +39,8 @@ export function NavLink({ href, label, description, icon }: NavLinkProps) {
       </div>
       {description && (
         <span className={clsx(
-          "text-xs transition-all duration-200",
-          isActive ? "text-slate-300" : "text-slate-500 group-hover:text-slate-300"
+          "text-xs font-normal normal-case tracking-normal",
+          isActive ? "text-white/90" : "text-black/60"
         )}>
           {description}
         </span>

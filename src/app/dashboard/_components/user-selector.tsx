@@ -143,29 +143,29 @@ export function UserSelector({
     <div className="relative w-full">
       {/* Selected user display */}
       {selectedUser ? (
-        <div className="flex items-center justify-between rounded-md border border-slate-700 bg-slate-900 px-3 py-2">
+        <div className="flex items-center justify-between border-2 border-black bg-white px-3 py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <div className="flex items-center gap-2 min-w-0">
             {selectedUser.pictureUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={selectedUser.pictureUrl}
                 alt={selectedUser.displayName}
-                className="h-8 w-8 rounded-full object-cover"
+                className="h-8 w-8 border-2 border-black object-cover"
               />
             ) : (
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-700">
-                <User className="h-4 w-4 text-slate-400" />
+              <div className="flex h-8 w-8 items-center justify-center border-2 border-black bg-[#FFFEF5]">
+                <User className="h-4 w-4 text-black" />
               </div>
             )}
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-white truncate">{selectedUser.displayName}</p>
-              <p className="text-xs text-slate-400 truncate">{selectedUser.lineUserId}</p>
+              <p className="text-sm font-bold text-black truncate">{selectedUser.displayName}</p>
+              <p className="text-xs font-mono text-black/60 truncate">{selectedUser.lineUserId}</p>
             </div>
           </div>
           <button
             type="button"
             onClick={handleClear}
-            className="ml-2 flex-shrink-0 rounded p-1 hover:bg-slate-800 text-slate-400 hover:text-slate-200"
+            className="ml-2 flex-shrink-0 border-2 border-black bg-white p-1 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] text-black transition-all"
             aria-label="選択を解除"
           >
             <X className="h-4 w-4" />
@@ -175,7 +175,7 @@ export function UserSelector({
         <>
           {/* Search input */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-black/60" />
             <input
               ref={inputRef}
               type="text"
@@ -185,7 +185,7 @@ export function UserSelector({
                 setIsOpen(true);
                 if (searchTerm) fetchUsers(searchTerm);
               }}
-              className="w-full rounded-md border border-slate-700 bg-slate-900 pl-10 pr-3 py-2 text-sm text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none"
+              className="w-full border-2 border-black bg-white pl-10 pr-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
               placeholder={placeholder}
             />
           </div>
@@ -194,10 +194,10 @@ export function UserSelector({
           {isOpen && (
             <div
               ref={dropdownRef}
-              className="absolute z-10 mt-1 w-full rounded-md border border-slate-700 bg-slate-900 shadow-lg max-h-60 overflow-auto"
+              className="absolute z-10 mt-2 w-full border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] max-h-60 overflow-auto"
             >
               {loading ? (
-                <div className="px-3 py-2 text-sm text-slate-400 text-center">
+                <div className="px-3 py-2 text-sm font-mono text-black/60 text-center">
                   読み込み中...
                 </div>
               ) : users.length > 0 ? (
@@ -207,34 +207,34 @@ export function UserSelector({
                       <button
                         type="button"
                         onClick={() => handleSelectUser(user)}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-slate-800 transition-colors"
+                        className="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-[#FFFEF5] transition-colors"
                       >
                         {user.pictureUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
                             src={user.pictureUrl}
                             alt={user.displayName}
-                            className="h-8 w-8 rounded-full object-cover"
+                            className="h-8 w-8 border-2 border-black object-cover"
                           />
                         ) : (
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-700">
-                            <User className="h-4 w-4 text-slate-400" />
+                          <div className="flex h-8 w-8 items-center justify-center border-2 border-black bg-[#FFFEF5]">
+                            <User className="h-4 w-4 text-black" />
                           </div>
                         )}
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium text-white truncate">{user.displayName}</p>
-                          <p className="text-xs text-slate-400 truncate">{user.lineUserId}</p>
+                          <p className="text-sm font-bold text-black truncate">{user.displayName}</p>
+                          <p className="text-xs font-mono text-black/60 truncate">{user.lineUserId}</p>
                         </div>
                       </button>
                     </li>
                   ))}
                 </ul>
               ) : searchTerm ? (
-                <div className="px-3 py-2 text-sm text-slate-400 text-center">
+                <div className="px-3 py-2 text-sm font-mono text-black/60 text-center">
                   ユーザーが見つかりませんでした
                 </div>
               ) : (
-                <div className="px-3 py-2 text-sm text-slate-400 text-center">
+                <div className="px-3 py-2 text-sm font-mono text-black/60 text-center">
                   検索キーワードを入力してください
                 </div>
               )}

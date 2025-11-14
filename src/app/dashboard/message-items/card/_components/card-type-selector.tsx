@@ -90,12 +90,12 @@ export function CardTypeSelector({ isOpen, onClose, onSelect }: CardTypeSelector
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl bg-slate-800 border-slate-700">
+      <DialogContent className="max-w-2xl bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-white">
+          <DialogTitle className="text-xl font-bold uppercase tracking-wider text-black">
             カードタイプを選択
           </DialogTitle>
-          <DialogDescription className="text-sm text-slate-400">
+          <DialogDescription className="text-sm font-mono text-black/60">
             作成するカードのタイプを選んでください
           </DialogDescription>
         </DialogHeader>
@@ -108,32 +108,28 @@ export function CardTypeSelector({ isOpen, onClose, onSelect }: CardTypeSelector
               <button
                 key={cardType.type}
                 onClick={() => handleSelect(cardType.type)}
-                className={`
-                  cursor-pointer group relative flex items-start gap-4 rounded-lg border p-4 text-left transition-all
-                  ${cardType.borderColor} ${cardType.bgColor} ${cardType.hoverBg}
-                  hover:border-opacity-100 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 active:scale-100
-                `}
+                className="cursor-pointer group relative flex items-start gap-4 border-2 border-black bg-white p-4 text-left transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none focus:ring-2 focus:ring-black active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
               >
                 {/* Icon */}
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-slate-800/60 transition group-hover:scale-110">
-                  <Icon className={`h-6 w-6 ${cardType.color}`} />
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center border-2 border-black bg-[#FFFEF5] transition group-hover:scale-110">
+                  <Icon className="h-6 w-6 text-black" />
                 </div>
 
                 {/* Content */}
                 <div className="flex-1">
-                  <h3 className={`text-lg font-semibold ${cardType.color}`}>
+                  <h3 className="text-lg font-bold uppercase tracking-wider text-black">
                     {cardType.name}
                   </h3>
-                  <p className="mt-1 text-sm text-slate-300 leading-relaxed">
+                  <p className="mt-1 text-sm font-mono text-black/60 leading-relaxed">
                     {cardType.description}
                   </p>
                 </div>
 
                 {/* Hover Indicator */}
                 <div className="absolute right-4 top-4 opacity-0 transition-opacity group-hover:opacity-100">
-                  <div className="rounded-full bg-white/10 p-1">
+                  <div className="border-2 border-black bg-white p-1">
                     <svg
-                      className="h-4 w-4 text-white"
+                      className="h-4 w-4 text-black"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -153,8 +149,8 @@ export function CardTypeSelector({ isOpen, onClose, onSelect }: CardTypeSelector
         </div>
 
         {/* Footer Help Text */}
-        <Alert className="border-slate-700/50 bg-slate-900/40">
-          <AlertDescription className="text-xs text-slate-400">
+        <Alert className="border-2 border-black bg-yellow-200 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <AlertDescription className="text-xs font-mono text-black">
             カードタイプは後から変更できません。用途に合わせて適切なタイプを選択してください。
           </AlertDescription>
         </Alert>

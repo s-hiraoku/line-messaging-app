@@ -75,48 +75,48 @@ export default function MessagesImagePage() {
 
   return (
     <div className="space-y-6">
-      <form onSubmit={handleSubmit} className="space-y-4 max-w-xl rounded-lg border border-slate-800/60 bg-slate-900/60 p-6 shadow-sm text-slate-100">
+      <form onSubmit={handleSubmit} className="space-y-4 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-300">LINE ユーザー ID</label>
+          <label className="text-sm font-bold uppercase tracking-wider text-black">LINE ユーザー ID</label>
           <input
             value={lineUserId}
             onChange={(e) => setLineUserId(e.target.value)}
             placeholder="Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-            className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
             required
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-300">画像URL（originalContentUrl）</label>
+          <label className="text-sm font-bold uppercase tracking-wider text-black">画像URL（originalContentUrl）</label>
           <input
             value={originalUrl}
             onChange={(e) => setOriginalUrl(e.target.value)}
             placeholder="https://..."
-            className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
             required
           />
-          <p className="text-xs text-slate-400">https の直リンク。LINEの仕様に沿ったサイズ/形式の画像URLを指定してください。</p>
+          <p className="text-xs font-mono text-black/60">https の直リンク。LINEの仕様に沿ったサイズ/形式の画像URLを指定してください。</p>
         </div>
         <div
           onDragOver={(e) => e.preventDefault()}
           onDrop={onDrop}
           onPaste={onPaste}
-          className="rounded-lg border border-dashed border-slate-700 bg-slate-900 p-4 text-center text-sm text-slate-400"
+          className="border-2 border-dashed border-black bg-[#FFFEF5] p-4 text-center text-sm text-black"
         >
           <input type="file" accept="image/*" ref={inputRef} className="hidden" onChange={(e) => { const f=e.target.files?.[0]; if (f) void onFile(f); }} />
-          <p className="mb-2">画像ファイルをドロップ or 貼り付け（Cmd/Ctrl+V）</p>
-          <button type="button" className="rounded-md border border-slate-700 px-3 py-1 text-xs text-slate-200 hover:border-slate-500 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60" onClick={pickFile} disabled={uploading}>{uploading ? 'アップロード中...' : 'ファイルを選択'}</button>
-          <p className="mt-2 text-xs text-slate-500">Cloudinary が設定されている場合、アップロードして URL を自動入力します。</p>
+          <p className="mb-2 font-bold">画像ファイルをドロップ or 貼り付け（Cmd/Ctrl+V）</p>
+          <button type="button" className="border-2 border-black bg-white px-3 py-1 text-xs font-bold uppercase tracking-wider text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 transition-all" onClick={pickFile} disabled={uploading}>{uploading ? 'アップロード中...' : 'ファイルを選択'}</button>
+          <p className="mt-2 text-xs font-mono text-black/60">Cloudinary が設定されている場合、アップロードして URL を自動入力します。</p>
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-300">プレビュー画像URL（previewImageUrl 任意）</label>
+          <label className="text-sm font-bold uppercase tracking-wider text-black">プレビュー画像URL（previewImageUrl 任意）</label>
           <input
             value={previewUrl}
             onChange={(e) => setPreviewUrl(e.target.value)}
             placeholder="https://..."
-            className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
           />
-          <div className="flex items-center gap-2 text-xs text-slate-400">
+          <div className="flex items-center gap-2 text-xs font-mono text-black/60">
             <input
               type="checkbox"
               checked={linkPreview}
@@ -129,23 +129,23 @@ export default function MessagesImagePage() {
                   setPreviewUrl("");
                 }
               }}
-              className="cursor-pointer"
+              className="w-4 h-4 border-2 border-black cursor-pointer accent-[#00B900]"
             />
             <span>プレビュー画像URLを original と同じにする</span>
           </div>
-          <p className="text-xs text-slate-400">未指定の場合、LINE側で original をサムネイル表示することがあります。</p>
+          <p className="text-xs font-mono text-black/60">未指定の場合、LINE側で original をサムネイル表示することがあります。</p>
         </div>
         {/* 画像のサムネイルプレビュー（会話プレビューで代替するため省略） */}
         <LineConversation direction={'outbound'} displayName={'Bot'} message={{ type: 'image', originalContentUrl: originalUrl, previewImageUrl: (previewUrl || (linkPreview ? originalUrl : undefined)) || undefined }} />
         <button
           type="submit"
-          className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
+          className="inline-flex items-center border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
           disabled={status === "sending"}
         >
           {status === "sending" ? "送信中..." : "送信"}
         </button>
-        {status === "success" && <p className="text-sm text-emerald-400">送信しました。</p>}
-        {status === "error" && error && <p className="text-sm text-red-400">{error}</p>}
+        {status === "success" && <p className="text-sm font-bold text-[#00B900]">送信しました。</p>}
+        {status === "error" && error && <p className="text-sm font-bold text-red-600">{error}</p>}
       </form>
 
       <DebugPanel

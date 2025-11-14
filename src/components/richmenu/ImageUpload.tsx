@@ -100,30 +100,30 @@ export function ImageUpload({ size, onUploadComplete, currentImageUrl }: ImageUp
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-slate-300">
-        リッチメニュー画像 <span className="text-slate-500">({expectedSize}px)</span>
+      <label className="block text-sm font-bold uppercase tracking-wider text-black">
+        リッチメニュー画像 <span className="font-mono text-black/60">({expectedSize}px)</span>
       </label>
 
       {previewUrl ? (
-        <div className="relative rounded-lg border border-slate-700/50 bg-slate-900/40 p-4">
+        <div className="relative border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <div className="flex items-start gap-4">
             <div className="flex-1">
               <img
                 src={previewUrl}
                 alt="Rich menu preview"
-                className="w-full h-auto rounded border border-slate-600"
+                className="w-full h-auto border-2 border-black"
               />
             </div>
             <button
               type="button"
               onClick={handleRemove}
-              className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+              className="border-2 border-black bg-red-600 p-2 text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
               title="画像を削除"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
-          <div className="flex items-center gap-2 mt-2 text-sm text-green-400">
+          <div className="flex items-center gap-2 mt-2 text-sm font-bold uppercase tracking-wider text-[#00B900]">
             <CheckCircle2 className="w-4 h-4" />
             アップロード完了
           </div>
@@ -134,9 +134,9 @@ export function ImageUpload({ size, onUploadComplete, currentImageUrl }: ImageUp
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           className={`
-            border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer
-            ${isDragging ? "border-blue-500 bg-blue-500/10" : "border-slate-600 hover:border-slate-500"}
-            ${uploading ? "opacity-50 cursor-not-allowed" : ""}
+            border-2 border-dashed border-black p-8 text-center transition-all cursor-pointer
+            ${isDragging ? "bg-[#FFFEF5] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]" : "bg-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"}
+            ${uploading ? "opacity-50 cursor-not-allowed" : "hover:bg-[#FFFEF5]"}
           `}
           onClick={() => !uploading && fileInputRef.current?.click()}
         >
@@ -151,16 +151,16 @@ export function ImageUpload({ size, onUploadComplete, currentImageUrl }: ImageUp
 
           {uploading ? (
             <div className="flex flex-col items-center gap-2">
-              <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
-              <p className="text-sm text-slate-400">アップロード中...</p>
+              <Loader2 className="w-12 h-12 text-black animate-spin" />
+              <p className="text-sm font-mono text-black/60">アップロード中...</p>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-2">
-              <Upload className="w-12 h-12 text-slate-400" />
-              <p className="text-sm text-slate-300">
+              <Upload className="w-12 h-12 text-black" />
+              <p className="text-sm font-bold text-black">
                 画像をドラッグ＆ドロップ、またはクリックして選択
               </p>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs font-mono text-black/60">
                 推奨サイズ: {expectedSize}px (JPG/PNG)
               </p>
             </div>
@@ -169,7 +169,7 @@ export function ImageUpload({ size, onUploadComplete, currentImageUrl }: ImageUp
       )}
 
       {error && (
-        <div className="rounded-md bg-red-500/10 border border-red-500/50 px-4 py-3 text-sm text-red-400">
+        <div className="border-2 border-black bg-red-100 px-4 py-3 text-sm font-mono text-red-900 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
           {error}
         </div>
       )}

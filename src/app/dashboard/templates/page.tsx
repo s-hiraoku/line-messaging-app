@@ -59,43 +59,43 @@ export default function TemplatesPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold">テンプレート</h1>
-        <p className="text-sm text-slate-500">テキストテンプレートの作成と一覧</p>
+        <h1 className="text-2xl font-bold uppercase tracking-wider text-black">テンプレート</h1>
+        <p className="text-sm text-black/60">テキストテンプレートの作成と一覧</p>
       </header>
 
-      <div className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm text-slate-100">
+      <div className="border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <div className="grid gap-3 sm:grid-cols-[240px_1fr_auto]">
           <input placeholder="テンプレート名" value={name} onChange={(e) => setName(e.target.value)}
-            className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
+            className="border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all" />
           <input placeholder="本文 (TEXT)" value={text} onChange={(e) => setText(e.target.value)}
-            className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
+            className="border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all" />
           <button onClick={create} disabled={saving || !name || !text}
-            className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90">{saving ? "作成中..." : "作成"}</button>
+            className="border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-60">{saving ? "作成中..." : "作成"}</button>
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-slate-800/60 bg-slate-900/60 text-slate-100">
+      <div className="overflow-hidden border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <table className="w-full text-left text-sm">
-          <thead className="bg-slate-800/60 text-slate-300">
+          <thead className="border-b-2 border-black bg-white">
             <tr>
-              <th className="px-4 py-2">名前</th>
-              <th className="px-4 py-2">タイプ</th>
-              <th className="px-4 py-2">本文</th>
-              <th className="px-4 py-2">作成日時</th>
+              <th className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-black">名前</th>
+              <th className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-black">タイプ</th>
+              <th className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-black">本文</th>
+              <th className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-black">作成日時</th>
             </tr>
           </thead>
           <tbody>
             {items.map((t) => (
-              <tr key={t.id} className="border-t">
-                <td className="px-4 py-2">{t.name}</td>
-                <td className="px-4 py-2">{t.type}</td>
-                <td className="px-4 py-2 truncate max-w-[360px] text-slate-300">{t.content?.text ?? ""}</td>
-                <td className="px-4 py-2 text-slate-300">{new Date(t.createdAt).toLocaleString()}</td>
+              <tr key={t.id} className="border-t-2 border-black hover:bg-[#FFFEF5]">
+                <td className="px-4 py-2 font-bold text-black">{t.name}</td>
+                <td className="px-4 py-2 font-mono text-black">{t.type}</td>
+                <td className="px-4 py-2 truncate max-w-[360px] text-black/60">{t.content?.text ?? ""}</td>
+                <td className="px-4 py-2 font-mono text-black/60">{new Date(t.createdAt).toLocaleString()}</td>
               </tr>
             ))}
             {items.length === 0 && (
               <tr>
-                <td className="px-4 py-8 text-center text-slate-500" colSpan={4}>テンプレートがありません</td>
+                <td className="px-4 py-8 text-center font-bold uppercase tracking-wider text-black/40" colSpan={4}>テンプレートがありません</td>
               </tr>
             )}
           </tbody>

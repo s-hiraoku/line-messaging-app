@@ -170,46 +170,46 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
     <div className="space-y-6">
       {/* Name Field */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-slate-300">
-          名前 <span className="text-red-400">*</span>
+        <label className="text-sm font-bold uppercase tracking-wider text-black">
+          名前 <span className="text-red-600">*</span>
         </label>
         <input
           type="text"
           value={card.name}
           onChange={handleNameChange}
           maxLength={40}
-          className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
           placeholder="例: 山田 太郎"
         />
         {errors.name && (
-          <p className="text-xs text-red-400">{errors.name}</p>
+          <p className="text-xs font-bold text-red-600">{errors.name}</p>
         )}
-        <p className="text-xs text-slate-500">{card.name.length}/40文字</p>
+        <p className="text-xs font-mono text-black/60">{card.name.length}/40文字</p>
       </div>
 
       {/* Description Field */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-slate-300">
-          説明 <span className="text-red-400">*</span>
+        <label className="text-sm font-bold uppercase tracking-wider text-black">
+          説明 <span className="text-red-600">*</span>
         </label>
         <textarea
           value={card.description}
           onChange={handleDescriptionChange}
           maxLength={60}
           rows={3}
-          className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
           placeholder="例: プロジェクトマネージャー / 東京オフィス"
         />
         {errors.description && (
-          <p className="text-xs text-red-400">{errors.description}</p>
+          <p className="text-xs font-bold text-red-600">{errors.description}</p>
         )}
-        <p className="text-xs text-slate-500">{card.description.length}/60文字</p>
+        <p className="text-xs font-mono text-black/60">{card.description.length}/60文字</p>
       </div>
 
       {/* Tags Field */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-slate-300">
-          タグ <span className="text-slate-500">(オプション)</span>
+        <label className="text-sm font-bold uppercase tracking-wider text-black">
+          タグ <span className="font-mono text-black/60">(オプション)</span>
         </label>
 
         {/* Tag chips display */}
@@ -218,13 +218,13 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
             {card.tags.map((tag, index) => (
               <div
                 key={index}
-                className="inline-flex items-center gap-1.5 rounded-full bg-blue-500/20 px-3 py-1 text-xs font-medium text-blue-300 border border-blue-500/30"
+                className="inline-flex items-center gap-1.5 border-2 border-black bg-[#00B900]/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
               >
                 <span>{tag}</span>
                 <button
                   type="button"
                   onClick={() => removeTag(index)}
-                  className="rounded-full p-0.5 hover:bg-blue-500/30 transition-colors"
+                  className="border-2 border-black bg-white p-0.5 hover:bg-red-600 hover:text-white transition-colors"
                   aria-label={`タグ "${tag}" を削除`}
                 >
                   <X className="h-3 w-3" />
@@ -243,39 +243,39 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
             onChange={handleTagInputChange}
             onKeyDown={handleTagInputKeyDown}
             maxLength={20}
-            className="flex-1 rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="flex-1 border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
             placeholder="タグを入力してEnterキーで追加"
           />
           <button
             type="button"
             onClick={addTag}
-            className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+            className="border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
           >
             追加
           </button>
         </div>
 
         {errors.tagInput && (
-          <p className="text-xs text-red-400">{errors.tagInput}</p>
+          <p className="text-xs font-bold text-red-600">{errors.tagInput}</p>
         )}
 
         {errors.tags && (
-          <p className="text-xs text-red-400">{errors.tags}</p>
+          <p className="text-xs font-bold text-red-600">{errors.tags}</p>
         )}
 
         {tagInput && (
-          <p className="text-xs text-slate-500">{tagInput.length}/20文字</p>
+          <p className="text-xs font-mono text-black/60">{tagInput.length}/20文字</p>
         )}
 
-        <p className="text-xs text-slate-400">
+        <p className="text-xs font-mono text-black/60">
           Enterキーまたは「追加」ボタンでタグを追加できます。各タグは最大20文字です。
         </p>
       </div>
 
       {/* Image Upload Field */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-slate-300">
-          画像 <span className="text-red-400">*</span>
+        <label className="text-sm font-bold uppercase tracking-wider text-black">
+          画像 <span className="text-red-600">*</span>
         </label>
         <ImageCropUploader
           onImageUploaded={handleImageUploaded}
@@ -283,17 +283,17 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
           placeholder="プロフィール画像をアップロード"
         />
         {errors.imageUrl && (
-          <p className="text-xs text-red-400">{errors.imageUrl}</p>
+          <p className="text-xs font-bold text-red-600">{errors.imageUrl}</p>
         )}
         {card.imageUrl && (
-          <div className="rounded-lg border border-slate-700/50 bg-slate-900/40 p-3">
-            <p className="text-xs text-slate-400 mb-2">現在の画像:</p>
+          <div className="border-2 border-black bg-[#FFFEF5] p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+            <p className="text-xs font-bold uppercase tracking-wider text-black mb-2">現在の画像:</p>
             <Image
               src={card.imageUrl}
               alt="プレビュー"
               width={128}
               height={128}
-              className="h-32 w-32 rounded-md object-cover"
+              className="h-32 w-32 border-2 border-black object-cover shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
             />
           </div>
         )}
@@ -307,7 +307,7 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
           maxActions={3}
         />
         {errors.actions && (
-          <p className="text-xs text-red-400">{errors.actions}</p>
+          <p className="text-xs font-bold text-red-600">{errors.actions}</p>
         )}
       </div>
     </div>

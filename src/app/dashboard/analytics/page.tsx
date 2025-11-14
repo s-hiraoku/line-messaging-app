@@ -176,7 +176,7 @@ export default function AnalyticsPage() {
   if (loading || !data) {
     return (
       <div className="flex items-center justify-center py-12">
-        <p className="text-slate-400">読み込み中...</p>
+        <p className="text-sm font-bold uppercase tracking-wider text-black/60">読み込み中...</p>
       </div>
     );
   }
@@ -245,15 +245,15 @@ export default function AnalyticsPage() {
 
   return (
     <div className="space-y-6">
-      <header className="flex items-center justify-between">
+      <header className="flex items-center justify-between border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <div className="space-y-1">
-          <h1 className="text-2xl font-semibold text-white">分析</h1>
-          <p className="text-sm text-slate-400">メッセージとユーザーの統計情報</p>
+          <h1 className="text-2xl font-bold uppercase tracking-wider text-black">分析</h1>
+          <p className="text-xs font-mono text-black/60">メッセージとユーザーの統計情報</p>
         </div>
         <div className="flex gap-2">
           <button
             onClick={exportToCSV}
-            className="flex items-center gap-2 rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm font-medium text-slate-300 transition hover:border-slate-500"
+            className="flex items-center gap-2 border-2 border-black bg-white px-3 py-2 text-sm font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
           >
             <Download className="h-4 w-4" />
             <span>CSV出力</span>
@@ -262,10 +262,10 @@ export default function AnalyticsPage() {
             <button
               key={d}
               onClick={() => setPeriod(d)}
-              className={`rounded-md px-3 py-1.5 text-sm font-medium transition cursor-pointer ${
+              className={`border-2 border-black px-4 py-2 text-sm font-bold uppercase tracking-wider transition-all ${
                 period === d
-                  ? "bg-blue-600 text-white"
-                  : "border border-slate-700 bg-slate-900 text-slate-300 hover:border-slate-500"
+                  ? "bg-[#00B900] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                  : "bg-white text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
               }`}
             >
               {d}日間
@@ -276,63 +276,63 @@ export default function AnalyticsPage() {
 
       {/* LINE公式統計 */}
       {insights && insights.followers && (
-        <section className="rounded-lg border border-blue-800/40 bg-gradient-to-br from-blue-900/30 to-slate-900/60 p-5 shadow-lg">
+        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <div className="mb-4 flex items-center gap-2">
-            <Target className="h-5 w-5 text-blue-400" />
-            <h2 className="text-lg font-semibold text-white">LINE 公式統計</h2>
-            <span className="ml-auto text-xs text-slate-400">
+            <Target className="h-5 w-5 text-black" />
+            <h2 className="text-lg font-bold uppercase tracking-wider text-black">LINE 公式統計</h2>
+            <span className="ml-auto text-xs font-mono text-black/60">
               {insights.date.slice(0, 4)}/{insights.date.slice(4, 6)}/{insights.date.slice(6, 8)}
             </span>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
-            <article className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4">
+            <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-medium text-slate-400">ターゲットリーチ</h3>
-                <Target className="h-4 w-4 text-blue-400" />
+                <h3 className="text-sm font-bold uppercase tracking-wider text-black/60">ターゲットリーチ</h3>
+                <Target className="h-4 w-4 text-black" />
               </div>
-              <p className="mt-2 text-2xl font-semibold text-white">
+              <p className="mt-2 text-3xl font-bold text-[#00B900]">
                 {insights.followers.targetedReaches.toLocaleString()}
               </p>
-              <p className="mt-1 text-xs text-slate-400">メッセージ到達可能数</p>
+              <p className="mt-1 text-xs font-mono text-black/60">メッセージ到達可能数</p>
             </article>
 
-            <article className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4">
+            <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-medium text-slate-400">友だち数</h3>
-                <Users className="h-4 w-4 text-emerald-400" />
+                <h3 className="text-sm font-bold uppercase tracking-wider text-black/60">友だち数</h3>
+                <Users className="h-4 w-4 text-black" />
               </div>
-              <p className="mt-2 text-2xl font-semibold text-white">
+              <p className="mt-2 text-3xl font-bold text-[#00B900]">
                 {insights.followers.followers.toLocaleString()}
               </p>
-              <p className="mt-1 text-xs text-slate-400">公式フォロワー数</p>
+              <p className="mt-1 text-xs font-mono text-black/60">公式フォロワー数</p>
             </article>
 
-            <article className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4">
+            <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-medium text-slate-400">ブロック数</h3>
-                <UserMinus className="h-4 w-4 text-red-400" />
+                <h3 className="text-sm font-bold uppercase tracking-wider text-black/60">ブロック数</h3>
+                <UserMinus className="h-4 w-4 text-black" />
               </div>
-              <p className="mt-2 text-2xl font-semibold text-white">
+              <p className="mt-2 text-3xl font-bold text-[#00B900]">
                 {insights.followers.blocks.toLocaleString()}
               </p>
-              <p className="mt-1 text-xs text-slate-400">ブロック中のユーザー</p>
+              <p className="mt-1 text-xs font-mono text-black/60">ブロック中のユーザー</p>
             </article>
           </div>
-          <p className="mt-4 text-xs text-slate-500">
+          <p className="mt-4 text-xs font-mono text-black/60">
             ※ LINE公式APIから取得した統計データです。前日の数値が表示されます。
           </p>
         </section>
       )}
 
       {insightsLoading && (
-        <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
-          <p className="text-center text-sm text-slate-400">LINE統計情報を読み込み中...</p>
+        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <p className="text-center text-sm font-mono text-black/60">LINE統計情報を読み込み中...</p>
         </section>
       )}
 
       {!insightsLoading && !insights?.followers && (
-        <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
-          <p className="text-center text-sm text-slate-400">
+        <section className="border-2 border-black bg-[#FFFEF5] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <p className="text-center text-sm font-mono text-black/60">
             LINE統計情報を取得できませんでした。チャネル設定を確認してください。
           </p>
         </section>
@@ -340,30 +340,30 @@ export default function AnalyticsPage() {
 
       {/* ユーザー属性 */}
       {demographics && demographics.available && (
-        <section className="rounded-lg border border-purple-800/40 bg-gradient-to-br from-purple-900/30 to-slate-900/60 p-5 shadow-lg">
+        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <div className="mb-4 flex items-center gap-2">
-            <User className="h-5 w-5 text-purple-400" />
-            <h2 className="text-lg font-semibold text-white">ユーザー属性</h2>
+            <User className="h-5 w-5 text-black" />
+            <h2 className="text-lg font-bold uppercase tracking-wider text-black">ユーザー属性</h2>
           </div>
 
           <div className="space-y-6">
             {/* 性別分布 */}
             {demographics.genders && demographics.genders.length > 0 && (
               <div>
-                <h3 className="mb-3 text-sm font-medium text-slate-300">性別</h3>
+                <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-black">性別</h3>
                 <div className="space-y-2">
                   {demographics.genders.map((item) => (
                     <div key={item.gender} className="flex items-center gap-3">
-                      <span className="w-16 text-xs text-slate-400">
+                      <span className="w-16 text-xs font-mono text-black/60">
                         {item.gender === "male" ? "男性" : item.gender === "female" ? "女性" : "不明"}
                       </span>
                       <div className="flex-1">
                         <div
-                          className="h-6 rounded bg-gradient-to-r from-purple-500/60 to-pink-500/60 transition-all"
+                          className="h-6 border-2 border-black bg-[#00B900] transition-all"
                           style={{ width: `${item.percentage}%` }}
                         />
                       </div>
-                      <span className="w-12 text-right text-sm font-medium text-slate-200">
+                      <span className="w-12 text-right text-sm font-bold text-black">
                         {item.percentage}%
                       </span>
                     </div>
@@ -375,18 +375,18 @@ export default function AnalyticsPage() {
             {/* 年齢分布 */}
             {demographics.ages && demographics.ages.length > 0 && (
               <div>
-                <h3 className="mb-3 text-sm font-medium text-slate-300">年齢</h3>
+                <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-black">年齢</h3>
                 <div className="space-y-2">
                   {demographics.ages.map((item) => (
                     <div key={item.age} className="flex items-center gap-3">
-                      <span className="w-16 text-xs text-slate-400">{item.age}</span>
+                      <span className="w-16 text-xs font-mono text-black/60">{item.age}</span>
                       <div className="flex-1">
                         <div
-                          className="h-6 rounded bg-gradient-to-r from-purple-500/60 to-blue-500/60 transition-all"
+                          className="h-6 border-2 border-black bg-[#00B900] transition-all"
                           style={{ width: `${item.percentage}%` }}
                         />
                       </div>
-                      <span className="w-12 text-right text-sm font-medium text-slate-200">
+                      <span className="w-12 text-right text-sm font-bold text-black">
                         {item.percentage}%
                       </span>
                     </div>
@@ -398,21 +398,21 @@ export default function AnalyticsPage() {
             {/* 地域分布 */}
             {demographics.areas && demographics.areas.length > 0 && (
               <div>
-                <h3 className="mb-3 flex items-center gap-2 text-sm font-medium text-slate-300">
+                <h3 className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-black">
                   <MapPin className="h-4 w-4" />
                   <span>地域（上位10件）</span>
                 </h3>
                 <div className="space-y-2">
                   {demographics.areas.slice(0, 10).map((item) => (
                     <div key={item.area} className="flex items-center gap-3">
-                      <span className="w-20 text-xs text-slate-400">{item.area}</span>
+                      <span className="w-20 text-xs font-mono text-black/60">{item.area}</span>
                       <div className="flex-1">
                         <div
-                          className="h-6 rounded bg-gradient-to-r from-purple-500/60 to-emerald-500/60 transition-all"
+                          className="h-6 border-2 border-black bg-[#00B900] transition-all"
                           style={{ width: `${item.percentage}%` }}
                         />
                       </div>
-                      <span className="w-12 text-right text-sm font-medium text-slate-200">
+                      <span className="w-12 text-right text-sm font-bold text-black">
                         {item.percentage}%
                       </span>
                     </div>
@@ -422,21 +422,21 @@ export default function AnalyticsPage() {
             )}
           </div>
 
-          <p className="mt-4 text-xs text-slate-500">
+          <p className="mt-4 text-xs font-mono text-black/60">
             ※ LINE公式APIから取得したユーザー属性の統計データです。
           </p>
         </section>
       )}
 
       {demographicsLoading && (
-        <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
-          <p className="text-center text-sm text-slate-400">ユーザー属性情報を読み込み中...</p>
+        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <p className="text-center text-sm font-mono text-black/60">ユーザー属性情報を読み込み中...</p>
         </section>
       )}
 
       {!demographicsLoading && (!demographics || !demographics.available) && (
-        <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
-          <p className="text-center text-sm text-slate-400">
+        <section className="border-2 border-black bg-[#FFFEF5] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <p className="text-center text-sm font-mono text-black/60">
             ユーザー属性情報を取得できませんでした。友だち数が一定数以上必要です。
           </p>
         </section>
@@ -444,20 +444,20 @@ export default function AnalyticsPage() {
 
       {/* サマリーカード */}
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <article className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
+        <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-medium text-slate-400">総メッセージ</h2>
-            <MessageSquare className="h-4 w-4 text-slate-500" />
+            <h2 className="text-sm font-bold uppercase tracking-wider text-black/60">総メッセージ</h2>
+            <MessageSquare className="h-4 w-4 text-black" />
           </div>
-          <p className="mt-3 text-3xl font-semibold text-white">{data.summary.total}</p>
+          <p className="mt-3 text-3xl font-bold text-[#00B900]">{data.summary.total}</p>
           <div className="mt-2 flex items-center justify-between text-xs">
-            <div className="flex gap-3 text-slate-400">
-              <span className="text-emerald-400">受信: {data.summary.totalInbound}</span>
-              <span className="text-blue-400">送信: {data.summary.totalOutbound}</span>
+            <div className="flex gap-3 font-mono text-black/60">
+              <span>受信: {data.summary.totalInbound}</span>
+              <span>送信: {data.summary.totalOutbound}</span>
             </div>
             {data.comparison && (
-              <span className={`flex items-center gap-1 font-medium ${
-                data.comparison.totalMessages.change >= 0 ? "text-emerald-400" : "text-red-400"
+              <span className={`flex items-center gap-1 font-bold ${
+                data.comparison.totalMessages.change >= 0 ? "text-[#00B900]" : "text-red-600"
               }`}>
                 {data.comparison.totalMessages.change >= 0 ? (
                   <TrendingUp className="h-3 w-3" />
@@ -470,26 +470,26 @@ export default function AnalyticsPage() {
           </div>
         </article>
 
-        <article className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
+        <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-medium text-slate-400">応答率</h2>
-            <TrendingUp className="h-4 w-4 text-slate-500" />
+            <h2 className="text-sm font-bold uppercase tracking-wider text-black/60">応答率</h2>
+            <TrendingUp className="h-4 w-4 text-black" />
           </div>
-          <p className="mt-3 text-3xl font-semibold text-white">{data.summary.responseRate}%</p>
-          <p className="mt-2 text-xs text-slate-400">送信/受信の比率</p>
+          <p className="mt-3 text-3xl font-bold text-[#00B900]">{data.summary.responseRate}%</p>
+          <p className="mt-2 text-xs font-mono text-black/60">送信/受信の比率</p>
         </article>
 
-        <article className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
+        <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-medium text-slate-400">新規ユーザー</h2>
-            <UserPlus className="h-4 w-4 text-slate-500" />
+            <h2 className="text-sm font-bold uppercase tracking-wider text-black/60">新規ユーザー</h2>
+            <UserPlus className="h-4 w-4 text-black" />
           </div>
-          <p className="mt-3 text-3xl font-semibold text-white">{data.summary.newUsers}</p>
+          <p className="mt-3 text-3xl font-bold text-[#00B900]">{data.summary.newUsers}</p>
           <div className="mt-2 flex items-center justify-between">
-            <p className="text-xs text-slate-400">期間内の新規登録</p>
+            <p className="text-xs font-mono text-black/60">期間内の新規登録</p>
             {data.comparison && (
-              <span className={`flex items-center gap-1 text-xs font-medium ${
-                data.comparison.newUsers.change >= 0 ? "text-emerald-400" : "text-red-400"
+              <span className={`flex items-center gap-1 text-xs font-bold ${
+                data.comparison.newUsers.change >= 0 ? "text-[#00B900]" : "text-red-600"
               }`}>
                 {data.comparison.newUsers.change >= 0 ? (
                   <TrendingUp className="h-3 w-3" />
@@ -502,52 +502,52 @@ export default function AnalyticsPage() {
           </div>
         </article>
 
-        <article className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
+        <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-medium text-slate-400">フォロワー</h2>
-            <Users className="h-4 w-4 text-slate-500" />
+            <h2 className="text-sm font-bold uppercase tracking-wider text-black/60">フォロワー</h2>
+            <Users className="h-4 w-4 text-black" />
           </div>
-          <p className="mt-3 text-3xl font-semibold text-white">{data.summary.followingUsers}</p>
-          <p className="mt-2 text-xs text-slate-400">総ユーザー: {data.summary.totalUsers}</p>
+          <p className="mt-3 text-3xl font-bold text-[#00B900]">{data.summary.followingUsers}</p>
+          <p className="mt-2 text-xs font-mono text-black/60">総ユーザー: {data.summary.totalUsers}</p>
         </article>
       </section>
 
       {/* 日別推移 */}
-      <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
-        <h2 className="mb-4 text-lg font-semibold text-white">日別メッセージ推移</h2>
+      <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <h2 className="mb-4 text-lg font-bold uppercase tracking-wider text-black">日別メッセージ推移</h2>
         <div className="space-y-2">
           {data.daily.map((day) => (
             <div key={day.date} className="flex items-center gap-3">
-              <span className="w-20 text-xs text-slate-400">{day.date.slice(5)}</span>
+              <span className="w-20 text-xs font-mono text-black/60">{day.date.slice(5)}</span>
               <div className="flex-1">
-                <div className="flex h-8 overflow-hidden rounded">
+                <div className="flex h-8 overflow-hidden border-2 border-black">
                   {day.inbound > 0 && (
                     <div
-                      className="bg-emerald-500/60 transition-all"
+                      className="bg-[#00B900] transition-all"
                       style={{ width: `${(day.inbound / maxDaily) * 100}%` }}
                       title={`受信: ${day.inbound}`}
                     />
                   )}
                   {day.outbound > 0 && (
                     <div
-                      className="bg-blue-500/60 transition-all"
+                      className="bg-[#FFE500] transition-all"
                       style={{ width: `${(day.outbound / maxDaily) * 100}%` }}
                       title={`送信: ${day.outbound}`}
                     />
                   )}
                 </div>
               </div>
-              <span className="w-12 text-right text-sm font-medium text-slate-200">{day.total}</span>
+              <span className="w-12 text-right text-sm font-bold text-black">{day.total}</span>
             </div>
           ))}
         </div>
-        <div className="mt-4 flex gap-4 text-xs text-slate-400">
+        <div className="mt-4 flex gap-4 text-xs font-mono text-black/60">
           <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded bg-emerald-500/60" />
+            <div className="h-3 w-3 border-2 border-black bg-[#00B900]" />
             <span>受信</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded bg-blue-500/60" />
+            <div className="h-3 w-3 border-2 border-black bg-[#FFE500]" />
             <span>送信</span>
           </div>
         </div>
@@ -555,24 +555,24 @@ export default function AnalyticsPage() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         {/* 時間帯別分布 */}
-        <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
+        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <div className="mb-4 flex items-center gap-2">
-            <Clock className="h-5 w-5 text-slate-400" />
-            <h2 className="text-lg font-semibold text-white">時間帯別分布</h2>
+            <Clock className="h-5 w-5 text-black" />
+            <h2 className="text-lg font-bold uppercase tracking-wider text-black">時間帯別分布</h2>
           </div>
           <div className="space-y-1">
             {data.hourly.map((h) => {
               const total = h.inbound + h.outbound;
               return (
                 <div key={h.hour} className="flex items-center gap-2">
-                  <span className="w-10 text-xs text-slate-400">{h.hour}時</span>
+                  <span className="w-10 text-xs font-mono text-black/60">{h.hour}時</span>
                   <div className="flex-1">
                     <div
-                      className="h-5 rounded bg-gradient-to-r from-emerald-500/60 to-blue-500/60 transition-all"
+                      className="h-5 border-2 border-black bg-[#00B900] transition-all"
                       style={{ width: `${(total / maxHourly) * 100}%` }}
                     />
                   </div>
-                  <span className="w-8 text-right text-xs text-slate-300">{total}</span>
+                  <span className="w-8 text-right text-xs font-bold text-black">{total}</span>
                 </div>
               );
             })}
@@ -580,34 +580,34 @@ export default function AnalyticsPage() {
         </section>
 
         {/* 曜日別分布 */}
-        <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
+        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <div className="mb-4 flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-slate-400" />
-            <h2 className="text-lg font-semibold text-white">曜日別分布</h2>
+            <Calendar className="h-5 w-5 text-black" />
+            <h2 className="text-lg font-bold uppercase tracking-wider text-black">曜日別分布</h2>
           </div>
           <div className="space-y-2">
             {data.weekday.map((w) => {
               const total = w.inbound + w.outbound;
               return (
                 <div key={w.day} className="flex items-center gap-3">
-                  <span className="w-8 text-sm font-medium text-slate-300">{w.dayName}</span>
+                  <span className="w-8 text-sm font-bold text-black">{w.dayName}</span>
                   <div className="flex-1">
-                    <div className="flex h-8 overflow-hidden rounded">
+                    <div className="flex h-8 overflow-hidden border-2 border-black">
                       {w.inbound > 0 && (
                         <div
-                          className="bg-emerald-500/60"
+                          className="bg-[#00B900]"
                           style={{ width: `${(w.inbound / maxWeekday) * 100}%` }}
                         />
                       )}
                       {w.outbound > 0 && (
                         <div
-                          className="bg-blue-500/60"
+                          className="bg-[#FFE500]"
                           style={{ width: `${(w.outbound / maxWeekday) * 100}%` }}
                         />
                       )}
                     </div>
                   </div>
-                  <span className="w-12 text-right text-sm font-medium text-slate-200">{total}</span>
+                  <span className="w-12 text-right text-sm font-bold text-black">{total}</span>
                 </div>
               );
             })}
@@ -617,25 +617,25 @@ export default function AnalyticsPage() {
 
       {/* メッセージタイプ別分析 */}
       {data.messageTypes && data.messageTypes.length > 0 && (
-        <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
+        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <div className="mb-4 flex items-center gap-2">
-            <FileType className="h-5 w-5 text-slate-400" />
-            <h2 className="text-lg font-semibold text-white">メッセージタイプ別</h2>
+            <FileType className="h-5 w-5 text-black" />
+            <h2 className="text-lg font-bold uppercase tracking-wider text-black">メッセージタイプ別</h2>
           </div>
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
             {data.messageTypes.map((item) => {
               const total = data.messageTypes.reduce((sum, t) => sum + t.count, 0);
               const percentage = total > 0 ? ((item.count / total) * 100).toFixed(1) : "0";
               return (
-                <article key={item.type} className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-4">
+                <article key={item.type} className="border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="text-slate-400">{getMessageTypeIcon(item.type)}</div>
-                      <h3 className="text-sm font-medium text-slate-300">{getMessageTypeLabel(item.type)}</h3>
+                      <div className="text-black">{getMessageTypeIcon(item.type)}</div>
+                      <h3 className="text-sm font-bold text-black">{getMessageTypeLabel(item.type)}</h3>
                     </div>
-                    <span className="text-xs text-slate-500">{percentage}%</span>
+                    <span className="text-xs font-mono text-black/60">{percentage}%</span>
                   </div>
-                  <p className="mt-2 text-2xl font-semibold text-white">{item.count.toLocaleString()}</p>
+                  <p className="mt-2 text-2xl font-bold text-[#00B900]">{item.count.toLocaleString()}</p>
                 </article>
               );
             })}
@@ -645,10 +645,10 @@ export default function AnalyticsPage() {
 
       {/* タグ別分析 */}
       {data.tags && data.tags.length > 0 && (
-        <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
+        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <div className="mb-4 flex items-center gap-2">
-            <TagIcon className="h-5 w-5 text-slate-400" />
-            <h2 className="text-lg font-semibold text-white">タグ別ユーザー数</h2>
+            <TagIcon className="h-5 w-5 text-black" />
+            <h2 className="text-lg font-bold uppercase tracking-wider text-black">タグ別ユーザー数</h2>
           </div>
           <div className="space-y-2">
             {data.tags.slice(0, 10).map((tag) => {
@@ -656,14 +656,14 @@ export default function AnalyticsPage() {
               const percentage = (tag.userCount / maxUsers) * 100;
               return (
                 <div key={tag.tagId} className="flex items-center gap-3">
-                  <span className="w-32 truncate text-sm text-slate-300">{tag.tagName}</span>
+                  <span className="w-32 truncate text-sm font-bold text-black">{tag.tagName}</span>
                   <div className="flex-1">
                     <div
-                      className="h-7 rounded bg-gradient-to-r from-indigo-500/60 to-purple-500/60 transition-all"
+                      className="h-7 border-2 border-black bg-[#00B900] transition-all"
                       style={{ width: `${percentage}%` }}
                     />
                   </div>
-                  <span className="w-16 text-right text-sm font-medium text-slate-200">
+                  <span className="w-16 text-right text-sm font-bold text-black">
                     {tag.userCount.toLocaleString()}
                   </span>
                 </div>
@@ -671,31 +671,31 @@ export default function AnalyticsPage() {
             })}
           </div>
           {data.tags.length === 0 && (
-            <p className="py-8 text-center text-sm text-slate-400">タグが登録されていません</p>
+            <p className="py-8 text-center text-sm font-mono text-black/60">タグが登録されていません</p>
           )}
         </section>
       )}
 
       {/* 配信分析 */}
       {data.broadcasts && (
-        <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5">
+        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <div className="mb-4 flex items-center gap-2">
-            <Send className="h-5 w-5 text-slate-400" />
-            <h2 className="text-lg font-semibold text-white">配信統計</h2>
+            <Send className="h-5 w-5 text-black" />
+            <h2 className="text-lg font-bold uppercase tracking-wider text-black">配信統計</h2>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-3">
-              <article className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-4">
-                <h3 className="text-xs font-medium text-slate-400">総配信数</h3>
-                <p className="mt-2 text-2xl font-semibold text-white">{data.broadcasts.total.toLocaleString()}</p>
+              <article className="border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-black/60">総配信数</h3>
+                <p className="mt-2 text-3xl font-bold text-[#00B900]">{data.broadcasts.total.toLocaleString()}</p>
               </article>
-              <article className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-4">
-                <h3 className="text-xs font-medium text-slate-400">予約済み</h3>
-                <p className="mt-2 text-2xl font-semibold text-white">{data.broadcasts.scheduled.toLocaleString()}</p>
+              <article className="border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-black/60">予約済み</h3>
+                <p className="mt-2 text-3xl font-bold text-[#00B900]">{data.broadcasts.scheduled.toLocaleString()}</p>
               </article>
             </div>
             <div>
-              <h3 className="mb-3 text-sm font-medium text-slate-300">ステータス別</h3>
+              <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-black">ステータス別</h3>
               <div className="space-y-2">
                 {data.broadcasts.byStatus.map((item) => {
                   const percentage = data.broadcasts.total > 0
@@ -703,14 +703,14 @@ export default function AnalyticsPage() {
                     : "0";
                   return (
                     <div key={item.status} className="flex items-center gap-3">
-                      <span className="w-20 text-xs text-slate-400">{getBroadcastStatusLabel(item.status)}</span>
+                      <span className="w-20 text-xs font-mono text-black/60">{getBroadcastStatusLabel(item.status)}</span>
                       <div className="flex-1">
                         <div
-                          className="h-6 rounded bg-gradient-to-r from-blue-500/60 to-cyan-500/60 transition-all"
+                          className="h-6 border-2 border-black bg-[#00B900] transition-all"
                           style={{ width: `${percentage}%` }}
                         />
                       </div>
-                      <span className="w-16 text-right text-sm font-medium text-slate-200">
+                      <span className="w-16 text-right text-sm font-bold text-black">
                         {item.count} ({percentage}%)
                       </span>
                     </div>
@@ -718,7 +718,7 @@ export default function AnalyticsPage() {
                 })}
               </div>
               {data.broadcasts.byStatus.length === 0 && (
-                <p className="py-8 text-center text-sm text-slate-400">配信がありません</p>
+                <p className="py-8 text-center text-sm font-mono text-black/60">配信がありません</p>
               )}
             </div>
           </div>
@@ -727,7 +727,7 @@ export default function AnalyticsPage() {
 
       {/* API デバッグ */}
       <div className="space-y-4">
-        <h2 className="text-lg font-semibold text-white">API デバッグ</h2>
+        <h2 className="text-lg font-bold uppercase tracking-wider text-black">API デバッグ</h2>
         <DebugPanel
           title="/api/analytics"
           request={{ days: period }}

@@ -127,54 +127,54 @@ export default function ImagemapMessagePage() {
   };
 
   return (
-    <div className="max-w-4xl space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold text-white">イメージマップメッセージ送信</h1>
-        <p className="text-sm text-slate-400">
+    <div className="space-y-6">
+      <header className="space-y-2">
+        <h1 className="text-2xl font-bold uppercase tracking-wider text-black">イメージマップメッセージ送信</h1>
+        <p className="text-sm text-black/60">
           画像に複数のタップ可能なエリアを設定して送信できます。
         </p>
       </header>
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 rounded-lg border border-slate-700/50 bg-slate-800/40 p-6 shadow-lg backdrop-blur-sm"
+        className="space-y-4 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
       >
         <div className="space-y-2">
-          <label htmlFor="lineUserId" className="text-sm font-medium text-slate-300">
-            LINE ユーザー ID <span className="text-red-400">*</span>
+          <label htmlFor="lineUserId" className="text-sm font-bold uppercase tracking-wider text-black">
+            LINE ユーザー ID <span className="text-red-600">*</span>
           </label>
           <input
             id="lineUserId"
             type="text"
             value={lineUserId}
             onChange={(event) => setLineUserId(event.target.value)}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
             placeholder="Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
             required
           />
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="baseUrl" className="text-sm font-medium text-slate-300">
-            画像ベースURL <span className="text-red-400">*</span>
+          <label htmlFor="baseUrl" className="text-sm font-bold uppercase tracking-wider text-black">
+            画像ベースURL <span className="text-red-600">*</span>
           </label>
           <input
             id="baseUrl"
             type="url"
             value={baseUrl}
             onChange={(event) => setBaseUrl(event.target.value)}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
             placeholder="https://example.com/images/imagemap"
             required
           />
-          <p className="text-xs text-slate-500">
+          <p className="text-xs font-mono text-black/60">
             HTTPS、1024x1024px以上、/1040 などのサイズ接尾辞なし
           </p>
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="altText" className="text-sm font-medium text-slate-300">
-            代替テキスト <span className="text-red-400">*</span>
+          <label htmlFor="altText" className="text-sm font-bold uppercase tracking-wider text-black">
+            代替テキスト <span className="text-red-600">*</span>
           </label>
           <input
             id="altText"
@@ -182,24 +182,24 @@ export default function ImagemapMessagePage() {
             value={altText}
             onChange={(event) => setAltText(event.target.value)}
             maxLength={400}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
             placeholder="画像マップ"
             required
           />
-          <p className="text-xs text-slate-500">最大400文字</p>
+          <p className="text-xs font-mono text-black/60">最大400文字</p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2">
           <div className="space-y-2">
-            <label htmlFor="width" className="text-sm font-medium text-slate-300">
-              幅 <span className="text-red-400">*</span>
+            <label htmlFor="width" className="text-sm font-bold uppercase tracking-wider text-black">
+              幅 <span className="text-red-600">*</span>
             </label>
             <input
               id="width"
               type="number"
               value={width}
               onChange={(event) => setWidth(event.target.value)}
-              className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
               min="1"
               max="2500"
               required
@@ -207,15 +207,15 @@ export default function ImagemapMessagePage() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="height" className="text-sm font-medium text-slate-300">
-              高さ <span className="text-red-400">*</span>
+            <label htmlFor="height" className="text-sm font-bold uppercase tracking-wider text-black">
+              高さ <span className="text-red-600">*</span>
             </label>
             <input
               id="height"
               type="number"
               value={height}
               onChange={(event) => setHeight(event.target.value)}
-              className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
               min="1"
               max="2500"
               required
@@ -223,15 +223,15 @@ export default function ImagemapMessagePage() {
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-slate-300">
-              アクションエリア <span className="text-red-400">*</span>
+            <label className="text-sm font-bold uppercase tracking-wider text-black">
+              アクションエリア <span className="text-red-600">*</span>
             </label>
             <button
               type="button"
               onClick={addAction}
-              className="inline-flex items-center gap-1 rounded-md border border-slate-600 bg-slate-900/60 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-slate-800/60"
+              className="inline-flex items-center gap-1 border-2 border-black bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -248,28 +248,28 @@ export default function ImagemapMessagePage() {
           {actions.map((action, index) => (
             <div
               key={index}
-              className="space-y-3 rounded-md border border-slate-700/50 bg-slate-900/40 p-4"
+              className="space-y-3 border-2 border-black bg-[#FFFEF5] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
             >
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-slate-300">エリア {index + 1}</span>
+                <span className="text-sm font-bold text-black">エリア {index + 1}</span>
                 {actions.length > 1 && (
                   <button
                     type="button"
                     onClick={() => removeAction(index)}
-                    className="text-xs text-red-400 hover:text-red-300"
+                    className="text-xs font-bold text-red-600 hover:text-red-700"
                   >
                     削除
                   </button>
                 )}
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid gap-2 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <label className="text-xs text-slate-400">アクションタイプ</label>
+                  <label className="text-xs font-bold text-black">アクションタイプ</label>
                   <select
                     value={action.type}
                     onChange={(e) => updateAction(index, "type", e.target.value)}
-                    className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
                   >
                     <option value="uri">リンク (URI)</option>
                     <option value="message">メッセージ</option>
@@ -278,12 +278,12 @@ export default function ImagemapMessagePage() {
 
                 {action.type === "uri" && (
                   <div className="space-y-2">
-                    <label className="text-xs text-slate-400">リンクURL</label>
+                    <label className="text-xs font-bold text-black">リンクURL</label>
                     <input
                       type="url"
                       value={action.linkUri || ""}
                       onChange={(e) => updateAction(index, "linkUri", e.target.value)}
-                      className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
                       placeholder="https://example.com"
                       required
                     />
@@ -292,12 +292,12 @@ export default function ImagemapMessagePage() {
 
                 {action.type === "message" && (
                   <div className="space-y-2">
-                    <label className="text-xs text-slate-400">送信テキスト</label>
+                    <label className="text-xs font-bold text-black">送信テキスト</label>
                     <input
                       type="text"
                       value={action.text || ""}
                       onChange={(e) => updateAction(index, "text", e.target.value)}
-                      className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
                       placeholder="タップされました"
                       required
                     />
@@ -305,47 +305,47 @@ export default function ImagemapMessagePage() {
                 )}
               </div>
 
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-4 gap-2">
                 <div className="space-y-2">
-                  <label className="text-xs text-slate-400">X</label>
+                  <label className="text-xs font-bold text-black">X</label>
                   <input
                     type="number"
                     value={action.area.x}
                     onChange={(e) => updateAction(index, "area.x", e.target.value)}
-                    className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
                     min="0"
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs text-slate-400">Y</label>
+                  <label className="text-xs font-bold text-black">Y</label>
                   <input
                     type="number"
                     value={action.area.y}
                     onChange={(e) => updateAction(index, "area.y", e.target.value)}
-                    className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
                     min="0"
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs text-slate-400">幅</label>
+                  <label className="text-xs font-bold text-black">幅</label>
                   <input
                     type="number"
                     value={action.area.width}
                     onChange={(e) => updateAction(index, "area.width", e.target.value)}
-                    className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
                     min="1"
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs text-slate-400">高さ</label>
+                  <label className="text-xs font-bold text-black">高さ</label>
                   <input
                     type="number"
                     value={action.area.height}
                     onChange={(e) => updateAction(index, "area.height", e.target.value)}
-                    className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
                     min="1"
                     required
                   />
@@ -355,28 +355,26 @@ export default function ImagemapMessagePage() {
           ))}
         </div>
 
-        <div className="flex items-center gap-3 border-t border-slate-700/50 pt-4">
-          <button
-            type="submit"
-            className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-            disabled={status === "sending" || !lineUserId || !baseUrl || !altText}
-          >
-            {status === "sending" ? "送信中..." : "送信"}
-          </button>
-          {status === "success" && (
-            <p className="text-sm text-green-400">イメージマップメッセージを送信しました。</p>
-          )}
-          {status === "error" && error && <p className="text-sm text-red-400">{error}</p>}
-        </div>
+        <button
+          type="submit"
+          className="inline-flex items-center border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={status === "sending" || !lineUserId || !baseUrl || !altText}
+        >
+          {status === "sending" ? "送信中..." : "送信"}
+        </button>
+        {status === "success" && (
+          <p className="text-sm font-bold text-[#00B900]">イメージマップメッセージを送信しました。</p>
+        )}
+        {status === "error" && error && <p className="text-sm font-bold text-red-600">{error}</p>}
       </form>
 
       {/* Preview */}
       {baseUrl && (
-        <div className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-6 shadow-lg backdrop-blur-sm">
-          <h2 className="mb-4 text-lg font-semibold text-white">プレビュー</h2>
+        <div className="border-2 border-black bg-[#FFFEF5] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <h2 className="mb-4 text-lg font-bold uppercase tracking-wider text-black">プレビュー</h2>
           <div className="flex justify-end">
             <div className="max-w-xs space-y-2">
-              <div className="overflow-hidden rounded-2xl bg-blue-600 shadow-md">
+              <div className="border-2 border-black bg-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                 <div className="relative">
                   <img
                     src={`${baseUrl}/1040`}
@@ -391,7 +389,7 @@ export default function ImagemapMessagePage() {
                     {actions.map((action, index) => (
                       <div
                         key={index}
-                        className="absolute border-2 border-blue-400 bg-blue-400/20"
+                        className="absolute border-2 border-black bg-black/10"
                         style={{
                           left: `${(action.area.x / parseInt(width)) * 100}%`,
                           top: `${(action.area.y / parseInt(height)) * 100}%`,
@@ -399,13 +397,13 @@ export default function ImagemapMessagePage() {
                           height: `${(action.area.height / parseInt(height)) * 100}%`,
                         }}
                       >
-                        <span className="text-xs text-white">{index + 1}</span>
+                        <span className="text-xs font-bold text-black">{index + 1}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
-              <div className="text-right text-xs text-slate-500">{altText}</div>
+              <div className="text-right text-xs text-black/60">{altText}</div>
             </div>
           </div>
         </div>

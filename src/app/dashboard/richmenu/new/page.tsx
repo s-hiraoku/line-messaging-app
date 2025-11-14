@@ -203,34 +203,34 @@ export default function NewRichMenuPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold text-white">リッチメニュー作成</h1>
-        <p className="text-sm text-slate-400">
+        <h1 className="text-lg font-bold uppercase tracking-wider text-black">リッチメニュー作成</h1>
+        <p className="text-xs font-mono text-black/60">
           新しいリッチメニューを作成します。
         </p>
       </header>
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 rounded-lg border border-slate-700/50 bg-slate-800/40 p-6 shadow-lg backdrop-blur-sm"
+        className="space-y-6 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
       >
         <div className="space-y-2">
-          <label htmlFor="name" className="text-sm font-medium text-slate-300">
-            メニュー名 <span className="text-red-400">*</span>
+          <label htmlFor="name" className="text-sm font-bold uppercase tracking-wider text-black">
+            メニュー名 <span className="text-red-600">*</span>
           </label>
           <input
             id="name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none"
             placeholder="メインメニュー"
             required
           />
-          <p className="text-xs text-slate-500">内部管理用の名前です</p>
+          <p className="text-xs font-mono text-black/60">内部管理用の名前です</p>
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="alias" className="text-sm font-medium text-slate-300">
+          <label htmlFor="alias" className="text-sm font-bold uppercase tracking-wider text-black">
             エイリアス
           </label>
           <input
@@ -238,21 +238,21 @@ export default function NewRichMenuPage() {
             type="text"
             value={alias}
             onChange={(e) => setAlias(e.target.value)}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none"
             placeholder="menu_alias"
           />
-          <p className="text-xs text-slate-500">リッチメニュー切り替えで使用するエイリアス（オプション）</p>
+          <p className="text-xs font-mono text-black/60">リッチメニュー切り替えで使用するエイリアス（オプション）</p>
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="size" className="text-sm font-medium text-slate-300">
-            サイズ <span className="text-red-400">*</span>
+          <label htmlFor="size" className="text-sm font-bold uppercase tracking-wider text-black">
+            サイズ <span className="text-red-600">*</span>
           </label>
           <select
             id="size"
             value={size}
             onChange={(e) => setSize(e.target.value as SizeType)}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none"
             required
           >
             <optgroup label="大サイズ (2500px幅)">
@@ -268,14 +268,14 @@ export default function NewRichMenuPage() {
               <option value="800x270">ハーフ - 800×270px</option>
             </optgroup>
           </select>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs font-mono text-black/60">
             画像は指定サイズに合わせて作成してください（JPEG/PNG、最大1MB）
           </p>
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="chatBarText" className="text-sm font-medium text-slate-300">
-            チャットバーテキスト <span className="text-red-400">*</span>
+          <label htmlFor="chatBarText" className="text-sm font-bold uppercase tracking-wider text-black">
+            チャットバーテキスト <span className="text-red-600">*</span>
           </label>
           <input
             id="chatBarText"
@@ -283,11 +283,11 @@ export default function NewRichMenuPage() {
             value={chatBarText}
             onChange={(e) => setChatBarText(e.target.value)}
             maxLength={14}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none"
             placeholder="メニュー"
             required
           />
-          <p className="text-xs text-slate-500">最大14文字（{chatBarText.length}/14）</p>
+          <p className="text-xs font-mono text-black/60">最大14文字（{chatBarText.length}/14）</p>
         </div>
 
         <div className="space-y-3">
@@ -296,18 +296,18 @@ export default function NewRichMenuPage() {
               type="checkbox"
               checked={barDisplayed}
               onChange={(e) => setBarDisplayed(e.target.checked)}
-              className="h-4 w-4 rounded border-slate-600 bg-slate-900/60 text-blue-600 focus:ring-blue-500"
+              className="h-4 w-4 border-2 border-black bg-white text-[#00B900] focus:ring-2 focus:ring-black focus:ring-offset-0"
             />
-            <span className="text-sm text-slate-300">チャットバーを表示する</span>
+            <span className="text-sm font-mono text-black">チャットバーを表示する</span>
           </label>
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
               checked={isDefault}
               onChange={(e) => setIsDefault(e.target.checked)}
-              className="h-4 w-4 rounded border-slate-600 bg-slate-900/60 text-blue-600 focus:ring-blue-500"
+              className="h-4 w-4 border-2 border-black bg-white text-[#00B900] focus:ring-2 focus:ring-black focus:ring-offset-0"
             />
-            <span className="text-sm text-slate-300">メニューを初期状態で開く</span>
+            <span className="text-sm font-mono text-black">メニューを初期状態で開く</span>
           </label>
         </div>
 
@@ -319,7 +319,7 @@ export default function NewRichMenuPage() {
 
         {/* Layout Templates */}
         <div className="space-y-3">
-          <label className="text-sm font-medium text-slate-300">
+          <label className="text-sm font-bold uppercase tracking-wider text-black">
             レイアウトテンプレート
           </label>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -328,14 +328,14 @@ export default function NewRichMenuPage() {
                 key={key}
                 type="button"
                 onClick={() => applyTemplate(key)}
-                className="rounded-lg border border-slate-600 bg-slate-900/60 p-3 text-left transition hover:border-blue-500 hover:bg-slate-800/60"
+                className="border-2 border-black bg-white p-3 text-left shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
               >
-                <div className="text-sm font-medium text-slate-300">{template.name}</div>
-                <div className="mt-1 text-xs text-slate-500">{template.description}</div>
+                <div className="text-sm font-bold text-black">{template.name}</div>
+                <div className="mt-1 text-xs font-mono text-black/60">{template.description}</div>
               </button>
             ))}
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs font-mono text-black/60">
             ※ テンプレートを選択すると現在のタップエリアが置き換えられます
           </p>
         </div>
@@ -343,13 +343,13 @@ export default function NewRichMenuPage() {
         {/* Tap Areas */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-slate-300">
-              タップエリア <span className="text-red-400">*</span>
+            <label className="text-sm font-bold uppercase tracking-wider text-black">
+              タップエリア <span className="text-red-600">*</span>
             </label>
             <button
               type="button"
               onClick={addArea}
-              className="inline-flex items-center gap-1 rounded-md border border-slate-600 bg-slate-900/60 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-slate-800/60"
+              className="inline-flex items-center gap-1 border-2 border-black bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -367,23 +367,23 @@ export default function NewRichMenuPage() {
         </div>
 
         {error && (
-          <div className="rounded-md bg-red-500/10 border border-red-500/50 px-4 py-3 text-sm text-red-400">
+          <div className="border-2 border-black bg-red-100 px-4 py-3 text-sm font-mono text-red-900 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
             {error}
           </div>
         )}
 
-        <div className="flex items-center gap-3 border-t border-slate-700/50 pt-4">
+        <div className="flex items-center gap-3 border-t-2 border-black pt-4">
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? "作成中..." : "作成"}
           </button>
           <button
             type="button"
             onClick={() => router.back()}
-            className="inline-flex items-center rounded-md border border-slate-600 bg-slate-900/60 px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800/60"
+            className="inline-flex items-center border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
           >
             キャンセル
           </button>

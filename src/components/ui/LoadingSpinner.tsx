@@ -19,14 +19,14 @@ export function LoadingSpinner({
 
   const spinner = (
     <div className="flex flex-col items-center gap-3">
-      <Loader2 className={`${sizeClasses[size]} animate-spin text-blue-500`} />
-      {text && <p className="text-sm text-slate-400">{text}</p>}
+      <Loader2 className={`${sizeClasses[size]} animate-spin text-[#00B900]`} />
+      {text && <p className="text-sm font-mono font-bold uppercase tracking-wider text-black">{text}</p>}
     </div>
   );
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#FFFEF5]/95 backdrop-blur-sm">
         {spinner}
       </div>
     );

@@ -6,14 +6,14 @@ import { ChevronDown, Search, Check, X } from 'lucide-react';
 import { clsx } from 'clsx';
 
 const dropdownVariants = cva(
-  'w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-slate-100 transition-all duration-200 cursor-pointer',
+  'w-full border-2 border-black bg-white px-4 py-2 text-black font-mono transition-all cursor-pointer',
   {
     variants: {
       variant: {
         default:
-          'border-slate-700/50 hover:border-slate-600/50 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/50',
+          'hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]',
         error:
-          'border-red-500/50 hover:border-red-400/50 focus:border-red-500 focus:ring-2 focus:ring-red-500/50',
+          'border-red-600 bg-red-50 text-red-600',
       },
       size: {
         sm: 'px-3 py-1.5 text-sm',
@@ -29,12 +29,12 @@ const dropdownVariants = cva(
 );
 
 const menuVariants = cva(
-  'absolute z-50 w-full mt-2 rounded-lg border bg-slate-900/95 backdrop-blur-sm shadow-2xl overflow-hidden',
+  'absolute z-50 w-full mt-2 border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden',
   {
     variants: {
       variant: {
-        default: 'border-slate-700/50',
-        error: 'border-red-500/50',
+        default: 'border-black',
+        error: 'border-red-600',
       },
     },
     defaultVariants: {
@@ -306,12 +306,12 @@ export function Dropdown({
         id={optionId}
         onClick={() => !option.disabled && handleSelect(option.value)}
         className={clsx(
-          'px-4 py-2.5 cursor-pointer transition-all duration-150 flex items-center justify-between gap-3',
+          'px-4 py-2.5 cursor-pointer transition-all flex items-center justify-between gap-3 font-mono',
           {
-            'bg-blue-500/20 text-blue-300': highlighted && !option.disabled,
-            'bg-slate-800/50': selected && !highlighted,
-            'text-slate-400 cursor-not-allowed opacity-50': option.disabled,
-            'hover:bg-slate-800/70': !option.disabled && !highlighted,
+            'bg-[#00B900] text-white': highlighted && !option.disabled,
+            'bg-[#FFFEF5]': selected && !highlighted,
+            'text-black/40 cursor-not-allowed opacity-50': option.disabled,
+            'hover:bg-[#FFFEF5]': !option.disabled && !highlighted,
           }
         )}
         role="option"
@@ -320,23 +320,23 @@ export function Dropdown({
       >
         <div className="flex items-center gap-3 flex-1 min-w-0">
           {option.icon && (
-            <div className="flex-shrink-0 text-slate-400">
+            <div className="flex-shrink-0 text-black">
               {option.icon}
             </div>
           )}
           <div className="flex-1 min-w-0">
-            <div className={clsx('truncate', selected && 'font-medium text-blue-300')}>
+            <div className={clsx('truncate', selected && 'font-bold text-black')}>
               {option.label}
             </div>
             {option.description && (
-              <div className="text-xs text-slate-500 truncate mt-0.5">
+              <div className="text-xs text-black/60 truncate mt-0.5">
                 {option.description}
               </div>
             )}
           </div>
         </div>
         {selected && (
-          <Check className="h-4 w-4 text-blue-400 flex-shrink-0" />
+          <Check className="h-4 w-4 text-[#00B900] flex-shrink-0" />
         )}
       </div>
     );
@@ -400,9 +400,9 @@ export function Dropdown({
         >
           {/* 検索入力 */}
           {searchable && (
-            <div className="p-2 border-b border-slate-700/50">
+            <div className="p-2 border-b-2 border-black">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-black/60" />
                 <input
                   ref={searchInputRef}
                   type="text"
@@ -412,7 +412,7 @@ export function Dropdown({
                     setHighlightedIndex(0);
                   }}
                   placeholder={searchPlaceholder}
-                  className="w-full pl-9 pr-3 py-2 bg-slate-900/50 border border-slate-700/50 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:border-blue-500/50 focus:outline-none focus:ring-1 focus:ring-blue-500/50 transition-colors"
+                  className="w-full pl-9 pr-3 py-2 bg-white border-2 border-black text-sm text-black placeholder-black/40 font-mono focus:outline-none transition-all"
                   onClick={(e) => e.stopPropagation()}
                 />
               </div>

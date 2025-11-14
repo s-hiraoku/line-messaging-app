@@ -35,22 +35,22 @@ export const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
               {label && (
                 <label
                   htmlFor={htmlFor}
-                  className="text-sm font-medium text-slate-200"
+                  className="text-sm font-bold uppercase tracking-wider text-black"
                 >
                   {label}
                   {required && (
-                    <span className="ml-1 text-red-500" aria-label="required">
+                    <span className="ml-1 text-red-600" aria-label="required">
                       *
                     </span>
                   )}
                 </label>
               )}
               {leftLabel && (
-                <div className="text-sm text-slate-400">{leftLabel}</div>
+                <div className="text-sm text-black/60">{leftLabel}</div>
               )}
             </div>
             {rightLabel && (
-              <div className="text-sm text-slate-400">{rightLabel}</div>
+              <div className="text-sm text-black/60">{rightLabel}</div>
             )}
           </div>
         )}
@@ -58,10 +58,10 @@ export const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
         {(helperText || error) && (
           <div className="mt-1.5">
             {error ? (
-              <p className="text-sm text-red-400">{error}</p>
+              <p className="text-sm font-medium text-red-600">{error}</p>
             ) : (
               helperText && (
-                <p className="text-sm text-slate-400">{helperText}</p>
+                <p className="text-sm text-black/60">{helperText}</p>
               )
             )}
           </div>
@@ -88,14 +88,14 @@ export const FormGroup = forwardRef<HTMLDivElement, FormGroupProps>(
         {...props}
       >
         {(title || description) && (
-          <div className="pb-2 border-b border-slate-800/60">
+          <div className="pb-2 border-b-2 border-black">
             {title && (
-              <h3 className="text-base font-semibold text-slate-100">
+              <h3 className="text-base font-bold uppercase tracking-wider text-black">
                 {title}
               </h3>
             )}
             {description && (
-              <p className="mt-1 text-sm text-slate-400">{description}</p>
+              <p className="mt-1 text-sm text-black/60">{description}</p>
             )}
           </div>
         )}

@@ -57,13 +57,13 @@ interface CardEditorProps {
 function getCardTypeInfo(type: CardType) {
   switch (type) {
     case 'product':
-      return { icon: ShoppingBag, label: '商品', color: 'text-blue-400 bg-blue-500/10 border-blue-500/30' };
+      return { icon: ShoppingBag, label: '商品', color: 'text-[#00B900] bg-[#00B900]/10 border-2 border-black' };
     case 'location':
-      return { icon: MapPin, label: '場所', color: 'text-green-400 bg-green-500/10 border-green-500/30' };
+      return { icon: MapPin, label: '場所', color: 'text-[#00B900] bg-[#00B900]/10 border-2 border-black' };
     case 'person':
-      return { icon: User, label: '人物', color: 'text-purple-400 bg-purple-500/10 border-purple-500/30' };
+      return { icon: User, label: '人物', color: 'text-[#00B900] bg-[#00B900]/10 border-2 border-black' };
     case 'image':
-      return { icon: ImageIcon, label: '画像', color: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30' };
+      return { icon: ImageIcon, label: '画像', color: 'text-[#FFE500] bg-[#FFE500]/10 border-2 border-black' };
   }
 }
 
@@ -127,27 +127,27 @@ function ConfirmDialog({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="w-full max-w-md rounded-xl border border-slate-700/50 bg-slate-800/95 backdrop-blur-md p-6 shadow-2xl shadow-black/50 animate-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div className="w-full max-w-md border-2 border-black bg-white p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
         <div className="mb-5 flex items-start gap-4">
-          <div className="rounded-full bg-red-500/10 p-3">
-            <AlertCircle className="h-6 w-6 flex-shrink-0 text-red-400" />
+          <div className="border-2 border-black bg-red-600/10 p-3">
+            <AlertCircle className="h-6 w-6 flex-shrink-0 text-black" />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-bold text-white mb-2">{title}</h3>
-            <p className="text-sm text-slate-300 leading-relaxed">{message}</p>
+            <h3 className="text-lg font-bold uppercase tracking-wider text-black mb-2">{title}</h3>
+            <p className="text-sm text-black/60 leading-relaxed">{message}</p>
           </div>
         </div>
         <div className="flex justify-end gap-3">
           <button
             onClick={onCancel}
-            className="cursor-pointer rounded-lg border border-slate-600/50 bg-slate-700/50 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-slate-600/50 hover:border-slate-500 active:scale-95"
+            className="cursor-pointer border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
           >
             キャンセル
           </button>
           <button
             onClick={onConfirm}
-            className="cursor-pointer rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-red-600/30 transition-all hover:bg-red-700 hover:shadow-xl hover:shadow-red-600/40 active:scale-95"
+            className="cursor-pointer border-2 border-black bg-red-600 px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
           >
             削除する
           </button>
@@ -184,7 +184,11 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
   // Set selected card ID after cards are initialized
   useEffect(() => {
     if (selectedCardId === null && cards.length > 0) {
-      setSelectedCardId(cards[0].id);
+      // Use setTimeout to defer state update to next render cycle
+      const timer = setTimeout(() => {
+        setSelectedCardId(cards[0].id);
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [cards, selectedCardId]);
 
@@ -299,9 +303,9 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
   const renderCardForm = () => {
     if (!selectedCard) {
       return (
-        <div className="flex h-full items-center justify-center rounded-lg border border-slate-700 bg-slate-800/40 p-8">
+        <div className="flex h-full items-center justify-center border-2 border-black bg-[#FFFEF5] p-8">
           <div className="text-center">
-            <p className="text-slate-400">カードを選択して編集を開始してください</p>
+            <p className="text-black/60">カードを選択して編集を開始してください</p>
           </div>
         </div>
       );
@@ -346,8 +350,8 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
 
       default:
         return (
-          <div className="flex h-full items-center justify-center rounded-lg border border-red-500/50 bg-red-500/10 p-8">
-            <p className="text-red-400">
+          <div className="flex h-full items-center justify-center border-2 border-black bg-red-600/10 p-8 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+            <p className="font-bold uppercase tracking-wider text-black">
               不明なカードタイプ: {(selectedCard as Card).type}
             </p>
           </div>
@@ -367,14 +371,14 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
         className="flex-1 flex flex-col"
       >
         {/* Tab Navigation */}
-        <div className="flex-shrink-0 border-b border-slate-700/50 pb-4">
+        <div className="flex-shrink-0 border-b-2 border-black pb-4">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h3 className="text-base font-semibold text-white">カード編集</h3>
-              <p className="text-xs text-slate-400 mt-1">
+              <h3 className="text-base font-bold uppercase tracking-wider text-black">カード編集</h3>
+              <p className="text-xs text-black/60 mt-1">
                 {cards.length} / 9 カード
                 {canAddCard && (
-                  <span className="text-slate-500 ml-2">
+                  <span className="text-black/40 ml-2">
                     あと {9 - cards.length} 枚追加可能
                   </span>
                 )}
@@ -385,7 +389,7 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
             <button
               onClick={handleAddCard}
               disabled={!canAddCard}
-              className="cursor-pointer inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-blue-600 disabled:hover:scale-100"
+              className="cursor-pointer inline-flex items-center gap-2 border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
               title={canAddCard ? '新しいカードを追加' : 'カードは最大9枚までです'}
             >
               <Plus className="h-4 w-4" />
@@ -394,7 +398,7 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
           </div>
 
           {/* Tabs List - Horizontal Scrollable */}
-          <TabsList className="w-full h-auto p-1 justify-start overflow-x-auto overflow-y-hidden bg-slate-800/50 border border-slate-700/50">
+          <TabsList className="w-full h-auto p-1 justify-start overflow-x-auto overflow-y-hidden bg-white border-2 border-black">
             {cards.map((card, index) => {
               const typeInfo = getCardTypeInfo(card.type);
               const Icon = typeInfo.icon;
@@ -405,30 +409,30 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
                 <TabsTrigger
                   key={card.id}
                   value={card.id}
-                  className="relative min-w-fit h-auto py-2.5 px-4 data-[state=active]:bg-slate-700/80 hover:bg-slate-700/40 group"
+                  className="relative min-w-fit h-auto py-2.5 px-4 border-2 border-black bg-[#FFFEF5] data-[state=active]:bg-white data-[state=active]:text-[#00B900] hover:bg-white group"
                 >
                   <div className="flex items-center justify-between w-full gap-3">
                     {/* Left: Card Icon and Info */}
                     <div className="flex items-center gap-2 min-w-0">
                       {/* Card Icon */}
-                      <div className={`rounded p-1.5 border ${typeInfo.color} flex-shrink-0`}>
+                      <div className={`p-1.5 ${typeInfo.color} flex-shrink-0`}>
                         <Icon className="h-4 w-4" />
                       </div>
 
                       {/* Card Info */}
                       <div className="flex flex-col items-start min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                          <span className="text-xs font-bold uppercase tracking-wider text-black">
                             {typeInfo.label} {index + 1}
                           </span>
                           {/* Error Badge */}
                           {hasErrors && (
                             <div className="flex items-center justify-center" title="入力エラーがあります">
-                              <AlertCircle className="h-3.5 w-3.5 text-red-400" />
+                              <AlertCircle className="h-3.5 w-3.5 text-red-600" />
                             </div>
                           )}
                         </div>
-                        <span className="text-xs text-slate-300 truncate max-w-[120px]">
+                        <span className="text-xs text-black/60 truncate max-w-[120px]">
                           {cardTitle}
                         </span>
                       </div>
@@ -441,7 +445,7 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
                           e.stopPropagation();
                           handleDeleteClick(card);
                         }}
-                        className="cursor-pointer p-1 rounded-md text-slate-400 opacity-0 group-hover:opacity-100 transition-all hover:text-red-400 hover:bg-red-400/10 flex-shrink-0"
+                        className="cursor-pointer p-1 border-2 border-black text-black opacity-0 group-hover:opacity-100 transition-all hover:text-red-600 hover:bg-red-600/10 flex-shrink-0"
                         title="カードを削除"
                       >
                         <X className="h-3.5 w-3.5" />
@@ -456,17 +460,17 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
           {/* Helper Messages */}
           <div className="mt-3 space-y-2">
             {!canAddCard && (
-              <div className="flex items-center gap-2 rounded-md bg-yellow-500/10 border border-yellow-500/30 px-3 py-2">
-                <AlertCircle className="h-4 w-4 text-yellow-400 flex-shrink-0" />
-                <p className="text-xs text-yellow-300">
+              <div className="flex items-center gap-2 border-2 border-black bg-[#FFE500] px-3 py-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                <AlertCircle className="h-4 w-4 text-black flex-shrink-0" />
+                <p className="text-xs font-bold uppercase tracking-wider text-black">
                   最大9枚までカードを作成できます
                 </p>
               </div>
             )}
             {!canDeleteCard && (
-              <div className="flex items-center gap-2 rounded-md bg-blue-500/10 border border-blue-500/30 px-3 py-2">
-                <AlertCircle className="h-4 w-4 text-blue-400 flex-shrink-0" />
-                <p className="text-xs text-blue-300">
+              <div className="flex items-center gap-2 border-2 border-black bg-[#00B900]/10 px-3 py-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                <AlertCircle className="h-4 w-4 text-black flex-shrink-0" />
+                <p className="text-xs font-bold uppercase tracking-wider text-black">
                   少なくとも1枚のカードが必要です
                 </p>
               </div>
@@ -482,7 +486,7 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
               value={card.id}
               className="mt-0 h-full data-[state=inactive]:hidden"
             >
-              <div className="rounded-xl border border-slate-700/50 bg-gradient-to-br from-slate-800/60 via-slate-800/40 to-slate-800/60 p-6 shadow-lg">
+              <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 {/* Dynamic Form Rendering */}
                 {(() => {
                   const handleCardUpdate = (updates: Partial<Card>) => {
@@ -520,8 +524,8 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
                       );
                     default:
                       return (
-                        <div className="flex h-full items-center justify-center rounded-lg border border-red-500/50 bg-red-500/10 p-8">
-                          <p className="text-red-400">
+                        <div className="flex h-full items-center justify-center border-2 border-black bg-red-600/10 p-8 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                          <p className="font-bold uppercase tracking-wider text-black">
                             不明なカードタイプ: {(card as Card).type}
                           </p>
                         </div>

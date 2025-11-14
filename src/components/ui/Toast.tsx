@@ -73,10 +73,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   );
 
   const toastStyles = {
-    success: "border-green-500/50 bg-green-500/10 text-green-400",
-    error: "border-red-500/50 bg-red-500/10 text-red-400",
-    info: "border-blue-500/50 bg-blue-500/10 text-blue-400",
-    warning: "border-yellow-500/50 bg-yellow-500/10 text-yellow-400",
+    success: "border-2 border-black bg-[#00B900] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
+    error: "border-2 border-black bg-red-600 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
+    info: "border-2 border-black bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
+    warning: "border-2 border-black bg-[#FFE500] text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
   };
 
   const icons = {
@@ -93,13 +93,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`pointer-events-auto flex items-center gap-3 rounded-lg border px-4 py-3 shadow-lg backdrop-blur-sm transition-all ${toastStyles[toast.type]}`}
+            className={`pointer-events-auto flex items-center gap-3 px-4 py-3 font-mono text-sm font-bold uppercase tracking-wider transition-all ${toastStyles[toast.type]}`}
           >
             {icons[toast.type]}
-            <p className="text-sm font-medium">{toast.message}</p>
+            <p>{toast.message}</p>
             <button
               onClick={() => removeToast(toast.id)}
-              className="ml-2 opacity-70 transition hover:opacity-100"
+              className="ml-2 transition hover:scale-110"
             >
               <X className="h-4 w-4" />
             </button>

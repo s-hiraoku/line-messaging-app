@@ -147,8 +147,8 @@ export default function UsersPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold text-white">ユーザー管理</h1>
-        <p className="text-sm text-slate-400">
+        <h1 className="text-2xl font-bold uppercase tracking-wider text-black">ユーザー管理</h1>
+        <p className="text-sm text-black/60">
           LINEユーザーの一覧とリッチメニュー設定を管理します。
         </p>
       </header>
@@ -156,58 +156,58 @@ export default function UsersPage() {
       {loading ? (
         <LoadingSpinner text="読み込み中..." />
       ) : users.length === 0 ? (
-        <div className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-12 text-center shadow-lg backdrop-blur-sm">
-          <UserIcon className="mx-auto h-12 w-12 text-slate-600" />
-          <h3 className="mt-4 text-lg font-medium text-white">ユーザーがいません</h3>
-          <p className="mt-2 text-sm text-slate-400">
+        <div className="border-2 border-black bg-white p-12 text-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <UserIcon className="mx-auto h-12 w-12 text-black/40" />
+          <h3 className="mt-4 text-lg font-bold uppercase tracking-wider text-black">ユーザーがいません</h3>
+          <p className="mt-2 text-sm text-black/60">
             LINEでボットを友だち追加したユーザーがここに表示されます。
           </p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-lg border border-slate-700/50 bg-slate-800/40 shadow-lg backdrop-blur-sm">
+        <div className="overflow-hidden border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <table className="w-full">
-            <thead className="border-b border-slate-700/50 bg-slate-900/40">
+            <thead className="border-b-2 border-black bg-white">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400">
+                <th className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-black">
                   ユーザー
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400">
+                <th className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-black">
                   登録日
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400">
+                <th className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-black">
                   リッチメニュー
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-slate-400">
+                <th className="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider text-black">
                   操作
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-700/50">
+            <tbody className="divide-y-2 divide-black">
               {users.map((user) => {
                 const currentMenu = richMenus.find((m) => m.richMenuId === user.richMenuId);
 
                 return (
-                  <tr key={user.id} className="hover:bg-slate-900/20">
+                  <tr key={user.id} className="hover:bg-[#FFFEF5]">
                     <td className="whitespace-nowrap px-6 py-4">
                       <div className="flex items-center gap-3">
                         {user.pictureUrl ? (
                           <img
                             src={user.pictureUrl}
                             alt={user.displayName}
-                            className="h-10 w-10 rounded-full"
+                            className="h-10 w-10 border-2 border-black"
                           />
                         ) : (
-                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-700">
-                            <UserIcon className="h-5 w-5 text-slate-400" />
+                          <div className="flex h-10 w-10 items-center justify-center border-2 border-black bg-white">
+                            <UserIcon className="h-5 w-5 text-black/40" />
                           </div>
                         )}
                         <div>
-                          <div className="font-medium text-white">{user.displayName}</div>
-                          <div className="text-xs text-slate-500">{user.lineUserId}</div>
+                          <div className="font-bold text-black">{user.displayName}</div>
+                          <div className="font-mono text-xs text-black/60">{user.lineUserId}</div>
                         </div>
                       </div>
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-400">
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-black/60">
                       {new Date(user.createdAt).toLocaleDateString("ja-JP")}
                     </td>
                     <td className="px-6 py-4">
@@ -217,7 +217,7 @@ export default function UsersPage() {
                             value={currentMenu.id}
                             onChange={(e) => handleSetRichMenu(user.id, e.target.value)}
                             disabled={settingMenu === user.id}
-                            className="rounded border border-slate-600 bg-slate-900/60 px-2 py-1 text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
+                            className="border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             {richMenus.map((menu) => (
                               <option key={menu.id} value={menu.id}>
@@ -228,7 +228,7 @@ export default function UsersPage() {
                           <button
                             onClick={() => handleUnlinkRichMenu(user.id, currentMenu.id)}
                             disabled={settingMenu === user.id}
-                            className="rounded border border-red-600/50 bg-red-600/10 px-2 py-1 text-xs text-red-400 transition hover:bg-red-600/20 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="border-2 border-black bg-red-600 px-3 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             {settingMenu === user.id ? "解除中..." : "解除"}
                           </button>
@@ -238,7 +238,7 @@ export default function UsersPage() {
                           value=""
                           onChange={(e) => handleSetRichMenu(user.id, e.target.value)}
                           disabled={settingMenu === user.id || richMenus.length === 0}
-                          className="rounded border border-slate-600 bg-slate-900/60 px-2 py-1 text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
+                          className="border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           <option value="">メニューを選択...</option>
                           {richMenus.map((menu) => (
@@ -251,7 +251,7 @@ export default function UsersPage() {
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-right text-sm">
                       {settingMenu === user.id && (
-                        <span className="text-slate-400">設定中...</span>
+                        <span className="font-bold text-black/60">設定中...</span>
                       )}
                     </td>
                   </tr>

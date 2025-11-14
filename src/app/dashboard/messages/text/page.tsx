@@ -1,72 +1,18 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useRealtimeEvents } from "@/lib/realtime/use-events";
+import { useState } from "react";
 import { DebugPanel, toCurl } from "../../_components/debug-panel";
 import { LineConversation } from "../_components/line-conversation";
 
 type Status = "idle" | "sending" | "success" | "error";
-
-type Msg = {
-  id: string;
-  direction: "INBOUND" | "OUTBOUND";
-  content: { text?: string };
-  createdAt: string;
-  user: { id: string; lineUserId: string; displayName: string };
-};
 
 export default function MessagesTextPage() {
   const [lineUserId, setLineUserId] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
-  const [items, setItems] = useState<Msg[]>([]);
-  const [cursor, setCursor] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
   const [lastRequest, setLastRequest] = useState<unknown>();
   const [lastResponse, setLastResponse] = useState<unknown>();
-
-  const load = async (initial = false) => {
-    setLoading(true);
-    try {
-      const url = new URL("/api/messages", typeof window !== 'undefined' ? location.origin : 'http://localhost:3000');
-      url.searchParams.set("take", "20");
-      if (!initial && cursor) url.searchParams.set("cursor", cursor);
-      const res = await fetch(url);
-      const data = (await res.json()) as { items: Msg[]; nextCursor: string | null };
-      setItems((prev) => (initial ? data.items : [...prev, ...data.items]));
-      setCursor(data.nextCursor);
-    } catch (e) {
-      // noop
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    load(true);
-  }, []);
-
-  useRealtimeEvents({
-    "message:inbound": (e) => {
-      setItems((prev) => [{
-        id: `tmp-${Date.now()}`,
-        direction: "INBOUND",
-        content: { text: e.text },
-        createdAt: e.createdAt,
-        user: { id: e.userId, lineUserId: "", displayName: "" },
-      }, ...prev]);
-    },
-    "message:outbound": (e) => {
-      setItems((prev) => [{
-        id: `tmp-${Date.now()}`,
-        direction: "OUTBOUND",
-        content: { text: e.text },
-        createdAt: e.createdAt,
-        user: { id: e.userId, lineUserId: "", displayName: "" },
-      }, ...prev]);
-    },
-  });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -90,61 +36,34 @@ export default function MessagesTextPage() {
       setLastResponse(data);
       setStatus("success");
       setMessage("");
-      // Reload messages to replace temporary message with actual DB record
-      await load(true);
     } catch (err) {
       setStatus("error");
       setError(err instanceof Error ? err.message : "不明なエラーが発生しました");
     }
   };
 
-  const hasMore = useMemo(() => Boolean(cursor), [cursor]);
-
   return (
     <div className="space-y-6">
-      <form onSubmit={handleSubmit} className="space-y-4 max-w-xl rounded-lg border border-slate-800/60 bg-slate-900/60 p-6 shadow-sm text-slate-100">
+      <form onSubmit={handleSubmit} className="space-y-4 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <div className="space-y-2">
-          <label htmlFor="lineUserId" className="text-sm font-medium text-slate-300">LINE ユーザー ID</label>
+          <label htmlFor="lineUserId" className="text-sm font-bold uppercase tracking-wider text-black">LINE ユーザー ID</label>
           <input id="lineUserId" type="text" value={lineUserId} onChange={(e) => setLineUserId(e.target.value)}
-            className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm text-black placeholder-black/40 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
             placeholder="Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" required />
         </div>
         <div className="space-y-2">
-          <label htmlFor="message" className="text-sm font-medium text-slate-300">メッセージ本文</label>
+          <label htmlFor="message" className="text-sm font-bold uppercase tracking-wider text-black">メッセージ本文</label>
           <textarea id="message" value={message} onChange={(e) => setMessage(e.target.value)}
-            className="h-24 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
+            className="h-24 w-full border-2 border-black bg-white px-3 py-2 text-sm text-black placeholder-black/40 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
             placeholder="こんにちは！" required />
         </div>
         <LineConversation direction={'inbound'} displayName={'ユーザー'} message={{ type: 'text', text: message }} />
-        <button type="submit" className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90" disabled={status === "sending"}>
+        <button type="submit" className="inline-flex items-center border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50 active:translate-x-[4px] active:translate-y-[4px] active:shadow-none" disabled={status === "sending"}>
           {status === "sending" ? "送信中..." : "送信"}
         </button>
-        {status === "success" && <p className="text-sm text-emerald-400">メッセージを送信しました。</p>}
-        {status === "error" && error && <p className="text-sm text-red-400">{error}</p>}
+        {status === "success" && <p className="text-sm font-bold text-[#00B900]">メッセージを送信しました。</p>}
+        {status === "error" && error && <p className="text-sm font-bold text-red-600">{error}</p>}
       </form>
-
-      <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm">
-        <h2 className="mb-3 text-sm font-semibold text-slate-300">最近のメッセージ</h2>
-        <ul className="divide-y divide-slate-800">
-          {items.map((m) => (
-            <li key={m.id} className="flex items-start justify-between gap-3 py-3">
-              <div className="min-w-0">
-                <p className="truncate text-sm text-slate-200">{m.content?.text ?? "(非テキスト)"}</p>
-                <p className="mt-1 text-xs text-slate-400">{m.direction === "INBOUND" ? "受信" : "送信"} ・ {new Date(m.createdAt).toLocaleString()}</p>
-              </div>
-              <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs ${m.direction === "INBOUND" ? "bg-emerald-500/20 text-emerald-200" : "bg-blue-500/20 text-blue-200"}`}>
-                {m.direction === "INBOUND" ? "IN" : "OUT"}
-              </span>
-            </li>
-          ))}
-        </ul>
-        <div className="mt-3">
-          <button onClick={() => load(false)} disabled={!hasMore || loading}
-            className="rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 hover:border-slate-500 disabled:cursor-not-allowed disabled:opacity-60 disabled:text-slate-300">
-            {loading ? "読み込み中..." : hasMore ? "さらに読み込む" : "すべて取得済み"}
-          </button>
-        </div>
-      </section>
 
       <DebugPanel
         title="送信 API デバッグ"

@@ -63,6 +63,11 @@ export const locationMessageSchema = z.object({
   longitude: z.number().min(-180).max(180),
 });
 
+export const couponMessageSchema = z.object({
+  type: z.literal("coupon"),
+  couponId: z.string().min(1),
+});
+
 // Note: Template message schema is defined after template schemas below
 
 // ============================================================================
@@ -215,6 +220,7 @@ export const anyMessageSchema = z.discriminatedUnion("type", [
   videoMessageSchema,
   audioMessageSchema,
   locationMessageSchema,
+  couponMessageSchema,
   imagemapMessageSchema,
   templateMessageSchema,
 ]);
@@ -360,6 +366,7 @@ export type ImageMessage = z.infer<typeof imageMessageSchema>;
 export type VideoMessage = z.infer<typeof videoMessageSchema>;
 export type AudioMessage = z.infer<typeof audioMessageSchema>;
 export type LocationMessage = z.infer<typeof locationMessageSchema>;
+export type CouponMessage = z.infer<typeof couponMessageSchema>;
 export type ImagemapMessage = z.infer<typeof imagemapMessageSchema>;
 export type TemplateMessage = z.infer<typeof templateMessageSchema>;
 export type AnyMessage = z.infer<typeof anyMessageSchema>;

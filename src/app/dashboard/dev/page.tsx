@@ -136,66 +136,66 @@ export default function DevPage() {
   }, []);
 
   return (
-    <div className="space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold">開発情報</h1>
-        <p className="text-sm text-slate-500">ランタイム・チャネル・接続状況の確認に。</p>
+    <div className="space-y-8">
+      <header className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <h1 className="text-2xl font-bold uppercase tracking-wider text-black">開発情報</h1>
+        <p className="text-xs font-mono text-black/60">ランタイム・チャネル・接続状況の確認に。</p>
       </header>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="border-2 border-black bg-red-600/10 px-4 py-3 text-sm font-bold text-red-600 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">{error}</p>}
 
       {info && (
         <div className="grid gap-4 md:grid-cols-2">
-          <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm">
-            <h2 className="mb-2 text-sm font-semibold text-slate-300">アプリ</h2>
-            <ul className="text-sm text-slate-200">
-              <li>name: <code className="text-xs">{info.app.name}</code></li>
-              <li>version: {info.app.version}</li>
-              <li>node: {info.app.node}</li>
-              <li>env: {info.app.env}</li>
-              <li>now: {new Date(info.app.now).toLocaleString()}</li>
+          <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-black">アプリ</h2>
+            <ul className="space-y-2 text-xs font-mono text-black/60">
+              <li>name: <code className="font-bold text-black">{info.app.name}</code></li>
+              <li>version: <span className="font-bold text-black">{info.app.version}</span></li>
+              <li>node: <span className="font-bold text-black">{info.app.node}</span></li>
+              <li>env: <span className="font-bold text-black">{info.app.env}</span></li>
+              <li>now: <span className="font-bold text-black">{new Date(info.app.now).toLocaleString()}</span></li>
             </ul>
           </section>
 
-          <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm">
-            <h2 className="mb-2 text-sm font-semibold text-slate-300">ランタイム</h2>
-            <ul className="text-sm text-slate-200">
-              <li>databaseConnected: {info.runtime.databaseConnected ? "true" : "false"}</li>
-              <li>redisConfigured: {info.runtime.redisConfigured ? "true" : "false"}</li>
-              <li>sseEndpoint: <code className="text-xs">{info.runtime.sseEndpoint}</code></li>
+          <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-black">ランタイム</h2>
+            <ul className="space-y-2 text-xs font-mono text-black/60">
+              <li>databaseConnected: <span className="font-bold text-black">{info.runtime.databaseConnected ? "true" : "false"}</span></li>
+              <li>redisConfigured: <span className="font-bold text-black">{info.runtime.redisConfigured ? "true" : "false"}</span></li>
+              <li>sseEndpoint: <code className="font-bold text-black">{info.runtime.sseEndpoint}</code></li>
             </ul>
           </section>
 
-          <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm md:col-span-2">
-            <h2 className="mb-2 text-sm font-semibold text-slate-300">チャネル</h2>
-            <ul className="text-sm text-slate-200">
-              <li>channelId: <code className="text-xs">{info.channel.channelId || "(未設定)"}</code></li>
-              <li>channelSecretConfigured: {info.channel.channelSecretConfigured ? "true" : "false"}</li>
-              <li>webhookPath: <code className="text-xs">{info.channel.webhookPath}</code></li>
+          <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:col-span-2">
+            <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-black">チャネル</h2>
+            <ul className="space-y-2 text-xs font-mono text-black/60">
+              <li>channelId: <code className="font-bold text-black">{info.channel.channelId || "(未設定)"}</code></li>
+              <li>channelSecretConfigured: <span className="font-bold text-black">{info.channel.channelSecretConfigured ? "true" : "false"}</span></li>
+              <li>webhookPath: <code className="font-bold text-black">{info.channel.webhookPath}</code></li>
               {info.channel.basicId && (
-                <li>basicId: <code className="text-xs">@{info.channel.basicId}</code></li>
+                <li>basicId: <code className="font-bold text-black">@{info.channel.basicId}</code></li>
               )}
               {info.channel.friendAddUrl && (
-                <li>friendAddUrl: <a className="text-blue-300 underline cursor-pointer" href={info.channel.friendAddUrl} target="_blank" rel="noreferrer">{info.channel.friendAddUrl}</a></li>
+                <li>friendAddUrl: <a className="font-bold text-[#00B900] underline hover:text-[#00B900]/80" href={info.channel.friendAddUrl} target="_blank" rel="noreferrer">{info.channel.friendAddUrl}</a></li>
               )}
             </ul>
-            <p className="mt-2 text-xs text-slate-500">アクセストークンは保存しません。送信時に自動発行します。</p>
+            <p className="mt-4 border-t-2 border-black pt-3 text-xs font-mono text-black/60">アクセストークンは保存しません。送信時に自動発行します。</p>
           </section>
           {info.channel.friendAddUrl ? (
-            <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm md:col-span-2">
-              <h2 className="mb-2 text-sm font-semibold text-slate-300">友だち追加 QR</h2>
-              <div className="flex items-start gap-4">
+            <section className="border-2 border-black bg-[#FFFEF5] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:col-span-2">
+              <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-black">友だち追加 QR</h2>
+              <div className="flex items-start gap-6">
                 <img
                   alt="Add friend QR"
-                  className="h-40 w-40 rounded-lg border border-slate-800 bg-white p-2"
+                  className="h-40 w-40 border-2 border-black bg-white p-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=${encodeURIComponent(info.channel.friendAddUrl)}`}
                 />
-                <div className="space-y-2 text-sm text-slate-200">
-                  <p>QR をスキャン、または下のリンクから友だち追加できます。</p>
-                  <a className="text-blue-300 underline cursor-pointer" href={info.channel.friendAddUrl} target="_blank" rel="noreferrer">{info.channel.friendAddUrl}</a>
+                <div className="flex-1 space-y-3">
+                  <p className="text-xs font-mono text-black/60">QR をスキャン、または下のリンクから友だち追加できます。</p>
+                  <a className="block text-xs font-bold text-[#00B900] underline hover:text-[#00B900]/80" href={info.channel.friendAddUrl} target="_blank" rel="noreferrer">{info.channel.friendAddUrl}</a>
                   <div>
                     <button
-                      className="mt-2 rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 hover:border-slate-500 cursor-pointer"
+                      className="border-2 border-black bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
                       onClick={async () => {
                         try { await navigator.clipboard.writeText(info.channel.friendAddUrl!); } catch {}
                       }}
@@ -205,22 +205,22 @@ export default function DevPage() {
               </div>
             </section>
           ) : (
-            <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm md:col-span-2">
-              <h2 className="mb-2 text-sm font-semibold text-slate-300">友だち追加 QR</h2>
-              <p className="text-sm text-slate-400">設定でベーシックIDまたは友だち追加URLを入力するとQRを表示できます。</p>
+            <section className="border-2 border-black bg-[#FFFEF5] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:col-span-2">
+              <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-black">友だち追加 QR</h2>
+              <p className="text-xs font-mono text-black/60">設定でベーシックIDまたは友だち追加URLを入力するとQRを表示できます。</p>
             </section>
           )}
-          <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm md:col-span-2">
-            <h2 className="mb-2 text-sm font-semibold text-slate-300">Webhook チェック</h2>
+          <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:col-span-2">
+            <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-black">Webhook チェック</h2>
             <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto] items-end">
               <input
                 placeholder="公開URL（https://xxxx.trycloudflare.com または 完全URL /api/line/webhook まで）"
                 value={publicUrl}
                 onChange={(e) => setPublicUrl(e.target.value)}
-                className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
+                className="border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none"
               />
               <button
-                className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 hover:border-slate-500 cursor-pointer"
+                className="border-2 border-black bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
                 onClick={async () => {
                   const payload = { mode: 'local' } as const;
                   setWbReq(payload);
@@ -231,7 +231,7 @@ export default function DevPage() {
                 }}
               >ローカルに送る</button>
               <button
-                className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
+                className="border-2 border-black bg-[#00B900] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={!publicUrl}
                 onClick={async () => {
                   const payload = { mode: 'public', publicUrl } as const;
@@ -243,9 +243,9 @@ export default function DevPage() {
                 }}
               >公開URLに送る</button>
             </div>
-            <p className="mt-2 text-xs text-slate-500">ローカルは内部HTTPへの自己呼び出し、公開URLはトンネル経由の疎通を確認します。</p>
+            <p className="mt-3 text-xs font-mono text-black/60">ローカルは内部HTTPへの自己呼び出し、公開URLはトンネル経由の疎通を確認します。</p>
             {wbStatus && (
-              <p className="mt-1 text-xs text-slate-300">結果: {wbStatus}</p>
+              <p className="mt-2 border-2 border-black bg-[#FFFEF5] px-3 py-2 text-xs font-mono text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">結果: {wbStatus}</p>
             )}
           </section>
           <div className="md:col-span-2">
@@ -264,12 +264,12 @@ export default function DevPage() {
               response={wbRes}
             />
           </div>
-          <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm md:col-span-2">
-            <div className="mb-2 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-slate-300">開発ログ（Webhook）</h2>
+          <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:col-span-2">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-black">開発ログ（Webhook）</h2>
               <div className="flex items-center gap-2">
                 <button
-                  className="rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 hover:border-slate-500 cursor-pointer"
+                  className="border-2 border-black bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
                   onClick={async () => {
                     setLogsLoading(true);
                     try {
@@ -281,7 +281,7 @@ export default function DevPage() {
                   }}
                 >再読込</button>
                 <button
-                  className="rounded-md bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90"
+                  className="border-2 border-black bg-[#00B900] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                   onClick={async () => {
                     await fetch('/api/dev/logs', { method: 'DELETE' });
                     setLogs([]);
@@ -290,35 +290,35 @@ export default function DevPage() {
                 >クリア</button>
               </div>
             </div>
-            <div className="max-h-80 overflow-auto rounded border border-slate-800">
-              <table className="w-full text-left text-xs text-slate-200">
-                <thead className="bg-slate-800/60 text-slate-300">
+            <div className="max-h-80 overflow-auto border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              <table className="w-full text-left text-xs text-black">
+                <thead className="border-b-2 border-black bg-[#FFFEF5]">
                   <tr>
-                    <th className="px-3 py-2">時刻</th>
-                    <th className="px-3 py-2">レベル</th>
-                    <th className="px-3 py-2">メッセージ</th>
-                    <th className="px-3 py-2">データ</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-black">時刻</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-black">レベル</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-black">メッセージ</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-black">データ</th>
                   </tr>
                 </thead>
                 <tbody>
                   {logs.map((l, idx) => (
-                    <tr key={`${l.time}-${idx}`} className="border-t border-slate-800">
-                      <td className="px-3 py-1 text-slate-400">{new Date(l.time).toLocaleString()}</td>
-                      <td className="px-3 py-1">{l.level}</td>
-                      <td className="px-3 py-1">{l.message}</td>
-                      <td className="px-3 py-1 text-[10px] text-slate-300"><pre className="whitespace-pre-wrap">{l.data ? JSON.stringify(l.data) : ''}</pre></td>
+                    <tr key={`${l.time}-${idx}`} className="border-t-2 border-black hover:bg-[#FFFEF5]">
+                      <td className="px-4 py-2 font-mono text-black/60">{new Date(l.time).toLocaleString()}</td>
+                      <td className="px-4 py-2 font-bold text-black">{l.level}</td>
+                      <td className="px-4 py-2 font-mono text-black">{l.message}</td>
+                      <td className="px-4 py-2 text-[10px] font-mono text-black/80"><pre className="whitespace-pre-wrap">{l.data ? JSON.stringify(l.data) : ''}</pre></td>
                     </tr>
                   ))}
                   {logs.length === 0 && (
-                    <tr><td colSpan={4} className="px-3 py-6 text-center text-slate-500">{logsLoading ? '読み込み中...' : 'ログはありません'}</td></tr>
+                    <tr><td colSpan={4} className="px-4 py-6 text-center font-mono text-black/40">{logsLoading ? '読み込み中...' : 'ログはありません'}</td></tr>
                   )}
                 </tbody>
               </table>
             </div>
           </section>
-          <section className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm md:col-span-2">
-            <h2 className="mb-2 text-sm font-semibold text-slate-300">権限・運用ヒント</h2>
-            <ul className="list-disc space-y-1 pl-5 text-xs text-slate-400">
+          <section className="border-2 border-black bg-[#FFFEF5] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:col-span-2">
+            <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-black">権限・運用ヒント</h2>
+            <ul className="list-disc space-y-2 pl-5 text-xs font-mono text-black/60">
               <li>followers/ids API はアカウント種別・プランにより利用できない場合があります（403）。Webhook 取り込みで代替可能です。</li>
               <li>Webhook は https の公開URLが必要（例: Cloudflare Tunnel）。再起動でURLが変わる場合はLINE側URLも更新します。</li>
               <li>署名検証はチャネルシークレットを使用。不一致だと 400 になるため、設定の値と LINE Developers の値を必ず一致させてください。</li>
@@ -327,10 +327,10 @@ export default function DevPage() {
 
           {/* API デバッグ */}
           <section className="md:col-span-2 space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-white">API デバッグ</h2>
+            <div className="flex items-center justify-between border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-black">API デバッグ</h2>
               <button
-                className="rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 hover:border-slate-500 cursor-pointer"
+                className="border-2 border-black bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
                 onClick={loadAllDebugData}
               >
                 全て再読込

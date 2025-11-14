@@ -67,44 +67,44 @@ export function ConfirmDialogProvider({ children }: { children: ReactNode }) {
   }, [resolvePromise]);
 
   const typeStyles = {
-    danger: "border-red-500/50 bg-red-500/10 text-red-400",
-    warning: "border-yellow-500/50 bg-yellow-500/10 text-yellow-400",
-    info: "border-blue-500/50 bg-blue-500/10 text-blue-400",
+    danger: "border-2 border-red-600 bg-red-50 text-red-600",
+    warning: "border-2 border-black bg-[#FFE500] text-black",
+    info: "border-2 border-black bg-white text-black",
   };
 
   const buttonStyles = {
-    danger: "bg-red-600 hover:bg-red-700",
-    warning: "bg-yellow-600 hover:bg-yellow-700",
-    info: "bg-blue-600 hover:bg-blue-700",
+    danger: "bg-red-600 text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
+    warning: "bg-[#FFE500] text-black border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
+    info: "bg-[#00B900] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
   };
 
   return (
     <ConfirmDialogContext.Provider value={{ confirm }}>
       {children}
       {isOpen && options && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-lg border border-slate-700/50 bg-slate-800/95 p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="w-full max-w-md border-2 border-black bg-white p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
             <div className="mb-4 flex items-start gap-3">
               <div
-                className={`rounded-full border p-2 ${typeStyles[options.type || "info"]}`}
+                className={`border-2 p-2 ${typeStyles[options.type || "info"]}`}
               >
                 <AlertCircle className="h-5 w-5" />
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-white">{options.title}</h3>
-                <p className="mt-2 text-sm text-slate-400">{options.message}</p>
+                <h3 className="text-lg font-bold uppercase tracking-wider text-black">{options.title}</h3>
+                <p className="mt-2 text-sm text-black/70">{options.message}</p>
               </div>
             </div>
             <div className="flex justify-end gap-3">
               <button
                 onClick={handleCancel}
-                className="rounded-md border border-slate-600 bg-slate-900/60 px-4 py-2 text-sm font-semibold text-slate-300 transition hover:bg-slate-800/60"
+                className="border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
               >
                 {options.cancelText || "キャンセル"}
               </button>
               <button
                 onClick={handleConfirm}
-                className={`rounded-md px-4 py-2 text-sm font-semibold text-white transition ${buttonStyles[options.type || "info"]}`}
+                className={`px-4 py-2 text-sm font-bold uppercase tracking-wider transition-all ${buttonStyles[options.type || "info"]}`}
               >
                 {options.confirmText || "確認"}
               </button>

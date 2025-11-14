@@ -73,36 +73,36 @@ export default function LocationMessagePage() {
   const isValidCoordinates = isValidLatitude && isValidLongitude;
 
   return (
-    <div className="max-w-4xl space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold text-white">位置情報メッセージ送信</h1>
-        <p className="text-sm text-slate-400">
+    <div className="space-y-6">
+      <header className="space-y-2 border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <h1 className="text-2xl font-bold uppercase tracking-wider text-black">位置情報メッセージ送信</h1>
+        <p className="text-sm text-black/60">
           地図上の位置をユーザーに共有できます。
         </p>
       </header>
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 rounded-lg border border-slate-700/50 bg-slate-800/40 p-6 shadow-lg backdrop-blur-sm"
+        className="space-y-4 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
       >
         <div className="space-y-2">
-          <label htmlFor="lineUserId" className="text-sm font-medium text-slate-300">
-            LINE ユーザー ID <span className="text-red-400">*</span>
+          <label htmlFor="lineUserId" className="text-sm font-bold uppercase tracking-wider text-black">
+            LINE ユーザー ID <span className="text-red-600">*</span>
           </label>
           <input
             id="lineUserId"
             type="text"
             value={lineUserId}
             onChange={(event) => setLineUserId(event.target.value)}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
             placeholder="Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
             required
           />
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="title" className="text-sm font-medium text-slate-300">
-            タイトル <span className="text-red-400">*</span>
+          <label htmlFor="title" className="text-sm font-bold uppercase tracking-wider text-black">
+            タイトル <span className="text-red-600">*</span>
           </label>
           <input
             id="title"
@@ -110,16 +110,16 @@ export default function LocationMessagePage() {
             value={title}
             onChange={(event) => setTitle(event.target.value)}
             maxLength={100}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
             placeholder="東京タワー"
             required
           />
-          <p className="text-xs text-slate-500">最大100文字</p>
+          <p className="text-xs font-mono text-black/60">最大100文字</p>
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="address" className="text-sm font-medium text-slate-300">
-            住所 <span className="text-red-400">*</span>
+          <label htmlFor="address" className="text-sm font-bold uppercase tracking-wider text-black">
+            住所 <span className="text-red-600">*</span>
           </label>
           <input
             id="address"
@@ -127,17 +127,17 @@ export default function LocationMessagePage() {
             value={address}
             onChange={(event) => setAddress(event.target.value)}
             maxLength={100}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
             placeholder="東京都港区芝公園4-2-8"
             required
           />
-          <p className="text-xs text-slate-500">最大100文字</p>
+          <p className="text-xs font-mono text-black/60">最大100文字</p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2">
           <div className="space-y-2">
-            <label htmlFor="latitude" className="text-sm font-medium text-slate-300">
-              緯度 <span className="text-red-400">*</span>
+            <label htmlFor="latitude" className="text-sm font-bold uppercase tracking-wider text-black">
+              緯度 <span className="text-red-600">*</span>
             </label>
             <input
               id="latitude"
@@ -145,22 +145,22 @@ export default function LocationMessagePage() {
               step="0.000001"
               value={latitude}
               onChange={(event) => setLatitude(event.target.value)}
-              className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
               placeholder="35.658581"
               min="-90"
               max="90"
               required
             />
             {latitude && (
-              <p className={`text-xs ${isValidLatitude ? "text-slate-500" : "text-red-400"}`}>
+              <p className={`text-xs font-mono ${isValidLatitude ? "text-black/60" : "text-red-600 font-bold"}`}>
                 {isValidLatitude ? "有効な緯度" : "-90.0〜90.0の範囲で入力してください"}
               </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="longitude" className="text-sm font-medium text-slate-300">
-              経度 <span className="text-red-400">*</span>
+            <label htmlFor="longitude" className="text-sm font-bold uppercase tracking-wider text-black">
+              経度 <span className="text-red-600">*</span>
             </label>
             <input
               id="longitude"
@@ -168,14 +168,14 @@ export default function LocationMessagePage() {
               step="0.000001"
               value={longitude}
               onChange={(event) => setLongitude(event.target.value)}
-              className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
               placeholder="139.745433"
               min="-180"
               max="180"
               required
             />
             {longitude && (
-              <p className={`text-xs ${isValidLongitude ? "text-slate-500" : "text-red-400"}`}>
+              <p className={`text-xs font-mono ${isValidLongitude ? "text-black/60" : "text-red-600 font-bold"}`}>
                 {isValidLongitude ? "有効な経度" : "-180.0〜180.0の範囲で入力してください"}
               </p>
             )}
@@ -185,7 +185,7 @@ export default function LocationMessagePage() {
         <button
           type="button"
           onClick={handleGetCurrentLocation}
-          className="inline-flex items-center gap-2 rounded-md border border-slate-600 bg-slate-900/60 px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800/60"
+          className="inline-flex items-center gap-2 border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none"
         >
           <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -204,25 +204,23 @@ export default function LocationMessagePage() {
           現在地を取得
         </button>
 
-        <div className="flex items-center gap-3 border-t border-slate-700/50 pt-4">
-          <button
-            type="submit"
-            className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-            disabled={
-              status === "sending" ||
-              !lineUserId ||
-              !title ||
-              !address ||
-              !isValidCoordinates
-            }
-          >
-            {status === "sending" ? "送信中..." : "送信"}
-          </button>
-          {status === "success" && (
-            <p className="text-sm text-green-400">位置情報メッセージを送信しました。</p>
-          )}
-          {status === "error" && error && <p className="text-sm text-red-400">{error}</p>}
-        </div>
+        <button
+          type="submit"
+          className="inline-flex items-center border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50 active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
+          disabled={
+            status === "sending" ||
+            !lineUserId ||
+            !title ||
+            !address ||
+            !isValidCoordinates
+          }
+        >
+          {status === "sending" ? "送信中..." : "送信"}
+        </button>
+        {status === "success" && (
+          <p className="text-sm font-bold text-[#00B900]">位置情報メッセージを送信しました。</p>
+        )}
+        {status === "error" && error && <p className="text-sm font-bold text-red-600">{error}</p>}
       </form>
 
       {/* Map Preview */}
@@ -240,50 +238,18 @@ export default function LocationMessagePage() {
 
       {/* Debug Panel */}
       {isValidCoordinates && (
-        <details className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-4 shadow-lg backdrop-blur-sm">
-          <summary className="cursor-pointer text-sm font-medium text-slate-300">
-            デバッグ情報
-          </summary>
-          <div className="mt-4 space-y-3">
-            <div>
-              <div className="mb-1 text-xs font-medium text-slate-400">cURL</div>
-              <pre className="overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-300">
-                {`curl -X POST https://api.line.me/v2/bot/message/push \\
-  -H 'Content-Type: application/json' \\
-  -H 'Authorization: Bearer {YOUR_CHANNEL_ACCESS_TOKEN}' \\
-  -d '{
-  "to": "${lineUserId || "Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}",
-  "messages": [
-    {
-      "type": "location",
-      "title": "${title}",
-      "address": "${address}",
-      "latitude": ${lat},
-      "longitude": ${lng}
-    }
-  ]
-}'`}
-              </pre>
-            </div>
-            <div>
-              <div className="mb-1 text-xs font-medium text-slate-400">Request Body</div>
-              <pre className="overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-300">
-                {JSON.stringify(
-                  {
-                    to: lineUserId || "Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-                    type: "location",
-                    title,
-                    address,
-                    latitude: lat,
-                    longitude: lng,
-                  },
-                  null,
-                  2
-                )}
-              </pre>
-            </div>
-          </div>
-        </details>
+        <DebugPanel
+          title="送信 API デバッグ"
+          request={{ to: lineUserId, type: "location", title, address, latitude: lat, longitude: lng }}
+          response={undefined}
+          curl={toCurl({
+            url: new URL('/api/line/send', typeof window !== 'undefined' ? location.origin : 'http://localhost:3000').toString(),
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: { to: lineUserId, type: "location", title, address, latitude: lat, longitude: lng }
+          })}
+          docsUrl="https://developers.line.biz/ja/reference/messaging-api/#send-push-message"
+        />
       )}
     </div>
   );

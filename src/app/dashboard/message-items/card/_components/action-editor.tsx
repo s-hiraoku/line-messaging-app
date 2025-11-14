@@ -210,15 +210,15 @@ export function ActionEditor({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <Label className="text-sm font-medium text-slate-300">
-          アクション <span className="text-red-400">*</span>
+        <Label className="text-sm font-bold uppercase tracking-wider text-black">
+          アクション <span className="text-red-600">*</span>
         </Label>
         <Button
           type="button"
           onClick={handleAddAction}
           disabled={actions.length >= maxActions}
           size="sm"
-          className="inline-flex items-center gap-1.5"
+          className="inline-flex items-center gap-1.5 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
         >
           <Plus className="h-3.5 w-3.5" />
           アクションを追加
@@ -226,8 +226,8 @@ export function ActionEditor({
       </div>
 
       {actions.length === 0 && (
-        <div className="rounded-lg border border-slate-700/50 bg-slate-900/40 p-4 text-center">
-          <p className="text-sm text-slate-400">
+        <div className="border-2 border-black bg-[#FFFEF5] p-4 text-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <p className="text-sm font-mono text-black/60">
             アクションが設定されていません。アクションを追加してください。
           </p>
         </div>
@@ -239,18 +239,18 @@ export function ActionEditor({
             <AccordionItem
               key={index}
               value={`action-${index}`}
-              className="rounded-lg border border-slate-700/50 bg-slate-900/40 px-4"
+              className="border-2 border-black bg-white px-4 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
             >
               <div className="flex items-center gap-2">
-                <AccordionTrigger className="flex-1 py-3 text-sm font-medium text-slate-300 hover:no-underline">
+                <AccordionTrigger className="flex-1 py-3 text-sm font-bold text-black hover:no-underline">
                   <div className="flex items-center gap-3">
-                    <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/50">
+                    <Badge variant="outline" className="bg-blue-300 text-black border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
                       {index + 1}
                     </Badge>
-                    <span className="flex-1 text-left truncate">
+                    <span className="flex-1 text-left truncate uppercase tracking-wider">
                       {action.label || "未設定"}
                     </span>
-                    <Badge variant="secondary" className="text-xs">
+                    <Badge variant="secondary" className="text-xs border-2 border-black bg-[#FFFEF5]">
                       {action.type === "uri" && "リンク"}
                       {action.type === "message" && "メッセージ"}
                       {action.type === "postback" && "ポストバック"}
@@ -262,7 +262,7 @@ export function ActionEditor({
                   variant="ghost"
                   size="sm"
                   onClick={() => handleDeleteAction(index)}
-                  className="cursor-pointer p-1.5 text-slate-400 hover:text-red-400 h-8 w-8"
+                  className="cursor-pointer p-1.5 text-black hover:text-white hover:bg-red-600 h-8 w-8 border-2 border-black"
                   title="削除"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -272,14 +272,14 @@ export function ActionEditor({
               <AccordionContent className="space-y-4 pb-4 pt-2">
                 {/* Action Type Selector */}
                 <div className="space-y-2">
-                  <Label className="text-xs text-slate-400">アクションタイプ</Label>
+                  <Label className="text-xs font-bold uppercase tracking-wider text-black/60">アクションタイプ</Label>
                   <Select
                     value={action.type}
                     onValueChange={(value) =>
                       handleActionTypeChange(index, value as CardAction["type"])
                     }
                   >
-                    <SelectTrigger className="w-full bg-slate-900/60 border-slate-600">
+                    <SelectTrigger className="w-full bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -292,23 +292,23 @@ export function ActionEditor({
 
                 {/* Label Input (Common for all types) */}
                 <div className="space-y-2">
-                  <Label className="text-xs text-slate-400">
-                    ラベル <span className="text-red-400">*</span>
+                  <Label className="text-xs font-bold uppercase tracking-wider text-black/60">
+                    ラベル <span className="text-red-600">*</span>
                   </Label>
                   <Input
                     type="text"
                     value={action.label}
                     onChange={(e) => handleActionUpdate(index, "label", e.target.value)}
                     maxLength={20}
-                    className="bg-slate-900/60 border-slate-600"
+                    className="bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                     placeholder="ボタンラベル (最大20文字)"
                   />
                   {errors[`${index}.label`] && (
-                    <p className="text-xs text-red-400">{errors[`${index}.label`]}</p>
+                    <p className="text-xs font-bold text-red-600">{errors[`${index}.label`]}</p>
                   )}
                   <div className="flex justify-between items-center">
-                    <span className="text-xs text-slate-500">最大20文字</span>
-                    <Badge variant="outline" className="text-xs">
+                    <span className="text-xs font-mono text-black/40">最大20文字</span>
+                    <Badge variant="outline" className="text-xs border-2 border-black">
                       {action.label.length}/20
                     </Badge>
                   </div>
@@ -317,41 +317,41 @@ export function ActionEditor({
                 {/* Type-specific inputs */}
                 {action.type === "uri" && (
                   <div className="space-y-2">
-                    <Label className="text-xs text-slate-400">
-                      URL <span className="text-red-400">*</span>
+                    <Label className="text-xs font-bold uppercase tracking-wider text-black/60">
+                      URL <span className="text-red-600">*</span>
                     </Label>
                     <Input
                       type="url"
                       value={action.uri}
                       onChange={(e) => handleActionUpdate(index, "uri", e.target.value)}
-                      className="bg-slate-900/60 border-slate-600"
+                      className="bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                       placeholder="https://example.com"
                     />
                     {errors[`${index}.uri`] && (
-                      <p className="text-xs text-red-400">{errors[`${index}.uri`]}</p>
+                      <p className="text-xs font-bold text-red-600">{errors[`${index}.uri`]}</p>
                     )}
                   </div>
                 )}
 
                 {action.type === "message" && (
                   <div className="space-y-2">
-                    <Label className="text-xs text-slate-400">
-                      メッセージテキスト <span className="text-red-400">*</span>
+                    <Label className="text-xs font-bold uppercase tracking-wider text-black/60">
+                      メッセージテキスト <span className="text-red-600">*</span>
                     </Label>
                     <Textarea
                       value={action.text}
                       onChange={(e) => handleActionUpdate(index, "text", e.target.value)}
                       maxLength={300}
                       rows={3}
-                      className="bg-slate-900/60 border-slate-600"
+                      className="bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                       placeholder="送信されるメッセージテキスト"
                     />
                     {errors[`${index}.text`] && (
-                      <p className="text-xs text-red-400">{errors[`${index}.text`]}</p>
+                      <p className="text-xs font-bold text-red-600">{errors[`${index}.text`]}</p>
                     )}
                     <div className="flex justify-between items-center">
-                      <span className="text-xs text-slate-500">最大300文字</span>
-                      <Badge variant="outline" className="text-xs">
+                      <span className="text-xs font-mono text-black/40">最大300文字</span>
+                      <Badge variant="outline" className="text-xs border-2 border-black">
                         {action.text.length}/300
                       </Badge>
                     </div>
@@ -361,30 +361,30 @@ export function ActionEditor({
                 {action.type === "postback" && (
                   <>
                     <div className="space-y-2">
-                      <Label className="text-xs text-slate-400">
-                        ポストバックデータ <span className="text-red-400">*</span>
+                      <Label className="text-xs font-bold uppercase tracking-wider text-black/60">
+                        ポストバックデータ <span className="text-red-600">*</span>
                       </Label>
                       <Textarea
                         value={action.data}
                         onChange={(e) => handleActionUpdate(index, "data", e.target.value)}
                         maxLength={300}
                         rows={2}
-                        className="bg-slate-900/60 border-slate-600"
+                        className="bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                         placeholder="action=buy&item_id=123"
                       />
                       {errors[`${index}.data`] && (
-                        <p className="text-xs text-red-400">{errors[`${index}.data`]}</p>
+                        <p className="text-xs font-bold text-red-600">{errors[`${index}.data`]}</p>
                       )}
                       <div className="flex justify-between items-center">
-                        <span className="text-xs text-slate-500">最大300文字</span>
-                        <Badge variant="outline" className="text-xs">
+                        <span className="text-xs font-mono text-black/40">最大300文字</span>
+                        <Badge variant="outline" className="text-xs border-2 border-black">
                           {action.data.length}/300
                         </Badge>
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-xs text-slate-400">
+                      <Label className="text-xs font-bold uppercase tracking-wider text-black/60">
                         表示テキスト (オプション)
                       </Label>
                       <Input
@@ -394,18 +394,18 @@ export function ActionEditor({
                           handleActionUpdate(index, "displayText", e.target.value)
                         }
                         maxLength={300}
-                        className="bg-slate-900/60 border-slate-600"
+                        className="bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                         placeholder="ユーザーに表示されるテキスト"
                       />
                       {errors[`${index}.displayText`] && (
-                        <p className="text-xs text-red-400">
+                        <p className="text-xs font-bold text-red-600">
                           {errors[`${index}.displayText`]}
                         </p>
                       )}
                       {action.displayText && (
                         <div className="flex justify-between items-center">
-                          <span className="text-xs text-slate-500">最大300文字</span>
-                          <Badge variant="outline" className="text-xs">
+                          <span className="text-xs font-mono text-black/40">最大300文字</span>
+                          <Badge variant="outline" className="text-xs border-2 border-black">
                             {action.displayText.length}/300
                           </Badge>
                         </div>
@@ -420,9 +420,9 @@ export function ActionEditor({
       )}
 
       {actions.length > 0 && (
-        <div className="flex items-center justify-between text-xs text-slate-500">
+        <div className="flex items-center justify-between text-xs font-mono text-black/60">
           <span>アクション使用中</span>
-          <Badge variant="outline">
+          <Badge variant="outline" className="border-2 border-black">
             {actions.length}/{maxActions}
           </Badge>
         </div>

@@ -124,36 +124,36 @@ export default function CouponMessagePage() {
   };
 
   return (
-    <div className="max-w-4xl space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold text-white">クーポンメッセージ送信</h1>
-        <p className="text-sm text-slate-400">
+    <div className="space-y-6">
+      <header className="space-y-2">
+        <h1 className="text-2xl font-bold uppercase tracking-wider text-black">クーポンメッセージ送信</h1>
+        <p className="text-sm text-black/60">
           LINE公式アカウントマネージャーで発行したクーポンを送信できます。
         </p>
       </header>
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 rounded-lg border border-slate-700/50 bg-slate-800/40 p-6 shadow-lg backdrop-blur-sm"
+        className="space-y-4 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
       >
         <div className="space-y-2">
-          <label htmlFor="lineUserId" className="text-sm font-medium text-slate-300">
-            LINE ユーザー ID <span className="text-red-400">*</span>
+          <label htmlFor="lineUserId" className="text-sm font-bold uppercase tracking-wider text-black">
+            LINE ユーザー ID <span className="text-red-600">*</span>
           </label>
           <input
             id="lineUserId"
             type="text"
             value={lineUserId}
             onChange={(event) => setLineUserId(event.target.value)}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
             placeholder="Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
             required
           />
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="couponId" className="text-sm font-medium text-slate-300">
-            クーポンID <span className="text-red-400">*</span>
+          <label htmlFor="couponId" className="text-sm font-bold uppercase tracking-wider text-black">
+            クーポンID <span className="text-red-600">*</span>
           </label>
           <input
             id="couponId"
@@ -163,11 +163,11 @@ export default function CouponMessagePage() {
               setCouponId(event.target.value);
               setSelectedCoupon(null);
             }}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
             placeholder="COUPON001"
             required
           />
-          <p className="text-xs text-slate-500">
+          <p className="text-xs font-mono text-black/60">
             LINE公式アカウントマネージャーで発行したクーポンIDを入力してください
           </p>
         </div>
@@ -175,50 +175,50 @@ export default function CouponMessagePage() {
         {/* Coupon List */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-slate-300">発行済みクーポン</label>
+            <label className="text-sm font-bold uppercase tracking-wider text-black">発行済みクーポン</label>
             <button
               type="button"
               onClick={loadCoupons}
               disabled={loading}
-              className="text-xs text-blue-400 hover:text-blue-300 disabled:opacity-50"
+              className="text-xs font-bold uppercase tracking-wider text-[#00B900] hover:text-[#009500] disabled:opacity-50"
             >
               {loading ? "読み込み中..." : "再読み込み"}
             </button>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-2 sm:grid-cols-2">
             {coupons.map((coupon) => (
               <button
                 key={coupon.couponId}
                 type="button"
                 onClick={() => handleSelectCoupon(coupon)}
                 disabled={coupon.used}
-                className={`rounded-lg border p-4 text-left transition ${
+                className={`border-2 p-3 text-left transition-all ${
                   selectedCoupon?.couponId === coupon.couponId
-                    ? "border-blue-500 bg-blue-500/10"
+                    ? "border-black bg-black text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
                     : coupon.used
-                      ? "border-slate-700 bg-slate-900/40 opacity-50"
-                      : "border-slate-700 bg-slate-900/40 hover:border-slate-600 hover:bg-slate-800/60"
+                      ? "border-black bg-[#F5F5F5] text-black opacity-50 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
+                      : "border-black bg-white text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
                 }`}
               >
                 <div className="mb-2 flex items-start justify-between">
                   <div className="flex-1">
-                    <div className="mb-1 font-medium text-white">{coupon.name}</div>
-                    <div className="text-xs text-slate-400">ID: {coupon.couponId}</div>
+                    <div className="mb-1 font-bold">{coupon.name}</div>
+                    <div className="text-xs">{coupon.couponId}</div>
                   </div>
                   {coupon.used && (
-                    <span className="rounded bg-red-500/20 px-2 py-1 text-xs text-red-400">
+                    <span className="border-2 border-red-600 bg-red-100 px-2 py-1 text-xs font-bold uppercase tracking-wider text-red-600">
                       使用済み
                     </span>
                   )}
                   {!coupon.used && selectedCoupon?.couponId === coupon.couponId && (
-                    <span className="rounded bg-blue-500/20 px-2 py-1 text-xs text-blue-400">
+                    <span className="border-2 border-white bg-black px-2 py-1 text-xs font-bold uppercase tracking-wider text-white">
                       選択中
                     </span>
                   )}
                 </div>
                 {coupon.expirationDate && (
-                  <div className="text-xs text-slate-500">
+                  <div className="text-xs">
                     有効期限: {coupon.expirationDate}
                   </div>
                 )}
@@ -227,8 +227,8 @@ export default function CouponMessagePage() {
           </div>
 
           {coupons.length === 0 && !loading && (
-            <div className="rounded-lg border border-slate-700 bg-slate-900/40 p-8 text-center">
-              <p className="text-sm text-slate-400">
+            <div className="border-2 border-black bg-[#FFFEF5] p-8 text-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+              <p className="text-sm text-black/60">
                 発行済みクーポンがありません
                 <br />
                 LINE公式アカウントマネージャーでクーポンを作成してください
@@ -237,43 +237,41 @@ export default function CouponMessagePage() {
           )}
         </div>
 
-        <div className="flex items-center gap-3 border-t border-slate-700/50 pt-4">
-          <button
-            type="submit"
-            className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-            disabled={status === "sending" || !lineUserId || !couponId}
-          >
-            {status === "sending" ? "送信中..." : "送信"}
-          </button>
-          {status === "success" && (
-            <p className="text-sm text-green-400">クーポンメッセージを送信しました。</p>
-          )}
-          {status === "error" && error && <p className="text-sm text-red-400">{error}</p>}
-        </div>
+        <button
+          type="submit"
+          className="inline-flex items-center border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={status === "sending" || !lineUserId || !couponId}
+        >
+          {status === "sending" ? "送信中..." : "送信"}
+        </button>
+        {status === "success" && (
+          <p className="text-sm font-bold text-[#00B900]">クーポンメッセージを送信しました。</p>
+        )}
+        {status === "error" && error && <p className="text-sm font-bold text-red-600">{error}</p>}
       </form>
 
       {/* Preview */}
       {selectedCoupon && (
-        <div className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-6 shadow-lg backdrop-blur-sm">
-          <h2 className="mb-4 text-lg font-semibold text-white">プレビュー</h2>
+        <div className="border-2 border-black bg-[#FFFEF5] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <h2 className="mb-4 text-lg font-bold uppercase tracking-wider text-black">プレビュー</h2>
           <div className="flex justify-end">
             <div className="max-w-xs space-y-2">
-              <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 shadow-md">
-                <div className="p-6 text-white">
+              <div className="border-2 border-black bg-[#00B900] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <div className="text-white">
                   <div className="mb-2 text-2xl font-bold">🎫</div>
-                  <div className="mb-4 text-lg font-semibold">{selectedCoupon.name}</div>
-                  <div className="mb-2 text-sm opacity-90">ID: {selectedCoupon.couponId}</div>
+                  <div className="mb-4 text-lg font-bold">{selectedCoupon.name}</div>
+                  <div className="mb-2 font-mono text-sm font-medium">ID: {selectedCoupon.couponId}</div>
                   {selectedCoupon.expirationDate && (
-                    <div className="text-xs opacity-75">
+                    <div className="font-mono text-xs font-medium">
                       有効期限: {selectedCoupon.expirationDate}
                     </div>
                   )}
-                  <div className="mt-4 rounded-lg bg-white/20 px-4 py-2 text-center text-sm font-medium backdrop-blur-sm">
+                  <div className="mt-4 border-2 border-white px-4 py-2 text-center text-sm font-bold uppercase tracking-wider">
                     このクーポンを使う
                   </div>
                 </div>
               </div>
-              <div className="text-right text-xs text-slate-500">クーポンメッセージ</div>
+              <div className="text-right font-mono text-xs text-black/60">クーポンメッセージ</div>
             </div>
           </div>
         </div>

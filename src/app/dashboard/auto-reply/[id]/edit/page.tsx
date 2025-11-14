@@ -120,7 +120,7 @@ export default function EditAutoReplyPage({ params }: { params: Promise<{ id: st
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <p className="text-slate-400">読み込み中...</p>
+        <p className="text-sm font-mono text-black/60">読み込み中...</p>
       </div>
     );
   }
@@ -130,33 +130,33 @@ export default function EditAutoReplyPage({ params }: { params: Promise<{ id: st
       <div className="space-y-1">
         <Link
           href="/dashboard/auto-reply"
-          className="text-blue-400 hover:text-blue-300 text-sm"
+          className="text-sm font-bold text-[#00B900] hover:underline"
         >
           ← 戻る
         </Link>
-        <h1 className="text-2xl font-semibold text-white">自動応答ルールを編集</h1>
-        <p className="text-sm text-slate-400">
+        <h1 className="text-2xl font-bold uppercase tracking-wider text-black">自動応答ルールを編集</h1>
+        <p className="text-xs font-mono text-black/60">
           キーワードと応答メッセージを更新してください。
         </p>
       </div>
 
       {error && (
-        <div className="p-4 bg-red-500/10 border border-red-500/50 text-red-400 rounded-md">
-          {error}
+        <div className="p-4 border-2 border-black bg-red-600/10 text-red-600 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+          <p className="font-bold">{error}</p>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-6 space-y-6">
+        <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-6">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
-              ルール名 <span className="text-red-400">*</span>
+            <label className="block text-sm font-bold uppercase tracking-wider text-black mb-2">
+              ルール名 <span className="text-red-600">*</span>
             </label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-700 bg-slate-900/60 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-slate-500"
+              className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
               placeholder="例: 営業時間の問い合わせ"
               maxLength={100}
               required
@@ -164,8 +164,8 @@ export default function EditAutoReplyPage({ params }: { params: Promise<{ id: st
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
-              キーワード <span className="text-red-400">*</span>
+            <label className="block text-sm font-bold uppercase tracking-wider text-black mb-2">
+              キーワード <span className="text-red-600">*</span>
             </label>
             <KeywordInput
               keywords={formData.keywords}
@@ -174,7 +174,7 @@ export default function EditAutoReplyPage({ params }: { params: Promise<{ id: st
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+            <label className="block text-sm font-bold uppercase tracking-wider text-black mb-2">
               マッチングタイプ
             </label>
             <MatchTypeSelect
@@ -184,38 +184,38 @@ export default function EditAutoReplyPage({ params }: { params: Promise<{ id: st
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
-              応答メッセージ <span className="text-red-400">*</span>
+            <label className="block text-sm font-bold uppercase tracking-wider text-black mb-2">
+              応答メッセージ <span className="text-red-600">*</span>
             </label>
             <textarea
               value={formData.replyText}
               onChange={(e) =>
                 setFormData({ ...formData, replyText: e.target.value })
               }
-              className="w-full px-3 py-2 border border-slate-700 bg-slate-900/60 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-slate-500"
+              className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
               rows={6}
               placeholder="自動応答で送信するメッセージを入力してください"
               maxLength={5000}
               required
             />
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-xs font-mono text-black/60">
               {formData.replyText.length} / 5000 文字
             </p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">優先度</label>
+            <label className="block text-sm font-bold uppercase tracking-wider text-black mb-2">優先度</label>
             <input
               type="number"
               value={formData.priority}
               onChange={(e) =>
                 setFormData({ ...formData, priority: parseInt(e.target.value) || 0 })
               }
-              className="w-full px-3 py-2 border border-slate-700 bg-slate-900/60 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
               min={0}
               max={9999}
             />
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-xs font-mono text-black/60">
               数値が小さいほど優先度が高くなります（0-9999）
             </p>
           </div>
@@ -228,9 +228,9 @@ export default function EditAutoReplyPage({ params }: { params: Promise<{ id: st
                 onChange={(e) =>
                   setFormData({ ...formData, isActive: e.target.checked })
                 }
-                className="mr-2"
+                className="mr-2 h-4 w-4 border-2 border-black"
               />
-              <span className="text-sm font-medium text-slate-300">有効にする</span>
+              <span className="text-sm font-bold uppercase tracking-wider text-black">有効にする</span>
             </label>
           </div>
         </div>
@@ -239,13 +239,13 @@ export default function EditAutoReplyPage({ params }: { params: Promise<{ id: st
           <button
             type="submit"
             disabled={submitting}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-slate-700 disabled:cursor-not-allowed transition"
+            className="border-2 border-black bg-[#00B900] px-6 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {submitting ? '更新中...' : '更新'}
           </button>
           <Link
             href="/dashboard/auto-reply"
-            className="px-6 py-2 bg-slate-700 text-slate-300 rounded-md hover:bg-slate-600 transition"
+            className="border-2 border-black bg-white px-6 py-2 text-sm font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
           >
             キャンセル
           </Link>

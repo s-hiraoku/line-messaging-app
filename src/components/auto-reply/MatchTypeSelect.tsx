@@ -20,10 +20,10 @@ export function MatchTypeSelect({ value, onChange }: MatchTypeSelectProps) {
       {matchTypes.map((type) => (
         <label
           key={type.value}
-          className={`flex items-start p-3 border rounded-lg cursor-pointer transition-colors ${
+          className={`flex items-start p-3 border-2 border-black cursor-pointer transition-all ${
             value === type.value
-              ? 'border-blue-500 bg-blue-500/10'
-              : 'border-slate-700 bg-slate-900/40 hover:border-slate-600'
+              ? 'bg-[#00B900]/10 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]'
+              : 'bg-white hover:bg-[#FFFEF5] hover:translate-x-[1px] hover:translate-y-[1px]'
           }`}
         >
           <input
@@ -32,11 +32,11 @@ export function MatchTypeSelect({ value, onChange }: MatchTypeSelectProps) {
             value={type.value}
             checked={value === type.value}
             onChange={(e) => onChange(e.target.value as MatchType)}
-            className="mt-1 mr-3"
+            className="mt-1 mr-3 h-4 w-4 border-2 border-black"
           />
           <div>
-            <div className="font-medium text-slate-200">{type.label}</div>
-            <div className="text-sm text-slate-400">{type.description}</div>
+            <div className="font-bold uppercase tracking-wider text-black text-sm">{type.label}</div>
+            <div className="text-xs font-mono text-black/60">{type.description}</div>
           </div>
         </label>
       ))}

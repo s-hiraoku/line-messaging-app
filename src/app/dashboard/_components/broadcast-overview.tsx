@@ -48,15 +48,15 @@ export function BroadcastOverview({ statusData, recentBroadcasts }: Props) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "DRAFT":
-        return "text-slate-400 bg-slate-500/20";
+        return "text-black bg-white border-2 border-black";
       case "SCHEDULED":
-        return "text-yellow-400 bg-yellow-500/20";
+        return "text-black bg-[#FFE500] border-2 border-black";
       case "SENDING":
-        return "text-blue-400 bg-blue-500/20";
+        return "text-white bg-[#00B900] border-2 border-black";
       case "SENT":
-        return "text-emerald-400 bg-emerald-500/20";
+        return "text-white bg-[#00B900] border-2 border-black";
       default:
-        return "text-slate-400 bg-slate-500/20";
+        return "text-black bg-white border-2 border-black";
     }
   };
 
@@ -71,12 +71,12 @@ export function BroadcastOverview({ statusData, recentBroadcasts }: Props) {
   };
 
   return (
-    <article className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5 shadow-sm">
+    <article className="border-2 border-black bg-white p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-white">配信ステータス</h2>
+        <h2 className="text-lg font-bold uppercase tracking-wider text-black">配信ステータス</h2>
         <Link
           href="/dashboard/broadcasts"
-          className="inline-flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300 cursor-pointer"
+          className="inline-flex items-center gap-1 text-sm font-bold text-[#00B900] hover:text-[#00B900]/80 cursor-pointer transition-colors"
         >
           すべて見る
           <ArrowUpRight className="h-4 w-4" />
@@ -88,14 +88,14 @@ export function BroadcastOverview({ statusData, recentBroadcasts }: Props) {
         {statusData.map((stat) => (
           <div
             key={stat.status}
-            className="flex items-center gap-3 p-3 rounded-lg bg-slate-800/30"
+            className="flex items-center gap-3 p-3 border-2 border-black bg-[#FFFEF5] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
           >
-            <div className={`p-2 rounded ${getStatusColor(stat.status)}`}>
+            <div className={`p-2 ${getStatusColor(stat.status)}`}>
               {getStatusIcon(stat.status)}
             </div>
             <div>
-              <p className="text-xs text-slate-400">{getStatusLabel(stat.status)}</p>
-              <p className="text-xl font-semibold text-white">{stat.count}</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-black/60">{getStatusLabel(stat.status)}</p>
+              <p className="text-xl font-bold text-black">{stat.count}</p>
             </div>
           </div>
         ))}
@@ -103,24 +103,24 @@ export function BroadcastOverview({ statusData, recentBroadcasts }: Props) {
 
       {/* 最近の配信 */}
       {recentBroadcasts.length > 0 && (
-        <div className="pt-4 border-t border-slate-800">
-          <h3 className="text-sm font-medium text-slate-300 mb-3">最近の配信</h3>
+        <div className="pt-4 border-t-2 border-black">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-black mb-3">最近の配信</h3>
           <ul className="space-y-2">
             {recentBroadcasts.map((broadcast) => (
               <li
                 key={broadcast.id}
-                className="flex items-center justify-between p-2 rounded hover:bg-slate-800/40 transition"
+                className="flex items-center justify-between p-2 border-2 border-black bg-white hover:bg-[#FFFEF5] transition-colors"
               >
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-slate-200 truncate">{broadcast.title}</p>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-sm font-bold text-black truncate">{broadcast.title}</p>
+                  <p className="text-xs font-mono text-black/60">
                     {broadcast.scheduledAt
                       ? `予約: ${formatDateTime(broadcast.scheduledAt)}`
                       : `作成: ${formatDateTime(broadcast.createdAt)}`}
                   </p>
                 </div>
                 <span
-                  className={`ml-2 flex-shrink-0 px-2 py-1 rounded text-xs font-medium ${getStatusColor(broadcast.status)}`}
+                  className={`ml-2 flex-shrink-0 px-2 py-1 text-xs font-bold uppercase tracking-wider ${getStatusColor(broadcast.status)}`}
                 >
                   {getStatusLabel(broadcast.status)}
                 </span>

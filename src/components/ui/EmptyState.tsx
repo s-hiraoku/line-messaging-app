@@ -41,13 +41,13 @@ export const EmptyState = forwardRef<HTMLDivElement, EmptyStateProps>(
         {...props}
       >
         {icon && (
-          <div className="mb-4 flex items-center justify-center w-16 h-16 rounded-full bg-slate-800/50 text-slate-400">
+          <div className="mb-4 flex items-center justify-center w-16 h-16 border-2 border-black bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
             {icon}
           </div>
         )}
-        <h3 className="text-lg font-semibold text-slate-100 mb-2">{title}</h3>
+        <h3 className="text-lg font-bold uppercase tracking-wider text-black mb-2">{title}</h3>
         {description && (
-          <p className="text-sm text-slate-400 max-w-md mb-6">{description}</p>
+          <p className="text-sm text-black/60 max-w-md mb-6">{description}</p>
         )}
         {(action || secondaryAction) && (
           <div className="flex items-center gap-3">

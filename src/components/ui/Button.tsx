@@ -4,25 +4,25 @@ import { Loader2 } from 'lucide-react';
 import { clsx } from 'clsx';
 
 const buttonVariants = cva(
-  'cursor-pointer inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
+  'cursor-pointer inline-flex items-center justify-center gap-2 border-2 border-black font-bold uppercase tracking-wider transition-all disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none',
   {
     variants: {
       variant: {
         primary:
-          'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 focus-visible:ring-blue-500',
+          'bg-[#00B900] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none',
         secondary:
-          'bg-slate-800 text-slate-100 border border-slate-700/50 hover:bg-slate-700 hover:border-slate-600/50 active:bg-slate-600 focus-visible:ring-slate-500',
+          'bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none',
         danger:
-          'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 focus-visible:ring-red-500',
+          'bg-red-600 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-red-700 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none',
         ghost:
-          'text-slate-300 hover:bg-slate-800/50 hover:text-slate-100 active:bg-slate-700/50 focus-visible:ring-slate-500',
+          'border-transparent text-black hover:border-black hover:bg-[#FFFEF5] active:bg-white',
         outline:
-          'border-2 border-blue-600 text-blue-500 hover:bg-blue-600/10 active:bg-blue-600/20 focus-visible:ring-blue-500',
+          'bg-transparent text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none',
       },
       size: {
-        sm: 'px-3 py-1.5 text-sm',
-        md: 'px-4 py-2 text-base',
-        lg: 'px-6 py-3 text-lg',
+        sm: 'px-3 py-1.5 text-xs',
+        md: 'px-4 py-2 text-sm',
+        lg: 'px-6 py-3 text-base',
       },
       fullWidth: {
         true: 'w-full',

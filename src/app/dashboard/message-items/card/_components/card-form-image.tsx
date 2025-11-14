@@ -92,8 +92,8 @@ export function CardFormImage({ card, onChange }: CardFormImageProps) {
     <div className="space-y-6">
       {/* Image Upload Section - Primary Focus */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-slate-300">
-          画像 <span className="text-red-400">*</span>
+        <label className="text-sm font-bold uppercase tracking-wider text-black">
+          画像 <span className="text-red-600">*</span>
         </label>
         <ImageCropUploader
           onImageUploaded={handleImageUpload}
@@ -101,17 +101,17 @@ export function CardFormImage({ card, onChange }: CardFormImageProps) {
           placeholder="画像カード用の画像をアップロード"
         />
         {errors.imageUrl && (
-          <p className="text-xs text-red-400">{errors.imageUrl}</p>
+          <p className="text-xs font-bold text-red-600">{errors.imageUrl}</p>
         )}
       </div>
 
       {/* Larger Image Preview */}
       {card.imageUrl && (
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-300">
+          <label className="text-sm font-bold uppercase tracking-wider text-black">
             プレビュー
           </label>
-          <div className="relative aspect-[16/9] overflow-hidden rounded-lg border border-slate-700 bg-slate-900">
+          <div className="relative aspect-[16/9] overflow-hidden border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
             <Image
               src={card.imageUrl}
               alt="Card preview"
@@ -125,7 +125,7 @@ export function CardFormImage({ card, onChange }: CardFormImageProps) {
 
       {/* Title Input (Optional) */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-slate-300">
+        <label className="text-sm font-bold uppercase tracking-wider text-black">
           タイトル (オプション)
         </label>
         <input
@@ -133,21 +133,21 @@ export function CardFormImage({ card, onChange }: CardFormImageProps) {
           value={card.title || ""}
           onChange={handleTitleChange}
           maxLength={40}
-          className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full border-2 border-black bg-white px-3 py-2 text-sm text-black placeholder-black/40 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600"
           placeholder="画像のタイトルを入力 (最大40文字)"
         />
         {errors.title && (
-          <p className="text-xs text-red-400">{errors.title}</p>
+          <p className="text-xs font-bold text-red-600">{errors.title}</p>
         )}
         <div className="flex items-center justify-between">
-          <p className="text-xs text-slate-500">
+          <p className="text-xs font-mono text-black/60">
             {(card.title || "").length}/40文字
           </p>
           {card.title && (
             <button
               type="button"
               onClick={() => onChange({ title: undefined })}
-              className="text-xs text-slate-400 hover:text-slate-300 transition-colors"
+              className="text-xs font-bold uppercase tracking-wider text-black/60 hover:text-black transition-colors"
             >
               クリア
             </button>
@@ -157,7 +157,7 @@ export function CardFormImage({ card, onChange }: CardFormImageProps) {
 
       {/* Description Input (Optional) */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-slate-300">
+        <label className="text-sm font-bold uppercase tracking-wider text-black">
           説明 (オプション)
         </label>
         <textarea
@@ -165,21 +165,21 @@ export function CardFormImage({ card, onChange }: CardFormImageProps) {
           onChange={handleDescriptionChange}
           maxLength={60}
           rows={3}
-          className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full border-2 border-black bg-white px-3 py-2 text-sm text-black placeholder-black/40 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600"
           placeholder="画像の説明を入力 (最大60文字)"
         />
         {errors.description && (
-          <p className="text-xs text-red-400">{errors.description}</p>
+          <p className="text-xs font-bold text-red-600">{errors.description}</p>
         )}
         <div className="flex items-center justify-between">
-          <p className="text-xs text-slate-500">
+          <p className="text-xs font-mono text-black/60">
             {(card.description || "").length}/60文字
           </p>
           {card.description && (
             <button
               type="button"
               onClick={() => onChange({ description: undefined })}
-              className="text-xs text-slate-400 hover:text-slate-300 transition-colors"
+              className="text-xs font-bold uppercase tracking-wider text-black/60 hover:text-black transition-colors"
             >
               クリア
             </button>
@@ -194,7 +194,7 @@ export function CardFormImage({ card, onChange }: CardFormImageProps) {
         maxActions={3}
       />
       {errors.actions && (
-        <p className="text-xs text-red-400">{errors.actions}</p>
+        <p className="text-xs font-bold text-red-600">{errors.actions}</p>
       )}
     </div>
   );

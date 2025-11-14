@@ -3,16 +3,16 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { clsx } from 'clsx';
 
 const cardVariants = cva(
-  'rounded-xl border backdrop-blur-sm transition-all duration-200',
+  'border-2 border-black transition-all',
   {
     variants: {
       variant: {
         default:
-          'bg-slate-900/50 border-slate-800/60 hover:bg-slate-900/70 hover:border-slate-700/60',
+          'bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]',
         glass:
-          'bg-slate-900/30 border-slate-800/40 hover:bg-slate-900/50 hover:border-slate-700/50',
-        solid: 'bg-slate-900 border-slate-800',
-        outline: 'bg-transparent border-slate-700/50 hover:border-slate-600/50',
+          'bg-white/90 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]',
+        solid: 'bg-[#FFFEF5] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]',
+        outline: 'bg-transparent shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]',
       },
       padding: {
         none: 'p-0',
@@ -21,7 +21,7 @@ const cardVariants = cva(
         lg: 'p-8',
       },
       hoverable: {
-        true: 'cursor-pointer hover:shadow-lg hover:shadow-slate-900/20 hover:-translate-y-0.5',
+        true: 'cursor-pointer hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]',
       },
     },
     defaultVariants: {
@@ -62,7 +62,7 @@ export const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
         ref={ref}
         className={clsx(
           'flex items-center justify-between',
-          border && 'pb-4 border-b border-slate-800/60',
+          border && 'pb-4 border-b-2 border-black',
           className
         )}
         {...props}
@@ -84,7 +84,7 @@ export const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
       <Component
         ref={ref}
         className={clsx(
-          'text-lg font-semibold text-slate-100',
+          'text-lg font-bold uppercase tracking-wider text-black',
           className
         )}
         {...props}
@@ -103,7 +103,7 @@ export const CardDescription = forwardRef<
   return (
     <p
       ref={ref}
-      className={clsx('text-sm text-slate-400', className)}
+      className={clsx('text-sm text-black/60', className)}
       {...props}
     />
   );
@@ -123,7 +123,7 @@ export const CardContent = forwardRef<HTMLDivElement, CardContentProps>(
         ref={ref}
         className={clsx(
           'py-4',
-          border && 'border-t border-slate-800/60',
+          border && 'border-t-2 border-black',
           className
         )}
         {...props}
@@ -146,7 +146,7 @@ export const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
         ref={ref}
         className={clsx(
           'flex items-center gap-2',
-          border && 'pt-4 border-t border-slate-800/60',
+          border && 'pt-4 border-t-2 border-black',
           className
         )}
         {...props}

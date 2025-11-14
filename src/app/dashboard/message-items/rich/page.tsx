@@ -149,10 +149,10 @@ export default function RichMessagePage() {
   };
 
   return (
-    <div className="max-w-4xl space-y-6">
-      <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
-        <h2 className="mb-2 text-sm font-semibold text-blue-300">リッチメッセージとは？</h2>
-        <p className="text-xs text-slate-400">
+    <div className="space-y-6">
+      <div className="border-2 border-black bg-[#FFFEF5] p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+        <h2 className="mb-2 text-sm font-bold uppercase tracking-wider text-black">リッチメッセージとは？</h2>
+        <p className="text-xs font-mono text-black/60">
           画像に複数のタップ可能なエリアを設定できるメッセージです。ユーザーがエリアをタップすると、URLを開いたり、メッセージを送信したりできます。
           マップやメニューなど、インタラクティブな画像コンテンツに最適です。
         </p>
@@ -160,25 +160,25 @@ export default function RichMessagePage() {
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 rounded-lg border border-slate-700/50 bg-slate-800/40 p-6 shadow-lg backdrop-blur-sm"
+        className="space-y-6 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
       >
         <div className="space-y-2">
-          <label htmlFor="lineUserId" className="text-sm font-medium text-slate-300">
-            送信先ユーザー <span className="text-red-400">*</span>
+          <label htmlFor="lineUserId" className="text-sm font-bold uppercase tracking-wider text-black">
+            送信先ユーザー <span className="text-red-600">*</span>
           </label>
           <UserSelector
             value={lineUserId}
             onValueChange={setLineUserId}
             placeholder="ユーザーを検索または LINE ユーザー ID を入力..."
           />
-          <p className="text-xs text-slate-500">
+          <p className="text-xs font-mono text-black/60">
             ユーザー名や表示名で検索、または LINE ユーザー ID を直接入力できます
           </p>
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="altText" className="text-sm font-medium text-slate-300">
-            代替テキスト <span className="text-red-400">*</span>
+          <label htmlFor="altText" className="text-sm font-bold uppercase tracking-wider text-black">
+            代替テキスト <span className="text-red-600">*</span>
           </label>
           <input
             id="altText"
@@ -186,22 +186,22 @@ export default function RichMessagePage() {
             value={altText}
             onChange={(event) => setAltText(event.target.value)}
             maxLength={400}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
             placeholder="リッチメッセージ"
             required
           />
-          <p className="text-xs text-slate-500">最大400文字</p>
+          <p className="text-xs font-mono text-black/60">最大400文字</p>
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-300">
-            リッチメッセージ画像 <span className="text-red-400">*</span>
+          <label className="text-sm font-bold uppercase tracking-wider text-black">
+            リッチメッセージ画像 <span className="text-red-600">*</span>
           </label>
           <ImageUploader
             onImageUploaded={setImageUrl}
             placeholder="リッチメッセージ用の画像をアップロード（1024x1024px以上、正方形推奨）"
           />
-          <p className="text-xs text-slate-500">
+          <p className="text-xs font-mono text-black/60">
             HTTPS画像が自動生成されます。1040x1040pxベースで配信されます。
           </p>
         </div>
@@ -214,10 +214,10 @@ export default function RichMessagePage() {
           />
         )}
 
-        <div className="flex items-center gap-3 border-t border-slate-700/50 pt-4">
+        <div className="flex items-center gap-3 border-t-2 border-black pt-4">
           <button
             type="submit"
-            className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-60"
             disabled={status === "sending" || !lineUserId || !imageUrl || areas.length === 0}
           >
             {status === "sending" ? "送信中..." : "送信"}
@@ -225,31 +225,31 @@ export default function RichMessagePage() {
 
           {/* Validation hints */}
           {!lineUserId && status !== "sending" && (
-            <p className="text-sm text-yellow-400">⚠️ 送信先ユーザーを選択してください</p>
+            <p className="text-sm font-mono text-black/60">⚠️ 送信先ユーザーを選択してください</p>
           )}
           {lineUserId && !imageUrl && status !== "sending" && (
-            <p className="text-sm text-yellow-400">⚠️ 画像をアップロードしてください</p>
+            <p className="text-sm font-mono text-black/60">⚠️ 画像をアップロードしてください</p>
           )}
           {lineUserId && imageUrl && areas.length === 0 && status !== "sending" && (
-            <p className="text-sm text-yellow-400">⚠️ 画像上でドラッグしてタップエリアを作成してください</p>
+            <p className="text-sm font-mono text-black/60">⚠️ 画像上でドラッグしてタップエリアを作成してください</p>
           )}
 
           {status === "success" && (
-            <p className="text-sm text-green-400">メッセージを送信しました。</p>
+            <p className="text-sm font-bold text-[#00B900]">メッセージを送信しました。</p>
           )}
-          {status === "error" && error && <p className="text-sm text-red-400">{error}</p>}
+          {status === "error" && error && <p className="text-sm font-bold text-red-600">{error}</p>}
         </div>
       </form>
 
       {/* Preview section */}
-      <div className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-6 shadow-lg backdrop-blur-sm">
-        <h2 className="mb-4 text-lg font-semibold text-white">プレビュー</h2>
+      <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <h2 className="mb-4 text-lg font-bold uppercase tracking-wider text-black">プレビュー</h2>
         <div className="flex justify-end">
           <div className="max-w-xs">
-            <div className="rounded-lg bg-slate-700 p-4 text-xs text-slate-300">
+            <div className="border-2 border-black bg-[#FFFEF5] p-4 text-xs text-black/80 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
               <div>
-                <div className="mb-2 font-medium">リッチメッセージ</div>
-                <div className="text-slate-400">
+                <div className="mb-2 font-bold uppercase tracking-wider">リッチメッセージ</div>
+                <div className="text-black/60">
                   {imageUrl ? (
                     <>
                       画像マップメッセージが送信されます。
@@ -259,7 +259,7 @@ export default function RichMessagePage() {
                           {areas.length}個のタップ可能なエリアが設定されています。
                           <br />
                           <div className="mt-2 space-y-1">
-                            <div className="text-xs font-medium text-slate-300">アクション種類：</div>
+                            <div className="text-xs font-bold uppercase tracking-wider text-black">アクション種類：</div>
                             {areas.filter(a => a.action.type === 'uri').length > 0 && (
                               <div>・URL: {areas.filter(a => a.action.type === 'uri').length}個</div>
                             )}

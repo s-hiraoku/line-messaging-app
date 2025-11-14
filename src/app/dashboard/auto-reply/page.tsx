@@ -118,7 +118,7 @@ export default function AutoReplyPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <p className="text-slate-400">読み込み中...</p>
+        <p className="text-sm font-mono text-black/60">読み込み中...</p>
       </div>
     );
   }
@@ -127,21 +127,21 @@ export default function AutoReplyPage() {
     <div className="space-y-6">
       <header className="flex justify-between items-center">
         <div className="space-y-1">
-          <h1 className="text-2xl font-semibold text-white">自動応答ルール</h1>
-          <p className="text-sm text-slate-400">
+          <h1 className="text-2xl font-bold uppercase tracking-wider text-black">自動応答ルール</h1>
+          <p className="text-xs font-mono text-black/60">
             キーワードに基づいた自動応答を管理します。
           </p>
         </div>
         <div className="flex gap-3">
           <Link
             href="/dashboard/auto-reply/analytics"
-            className="px-4 py-2 border border-slate-700 bg-slate-800/40 text-slate-300 rounded-md hover:bg-slate-800 transition"
+            className="border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
           >
             分析
           </Link>
           <Link
             href="/dashboard/auto-reply/new"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+            className="border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
           >
             新規作成
           </Link>
@@ -151,30 +151,30 @@ export default function AutoReplyPage() {
       <div className="flex gap-2">
         <button
           onClick={() => setFilter('all')}
-          className={`px-4 py-2 rounded-md text-sm font-medium transition ${
+          className={`px-4 py-2 text-sm font-bold uppercase tracking-wider transition-all ${
             filter === 'all'
-              ? 'bg-blue-600 text-white'
-              : 'bg-slate-800/40 text-slate-300 hover:bg-slate-800 border border-slate-700/50'
+              ? 'border-2 border-black bg-[#00B900] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+              : 'border-2 border-black bg-white text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]'
           }`}
         >
           すべて
         </button>
         <button
           onClick={() => setFilter('active')}
-          className={`px-4 py-2 rounded-md text-sm font-medium transition ${
+          className={`px-4 py-2 text-sm font-bold uppercase tracking-wider transition-all ${
             filter === 'active'
-              ? 'bg-blue-600 text-white'
-              : 'bg-slate-800/40 text-slate-300 hover:bg-slate-800 border border-slate-700/50'
+              ? 'border-2 border-black bg-[#00B900] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+              : 'border-2 border-black bg-white text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]'
           }`}
         >
           有効
         </button>
         <button
           onClick={() => setFilter('inactive')}
-          className={`px-4 py-2 rounded-md text-sm font-medium transition ${
+          className={`px-4 py-2 text-sm font-bold uppercase tracking-wider transition-all ${
             filter === 'inactive'
-              ? 'bg-blue-600 text-white'
-              : 'bg-slate-800/40 text-slate-300 hover:bg-slate-800 border border-slate-700/50'
+              ? 'border-2 border-black bg-[#00B900] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+              : 'border-2 border-black bg-white text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]'
           }`}
         >
           無効
@@ -182,11 +182,11 @@ export default function AutoReplyPage() {
       </div>
 
       {autoReplies.length === 0 ? (
-        <div className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-12 text-center">
-          <p className="text-slate-400">自動応答ルールがありません</p>
+        <div className="border-2 border-black bg-[#FFFEF5] p-12 text-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+          <p className="text-sm font-mono text-black/60">自動応答ルールがありません</p>
           <Link
             href="/dashboard/auto-reply/new"
-            className="text-blue-400 hover:text-blue-300 mt-2 inline-block"
+            className="mt-2 inline-block text-sm font-bold text-[#00B900] hover:underline"
           >
             最初のルールを作成
           </Link>
@@ -196,29 +196,25 @@ export default function AutoReplyPage() {
           {autoReplies.map((rule) => (
             <div
               key={rule.id}
-              className={`border rounded-lg p-5 transition ${
-                rule.isActive
-                  ? 'border-slate-700/50 bg-slate-800/40'
-                  : 'border-slate-700/30 bg-slate-800/20'
-              }`}
+              className="border-2 border-black bg-white p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
             >
               <div className="flex justify-between items-start mb-3">
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-3">
-                    <h3 className="text-lg font-semibold text-white">{rule.name}</h3>
+                  <div className="flex items-center gap-2 mb-3 flex-wrap">
+                    <h3 className="text-lg font-bold text-black">{rule.name}</h3>
                     <span
-                      className={`px-2 py-1 text-xs rounded-full font-medium ${
+                      className={`px-2 py-1 text-xs font-bold uppercase border-2 border-black ${
                         rule.isActive
-                          ? 'bg-green-500/20 text-green-400'
-                          : 'bg-slate-700 text-slate-400'
+                          ? 'bg-[#00B900] text-white'
+                          : 'bg-white text-black'
                       }`}
                     >
                       {rule.isActive ? '有効' : '無効'}
                     </span>
-                    <span className="px-2 py-1 text-xs bg-blue-500/20 text-blue-400 rounded-full font-medium">
+                    <span className="px-2 py-1 text-xs font-bold font-mono border-2 border-black bg-white text-black">
                       優先度: {rule.priority}
                     </span>
-                    <span className="px-2 py-1 text-xs bg-purple-500/20 text-purple-400 rounded-full font-medium">
+                    <span className="px-2 py-1 text-xs font-bold uppercase border-2 border-black bg-white text-black">
                       {getMatchTypeLabel(rule.matchType)}
                     </span>
                   </div>
@@ -226,41 +222,41 @@ export default function AutoReplyPage() {
                     {rule.keywords.slice(0, 5).map((keyword, idx) => (
                       <span
                         key={idx}
-                        className="px-2 py-1 bg-slate-700 text-slate-300 text-sm rounded"
+                        className="px-2 py-1 border-2 border-black bg-[#FFFEF5] text-black text-sm font-mono"
                       >
                         {keyword}
                       </span>
                     ))}
                     {rule.keywords.length > 5 && (
-                      <span className="px-2 py-1 text-slate-500 text-sm">
+                      <span className="px-2 py-1 text-black/60 text-sm font-mono">
                         ...他{rule.keywords.length - 5}個
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-slate-400 line-clamp-2">
+                  <p className="text-sm font-mono text-black/70 line-clamp-2">
                     {rule.replyText}
                   </p>
                 </div>
-                <div className="flex gap-2 ml-4">
+                <div className="flex gap-2 ml-4 flex-wrap">
                   <button
                     onClick={() => toggleActive(rule.id)}
-                    className={`px-3 py-1.5 text-sm rounded font-medium transition ${
+                    className={`px-3 py-1.5 text-sm font-bold uppercase tracking-wider transition-all ${
                       rule.isActive
-                        ? 'bg-slate-700 text-slate-300 hover:bg-slate-600'
-                        : 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
+                        ? 'border-2 border-black bg-white text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]'
+                        : 'border-2 border-black bg-[#00B900] text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]'
                     }`}
                   >
                     {rule.isActive ? '無効化' : '有効化'}
                   </button>
                   <Link
                     href={`/dashboard/auto-reply/${rule.id}/edit`}
-                    className="px-3 py-1.5 text-sm bg-blue-500/20 text-blue-400 rounded hover:bg-blue-500/30 font-medium transition"
+                    className="px-3 py-1.5 text-sm border-2 border-black bg-white text-black font-bold uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
                   >
                     編集
                   </Link>
                   <button
                     onClick={() => deleteAutoReply(rule.id, rule.name)}
-                    className="px-3 py-1.5 text-sm bg-red-500/20 text-red-400 rounded hover:bg-red-500/30 font-medium transition"
+                    className="px-3 py-1.5 text-sm border-2 border-black bg-red-600 text-white font-bold uppercase tracking-wider shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
                   >
                     削除
                   </button>

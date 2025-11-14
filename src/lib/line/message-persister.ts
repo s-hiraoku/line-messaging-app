@@ -158,6 +158,32 @@ async function persistLocationMessage(
 }
 
 /**
+ * Persist a coupon message and emit realtime event
+ */
+async function persistCouponMessage(
+  userId: string,
+  couponId: string
+): Promise<void> {
+  const msg = await prisma.message.create({
+    data: {
+      type: "COUPON",
+      content: {
+        couponId,
+      },
+      direction: "OUTBOUND",
+      userId,
+      deliveryStatus: "SENT",
+    },
+  });
+
+  await realtime().emit("message:outbound", {
+    userId,
+    text: `🎫 クーポン (${couponId})`,
+    createdAt: msg.createdAt.toISOString(),
+  });
+}
+
+/**
  * Persist an imagemap message and emit realtime event
  */
 async function persistImagemapMessage(
@@ -324,6 +350,10 @@ export async function persistMessages(
           message.latitude,
           message.longitude
         );
+        break;
+
+      case "coupon":
+        await persistCouponMessage(userId, message.couponId);
         break;
 
       case "imagemap":

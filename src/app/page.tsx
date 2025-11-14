@@ -1,66 +1,178 @@
 import Link from "next/link";
+import { Syne, IBM_Plex_Sans } from "next/font/google";
+
+const syne = Syne({
+  weight: "800",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const ibmPlexSans = IBM_Plex_Sans({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
 
 const featureHighlights = [
   {
     title: "メッセージ統合管理",
     description: "チャット、ブロードキャスト、テンプレートを一元管理し、運用負荷を軽減。",
+    number: "01",
   },
   {
     title: "リアルタイム連携",
     description: "Webhook とダッシュボードで最新のユーザー状況や会話ログを即座に把握。",
+    number: "02",
   },
   {
     title: "柔軟な拡張性",
     description: "LINE Messaging API の各種メッセージタイプに対応するモジュール化された設計。",
+    number: "03",
   },
 ];
 
 export default function Home() {
   return (
-    <main className="relative flex min-h-screen flex-col overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.25),_transparent_55%)]" />
-      <section className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col items-center justify-center gap-14 px-6 py-24 text-slate-100">
-        <div className="flex flex-col items-center text-center gap-6">
-          <span className="rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-blue-200">
-            Line Messaging App POC
-          </span>
-          <h1 className="max-w-3xl text-balance text-4xl font-semibold leading-tight sm:text-5xl">
-            LINE チャネル運用を加速するモダンダッシュボード
-          </h1>
-          <p className="max-w-2xl text-pretty text-base text-slate-300 sm:text-lg">
-            顧客とのコミュニケーションを最適化するための、メッセージ配信・分析・自動化を備えた統合管理ツールです。
-          </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center rounded-full bg-blue-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition hover:bg-blue-400"
-            >
-              ダッシュボードへ進む
-            </Link>
-            <Link
-              href="/docs/system-design"
-              className="inline-flex items-center rounded-full border border-slate-600 px-6 py-3 text-sm font-semibold text-slate-200 transition hover:border-slate-400 hover:text-white"
-            >
-              設計仕様を確認
-            </Link>
+    <main className="relative min-h-screen overflow-hidden bg-[#FFFEF5]">
+      {/* Background Decorative Elements */}
+      <div className="pointer-events-none absolute left-0 top-0 h-[600px] w-[600px] -translate-x-1/3 -translate-y-1/3 rounded-full bg-[#00B900] opacity-[0.15] blur-[120px]" />
+      <div className="pointer-events-none absolute right-0 top-1/4 h-[400px] w-[400px] translate-x-1/4 rounded-full bg-[#FFE500] opacity-[0.12] blur-[100px]" />
+      <div className="pointer-events-none absolute bottom-0 left-1/3 h-[500px] w-[500px] rounded-full bg-[#00B900] opacity-[0.08] blur-[130px]" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 py-16 sm:px-12 sm:py-24">
+        {/* Header Badge */}
+        <div className="flex items-start justify-between">
+          <div
+            className="inline-block animate-[slideDown_0.8s_ease-out]"
+            style={{ animationDelay: '0.1s', animationFillMode: 'backwards' }}
+          >
+            <span className="inline-block -rotate-2 border-2 border-black bg-[#FFE500] px-6 py-2 font-mono text-xs font-bold uppercase tracking-[0.2em] text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              LINE Messaging POC
+            </span>
           </div>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-3">
-          {featureHighlights.map((feature) => (
-            <article
-              key={feature.title}
-              className="group relative overflow-hidden rounded-2xl border border-slate-800/70 bg-slate-900/40 p-6 transition hover:border-blue-500/50 hover:bg-slate-900/60"
+        {/* Hero Section */}
+        <section className="mt-16 grid gap-12 lg:grid-cols-12 lg:gap-20">
+          {/* Main Title - Takes up more space */}
+          <div className="lg:col-span-7">
+            <h1
+              className={`mb-8 text-6xl font-black leading-[1.1] tracking-tight text-black sm:text-7xl lg:text-8xl animate-[slideUp_1s_ease-out] ${syne.className}`}
+              style={{
+                animationDelay: '0.2s',
+                animationFillMode: 'backwards',
+              }}
             >
-              <div className="absolute inset-0 translate-y-full rounded-2xl bg-blue-500/10 transition duration-500 group-hover:translate-y-0" />
-              <div className="relative z-10 space-y-3">
-                <h2 className="text-lg font-semibold text-white">{feature.title}</h2>
-                <p className="text-sm leading-relaxed text-slate-300">{feature.description}</p>
-              </div>
-            </article>
-          ))}
+              LINE チャネル運用を
+              <span className="relative ml-2 inline-block">
+                <span className="relative z-10">加速</span>
+                <span className="absolute bottom-2 left-0 z-0 h-4 w-full bg-[#00B900]" />
+              </span>
+              する
+              <br />
+              モダン
+              <span className="relative mx-3 inline-block rotate-3 border-2 border-black bg-[#FFE500] px-4 py-1 text-5xl sm:text-6xl lg:text-7xl">
+                ダッシュボード
+              </span>
+            </h1>
+
+            <p
+              className={`mb-10 max-w-xl text-lg leading-relaxed text-black/80 sm:text-xl animate-[fadeIn_1s_ease-out] ${ibmPlexSans.className}`}
+              style={{
+                animationDelay: '0.4s',
+                animationFillMode: 'backwards',
+              }}
+            >
+              顧客とのコミュニケーションを最適化するための、
+              メッセージ配信・分析・自動化を備えた統合管理ツール
+            </p>
+
+            <div
+              className="flex flex-wrap gap-4 animate-[slideUp_1s_ease-out]"
+              style={{ animationDelay: '0.6s', animationFillMode: 'backwards' }}
+            >
+              <Link
+                href="/dashboard"
+                className="group relative inline-flex items-center border-2 border-black bg-[#00B900] px-8 py-4 font-mono text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+              >
+                <span className="relative z-10">ダッシュボードへ進む</span>
+                <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">→</span>
+              </Link>
+
+              <Link
+                href="/docs/system-design"
+                className="group inline-flex items-center border-2 border-black bg-white px-8 py-4 font-mono text-sm font-bold uppercase tracking-wider text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+              >
+                設計仕様を確認
+                <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">↗</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Decorative Element */}
+          <div className="relative hidden lg:col-span-5 lg:block">
+            <div className="absolute -right-20 top-0 h-[500px] w-[500px]">
+              {/* Large decorative number */}
+              <span
+                className="absolute right-0 top-0 select-none font-mono text-[20rem] font-black leading-none text-[#00B900] opacity-[0.15] animate-[rotateIn_1.2s_ease-out]"
+                style={{ animationDelay: '0.3s', animationFillMode: 'backwards' }}
+              >
+                L
+              </span>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Grid */}
+        <section className="mt-32">
+          <div className="mb-12 flex items-end justify-between border-b-4 border-black pb-4">
+            <h2 className={`text-4xl font-black text-black sm:text-5xl ${syne.className}`}>
+              主な機能
+            </h2>
+            <span className="font-mono text-lg font-bold text-black/40">03 Features</span>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-3">
+            {featureHighlights.map((feature, index) => (
+              <article
+                key={feature.title}
+                className="group relative animate-[slideUp_1s_ease-out]"
+                style={{
+                  animationDelay: `${0.8 + index * 0.1}s`,
+                  animationFillMode: 'backwards'
+                }}
+              >
+                {/* Number Badge */}
+                <div className="mb-6 inline-block">
+                  <span className="inline-block border-2 border-black bg-white px-4 py-2 font-mono text-2xl font-black text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all group-hover:translate-x-[2px] group-hover:translate-y-[2px] group-hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                    {feature.number}
+                  </span>
+                </div>
+
+                {/* Content */}
+                <h3 className={`mb-4 text-2xl font-bold text-black ${ibmPlexSans.className}`}>
+                  {feature.title}
+                </h3>
+                <p className={`leading-relaxed text-black/70 ${ibmPlexSans.className}`}>
+                  {feature.description}
+                </p>
+
+                {/* Hover decoration */}
+                <div className="absolute -bottom-2 -right-2 -z-10 h-full w-full border-2 border-black bg-[#FFE500] opacity-0 transition-opacity group-hover:opacity-100" />
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* Footer Accent */}
+        <div className="mt-32 flex items-center justify-center gap-6">
+          <div className="h-1 w-16 bg-black" />
+          <span className="font-mono text-xs font-bold uppercase tracking-[0.3em] text-black/40">
+            Built for Communication
+          </span>
+          <div className="h-1 w-16 bg-black" />
         </div>
-      </section>
+      </div>
     </main>
   );
 }

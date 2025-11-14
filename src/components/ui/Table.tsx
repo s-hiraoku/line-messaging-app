@@ -10,13 +10,13 @@ export interface TableProps extends HTMLAttributes<HTMLTableElement> {
 export const Table = forwardRef<HTMLTableElement, TableProps>(
   ({ className, striped = false, hoverable = true, ...props }, ref) => {
     return (
-      <div className="w-full overflow-x-auto rounded-lg border border-slate-800/60">
+      <div className="w-full overflow-x-auto border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <table
           ref={ref}
           className={clsx(
             'w-full border-collapse text-sm',
-            striped && '[&_tbody_tr:nth-child(even)]:bg-slate-900/30',
-            hoverable && '[&_tbody_tr]:hover:bg-slate-800/30 [&_tbody_tr]:transition-colors',
+            striped && '[&_tbody_tr:nth-child(even)]:bg-[#FFFEF5]',
+            hoverable && '[&_tbody_tr]:hover:bg-[#FFFEF5] [&_tbody_tr]:transition-colors',
             className
           )}
           {...props}
@@ -37,7 +37,7 @@ export const TableHeader = forwardRef<
     <thead
       ref={ref}
       className={clsx(
-        'bg-slate-900/80 border-b border-slate-800/60',
+        'bg-white border-b-2 border-black',
         className
       )}
       {...props}
@@ -66,7 +66,7 @@ export const TableFooter = forwardRef<
     <tfoot
       ref={ref}
       className={clsx(
-        'bg-slate-900/80 border-t border-slate-800/60 font-medium',
+        'bg-white border-t-2 border-black font-bold',
         className
       )}
       {...props}
@@ -84,7 +84,7 @@ export const TableRow = forwardRef<
   return (
     <tr
       ref={ref}
-      className={clsx('border-b border-slate-800/40 last:border-0', className)}
+      className={clsx('border-b-2 border-black last:border-0', className)}
       {...props}
     />
   );
@@ -104,8 +104,8 @@ export const TableHead = forwardRef<HTMLTableCellElement, TableHeadProps>(
       <th
         ref={ref}
         className={clsx(
-          'px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-300',
-          sortable && 'cursor-pointer select-none hover:text-slate-100',
+          'px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-black',
+          sortable && 'cursor-pointer select-none hover:bg-[#FFFEF5]',
           className
         )}
         {...props}
@@ -113,7 +113,7 @@ export const TableHead = forwardRef<HTMLTableCellElement, TableHeadProps>(
         <div className="flex items-center gap-2">
           {children}
           {sortable && sorted && (
-            <span className="text-blue-500">
+            <span className="text-[#00B900]">
               {sorted === 'asc' ? '↑' : '↓'}
             </span>
           )}
@@ -133,7 +133,7 @@ export const TableCell = forwardRef<
   return (
     <td
       ref={ref}
-      className={clsx('px-4 py-3 text-slate-200', className)}
+      className={clsx('px-4 py-3 text-black', className)}
       {...props}
     />
   );
@@ -149,7 +149,7 @@ export const TableCaption = forwardRef<
   return (
     <caption
       ref={ref}
-      className={clsx('mt-4 text-sm text-slate-400', className)}
+      className={clsx('mt-4 text-sm text-black/60', className)}
       {...props}
     />
   );

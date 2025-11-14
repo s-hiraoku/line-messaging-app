@@ -84,38 +84,38 @@ export default function StickerMessagePage() {
   };
 
   return (
-    <div className="max-w-4xl space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold text-white">スタンプメッセージ送信</h1>
-        <p className="text-sm text-slate-400">
+    <div className="space-y-6">
+      <header className="space-y-2 border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <h1 className="text-2xl font-bold uppercase tracking-wider text-black">スタンプメッセージ送信</h1>
+        <p className="text-sm text-black/60">
           LINE の公式スタンプを選択してユーザーに送信できます。
         </p>
       </header>
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 rounded-lg border border-slate-700/50 bg-slate-800/40 p-6 shadow-lg backdrop-blur-sm"
+        className="space-y-4 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
       >
         <div className="space-y-2">
-          <label htmlFor="lineUserId" className="text-sm font-medium text-slate-300">
-            LINE ユーザー ID <span className="text-red-400">*</span>
+          <label htmlFor="lineUserId" className="text-sm font-bold uppercase tracking-wider text-black">
+            LINE ユーザー ID <span className="text-red-600">*</span>
           </label>
           <input
             id="lineUserId"
             type="text"
             value={lineUserId}
             onChange={(event) => setLineUserId(event.target.value)}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
             placeholder="Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
             required
           />
         </div>
 
-        <div className="space-y-4">
-          <label className="text-sm font-medium text-slate-300">
-            スタンプパッケージ <span className="text-red-400">*</span>
+        <div className="space-y-3">
+          <label className="text-sm font-bold uppercase tracking-wider text-black">
+            スタンプパッケージ <span className="text-red-600">*</span>
           </label>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {STICKER_PACKAGES.map((pkg) => (
               <button
                 key={pkg.id}
@@ -124,15 +124,15 @@ export default function StickerMessagePage() {
                   setPackageId(pkg.id);
                   setStickerId("");
                 }}
-                className={`rounded-lg border p-4 text-left transition ${
+                className={`border-2 p-3 text-left transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] ${
                   packageId === pkg.id
-                    ? "border-blue-500 bg-blue-500/10"
-                    : "border-slate-600 bg-slate-900/40 hover:border-slate-500"
+                    ? "border-black bg-black text-white"
+                    : "border-black bg-white text-black hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
                 }`}
               >
                 <div className="space-y-1">
-                  <div className="text-sm font-medium text-white">{pkg.name}</div>
-                  <div className="text-xs text-slate-400">Package ID: {pkg.id}</div>
+                  <div className="text-sm font-bold">{pkg.name}</div>
+                  <div className="text-xs font-mono">{pkg.id}</div>
                 </div>
               </button>
             ))}
@@ -140,20 +140,20 @@ export default function StickerMessagePage() {
         </div>
 
         {selectedPackage && (
-          <div className="space-y-4">
-            <label className="text-sm font-medium text-slate-300">
-              スタンプを選択 <span className="text-red-400">*</span>
+          <div className="space-y-3">
+            <label className="text-sm font-bold uppercase tracking-wider text-black">
+              スタンプを選択 <span className="text-red-600">*</span>
             </label>
-            <div className="grid grid-cols-5 gap-3 sm:grid-cols-6 md:grid-cols-8">
+            <div className="grid grid-cols-5 gap-2 sm:grid-cols-6 md:grid-cols-8">
               {selectedPackage.stickers.map((sticker) => (
                 <button
                   key={sticker.id}
                   type="button"
                   onClick={() => setStickerId(sticker.id)}
-                  className={`flex aspect-square items-center justify-center rounded-lg border text-3xl transition ${
+                  className={`flex aspect-square items-center justify-center border-2 text-3xl transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] ${
                     stickerId === sticker.id
-                      ? "border-blue-500 bg-blue-500/10"
-                      : "border-slate-600 bg-slate-900/40 hover:border-slate-500 hover:bg-slate-800/60"
+                      ? "border-black bg-black"
+                      : "border-black bg-white hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
                   }`}
                   title={`Sticker ID: ${sticker.id}`}
                 >
@@ -162,26 +162,24 @@ export default function StickerMessagePage() {
               ))}
             </div>
             {stickerId && (
-              <div className="text-xs text-slate-400">
+              <div className="text-xs font-mono text-black/60">
                 選択中: Sticker ID {stickerId}
               </div>
             )}
           </div>
         )}
 
-        <div className="flex items-center gap-3 border-t border-slate-700/50 pt-4">
-          <button
-            type="submit"
-            className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-            disabled={status === "sending" || !lineUserId || !packageId || !stickerId}
-          >
-            {status === "sending" ? "送信中..." : "送信"}
-          </button>
-          {status === "success" && (
-            <p className="text-sm text-green-400">スタンプを送信しました。</p>
-          )}
-          {status === "error" && error && <p className="text-sm text-red-400">{error}</p>}
-        </div>
+        <button
+          type="submit"
+          className="inline-flex items-center border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50 active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
+          disabled={status === "sending" || !lineUserId || !packageId || !stickerId}
+        >
+          {status === "sending" ? "送信中..." : "送信"}
+        </button>
+        {status === "success" && (
+          <p className="text-sm font-bold text-[#00B900]">スタンプを送信しました。</p>
+        )}
+        {status === "error" && error && <p className="text-sm font-bold text-red-600">{error}</p>}
       </form>
 
       {/* Preview Section */}
@@ -198,46 +196,18 @@ export default function StickerMessagePage() {
 
       {/* Debug Panel */}
       {packageId && stickerId && (
-        <details className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-4 shadow-lg backdrop-blur-sm">
-          <summary className="cursor-pointer text-sm font-medium text-slate-300">
-            デバッグ情報
-          </summary>
-          <div className="mt-4 space-y-3">
-            <div>
-              <div className="mb-1 text-xs font-medium text-slate-400">cURL</div>
-              <pre className="overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-300">
-                {`curl -X POST https://api.line.me/v2/bot/message/push \\
-  -H 'Content-Type: application/json' \\
-  -H 'Authorization: Bearer {YOUR_CHANNEL_ACCESS_TOKEN}' \\
-  -d '{
-  "to": "${lineUserId || "Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}",
-  "messages": [
-    {
-      "type": "sticker",
-      "packageId": "${packageId}",
-      "stickerId": "${stickerId}"
-    }
-  ]
-}'`}
-              </pre>
-            </div>
-            <div>
-              <div className="mb-1 text-xs font-medium text-slate-400">Request Body</div>
-              <pre className="overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-300">
-                {JSON.stringify(
-                  {
-                    to: lineUserId || "Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-                    type: "sticker",
-                    packageId,
-                    stickerId,
-                  },
-                  null,
-                  2
-                )}
-              </pre>
-            </div>
-          </div>
-        </details>
+        <DebugPanel
+          title="送信 API デバッグ"
+          request={{ to: lineUserId, type: "sticker", packageId, stickerId }}
+          response={undefined}
+          curl={toCurl({
+            url: new URL('/api/line/send', typeof window !== 'undefined' ? location.origin : 'http://localhost:3000').toString(),
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: { to: lineUserId, type: "sticker", packageId, stickerId }
+          })}
+          docsUrl="https://developers.line.biz/ja/reference/messaging-api/#send-push-message"
+        />
       )}
     </div>
   );

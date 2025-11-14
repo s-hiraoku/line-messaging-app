@@ -129,8 +129,8 @@ export function LocationForm({ card, onChange }: LocationFormProps) {
     <div className="space-y-6">
       {/* Title Field */}
       <div className="space-y-2">
-        <label htmlFor="location-title" className="text-sm font-medium text-slate-300">
-          タイトル <span className="text-red-400">*</span>
+        <label htmlFor="location-title" className="text-sm font-bold uppercase tracking-wider text-black">
+          タイトル <span className="text-red-600">*</span>
         </label>
         <input
           id="location-title"
@@ -139,27 +139,27 @@ export function LocationForm({ card, onChange }: LocationFormProps) {
           onChange={(e) => handleTitleChange(e.target.value)}
           onBlur={() => handleBlur("title")}
           maxLength={40}
-          className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
           placeholder="場所の名前を入力 (例: 東京タワー)"
         />
         {shouldShowError("title") && (
-          <p className="text-xs text-red-400">{errors.title}</p>
+          <p className="text-xs font-bold text-red-600">{errors.title}</p>
         )}
         <div className="flex justify-between text-xs">
-          <p className="text-slate-500">{card.title.length}/40文字</p>
+          <p className="font-mono text-black/60">{card.title.length}/40文字</p>
           {card.title.length >= 35 && card.title.length < 40 && (
-            <p className="text-yellow-400">文字数制限に近づいています</p>
+            <p className="font-bold text-black">文字数制限に近づいています</p>
           )}
           {card.title.length === 40 && (
-            <p className="text-red-400">文字数制限に達しました</p>
+            <p className="font-bold text-red-600">文字数制限に達しました</p>
           )}
         </div>
       </div>
 
       {/* Address Field */}
       <div className="space-y-2">
-        <label htmlFor="location-address" className="text-sm font-medium text-slate-300">
-          住所 <span className="text-red-400">*</span>
+        <label htmlFor="location-address" className="text-sm font-bold uppercase tracking-wider text-black">
+          住所 <span className="text-red-600">*</span>
         </label>
         <input
           id="location-address"
@@ -168,26 +168,26 @@ export function LocationForm({ card, onChange }: LocationFormProps) {
           onChange={(e) => handleAddressChange(e.target.value)}
           onBlur={() => handleBlur("address")}
           maxLength={60}
-          className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
           placeholder="住所を入力 (例: 東京都港区芝公園4-2-8)"
         />
         {shouldShowError("address") && (
-          <p className="text-xs text-red-400">{errors.address}</p>
+          <p className="text-xs font-bold text-red-600">{errors.address}</p>
         )}
         <div className="flex justify-between text-xs">
-          <p className="text-slate-500">{card.address.length}/60文字</p>
+          <p className="font-mono text-black/60">{card.address.length}/60文字</p>
           {card.address.length >= 55 && card.address.length < 60 && (
-            <p className="text-yellow-400">文字数制限に近づいています</p>
+            <p className="font-bold text-black">文字数制限に近づいています</p>
           )}
           {card.address.length === 60 && (
-            <p className="text-red-400">文字数制限に達しました</p>
+            <p className="font-bold text-red-600">文字数制限に達しました</p>
           )}
         </div>
       </div>
 
       {/* Hours Field (Optional) */}
       <div className="space-y-2">
-        <label htmlFor="location-hours" className="text-sm font-medium text-slate-300">営業時間</label>
+        <label htmlFor="location-hours" className="text-sm font-bold uppercase tracking-wider text-black">営業時間</label>
         <input
           id="location-hours"
           type="text"
@@ -195,27 +195,27 @@ export function LocationForm({ card, onChange }: LocationFormProps) {
           onChange={(e) => handleHoursChange(e.target.value)}
           onBlur={() => handleBlur("hours")}
           maxLength={60}
-          className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
           placeholder="営業時間を入力 (例: 9:00-21:00)"
         />
         {shouldShowError("hours") && (
-          <p className="text-xs text-red-400">{errors.hours}</p>
+          <p className="text-xs font-bold text-red-600">{errors.hours}</p>
         )}
         <div className="flex justify-between text-xs">
-          <p className="text-slate-500">{(card.hours || "").length}/60文字</p>
+          <p className="font-mono text-black/60">{(card.hours || "").length}/60文字</p>
           {card.hours && card.hours.length >= 55 && card.hours.length < 60 && (
-            <p className="text-yellow-400">文字数制限に近づいています</p>
+            <p className="font-bold text-black">文字数制限に近づいています</p>
           )}
           {card.hours && card.hours.length === 60 && (
-            <p className="text-red-400">文字数制限に達しました</p>
+            <p className="font-bold text-red-600">文字数制限に達しました</p>
           )}
         </div>
       </div>
 
       {/* Image Upload Field */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-slate-300">
-          画像 <span className="text-red-400">*</span>
+        <label className="text-sm font-bold uppercase tracking-wider text-black">
+          画像 <span className="text-red-600">*</span>
         </label>
         <ImageCropUploader
           onImageUploaded={handleImageUploaded}
@@ -223,12 +223,12 @@ export function LocationForm({ card, onChange }: LocationFormProps) {
           placeholder="場所の画像をアップロード (JPEG/PNG、10MB以下、1024x1024px以上)"
         />
         {shouldShowError("imageUrl") && (
-          <p className="text-xs text-red-400">{errors.imageUrl}</p>
+          <p className="text-xs font-bold text-red-600">{errors.imageUrl}</p>
         )}
         {card.imageUrl && (
-          <div className="rounded-lg border border-slate-700 bg-slate-900/40 p-3">
-            <p className="text-xs text-slate-400 mb-2">現在の画像:</p>
-            <div className="relative aspect-video w-full overflow-hidden rounded-md bg-slate-800">
+          <div className="border-2 border-black bg-[#FFFEF5] p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+            <p className="text-xs font-bold uppercase tracking-wider text-black mb-2">現在の画像:</p>
+            <div className="relative aspect-video w-full overflow-hidden border-2 border-black bg-white">
               {/* eslint-disable-next-line @next/next/no-img-element -- Preview component with user-provided URLs from various sources */}
               <img
                 src={card.imageUrl}
@@ -236,7 +236,7 @@ export function LocationForm({ card, onChange }: LocationFormProps) {
                 className="h-full w-full object-cover"
               />
             </div>
-            <p className="text-xs text-slate-500 mt-2 break-all">{card.imageUrl}</p>
+            <p className="text-xs font-mono text-black/60 mt-2 break-all">{card.imageUrl}</p>
           </div>
         )}
       </div>
@@ -254,62 +254,62 @@ export function LocationForm({ card, onChange }: LocationFormProps) {
       </div>
 
       {/* Form Summary */}
-      <div className="rounded-lg border border-slate-700/50 bg-slate-900/30 p-4">
-        <h4 className="text-sm font-medium text-slate-300 mb-2">入力状況</h4>
+      <div className="border-2 border-black bg-[#00B900]/10 p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+        <h4 className="text-sm font-bold uppercase tracking-wider text-black mb-2">入力状況</h4>
         <div className="space-y-1 text-xs">
           <div className="flex items-center justify-between">
-            <span className="text-slate-400">タイトル</span>
+            <span className="font-mono text-black/60">タイトル</span>
             <span
               className={
                 card.title && card.title.trim().length > 0
-                  ? "text-emerald-400"
-                  : "text-slate-500"
+                  ? "font-bold text-[#00B900]"
+                  : "font-mono text-black/40"
               }
             >
               {card.title && card.title.trim().length > 0 ? "✓" : "ー"}
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-slate-400">住所</span>
+            <span className="font-mono text-black/60">住所</span>
             <span
               className={
                 card.address && card.address.trim().length > 0
-                  ? "text-emerald-400"
-                  : "text-slate-500"
+                  ? "font-bold text-[#00B900]"
+                  : "font-mono text-black/40"
               }
             >
               {card.address && card.address.trim().length > 0 ? "✓" : "ー"}
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-slate-400">営業時間 (オプション)</span>
+            <span className="font-mono text-black/60">営業時間 (オプション)</span>
             <span
               className={
                 card.hours && card.hours.trim().length > 0
-                  ? "text-emerald-400"
-                  : "text-slate-500"
+                  ? "font-bold text-[#00B900]"
+                  : "font-mono text-black/40"
               }
             >
               {card.hours && card.hours.trim().length > 0 ? "✓" : "ー"}
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-slate-400">画像</span>
+            <span className="font-mono text-black/60">画像</span>
             <span
               className={
                 card.imageUrl && card.imageUrl.trim().length > 0
-                  ? "text-emerald-400"
-                  : "text-slate-500"
+                  ? "font-bold text-[#00B900]"
+                  : "font-mono text-black/40"
               }
             >
               {card.imageUrl && card.imageUrl.trim().length > 0 ? "✓" : "ー"}
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-slate-400">アクション</span>
+            <span className="font-mono text-black/60">アクション</span>
             <span
               className={
-                card.actions.length > 0 ? "text-emerald-400" : "text-slate-500"
+                card.actions.length > 0 ? "font-bold text-[#00B900]" : "font-mono text-black/40"
               }
             >
               {card.actions.length > 0
@@ -322,11 +322,11 @@ export function LocationForm({ card, onChange }: LocationFormProps) {
 
       {/* Validation Summary */}
       {Object.keys(errors).length > 0 && (
-        <div className="rounded-lg border border-red-500/50 bg-red-500/10 p-4">
-          <h4 className="text-sm font-medium text-red-400 mb-2">
+        <div className="border-2 border-black bg-red-600/10 p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+          <h4 className="text-sm font-bold uppercase tracking-wider text-black mb-2">
             入力エラー ({Object.keys(errors).length}件)
           </h4>
-          <ul className="space-y-1 text-xs text-red-300">
+          <ul className="space-y-1 text-xs font-mono text-black/80">
             {Object.entries(errors).map(([field, message]) => (
               <li key={field}>• {message}</li>
             ))}

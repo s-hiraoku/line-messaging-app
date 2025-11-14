@@ -30,6 +30,8 @@ export default function TemplateMessagePage() {
   ]);
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [lastRequest, setLastRequest] = useState<unknown>();
+  const [lastResponse, setLastResponse] = useState<unknown>();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -54,21 +56,28 @@ export default function TemplateMessagePage() {
         }
       }
 
+      const payload = {
+        to: lineUserId,
+        messages: [{
+          type: "template",
+          altText,
+          template,
+        }],
+      };
+      setLastRequest(payload);
+
       const response = await fetch("/api/line/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          to: lineUserId,
-          type: "template",
-          altText,
-          template,
-        }),
+        body: JSON.stringify(payload),
       });
 
+      const data = await response.json().catch(() => ({}));
+      setLastResponse(data);
+
       if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
         throw new Error(data.error ?? "テンプレートメッセージの送信に失敗しました");
       }
 
@@ -127,36 +136,36 @@ export default function TemplateMessagePage() {
   };
 
   return (
-    <div className="max-w-4xl space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold text-white">テンプレートメッセージ送信</h1>
-        <p className="text-sm text-slate-400">
+    <div className="space-y-6">
+      <header className="space-y-2 border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <h1 className="text-2xl font-bold uppercase tracking-wider text-black">テンプレートメッセージ送信</h1>
+        <p className="text-sm text-black/60">
           ボタン付きのリッチなメッセージを送信できます。
         </p>
       </header>
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 rounded-lg border border-slate-700/50 bg-slate-800/40 p-6 shadow-lg backdrop-blur-sm"
+        className="space-y-6 border-2 border-black bg-[#FFFEF5] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
       >
         <div className="space-y-2">
-          <label htmlFor="lineUserId" className="text-sm font-medium text-slate-300">
-            LINE ユーザー ID <span className="text-red-400">*</span>
+          <label htmlFor="lineUserId" className="text-sm font-bold uppercase tracking-wider text-black">
+            LINE ユーザー ID <span className="text-red-600">*</span>
           </label>
           <input
             id="lineUserId"
             type="text"
             value={lineUserId}
             onChange={(event) => setLineUserId(event.target.value)}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
             placeholder="Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
             required
           />
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="templateType" className="text-sm font-medium text-slate-300">
-            テンプレートタイプ <span className="text-red-400">*</span>
+          <label htmlFor="templateType" className="text-sm font-bold uppercase tracking-wider text-black">
+            テンプレートタイプ <span className="text-red-600">*</span>
           </label>
           <select
             id="templateType"
@@ -174,12 +183,12 @@ export default function TemplateMessagePage() {
                 ]);
               }
             }}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
           >
             <option value="buttons">ボタン (Buttons)</option>
             <option value="confirm">確認 (Confirm)</option>
           </select>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs font-mono text-black/60">
             {templateType === "buttons"
               ? "最大4つのアクションボタンを含むテンプレート"
               : "2つのアクションボタンで確認を促すテンプレート"}
@@ -187,8 +196,8 @@ export default function TemplateMessagePage() {
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="altText" className="text-sm font-medium text-slate-300">
-            代替テキスト <span className="text-red-400">*</span>
+          <label htmlFor="altText" className="text-sm font-bold uppercase tracking-wider text-black">
+            代替テキスト <span className="text-red-600">*</span>
           </label>
           <input
             id="altText"
@@ -196,16 +205,16 @@ export default function TemplateMessagePage() {
             value={altText}
             onChange={(event) => setAltText(event.target.value)}
             maxLength={400}
-            className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
             placeholder="通知テキスト"
             required
           />
-          <p className="text-xs text-slate-500">最大400文字</p>
+          <p className="text-xs font-mono text-black/60">最大400文字</p>
         </div>
 
         {templateType === "buttons" && (
           <div className="space-y-2">
-            <label htmlFor="title" className="text-sm font-medium text-slate-300">
+            <label htmlFor="title" className="text-sm font-bold uppercase tracking-wider text-black">
               タイトル
             </label>
             <input
@@ -214,34 +223,34 @@ export default function TemplateMessagePage() {
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               maxLength={40}
-              className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
               placeholder="メニュー"
             />
-            <p className="text-xs text-slate-500">オプション、最大40文字</p>
+            <p className="text-xs font-mono text-black/60">オプション、最大40文字</p>
           </div>
         )}
 
         <div className="space-y-2">
-          <label htmlFor="text" className="text-sm font-medium text-slate-300">
-            本文 <span className="text-red-400">*</span>
+          <label htmlFor="text" className="text-sm font-bold uppercase tracking-wider text-black">
+            本文 <span className="text-red-600">*</span>
           </label>
           <textarea
             id="text"
             value={text}
             onChange={(event) => setText(event.target.value)}
             maxLength={templateType === "confirm" ? 240 : 160}
-            className="h-24 w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="h-24 w-full border-2 border-black bg-white px-3 py-2 text-sm text-black placeholder-black/40 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
             placeholder="以下からお選びください"
             required
           />
-          <p className="text-xs text-slate-500">
+          <p className="text-xs font-mono text-black/60">
             最大{templateType === "confirm" ? "240" : "160"}文字
           </p>
         </div>
 
         {templateType === "buttons" && (
           <div className="space-y-2">
-            <label htmlFor="thumbnailImageUrl" className="text-sm font-medium text-slate-300">
+            <label htmlFor="thumbnailImageUrl" className="text-sm font-bold uppercase tracking-wider text-black">
               サムネイル画像URL
             </label>
             <input
@@ -249,23 +258,23 @@ export default function TemplateMessagePage() {
               type="url"
               value={thumbnailImageUrl}
               onChange={(event) => setThumbnailImageUrl(event.target.value)}
-              className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
               placeholder="https://example.com/image.jpg"
             />
-            <p className="text-xs text-slate-500">オプション、HTTPS、最大1024x1024px、JPEG/PNG</p>
+            <p className="text-xs font-mono text-black/60">オプション、HTTPS、最大1024x1024px、JPEG/PNG</p>
           </div>
         )}
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-slate-300">
-              アクション <span className="text-red-400">*</span>
+            <label className="text-sm font-bold uppercase tracking-wider text-black">
+              アクション <span className="text-red-600">*</span>
             </label>
             <button
               type="button"
               onClick={addAction}
               disabled={actions.length >= 4}
-              className="inline-flex items-center gap-1 rounded-md border border-slate-600 bg-slate-900/60 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-slate-800/60 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center gap-1 border-2 border-black bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -282,17 +291,17 @@ export default function TemplateMessagePage() {
           {actions.map((action, index) => (
             <div
               key={index}
-              className="space-y-3 rounded-md border border-slate-700/50 bg-slate-900/40 p-4"
+              className="space-y-3 border-2 border-black bg-white p-4 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
             >
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-slate-300">
+                <span className="text-sm font-bold uppercase tracking-wider text-black">
                   アクション {index + 1}
                 </span>
                 {actions.length > 1 && (
                   <button
                     type="button"
                     onClick={() => removeAction(index)}
-                    className="text-xs text-red-400 hover:text-red-300"
+                    className="text-xs font-bold text-red-600 hover:text-red-700"
                   >
                     削除
                   </button>
@@ -301,25 +310,25 @@ export default function TemplateMessagePage() {
 
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <label className="text-xs text-slate-400">ラベル</label>
+                  <label className="text-xs font-bold uppercase tracking-wider text-black">ラベル</label>
                   <input
                     type="text"
                     value={action.label}
                     onChange={(e) => updateAction(index, "label", e.target.value)}
                     maxLength={20}
-                    className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
                     placeholder="ボタンテキスト"
                     required
                   />
-                  <p className="text-xs text-slate-500">最大20文字</p>
+                  <p className="text-xs font-mono text-black/60">最大20文字</p>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-xs text-slate-400">アクションタイプ</label>
+                  <label className="text-xs font-bold uppercase tracking-wider text-black">アクションタイプ</label>
                   <select
                     value={action.type}
                     onChange={(e) => updateAction(index, "type", e.target.value)}
-                    className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
                   >
                     <option value="uri">リンク (URI)</option>
                     <option value="message">メッセージ</option>
@@ -330,12 +339,12 @@ export default function TemplateMessagePage() {
 
               {action.type === "uri" && (
                 <div className="space-y-2">
-                  <label className="text-xs text-slate-400">URL</label>
+                  <label className="text-xs font-bold uppercase tracking-wider text-black">URL</label>
                   <input
                     type="url"
                     value={action.uri || ""}
                     onChange={(e) => updateAction(index, "uri", e.target.value)}
-                    className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
                     placeholder="https://example.com"
                     required
                   />
@@ -344,13 +353,13 @@ export default function TemplateMessagePage() {
 
               {action.type === "message" && (
                 <div className="space-y-2">
-                  <label className="text-xs text-slate-400">送信テキスト</label>
+                  <label className="text-xs font-bold uppercase tracking-wider text-black">送信テキスト</label>
                   <input
                     type="text"
                     value={action.text || ""}
                     onChange={(e) => updateAction(index, "text", e.target.value)}
                     maxLength={300}
-                    className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
                     placeholder="送信されるメッセージ"
                     required
                   />
@@ -359,13 +368,13 @@ export default function TemplateMessagePage() {
 
               {action.type === "postback" && (
                 <div className="space-y-2">
-                  <label className="text-xs text-slate-400">データ</label>
+                  <label className="text-xs font-bold uppercase tracking-wider text-black">データ</label>
                   <input
                     type="text"
                     value={action.data || ""}
                     onChange={(e) => updateAction(index, "data", e.target.value)}
                     maxLength={300}
-                    className="w-full rounded-md border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
                     placeholder="action=example&id=123"
                     required
                   />
@@ -375,18 +384,18 @@ export default function TemplateMessagePage() {
           ))}
         </div>
 
-        <div className="flex items-center gap-3 border-t border-slate-700/50 pt-4">
+        <div className="flex items-center gap-3 border-t-2 border-black pt-4">
           <button
             type="submit"
-            className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50 active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
             disabled={status === "sending" || !lineUserId || !altText || !text}
           >
             {status === "sending" ? "送信中..." : "送信"}
           </button>
           {status === "success" && (
-            <p className="text-sm text-green-400">テンプレートメッセージを送信しました。</p>
+            <p className="text-sm font-bold text-[#00B900]">テンプレートメッセージを送信しました。</p>
           )}
-          {status === "error" && error && <p className="text-sm text-red-400">{error}</p>}
+          {status === "error" && error && <p className="text-sm font-bold text-red-600">{error}</p>}
         </div>
       </form>
 
@@ -403,34 +412,18 @@ export default function TemplateMessagePage() {
       />
 
       {/* Debug Panel */}
-      <details className="rounded-lg border border-slate-700/50 bg-slate-800/40 p-4 shadow-lg backdrop-blur-sm">
-        <summary className="cursor-pointer text-sm font-medium text-slate-300">
-          デバッグ情報
-        </summary>
-        <div className="mt-4 space-y-3">
-          <div>
-            <div className="mb-1 text-xs font-medium text-slate-400">Request Body</div>
-            <pre className="overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-300">
-              {JSON.stringify(
-                {
-                  to: lineUserId || "Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-                  type: "template",
-                  altText,
-                  template: {
-                    type: "buttons",
-                    ...(title && { title }),
-                    text,
-                    ...(thumbnailImageUrl && { thumbnailImageUrl }),
-                    actions,
-                  },
-                },
-                null,
-                2
-              )}
-            </pre>
-          </div>
-        </div>
-      </details>
+      <DebugPanel
+        title="送信 API デバッグ"
+        request={lastRequest}
+        response={lastResponse}
+        curl={lastRequest ? toCurl({
+          url: typeof window !== 'undefined' ? `${window.location.origin}/api/line/send` : 'http://localhost:3000/api/line/send',
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: lastRequest
+        }) : undefined}
+        docsUrl="https://developers.line.biz/ja/reference/messaging-api/#template-messages"
+      />
     </div>
   );
 }

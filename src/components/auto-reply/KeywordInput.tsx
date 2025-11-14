@@ -41,13 +41,13 @@ export function KeywordInput({ keywords, onChange, maxKeywords = 20 }: KeywordIn
         {keywords.map((keyword, index) => (
           <span
             key={index}
-            className="inline-flex items-center gap-1 px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm"
+            className="inline-flex items-center gap-1 px-3 py-1 border-2 border-black bg-[#FFFEF5] text-black text-sm font-mono"
           >
             {keyword}
             <button
               type="button"
               onClick={() => removeKeyword(index)}
-              className="hover:text-blue-300"
+              className="font-bold hover:text-red-600 transition-colors"
               aria-label={`Remove ${keyword}`}
             >
               ×
@@ -61,10 +61,10 @@ export function KeywordInput({ keywords, onChange, maxKeywords = 20 }: KeywordIn
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="キーワードを入力してEnterキーで追加"
-        className="w-full px-3 py-2 border border-slate-700 bg-slate-900/60 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-slate-500 disabled:opacity-50"
+        className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all disabled:opacity-50"
         disabled={keywords.length >= maxKeywords}
       />
-      <p className="text-sm text-slate-500">
+      <p className="text-xs font-mono text-black/60">
         {keywords.length} / {maxKeywords} キーワード
       </p>
     </div>

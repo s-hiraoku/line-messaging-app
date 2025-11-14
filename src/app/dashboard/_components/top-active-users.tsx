@@ -15,31 +15,31 @@ type Props = {
 export function TopActiveUsers({ data }: Props) {
   if (data.length === 0) {
     return (
-      <article className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5 shadow-sm">
+      <article className="border-2 border-black bg-white p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white">アクティブユーザー</h2>
-          <Users className="h-5 w-5 text-slate-500" />
+          <h2 className="text-lg font-bold uppercase tracking-wider text-black">アクティブユーザー</h2>
+          <Users className="h-5 w-5 text-black/40" />
         </div>
-        <p className="py-8 text-center text-sm text-slate-500">データがありません</p>
+        <p className="py-8 text-center text-sm font-bold text-black/60">データがありません</p>
       </article>
     );
   }
 
   return (
-    <article className="rounded-lg border border-slate-800/60 bg-slate-900/60 p-5 shadow-sm">
+    <article className="border-2 border-black bg-white p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-white">アクティブユーザー</h2>
-        <Users className="h-5 w-5 text-blue-500" />
+        <h2 className="text-lg font-bold uppercase tracking-wider text-black">アクティブユーザー</h2>
+        <Users className="h-5 w-5 text-[#00B900]" />
       </div>
 
       <ul className="space-y-3">
         {data.map((user, index) => (
           <li
             key={user.id}
-            className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-800/40 transition"
+            className="flex items-center gap-3 p-2 border-2 border-black bg-white hover:bg-[#FFFEF5] transition-colors"
           >
             <div className="flex-shrink-0 w-6 text-center">
-              <span className="text-sm font-semibold text-slate-500">#{index + 1}</span>
+              <span className="text-sm font-bold text-black/60">#{index + 1}</span>
             </div>
             <div className="flex-shrink-0">
               {user.pictureUrl ? (
@@ -48,19 +48,19 @@ export function TopActiveUsers({ data }: Props) {
                   alt={user.displayName}
                   width={40}
                   height={40}
-                  className="rounded-full"
+                  className="border-2 border-black"
                 />
               ) : (
-                <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center">
-                  <Users className="h-5 w-5 text-slate-600" />
+                <div className="w-10 h-10 border-2 border-black bg-[#FFFEF5] flex items-center justify-center">
+                  <Users className="h-5 w-5 text-black/60" />
                 </div>
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-slate-200 truncate">
+              <p className="text-sm font-bold text-black truncate">
                 {user.displayName}
               </p>
-              <div className="flex items-center gap-1 text-xs text-slate-400">
+              <div className="flex items-center gap-1 text-xs font-mono text-black/60">
                 <MessageCircle className="h-3 w-3" />
                 <span>{user.messageCount} メッセージ</span>
               </div>
@@ -69,8 +69,8 @@ export function TopActiveUsers({ data }: Props) {
         ))}
       </ul>
 
-      <div className="mt-4 pt-4 border-t border-slate-800">
-        <p className="text-xs text-slate-400">
+      <div className="mt-4 pt-4 border-t-2 border-black">
+        <p className="text-xs font-bold uppercase tracking-wider text-black/60">
           メッセージ数が多い順にランキング表示
         </p>
       </div>

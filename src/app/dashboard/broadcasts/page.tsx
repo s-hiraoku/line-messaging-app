@@ -35,24 +35,24 @@ export default function BroadcastsPage() {
 
   return (
     <div className="space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold">配信（ブロードキャスト）</h1>
-        <p className="text-sm text-slate-500">テキストの一斉送信を試験できます。</p>
+      <header className="space-y-2 border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <h1 className="text-2xl font-bold uppercase tracking-wider text-black">配信（ブロードキャスト）</h1>
+        <p className="text-sm text-black/60">テキストの一斉送信を試験できます。</p>
       </header>
 
-      <div className="max-w-xl space-y-3 rounded-lg border border-slate-800/60 bg-slate-900/60 p-4 shadow-sm text-slate-100">
+      <div className="space-y-3 border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <input
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="配信メッセージ"
-          className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
+          className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
         />
         <button onClick={send} disabled={!message || status === "sending"}
-          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:text-white/90">
+          className="border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-60">
           {status === "sending" ? "送信中..." : "配信する"}
         </button>
-        {status === "sent" && <p className="text-sm text-emerald-600">配信しました。</p>}
-        {status === "error" && error && <p className="text-sm text-red-600">{error}</p>}
+        {status === "sent" && <p className="text-sm font-bold text-[#00B900]">配信しました。</p>}
+        {status === "error" && error && <p className="text-sm font-bold text-red-600">{error}</p>}
       </div>
 
       <DebugPanel

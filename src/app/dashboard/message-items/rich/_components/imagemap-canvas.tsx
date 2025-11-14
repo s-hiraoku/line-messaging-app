@@ -103,7 +103,7 @@ export function ImagemapCanvas({
   return (
     <div
       ref={containerRef}
-      className="rounded-lg border border-slate-700/50 bg-slate-900/40 p-4"
+      className="border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
     >
       <canvas
         ref={canvasRef}
@@ -112,7 +112,7 @@ export function ImagemapCanvas({
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseLeave}
         style={{ cursor }}
-        className="w-full rounded border border-slate-600"
+        className="w-full border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
       />
     </div>
   );
