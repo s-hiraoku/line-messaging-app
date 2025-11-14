@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { ImageUploader } from '@/app/dashboard/_components/image-uploader';
+import { ImageCropUploader } from '@/app/dashboard/_components/image-crop-uploader';
 import { ActionEditor } from './action-editor';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/Input';
@@ -283,8 +283,9 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
         <Label className="text-sm font-semibold text-slate-200">
           画像 <span className="text-red-400">*</span>
         </Label>
-        <ImageUploader
+        <ImageCropUploader
           onImageUploaded={handleImageUploaded}
+          defaultAspectRatio="SQUARE"
           placeholder="商品画像をアップロード (JPEG/PNG, 1024x1024px以上)"
         />
         {errors.imageUrl && (

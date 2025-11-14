@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { X } from 'lucide-react';
-import { ImageUploader } from '@/app/dashboard/_components/image-uploader';
+import { ImageCropUploader } from '@/app/dashboard/_components/image-crop-uploader';
 import { ActionEditor } from './action-editor';
 import type { PersonCard } from './types';
 
@@ -277,8 +277,9 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
         <label className="text-sm font-medium text-slate-300">
           画像 <span className="text-red-400">*</span>
         </label>
-        <ImageUploader
+        <ImageCropUploader
           onImageUploaded={handleImageUploaded}
+          defaultAspectRatio="SQUARE"
           placeholder="プロフィール画像をアップロード"
         />
         {errors.imageUrl && (

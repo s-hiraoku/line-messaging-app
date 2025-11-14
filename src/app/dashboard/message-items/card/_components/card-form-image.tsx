@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { ImageUploader } from "@/app/dashboard/_components/image-uploader";
+import { ImageCropUploader } from "@/app/dashboard/_components/image-crop-uploader";
 import { ActionEditor } from "./action-editor";
 import type { ImageCard } from "./types";
 
@@ -95,8 +95,9 @@ export function CardFormImage({ card, onChange }: CardFormImageProps) {
         <label className="text-sm font-medium text-slate-300">
           画像 <span className="text-red-400">*</span>
         </label>
-        <ImageUploader
+        <ImageCropUploader
           onImageUploaded={handleImageUpload}
+          defaultAspectRatio="FREE"
           placeholder="画像カード用の画像をアップロード"
         />
         {errors.imageUrl && (

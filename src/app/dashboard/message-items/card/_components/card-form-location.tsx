@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { LocationCard } from "./types";
-import { ImageUploader } from "@/app/dashboard/_components/image-uploader";
+import { ImageCropUploader } from "@/app/dashboard/_components/image-crop-uploader";
 import { ActionEditor } from "./action-editor";
 
 interface LocationFormProps {
@@ -217,8 +217,9 @@ export function LocationForm({ card, onChange }: LocationFormProps) {
         <label className="text-sm font-medium text-slate-300">
           画像 <span className="text-red-400">*</span>
         </label>
-        <ImageUploader
+        <ImageCropUploader
           onImageUploaded={handleImageUploaded}
+          defaultAspectRatio="LANDSCAPE"
           placeholder="場所の画像をアップロード (JPEG/PNG、10MB以下、1024x1024px以上)"
         />
         {shouldShowError("imageUrl") && (
