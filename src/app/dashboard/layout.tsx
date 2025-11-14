@@ -106,7 +106,7 @@ export default function DashboardLayout({
   return (
     <ToastProvider>
       <ConfirmDialogProvider>
-        <div className="min-h-screen bg-[#FFFEF5]">
+        <div className="min-h-screen bg-[#FFFEF5] overflow-x-hidden">
           <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[320px_1fr]">
             {/* Sidebar */}
             <aside className="relative border-b-4 border-black bg-white lg:border-b-0 lg:border-r-4">
