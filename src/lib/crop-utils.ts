@@ -33,8 +33,8 @@ export interface Area {
 export function createImage(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const image = new Image();
-    image.addEventListener('load', () => resolve(image));
-    image.addEventListener('error', (error) =>
+    image.addEventListener("load", () => resolve(image));
+    image.addEventListener("error", (error) =>
       reject(new Error(`画像の読み込みに失敗しました: ${error}`))
     );
     image.src = url;
@@ -65,18 +65,18 @@ export function createImage(url: string): Promise<HTMLImageElement> {
 export async function getCroppedImg(
   imageSrc: string,
   pixelCrop: Area,
-  outputFormat: 'image/jpeg' | 'image/png' = 'image/jpeg'
+  outputFormat: "image/jpeg" | "image/png" = "image/jpeg"
 ): Promise<Blob> {
   try {
     // Load image
     const image = await createImage(imageSrc);
 
     // Create canvas
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
 
     if (!ctx) {
-      throw new Error('Canvas context を取得できませんでした');
+      throw new Error("Canvas context を取得できませんでした");
     }
 
     // Set canvas size to crop size
@@ -103,15 +103,17 @@ export async function getCroppedImg(
           if (blob) {
             resolve(blob);
           } else {
-            reject(new Error('Canvas to Blob 変換に失敗しました'));
+            reject(new Error("Canvas to Blob 変換に失敗しました"));
           }
         },
         outputFormat,
-        outputFormat === 'image/jpeg' ? 0.95 : undefined // JPEG quality: 95%
+        outputFormat === "image/jpeg" ? 0.95 : undefined // JPEG quality: 95%
       );
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : '不明なエラー';
-    throw new Error(`画像の切り取りに失敗しました。別の画像を選択してください。(${message})`);
+    const message = error instanceof Error ? error.message : "不明なエラー";
+    throw new Error(
+      `画像の切り取りに失敗しました。別の画像を選択してください。(${message})`
+    );
   }
 }
