@@ -1,6 +1,6 @@
 type LogEntry = {
   time: string;
-  level: 'info' | 'warn' | 'error';
+  level: 'debug' | 'info' | 'warn' | 'error';
   message: string;
   data?: any;
 };
