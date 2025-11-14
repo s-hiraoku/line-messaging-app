@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { ImageCropUploader } from '@/app/dashboard/_components/image-crop-uploader';
 import { ActionEditor } from './action-editor';
+import { ImageAreaEditor } from './image-area-editor';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
@@ -309,6 +310,14 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
           </div>
         )}
       </div>
+
+      <Separator className="bg-black h-[2px]" />
+
+      {/* Image Area Editor */}
+      <ImageAreaEditor
+        imageUrl={card.imageUrl}
+        onAreasChange={(areas) => onChange({ imageAreas: areas })}
+      />
 
       <Separator className="bg-black h-[2px]" />
 

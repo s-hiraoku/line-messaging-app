@@ -60,9 +60,12 @@ LINE Official Account Manager では、Product/Location カードで画像を複
 - 既存カードに画像エリア機能を追加する場合は編集画面で設定
 
 ### Dependencies
-- ImageCropUploader コンポーネント(既存)
+- **ImageCropUploader コンポーネント(既存)** - 画像のアップロード、クロップ、ズーム調整に使用
+  - 各カードフォームで既に使用中
+  - `onImageUploaded` コールバックで画像URLを取得
+  - アスペクト比設定(SQUARE, LANDSCAPE, FREE)
 - ActionEditor コンポーネント(既存)
-- Cloudinary(画像アップロード)
+- Cloudinary(画像アップロード・テキストオーバーレイ)
 - 既存のカードエディタコンポーネント
 
 ### Testing requirements

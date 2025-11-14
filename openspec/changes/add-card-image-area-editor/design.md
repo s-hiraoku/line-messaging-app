@@ -7,7 +7,12 @@
 ```
 card-form-{type}.tsx (Product/Location/Person/Image)
 ├── ImageCropUploader (画像アップロード - 既存)
+│   ├── アスペクト比設定 (カードタイプに応じた推奨比率)
+│   ├── クロップ機能
+│   ├── ズーム機能 (0.8x-2x)
+│   └── Cloudinary への自動アップロード
 ├── ImageAreaEditor (新規 - メインエディタ)
+│   ├── 有効化トグル「画像エリア分割を有効にする」
 │   ├── ImageAreaCanvas (新規 - ビジュアルエディタ)
 │   │   ├── Canvas描画 (画像 + 領域 + テキストラベル)
 │   │   ├── ドラッグ&リサイズ (領域編集)
@@ -22,6 +27,15 @@ card-form-{type}.tsx (Product/Location/Person/Image)
 │       └── ActionEditor (アクション設定 - 既存)
 └── ActionEditor (カードボタン用 - 既存)
 ```
+
+**ImageCropUploader の使用方法:**
+- 各カードタイプのフォームで既に使用中のコンポーネントを継続使用
+- `onImageUploaded` コールバックで画像URLを取得後、ImageAreaEditor を有効化
+- カードタイプごとの推奨アスペクト比:
+  - Product: SQUARE (1:1)
+  - Location: LANDSCAPE (16:9)
+  - Person: SQUARE (1:1)
+  - Image: FREE (自由)
 
 ### Data Model
 
@@ -87,9 +101,13 @@ interface BaseCard {
 │ 説明入力                            │
 │ その他フィールド                    │
 ├─────────────────────────────────────┤
-│ 画像アップロード (ImageCropUploader)│
+│ 画像アップロード (ImageCropUploader)│ ← 既存コンポーネント
+│ ├─ ドラッグ&ドロップエリア          │
+│ ├─ クロップ・ズーム編集             │
+│ └─ Cloudinary へアップロード        │
 ├─────────────────────────────────────┤
 │ 画像エリア編集 (ImageAreaEditor)    │ ← 新規追加
+│ ├─ 有効化トグル                    │ ← ImageCropUploader で画像アップロード後に有効化可能
 │ ├─ ビジュアルエディタ              │
 │ ├─ 領域リスト                      │
 │ └─ 領域編集フォーム                │
@@ -97,6 +115,13 @@ interface BaseCard {
 │ アクションボタン設定 (ActionEditor) │
 └─────────────────────────────────────┘
 ```
+
+**画像アップロードフロー:**
+1. ユーザーが ImageCropUploader で画像を選択
+2. クロップ・ズーム調整
+3. Cloudinary へ自動アップロード
+4. `onImageUploaded(url)` コールバックで URL を取得
+5. 画像エリアエディタの有効化トグルが操作可能になる
 
 #### 2. ビジュアルエディタ(ImageAreaCanvas)
 - 画像をキャンバスに表示

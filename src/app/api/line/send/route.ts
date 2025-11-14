@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     const payload = payloadSchema.parse(json);
 
     // 2. Normalize payload to standard format
-    const normalized = normalizePayload(payload);
+    const normalized = await normalizePayload(payload);
 
     // 3. Ensure user exists in database
     const user = await ensureUser(normalized.to);
@@ -91,6 +91,20 @@ export async function POST(req: NextRequest) {
         msg.altText,
         msg.baseSize,
         msg.actions
+      );
+    } else if (
+      normalized.messageItemType === "cardType" &&
+      normalized.messages.length === 1 &&
+      normalized.messages[0].type === "imagemap"
+    ) {
+      // Card-type message with image areas (sent as imagemap)
+      const msg = normalized.messages[0];
+      await pushMessage(normalized.to, msg as any);
+      // Store as CARD_TYPE message (imagemap variant)
+      await persistCardTypeMessage(
+        user.id,
+        msg.altText,
+        msg // Store imagemap data as-is
       );
     } else {
       // Regular messages

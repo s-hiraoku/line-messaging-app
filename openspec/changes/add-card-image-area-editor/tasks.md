@@ -41,7 +41,8 @@
 
 - [ ] `src/app/dashboard/message-items/card/_components/image-area-canvas.tsx` を作成
   - Canvas 要素の作成と初期化
-  - 画像の描画
+  - ImageCropUploader でアップロードされた画像の読み込みと描画
+  - 画像の元サイズ(width, height)の取得
   - 領域の描画(半透明矩形 + テキストラベル)
   - 選択中の領域のハイライト表示
   - リサイズハンドル(4隅 + 4辺)の描画
@@ -74,14 +75,19 @@
 ## Phase 6: カードフォームへの統合
 
 - [ ] `src/app/dashboard/message-items/card/_components/card-form-product.tsx` を更新
-  - ImageAreaEditor コンポーネントを画像アップロード後に追加
-  - 「画像エリア分割を有効にする」トグルスイッチ追加
+  - 既存の ImageCropUploader の `onImageUploaded` コールバックで画像URL取得
+  - ImageAreaEditor コンポーネントを ImageCropUploader の直後に追加
+  - 「画像エリア分割を有効にする」トグルスイッチ追加(画像アップロード後に有効化)
+  - 推奨アスペクト比: SQUARE (1:1)
 - [ ] `src/app/dashboard/message-items/card/_components/card-form-location.tsx` を更新
   - ImageAreaEditor コンポーネント統合
+  - 推奨アスペクト比: LANDSCAPE (16:9)
 - [ ] `src/app/dashboard/message-items/card/_components/card-form-person.tsx` を更新
   - ImageAreaEditor コンポーネント統合
+  - 推奨アスペクト比: SQUARE (1:1)
 - [ ] `src/app/dashboard/message-items/card/_components/card-form-image.tsx` を更新
   - ImageAreaEditor コンポーネント統合
+  - 推奨アスペクト比: FREE (自由)
 
 ## Phase 7: 画像合成(Cloudinary)
 

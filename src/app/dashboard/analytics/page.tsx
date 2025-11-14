@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TrendingUp, TrendingDown, MessageSquare, Users, Clock, Calendar, UserPlus, UserMinus, Target, User, MapPin, Tag as TagIcon, Send, Download, FileType, Image, Video, Music, MapPinned, Sticker, FileText } from "lucide-react";
+import { TrendingUp, TrendingDown, MessageSquare, Users, Clock, Calendar, UserPlus, UserMinus, Target, User, MapPin, Tag as TagIcon, Send, Download, FileType, Image, Video, Music, MapPinned, Sticker, FileText, BarChart3, PieChartIcon, Activity } from "lucide-react";
 import { DebugPanel, toCurl } from "../_components/debug-panel";
+import { LineChart } from "../_components/line-chart";
+import { PieChart } from "../_components/pie-chart";
+import { Heatmap } from "../_components/heatmap";
 
 type AnalyticsData = {
   period: {
@@ -516,7 +519,7 @@ export default function AnalyticsPage() {
         </article>
       </section>
 
-      {/* 日別推移 */}
+      {/* 日別推移 - バーチャート */}
       <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <h2 className="mb-4 text-lg font-bold uppercase tracking-wider text-black">日別メッセージ推移</h2>
         <div className="space-y-2">
@@ -554,6 +557,139 @@ export default function AnalyticsPage() {
             <div className="h-3 w-3 border-2 border-black bg-[#FFE500]" />
             <span>送信</span>
           </div>
+        </div>
+      </section>
+
+      {/* 日別推移 - 折れ線グラフ */}
+      <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="mb-4 flex items-center gap-2">
+          <BarChart3 className="h-5 w-5 text-black" />
+          <h2 className="text-lg font-bold uppercase tracking-wider text-black">日別推移グラフ</h2>
+        </div>
+        <LineChart
+          data={data.daily.map(d => ({
+            label: d.date.slice(5),
+            value: d.total
+          }))}
+          height={250}
+          color="#00B900"
+        />
+      </section>
+
+      {/* メッセージタイプ分布 - 円グラフ */}
+      {data.messageTypes && data.messageTypes.length > 0 && (
+        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <div className="mb-4 flex items-center gap-2">
+            <PieChartIcon className="h-5 w-5 text-black" />
+            <h2 className="text-lg font-bold uppercase tracking-wider text-black">メッセージタイプ分布</h2>
+          </div>
+          <div className="flex justify-center">
+            <PieChart
+              data={data.messageTypes.map(item => ({
+                label: getMessageTypeLabel(item.type),
+                value: item.count
+              }))}
+              size={350}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* アクティビティヒートマップ */}
+      <section>
+        <div className="mb-4 flex items-center gap-2">
+          <Activity className="h-5 w-5 text-black" />
+          <h2 className="text-lg font-bold uppercase tracking-wider text-black">アクティビティパターン</h2>
+        </div>
+        <Heatmap data={{ hourly: data.hourly, weekday: data.weekday }} />
+      </section>
+
+      {/* トレンド・予測分析 */}
+      <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="mb-4 flex items-center gap-2">
+          <TrendingUp className="h-5 w-5 text-black" />
+          <h2 className="text-lg font-bold uppercase tracking-wider text-black">トレンド分析</h2>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          {/* メッセージトレンド */}
+          <article className="border-2 border-black bg-[#FFFEF5] p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-black/60">メッセージ量トレンド</h3>
+            <div className="mt-4 space-y-2">
+              <div className="flex justify-between">
+                <span className="text-xs font-mono text-black/60">現在の7日平均:</span>
+                <span className="text-sm font-bold text-black">
+                  {Math.round(data.daily.reduce((sum, d) => sum + d.total, 0) / data.daily.length).toLocaleString()}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-xs font-mono text-black/60">ピーク日:</span>
+                <span className="text-sm font-bold text-black">
+                  {data.daily.reduce((max, d) => d.total > max.total ? d : max, data.daily[0]).date.slice(5)} ({data.daily.reduce((max, d) => d.total > max.total ? d : max, data.daily[0]).total})
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-xs font-mono text-black/60">最低日:</span>
+                <span className="text-sm font-bold text-black">
+                  {data.daily.reduce((min, d) => d.total < min.total ? d : min, data.daily[0]).date.slice(5)} ({data.daily.reduce((min, d) => d.total < min.total ? d : min, data.daily[0]).total})
+                </span>
+              </div>
+            </div>
+            {(() => {
+              const recent = data.daily.slice(-3).reduce((sum, d) => sum + d.total, 0) / 3;
+              const earlier = data.daily.slice(0, -3).reduce((sum, d) => sum + d.total, 0) / (data.daily.length - 3);
+              const trend = ((recent - earlier) / earlier) * 100;
+              return (
+                <div className="mt-4 flex items-center gap-2 border-t-2 border-black pt-3">
+                  {trend >= 0 ? (
+                    <TrendingUp className="h-4 w-4 text-[#00B900]" />
+                  ) : (
+                    <TrendingDown className="h-4 w-4 text-red-600" />
+                  )}
+                  <span className={`text-sm font-bold ${trend >= 0 ? 'text-[#00B900]' : 'text-red-600'}`}>
+                    {trend >= 0 ? '+' : ''}{trend.toFixed(1)}% (直近3日 vs それ以前)
+                  </span>
+                </div>
+              );
+            })()}
+          </article>
+
+          {/* ユーザートレンド */}
+          <article className="border-2 border-black bg-[#FFFEF5] p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-black/60">ユーザー成長予測</h3>
+            <div className="mt-4 space-y-2">
+              <div className="flex justify-between">
+                <span className="text-xs font-mono text-black/60">現在のフォロワー:</span>
+                <span className="text-sm font-bold text-black">{data.summary.followingUsers.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-xs font-mono text-black/60">期間内の新規:</span>
+                <span className="text-sm font-bold text-black">{data.summary.newUsers.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-xs font-mono text-black/60">1日あたりの成長:</span>
+                <span className="text-sm font-bold text-black">
+                  {(data.summary.newUsers / data.period.days).toFixed(1)}
+                </span>
+              </div>
+            </div>
+            {(() => {
+              const dailyGrowth = data.summary.newUsers / data.period.days;
+              const predicted30Days = Math.round(data.summary.followingUsers + dailyGrowth * 30);
+              return (
+                <div className="mt-4 border-t-2 border-black pt-3">
+                  <div className="flex justify-between">
+                    <span className="text-xs font-mono text-black/60">30日後の予測:</span>
+                    <span className="text-lg font-bold text-[#00B900]">
+                      {predicted30Days.toLocaleString()}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-xs font-mono text-black/60">
+                    (現在のペースで成長した場合)
+                  </p>
+                </div>
+              );
+            })()}
+          </article>
         </div>
       </section>
 

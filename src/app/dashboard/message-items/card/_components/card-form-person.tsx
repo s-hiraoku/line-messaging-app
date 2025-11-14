@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { X } from 'lucide-react';
 import { ImageCropUploader } from '@/app/dashboard/_components/image-crop-uploader';
 import { ActionEditor } from './action-editor';
+import { ImageAreaEditor } from './image-area-editor';
 import type { PersonCard } from './types';
 
 interface PersonFormProps {
@@ -298,6 +299,12 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
           </div>
         )}
       </div>
+
+      {/* Image Area Editor */}
+      <ImageAreaEditor
+        imageUrl={card.imageUrl}
+        onAreasChange={(areas) => onChange({ imageAreas: areas })}
+      />
 
       {/* Actions Field */}
       <div className="space-y-2">

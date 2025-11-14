@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import type { LocationCard } from "./types";
 import { ImageCropUploader } from "@/app/dashboard/_components/image-crop-uploader";
 import { ActionEditor } from "./action-editor";
+import { ImageAreaEditor } from "./image-area-editor";
 
 interface LocationFormProps {
   card: LocationCard;
@@ -240,6 +241,12 @@ export function LocationForm({ card, onChange }: LocationFormProps) {
           </div>
         )}
       </div>
+
+      {/* Image Area Editor */}
+      <ImageAreaEditor
+        imageUrl={card.imageUrl}
+        onAreasChange={(areas) => onChange({ imageAreas: areas })}
+      />
 
       {/* Actions Field */}
       <div className="space-y-2">

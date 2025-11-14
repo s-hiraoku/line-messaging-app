@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { ImageCropUploader } from "@/app/dashboard/_components/image-crop-uploader";
 import { ActionEditor } from "./action-editor";
+import { ImageAreaEditor } from "./image-area-editor";
 import type { ImageCard } from "./types";
 
 interface CardFormImageProps {
@@ -186,6 +187,12 @@ export function CardFormImage({ card, onChange }: CardFormImageProps) {
           )}
         </div>
       </div>
+
+      {/* Image Area Editor */}
+      <ImageAreaEditor
+        imageUrl={card.imageUrl}
+        onAreasChange={(areas) => onChange({ imageAreas: areas })}
+      />
 
       {/* Actions Section (Required) */}
       <ActionEditor

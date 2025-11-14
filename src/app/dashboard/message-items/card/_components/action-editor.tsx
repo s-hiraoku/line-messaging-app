@@ -148,7 +148,7 @@ export function ActionEditor({
 
     updatedActions[index] = newAction;
     onChange(updatedActions);
-    validateAllActions(updatedActions);
+    // Validation will be handled by useEffect
   };
 
   /**
@@ -178,7 +178,7 @@ export function ActionEditor({
     }
 
     onChange(updatedActions);
-    validateAllActions(updatedActions);
+    // Validation will be handled by useEffect
   };
 
   /**
@@ -195,7 +195,7 @@ export function ActionEditor({
 
     const updatedActions = [...actions, newAction];
     onChange(updatedActions);
-    validateAllActions(updatedActions);
+    // Validation will be handled by useEffect
   };
 
   /**
@@ -204,7 +204,7 @@ export function ActionEditor({
   const handleDeleteAction = (index: number) => {
     const updatedActions = actions.filter((_, i) => i !== index);
     onChange(updatedActions);
-    validateAllActions(updatedActions);
+    // Validation will be handled by useEffect
   };
 
   return (

@@ -191,6 +191,168 @@ export async function GET() {
       usageCount: template._count.messages
     }));
 
+    // エンゲージメント指標
+    // 1. 平均応答時間（受信メッセージから送信メッセージまでの平均時間）
+    const recentMessages = await prisma.message.findMany({
+      where: {
+        createdAt: { gte: sevenDaysAgo },
+        direction: 'INBOUND'
+      },
+      select: {
+        userId: true,
+        createdAt: true
+      }
+    });
+
+    let totalResponseTime = 0;
+    let responseCount = 0;
+
+    for (const inboundMsg of recentMessages) {
+      const nextOutbound = await prisma.message.findFirst({
+        where: {
+          userId: inboundMsg.userId,
+          direction: 'OUTBOUND',
+          createdAt: { gt: inboundMsg.createdAt }
+        },
+        orderBy: { createdAt: 'asc' }
+      });
+
+      if (nextOutbound) {
+        const responseTime = nextOutbound.createdAt.getTime() - inboundMsg.createdAt.getTime();
+        totalResponseTime += responseTime;
+        responseCount++;
+      }
+    }
+
+    const averageResponseTime = responseCount > 0
+      ? Math.round(totalResponseTime / responseCount / 1000 / 60) // 分単位
+      : 0;
+
+    // 2. アクティブユーザー率（過去7日間でメッセージを送ったユーザー）
+    const totalUsers = await prisma.user.count();
+    const activeUsers = await prisma.user.count({
+      where: {
+        messages: {
+          some: {
+            createdAt: { gte: sevenDaysAgo }
+          }
+        }
+      }
+    });
+
+    const activeUserRate = totalUsers > 0
+      ? ((activeUsers / totalUsers) * 100).toFixed(1)
+      : "0";
+
+    // 3. ユーザーあたりの平均メッセージ数
+    const totalMessages = await prisma.message.count({
+      where: {
+        createdAt: { gte: sevenDaysAgo }
+      }
+    });
+
+    const messagesPerUser = activeUsers > 0
+      ? (totalMessages / activeUsers).toFixed(1)
+      : "0";
+
+    // 月次比較データ
+    const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const twoMonthsAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
+
+    const currentMonthMessages = await prisma.message.count({
+      where: {
+        createdAt: { gte: oneMonthAgo }
+      }
+    });
+
+    const previousMonthMessages = await prisma.message.count({
+      where: {
+        createdAt: {
+          gte: twoMonthsAgo,
+          lt: oneMonthAgo
+        }
+      }
+    });
+
+    const currentMonthUsers = await prisma.user.count({
+      where: {
+        createdAt: { gte: oneMonthAgo }
+      }
+    });
+
+    const previousMonthUsers = await prisma.user.count({
+      where: {
+        createdAt: {
+          gte: twoMonthsAgo,
+          lt: oneMonthAgo
+        }
+      }
+    });
+
+    const messageGrowthRate = previousMonthMessages > 0
+      ? (((currentMonthMessages - previousMonthMessages) / previousMonthMessages) * 100).toFixed(1)
+      : "0";
+
+    const userGrowthRate = previousMonthUsers > 0
+      ? (((currentMonthUsers - previousMonthUsers) / previousMonthUsers) * 100).toFixed(1)
+      : "0";
+
+    // 最近のアクティビティフィード（過去24時間）
+    const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+    const recentMessages24h = await prisma.message.findMany({
+      where: {
+        createdAt: { gte: oneDayAgo }
+      },
+      include: {
+        user: {
+          select: {
+            displayName: true,
+            pictureUrl: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 10
+    });
+
+    const recentUserActions = await prisma.user.findMany({
+      where: {
+        OR: [
+          { createdAt: { gte: oneDayAgo } },
+          { updatedAt: { gte: oneDayAgo } }
+        ]
+      },
+      orderBy: { updatedAt: 'desc' },
+      take: 10,
+      select: {
+        id: true,
+        displayName: true,
+        pictureUrl: true,
+        isFollowing: true,
+        createdAt: true,
+        updatedAt: true
+      }
+    });
+
+    const activityFeed = {
+      recentMessages: recentMessages24h.map((msg: { id: string; type: string; direction: string; createdAt: Date; user: { displayName: string; pictureUrl: string | null } }) => ({
+        id: msg.id,
+        type: msg.type,
+        direction: msg.direction,
+        userName: msg.user.displayName,
+        userPicture: msg.user.pictureUrl,
+        timestamp: msg.createdAt.toISOString()
+      })),
+      recentUserActions: recentUserActions.map((user: { id: string; displayName: string; pictureUrl: string | null; isFollowing: boolean; createdAt: Date; updatedAt: Date }) => ({
+        userId: user.id,
+        userName: user.displayName,
+        userPicture: user.pictureUrl,
+        action: user.createdAt.toISOString() === user.updatedAt.toISOString() ? 'follow' : (user.isFollowing ? 'update' : 'unfollow'),
+        timestamp: user.updatedAt.toISOString()
+      }))
+    };
+
     const extendedStats = {
       messageTypeDistribution,
       userGrowth,
@@ -207,7 +369,30 @@ export async function GET() {
       })),
       weeklyActivity: weeklyActivityData,
       newUsersCount,
-      topTemplates
+      topTemplates,
+      // エンゲージメント指標
+      engagement: {
+        averageResponseTime, // 分単位
+        activeUserRate: parseFloat(activeUserRate), // パーセント
+        messagesPerUser: parseFloat(messagesPerUser), // 平均メッセージ数
+        activeUsers,
+        totalUsers
+      },
+      // 月次比較
+      monthlyComparison: {
+        messages: {
+          current: currentMonthMessages,
+          previous: previousMonthMessages,
+          growthRate: parseFloat(messageGrowthRate)
+        },
+        users: {
+          current: currentMonthUsers,
+          previous: previousMonthUsers,
+          growthRate: parseFloat(userGrowthRate)
+        }
+      },
+      // アクティビティフィード
+      activityFeed
     };
 
     return NextResponse.json(extendedStats);

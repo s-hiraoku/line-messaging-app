@@ -1,9 +1,11 @@
 import type { SendMessagePayload, AnyMessage } from "./message-schemas";
+import { overlayTextOnImage, isCloudinaryUrl, type ImageAreaForOverlay } from "../cloudinary/text-overlay";
+import { convertCardToImagemap, validateImageAreas, type ImageArea, type CardWithImageAreas } from "./imagemap-converter";
 
 /**
  * Normalize various payload formats to a standard messages array format
  */
-export function normalizePayload(payload: SendMessagePayload): {
+export async function normalizePayload(payload: SendMessagePayload): Promise<{
   to: string;
   messages: AnyMessage[];
   isTemplate: boolean;
@@ -12,7 +14,7 @@ export function normalizePayload(payload: SendMessagePayload): {
     template: any;
   };
   messageItemType?: "richMessage" | "cardType";
-} {
+}> {
   const to = payload.to;
 
   // Template message (special case)
@@ -137,7 +139,71 @@ export function normalizePayload(payload: SendMessagePayload): {
 
   // Card-Type Message format: {to, type: "cardType", ...}
   // Note: Card-type messages are stored as CARD_TYPE in DB but sent as template to LINE API
+  // If imageAreas are provided, convert to imagemap message instead
   if ("type" in payload && payload.type === "cardType") {
+    // Check if imageAreas are provided (new image area editor feature)
+    if (payload.imageAreas && payload.imageAreas.length > 0) {
+      // Validate image URL is from Cloudinary
+      if (!payload.imageUrl) {
+        throw new Error("Image URL is required when using image areas");
+      }
+
+      if (!isCloudinaryUrl(payload.imageUrl)) {
+        throw new Error("Image areas are only supported for Cloudinary images");
+      }
+
+      // Validate image areas
+      const imageWidth = payload.imageWidth || 1024;
+      const imageHeight = payload.imageHeight || 1024;
+      const validationErrors = validateImageAreas(payload.imageAreas as ImageArea[], imageWidth, imageHeight);
+
+      if (validationErrors.length > 0) {
+        throw new Error(`Image area validation failed: ${validationErrors.join(", ")}`);
+      }
+
+      // Convert imageAreas to overlay format
+      const overlayAreas: ImageAreaForOverlay[] = payload.imageAreas.map((area) => ({
+        id: area.id,
+        label: area.label,
+        x: area.x,
+        y: area.y,
+        width: area.width,
+        height: area.height,
+      }));
+
+      // Overlay text labels on image using Cloudinary
+      const composedImageUrl = await overlayTextOnImage(
+        payload.imageUrl,
+        overlayAreas,
+        imageWidth,
+        imageHeight
+      );
+
+      // Convert card to imagemap message
+      const cardData: CardWithImageAreas = {
+        id: "card-" + Date.now(),
+        type: "image", // Generic type for imagemap
+        imageUrl: payload.imageUrl,
+        title: payload.altText,
+        imageAreas: payload.imageAreas as ImageArea[],
+      };
+
+      const imagemapMessage = convertCardToImagemap(
+        cardData,
+        composedImageUrl,
+        imageWidth,
+        imageHeight
+      );
+
+      return {
+        to,
+        messages: [imagemapMessage],
+        isTemplate: false,
+        messageItemType: "cardType" as const,
+      };
+    }
+
+    // Traditional card (no imageAreas) - return as template
     return {
       to,
       messages: [],
