@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ImageUpload } from "@/components/richmenu/ImageUpload";
 import { VisualEditor } from "@/components/richmenu/VisualEditor";
 import { DebugPanel, toCurl } from "../../_components/debug-panel";
+import type { TapArea } from "@/types/richmenu";
 
 export const dynamic = "force-dynamic";
 
@@ -15,28 +16,6 @@ type SizeType =
   | "1200x405"   // Medium Half
   | "800x540"    // Small Full
   | "800x270";   // Small Half
-
-interface TapArea {
-  bounds: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  };
-  action: {
-    type: "uri" | "message" | "postback" | "datetimepicker" | "richmenuswitch";
-    label?: string;
-    uri?: string;
-    text?: string;
-    data?: string;
-    displayText?: string;
-    mode?: "date" | "time" | "datetime";
-    initial?: string;
-    max?: string;
-    min?: string;
-    richMenuAliasId?: string;
-  };
-}
 
 // Layout templates
 const LAYOUT_TEMPLATES: Record<string, { name: string; description: string; areas: (size: "full" | "half") => TapArea[] }> = {

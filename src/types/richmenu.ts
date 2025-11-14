@@ -6,11 +6,16 @@ export interface TapArea {
     height: number;
   };
   action: {
-    type: "uri" | "message" | "postback";
+    type: "uri" | "message" | "postback" | "datetimepicker" | "richmenuswitch" | "camera" | "cameraRoll" | "location";
     label?: string;
     uri?: string;
     text?: string;
     data?: string;
+    mode?: string;
+    initial?: string;
+    max?: string;
+    min?: string;
+    richMenuAliasId?: string;
   };
 }
 

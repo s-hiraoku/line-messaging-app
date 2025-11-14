@@ -13,6 +13,19 @@ import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/Input";
 import type { Card } from "./_components/types";
+import { Syne, IBM_Plex_Sans } from "next/font/google";
+
+const syne = Syne({
+  weight: "800",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const ibmPlexSans = IBM_Plex_Sans({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -177,6 +190,16 @@ export default function CardMessagePage() {
 
   return (
     <div className="space-y-6">
+      <header className="space-y-3">
+        <div className="flex items-center gap-4">
+          <h1 className={`text-5xl font-black text-black ${syne.className}`}>カードメッセージ</h1>
+          <div className="h-2 w-12 rotate-12 bg-[#FFE500]" />
+        </div>
+        <p className={`text-base text-black/70 ${ibmPlexSans.className}`}>
+          カード形式のメッセージアイテムを作成・管理できます。
+        </p>
+      </header>
+
       {/* Info Banner */}
       <div className="border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <div className="flex flex-col gap-4">
@@ -188,7 +211,7 @@ export default function CardMessagePage() {
               </svg>
             </div>
             <div className="flex-1">
-              <h2 className="mb-2 text-sm font-bold uppercase tracking-wider text-black">
+              <h2 className={`mb-2 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>
                 カードメッセージとは？
               </h2>
               <p className="text-xs text-black/70 leading-relaxed">
@@ -267,7 +290,7 @@ export default function CardMessagePage() {
         {/* Main Editor Area */}
         <div className="space-y-4">
           <div className="border-t-2 border-black pt-4">
-            <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-black">
+            <h3 className={`mb-4 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>
               カード編集
             </h3>
 

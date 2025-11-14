@@ -10,7 +10,14 @@ import { DebugPanel, toCurl } from '@/app/dashboard/_components/debug-panel';
 
 export default function NewAutoReplyPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    keywords: string[];
+    replyText: string;
+    priority: number;
+    isActive: boolean;
+    matchType: MatchType;
+  }>({
     name: '',
     keywords: [] as string[],
     replyText: '',

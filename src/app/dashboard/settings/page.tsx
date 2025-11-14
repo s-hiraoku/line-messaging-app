@@ -3,6 +3,19 @@
 import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import { DebugPanel, toCurl } from "../_components/debug-panel";
+import { Syne, IBM_Plex_Sans } from "next/font/google";
+
+const syne = Syne({
+  weight: "800",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const ibmPlexSans = IBM_Plex_Sans({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
 
 const channelSteps = [
   "LINE Developers → 対象プロバイダ →『Messaging API』チャネルを作成/選択します（Login ではなく Messaging API）。",
@@ -127,9 +140,12 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-10">
-      <header className="border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-2">
-        <h1 className="text-2xl font-bold uppercase tracking-wider text-black">チャネル / Webhook 設定</h1>
-        <p className="text-sm text-black/60">
+      <header className="space-y-3">
+        <div className="flex items-center gap-4">
+          <h1 className={`text-5xl font-black text-black ${syne.className}`}>チャネル / Webhook 設定</h1>
+          <div className="h-2 w-12 rotate-12 bg-[#FFE500]" />
+        </div>
+        <p className={`text-base text-black/70 ${ibmPlexSans.className}`}>
           LINE Developers で取得したチャネル情報を保存し、Webhook 設定のポイントを確認できます。
         </p>
       </header>
@@ -140,7 +156,7 @@ export default function SettingsPage() {
             <span className="inline-flex items-center border-2 border-black bg-[#00B900] px-3 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-xs font-bold uppercase tracking-wider text-white">
               Channel
             </span>
-            <h2 className="text-lg font-bold uppercase tracking-wider text-black">チャネル情報の保存</h2>
+            <h2 className={`text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>チャネル情報の保存</h2>
             <p className="text-xs text-black/60">
               チャネル ID とシークレットをアプリケーションに保存し、環境変数と整合させます。
             </p>
@@ -257,7 +273,7 @@ export default function SettingsPage() {
             <span className="inline-flex items-center border-2 border-black bg-[#00B900] px-3 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-xs font-bold uppercase tracking-wider text-white">
               Webhook
             </span>
-            <h2 className="text-lg font-bold uppercase tracking-wider text-black">Webhook 設定のチェックリスト</h2>
+            <h2 className={`text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>Webhook 設定のチェックリスト</h2>
             <p className="text-xs text-black/60">
               公開環境の URL を LINE Developers に登録し、署名検証を通過させるための注意点です。
             </p>

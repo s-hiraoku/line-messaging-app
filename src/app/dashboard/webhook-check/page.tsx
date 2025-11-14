@@ -3,6 +3,19 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { DebugPanel, toCurl } from '../_components/debug-panel';
+import { Syne, IBM_Plex_Sans } from "next/font/google";
+
+const syne = Syne({
+  weight: "800",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const ibmPlexSans = IBM_Plex_Sans({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export default function WebhookCheckPage() {
   const [localTest, setLocalTest] = useState<boolean | null>(null);
@@ -77,16 +90,19 @@ export default function WebhookCheckPage() {
 
   return (
     <div className="space-y-6">
-      <header className="space-y-2 border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-        <h1 className="text-2xl font-bold uppercase tracking-wider text-black">Webhook診断</h1>
-        <p className="text-sm text-black/60">
+      <header className="space-y-3">
+        <div className="flex items-center gap-4">
+          <h1 className={`text-5xl font-black text-black ${syne.className}`}>Webhook診断</h1>
+          <div className="h-2 w-12 rotate-12 bg-[#FFE500]" />
+        </div>
+        <p className={`text-base text-black/70 ${ibmPlexSans.className}`}>
           自動応答が動作しない場合、この画面で設定を確認してください。
         </p>
       </header>
 
       {/* アプリケーション側のチェック */}
       <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-        <h2 className="mb-4 text-lg font-bold uppercase tracking-wider text-black">1. アプリケーション設定</h2>
+        <h2 className={`mb-4 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>1. アプリケーション設定</h2>
         <div className="space-y-3">
           <div className="flex items-center gap-3">
             <StatusIcon status={localTest} />
@@ -139,7 +155,7 @@ export default function WebhookCheckPage() {
 
       {/* LINE側のチェック */}
       <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-        <h2 className="mb-4 text-lg font-bold uppercase tracking-wider text-black">2. LINE Developers設定（最重要）</h2>
+        <h2 className={`mb-4 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>2. LINE Developers設定（最重要）</h2>
 
         <div className="mb-4 border-2 border-yellow-600 bg-yellow-50 p-4 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
           <div className="mb-2 font-bold uppercase tracking-wider text-yellow-600">
@@ -229,7 +245,7 @@ export default function WebhookCheckPage() {
 
       {/* Cloudflare Tunnel */}
       <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-        <h2 className="mb-4 text-lg font-bold uppercase tracking-wider text-black">3. ローカル開発用の公開URL</h2>
+        <h2 className={`mb-4 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>3. ローカル開発用の公開URL</h2>
 
         <div className="space-y-3">
           <div className="text-sm text-black/70">
@@ -252,7 +268,7 @@ export default function WebhookCheckPage() {
 
       {/* テスト手順 */}
       <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-        <h2 className="mb-4 text-lg font-bold uppercase tracking-wider text-black">4. テスト手順</h2>
+        <h2 className={`mb-4 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>4. テスト手順</h2>
 
         <ol className="space-y-2 text-sm text-black">
           <li className="flex gap-3">
@@ -301,7 +317,7 @@ export default function WebhookCheckPage() {
 
       {/* API Debug Panels */}
       <div className="space-y-4">
-        <h2 className="text-lg font-bold uppercase tracking-wider text-black">API デバッグ</h2>
+        <h2 className={`text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>API デバッグ</h2>
 
         <DebugPanel
           title="/api/line/webhook/test"

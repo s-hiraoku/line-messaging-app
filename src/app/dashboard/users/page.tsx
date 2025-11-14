@@ -5,6 +5,19 @@ import { User as UserIcon } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { DebugPanel, toCurl } from "../_components/debug-panel";
+import { Syne, IBM_Plex_Sans } from "next/font/google";
+
+const syne = Syne({
+  weight: "800",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const ibmPlexSans = IBM_Plex_Sans({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
 
 interface User {
   id: string;
@@ -146,10 +159,13 @@ export default function UsersPage() {
 
   return (
     <div className="space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-bold uppercase tracking-wider text-black">ユーザー管理</h1>
-        <p className="text-sm text-black/60">
-          LINEユーザーの一覧とリッチメニュー設定を管理します。
+      <header className="space-y-3">
+        <div className="flex items-center gap-4">
+          <h1 className={`text-5xl font-black text-black ${syne.className}`}>ユーザー管理</h1>
+          <div className="h-2 w-12 rotate-12 bg-[#FFE500]" />
+        </div>
+        <p className={`text-base text-black/70 ${ibmPlexSans.className}`}>
+          LINEフォロワーの一覧と詳細情報を確認できます。
         </p>
       </header>
 
