@@ -14,7 +14,7 @@
     "db:logs": "docker compose logs -f postgres",
     "db:psql": "docker exec -it lineapp-postgres psql -U postgres -d line_app",
     "db:reset": "docker compose down -v && docker compose up -d postgres",
-    "tunnel:quick": "cloudflared tunnel --url http://localhost:3000",
+    "tunnel:quick": "cloudflared tunnel --url http://localhost:3000 --protocol http2",
     "tunnel": "cloudflared tunnel run line-messaging-app",
     "tunnel:info": "cloudflared tunnel info line-messaging-app"
   },
