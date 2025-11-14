@@ -97,8 +97,10 @@ export async function GET(req: NextRequest) {
       where: { isFollowing: true },
     });
 
-    // 応答率（受信メッセージに対する送信メッセージの割合）
-    const responseRate = totalInbound > 0 ? ((totalOutbound / totalInbound) * 100).toFixed(1) : "0";
+    // 応答率（受信メッセージに対する送信メッセージの割合、最大100%）
+    const responseRate = totalInbound > 0
+      ? Math.min((totalOutbound / totalInbound) * 100, 100).toFixed(1)
+      : "0";
 
     // メッセージタイプ別の分析
     const messageTypes = await prisma.message.groupBy({

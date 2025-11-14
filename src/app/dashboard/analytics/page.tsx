@@ -475,8 +475,12 @@ export default function AnalyticsPage() {
             <h2 className="text-sm font-bold uppercase tracking-wider text-black/60">応答率</h2>
             <TrendingUp className="h-4 w-4 text-black" />
           </div>
-          <p className="mt-3 text-3xl font-bold text-[#00B900]">{data.summary.responseRate}%</p>
-          <p className="mt-2 text-xs font-mono text-black/60">送信/受信の比率</p>
+          <p className="mt-3 text-3xl font-bold text-[#00B900]">
+            {data.summary.totalInbound > 0 ? `${data.summary.responseRate}%` : "N/A"}
+          </p>
+          <p className="mt-2 text-xs font-mono text-black/60">
+            受信メッセージへの応答率（最大100%）
+          </p>
         </article>
 
         <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
