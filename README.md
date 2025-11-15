@@ -71,6 +71,7 @@ LINE Messaging API を活用した統合メッセージング管理アプリケ�
 - [クイックスタート](#クイックスタート)
 - [環境変数](#環境変数)
 - [Cloudinary セットアップ](#cloudinary-セットアップ画像機能を使う場合)
+- [Cloudflare Tunnel セットアップ](#cloudflare-tunnel-セットアップ公開url)
 - [データベースと Prisma](#データベースと-prisma)
 - [Webhook のセットアップ](#webhook-のセットアップmessaging-api)
 - [リッチメッセージ（Imagemap）のテスト方法](#リッチメッセージimagemapのテスト方法)
@@ -260,6 +261,41 @@ Cloudinary を使わない場合、以下の選択肢があります：
 
 ---
 
+## Cloudflare Tunnel セットアップ（公開URL）
+
+Cloudflare Tunnelを使用すると、ローカル環境を無料でHTTPS公開URLとして利用できます。LINE Webhookやリッチメッセージのテストに必要です。
+
+### クイックスタート
+
+```bash
+# 1. cloudflaredをインストール
+brew install cloudflared
+
+# 2. Next.js開発サーバーを起動（別ターミナル）
+npm run dev
+
+# 3. トンネルを起動
+npm run tunnel:quick
+```
+
+表示されたURL（例：`https://xxx-yyy-zzz.trycloudflare.com`）で、ローカルアプリに公開アクセスできます。
+
+### 詳細なセットアップガイド
+
+完全なセットアップ手順、名前付きトンネルの設定、LINE Webhook統合、トラブルシューティングなどの詳細は、以下のドキュメントを参照してください：
+
+📘 **[Cloudflare Tunnel セットアップガイド](./docs/cloudflare-tunnel-setup.md)**
+
+このガイドには以下が含まれます：
+- クイックトンネル vs 名前付きトンネル
+- 環境変数の設定方法
+- LINE Webhook URLの設定手順
+- トラブルシューティング
+- セキュリティのベストプラクティス
+- FAQ
+
+---
+
 ## データベースと Prisma
 
 ### コマンド
@@ -361,6 +397,12 @@ http://localhost:3000/dashboard/webhook-check にアクセスして、Webhook �
 - テスト手順
 
 が表示されます。
+
+### 詳細なセットアップガイド
+
+Cloudflare Tunnelの詳細な設定方法、トラブルシューティング、本番環境向けの名前付きトンネルのセットアップについては、以下のドキュメントを参照してください：
+
+📘 **[Cloudflare Tunnel セットアップガイド](./docs/cloudflare-tunnel-setup.md)**
 
 ---
 
@@ -642,6 +684,14 @@ curl -X POST http://localhost:3000/api/line/broadcast \
 - `npx prisma studio` - Prisma Studio 起動（http://localhost:5555）
 - `npx prisma migrate dev` - マイグレーション適用
 - `npx prisma generate` - クライアント生成
+
+### Cloudflare Tunnel
+
+- `npm run tunnel:quick` - クイックトンネル起動（テスト用、URLは毎回変わる）
+- `npm run tunnel` - 名前付きトンネル起動（本番用、URLは永続的）
+- `npm run tunnel:info` - トンネル情報表示
+
+詳細は [Cloudflare Tunnel セットアップガイド](./docs/cloudflare-tunnel-setup.md) を参照してください。
 
 ### その他
 
