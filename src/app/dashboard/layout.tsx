@@ -11,6 +11,7 @@ import {
   Menu,
   Bot,
   LayoutGrid,
+  Home,
 } from "lucide-react";
 
 import { NavLink } from "./_components/nav-link";
@@ -30,6 +31,12 @@ const ibmPlexSans = IBM_Plex_Sans({
 });
 
 const primaryNav = [
+  {
+    href: "/",
+    label: "トップページ",
+    description: "ホーム画面に戻る",
+    icon: <Home className="h-4 w-4" />,
+  },
   {
     href: "/dashboard",
     label: "ダッシュボード",
@@ -106,10 +113,10 @@ export default function DashboardLayout({
   return (
     <ToastProvider>
       <ConfirmDialogProvider>
-        <div className="min-h-screen bg-[#FFFEF5] overflow-x-hidden">
-          <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[320px_1fr]">
+        <div className="min-h-screen bg-[#FFFEF5]">
+          <div className="flex min-h-screen flex-col lg:flex-row">
             {/* Sidebar */}
-            <aside className="relative border-b-4 border-black bg-white lg:border-b-0 lg:border-r-4">
+            <aside className="relative w-full overflow-x-hidden border-b-4 border-black bg-white lg:fixed lg:left-0 lg:top-0 lg:h-screen lg:w-[320px] lg:overflow-y-auto lg:border-b-0 lg:border-r-4">
               {/* Decorative Background */}
               <div className="pointer-events-none absolute right-0 top-20 h-[300px] w-[300px] translate-x-1/2 rounded-full bg-[#00B900] opacity-[0.08] blur-[100px]" />
 
@@ -131,7 +138,20 @@ export default function DashboardLayout({
 
                 {/* Navigation */}
                 <nav className="flex flex-col gap-2">
-                  {primaryNav.map((item) => (
+                  {primaryNav.slice(0, 10).map((item) => (
+                    <NavLink key={item.href} {...item} />
+                  ))}
+
+                  {/* Separator for Development Tools */}
+                  <div className="my-3 flex items-center gap-3">
+                    <div className="h-[2px] flex-1 bg-black"></div>
+                    <span className={`text-xs font-bold uppercase tracking-wider text-black/40 ${ibmPlexSans.className}`}>
+                      開発ツール
+                    </span>
+                    <div className="h-[2px] flex-1 bg-black"></div>
+                  </div>
+
+                  {primaryNav.slice(10).map((item) => (
                     <NavLink key={item.href} {...item} />
                   ))}
                 </nav>
@@ -139,7 +159,7 @@ export default function DashboardLayout({
             </aside>
 
             {/* Main Content */}
-            <main className="relative bg-[#FFFEF5] px-6 py-10 lg:px-12">
+            <main className="relative flex-1 bg-[#FFFEF5] px-6 py-10 lg:ml-[320px] lg:px-12">
               {/* Decorative Background Elements */}
               <div className="pointer-events-none absolute right-0 top-0 h-[400px] w-[400px] translate-x-1/4 -translate-y-1/4 rounded-full bg-[#00B900] opacity-[0.06] blur-[120px]" />
 
