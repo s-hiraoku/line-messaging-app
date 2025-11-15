@@ -16,6 +16,7 @@ import type {
   PersonCard,
   ImageCard,
   ValidationError,
+  TemplateArea,
 } from './types';
 
 /**
@@ -74,18 +75,40 @@ export function validateAction(action: CardAction): ValidationError[] {
  */
 export function validateCard(card: Card): ValidationError[] {
   const errors: ValidationError[] = [];
+  const usingTemplate = !!card.templateEnabled;
 
   // Image URL validation (required, HTTPS only)
-  if (!card.imageUrl || card.imageUrl.trim().length === 0) {
-    errors.push({
-      field: 'imageUrl',
-      message: '画像URLは必須です',
-    });
-  } else if (!card.imageUrl.startsWith('https://')) {
-    errors.push({
-      field: 'imageUrl',
-      message: '画像URLはHTTPSで始まる必要があります',
-    });
+  if (!usingTemplate) {
+    if (!card.imageUrl || card.imageUrl.trim().length === 0) {
+      errors.push({
+        field: 'imageUrl',
+        message: '画像URLは必須です',
+      });
+    } else if (!card.imageUrl.startsWith('https://')) {
+      errors.push({
+        field: 'imageUrl',
+        message: '画像URLはHTTPSで始まる必要があります',
+      });
+    }
+  } else {
+    if (!card.templateId) {
+      errors.push({
+        field: 'templateId',
+        message: 'テンプレートを選択してください',
+      });
+    }
+
+    if (!card.templateAreas || card.templateAreas.length === 0) {
+      errors.push({
+        field: 'templateAreas',
+        message: 'テンプレートのエリアを設定してください',
+      });
+    } else if (card.templateAreas.some((area) => !area.imageUrl)) {
+      errors.push({
+        field: 'templateAreas',
+        message: 'すべてのテンプレートエリアに画像を設定してください',
+      });
+    }
   }
 
   // Actions validation (min 1, max 3)
@@ -327,7 +350,7 @@ export function cardToCarouselColumn(card: Card): {
   });
 
   return {
-    thumbnailImageUrl: card.imageUrl,
+    ...(card.imageUrl ? { thumbnailImageUrl: card.imageUrl } : {}),
     ...(title && { title }),
     text,
     actions,
@@ -342,6 +365,10 @@ export function createDefaultCard(type: CardType): Card {
     id: `card-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
     type,
     imageUrl: '',
+    templateEnabled: false,
+    templateId: null as string | null,
+    templateAreas: [] as TemplateArea[],
+    templatePreviewUrl: null as string | null,
     actions: [
       {
         type: 'uri' as const,

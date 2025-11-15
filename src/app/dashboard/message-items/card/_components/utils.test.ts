@@ -17,6 +17,7 @@ import type {
   LocationCard,
   PersonCard,
   ImageCard,
+  TemplateArea,
 } from './types';
 
 describe('validateAction', () => {
@@ -323,6 +324,86 @@ describe('validateCard', () => {
       expect(errors).toContainEqual({
         field: 'imageUrl',
         message: '画像URLはHTTPSで始まる必要があります',
+      });
+    });
+
+    it('should allow missing imageUrl when template is configured', () => {
+      const templateAreas: TemplateArea[] = [
+        { id: 'area-1', x: 0, y: 0, width: 512, height: 512, imageUrl: 'https://example.com/a.jpg' },
+      ];
+
+      const card: ProductCard = {
+        id: 'card-1',
+        type: 'product',
+        imageUrl: '',
+        templateEnabled: true,
+        title: '商品名',
+        description: '説明',
+        templateId: 'split-1-full',
+        templateAreas,
+        actions: [
+          {
+            type: 'uri',
+            label: '詳細',
+            uri: 'https://example.com',
+          },
+        ],
+      };
+
+      const errors = validateCard(card);
+
+      expect(errors.find((err) => err.field === 'imageUrl')).toBeUndefined();
+    });
+
+    it('should fail when template is enabled but no templateId provided', () => {
+      const card: ProductCard = {
+        id: 'card-1',
+        type: 'product',
+        imageUrl: '',
+        templateEnabled: true,
+        title: '商品名',
+        description: '説明',
+        actions: [
+          {
+            type: 'uri',
+            label: '詳細',
+            uri: 'https://example.com',
+          },
+        ],
+      };
+
+      const errors = validateCard(card);
+
+      expect(errors).toContainEqual({
+        field: 'templateId',
+        message: 'テンプレートを選択してください',
+      });
+    });
+
+    it('should fail when templateId is set but areas are missing', () => {
+      const card: ProductCard = {
+        id: 'card-1',
+        type: 'product',
+        imageUrl: '',
+        templateEnabled: true,
+        title: '商品名',
+        description: '説明',
+        templateId: 'split-1-full',
+        templateAreas: [],
+        actions: [
+          {
+            type: 'uri',
+            label: '詳細',
+            uri: 'https://example.com',
+          },
+        ],
+      };
+
+      const errors = validateCard(card);
+
+      expect(errors).toContainEqual({
+        field: 'templateAreas',
+        message: 'テンプレートのエリアを設定してください',
       });
     });
 
@@ -1288,6 +1369,10 @@ describe('createDefaultCard', () => {
       expect(card.type).toBe('product');
       expect(card.id).toMatch(/^card-\d+-[a-z0-9]+$/);
       expect(card.imageUrl).toBe('');
+      expect(card.templateEnabled).toBe(false);
+      expect(card.templateId).toBeNull();
+      expect(card.templateAreas).toEqual([]);
+      expect(card.templatePreviewUrl).toBeNull();
       expect(card.title).toBe('商品名');
       expect(card.description).toBe('商品の説明をここに入力してください');
       expect(card.price).toBeUndefined();
@@ -1314,6 +1399,10 @@ describe('createDefaultCard', () => {
       expect(card.type).toBe('location');
       expect(card.id).toMatch(/^card-\d+-[a-z0-9]+$/);
       expect(card.imageUrl).toBe('');
+      expect(card.templateEnabled).toBe(false);
+      expect(card.templateId).toBeNull();
+      expect(card.templateAreas).toEqual([]);
+      expect(card.templatePreviewUrl).toBeNull();
       expect(card.title).toBe('場所名');
       expect(card.address).toBe('住所をここに入力してください');
       expect(card.hours).toBeUndefined();
@@ -1333,6 +1422,10 @@ describe('createDefaultCard', () => {
       expect(card.type).toBe('person');
       expect(card.id).toMatch(/^card-\d+-[a-z0-9]+$/);
       expect(card.imageUrl).toBe('');
+      expect(card.templateEnabled).toBe(false);
+      expect(card.templateId).toBeNull();
+      expect(card.templateAreas).toEqual([]);
+      expect(card.templatePreviewUrl).toBeNull();
       expect(card.name).toBe('名前');
       expect(card.description).toBe('説明をここに入力してください');
       expect(card.tags).toEqual([]);
@@ -1352,6 +1445,10 @@ describe('createDefaultCard', () => {
       expect(card.type).toBe('image');
       expect(card.id).toMatch(/^card-\d+-[a-z0-9]+$/);
       expect(card.imageUrl).toBe('');
+      expect(card.templateEnabled).toBe(false);
+      expect(card.templateId).toBeNull();
+      expect(card.templateAreas).toEqual([]);
+      expect(card.templatePreviewUrl).toBeNull();
       expect(card.title).toBeUndefined();
       expect(card.description).toBeUndefined();
       expect(card.actions).toHaveLength(1);

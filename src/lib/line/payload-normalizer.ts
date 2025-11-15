@@ -1,6 +1,21 @@
-import type { SendMessagePayload, AnyMessage } from "./message-schemas";
-import { overlayTextOnImage, isCloudinaryUrl, type ImageAreaForOverlay } from "../cloudinary/text-overlay";
-import { convertCardToImagemap, validateImageAreas, type ImageArea, type CardWithImageAreas } from "./imagemap-converter";
+import type { SendMessagePayload, AnyMessage, TemplateAreaPayload } from "./message-schemas";
+import type { TemplateArea } from '@/lib/template-image-splitter/types';
+import { composeTemplateImages } from "../cloudinary/template-image-composer";
+import { convertTemplateToImagemap } from "./imagemap-converter";
+
+function inferBaseSize(areas: TemplateAreaPayload[]): { width: number; height: number } {
+  if (!areas.length) {
+    return { width: 1024, height: 1024 };
+  }
+
+  const width = Math.max(...areas.map((area) => area.x + area.width));
+  const height = Math.max(...areas.map((area) => area.y + area.height));
+
+  return {
+    width: Math.max(1, width),
+    height: Math.max(1, height),
+  };
+}
 
 /**
  * Normalize various payload formats to a standard messages array format
@@ -139,61 +154,36 @@ export async function normalizePayload(payload: SendMessagePayload): Promise<{
 
   // Card-Type Message format: {to, type: "cardType", ...}
   // Note: Card-type messages are stored as CARD_TYPE in DB but sent as template to LINE API
-  // If imageAreas are provided, convert to imagemap message instead
   if ("type" in payload && payload.type === "cardType") {
-    // Check if imageAreas are provided (new image area editor feature)
-    if (payload.imageAreas && payload.imageAreas.length > 0) {
-      // Validate image URL is from Cloudinary
-      if (!payload.imageUrl) {
-        throw new Error("Image URL is required when using image areas");
+    if (payload.templateAreas && payload.templateAreas.length > 0) {
+      if (!payload.templateId) {
+        throw new Error("templateId is required when template areas are provided");
       }
 
-      if (!isCloudinaryUrl(payload.imageUrl)) {
-        throw new Error("Image areas are only supported for Cloudinary images");
-      }
-
-      // Validate image areas
-      const imageWidth = payload.imageWidth || 1024;
-      const imageHeight = payload.imageHeight || 1024;
-      const validationErrors = validateImageAreas(payload.imageAreas as ImageArea[], imageWidth, imageHeight);
-
-      if (validationErrors.length > 0) {
-        throw new Error(`Image area validation failed: ${validationErrors.join(", ")}`);
-      }
-
-      // Convert imageAreas to overlay format
-      const overlayAreas: ImageAreaForOverlay[] = payload.imageAreas.map((area) => ({
-        id: area.id,
-        label: area.label,
-        x: area.x,
-        y: area.y,
-        width: area.width,
-        height: area.height,
-      }));
-
-      // Overlay text labels on image using Cloudinary
-      const composedImageUrl = await overlayTextOnImage(
-        payload.imageUrl,
-        overlayAreas,
-        imageWidth,
-        imageHeight
-      );
-
-      // Convert card to imagemap message
-      const cardData: CardWithImageAreas = {
-        id: "card-" + Date.now(),
-        type: "image", // Generic type for imagemap
-        imageUrl: payload.imageUrl,
-        title: payload.altText,
-        imageAreas: payload.imageAreas as ImageArea[],
+      const baseSize = inferBaseSize(payload.templateAreas);
+      const compositionPlan = {
+        id: payload.templateId,
+        baseSize,
+        areas: payload.templateAreas.map((area) => ({
+          id: area.id,
+          x: area.x,
+          y: area.y,
+          width: area.width,
+          height: area.height,
+        })),
       };
 
-      const imagemapMessage = convertCardToImagemap(
-        cardData,
-        composedImageUrl,
-        imageWidth,
-        imageHeight
+      const composedImageUrl = await composeTemplateImages(
+        compositionPlan,
+        payload.templateAreas as TemplateArea[]
       );
+
+      const imagemapMessage = convertTemplateToImagemap({
+        templateId: payload.templateId,
+        composedImageUrl,
+        baseSize,
+        areas: payload.templateAreas as TemplateArea[],
+      });
 
       return {
         to,
@@ -203,7 +193,7 @@ export async function normalizePayload(payload: SendMessagePayload): Promise<{
       };
     }
 
-    // Traditional card (no imageAreas) - return as template
+    // Traditional card without template areas - return as template
     return {
       to,
       messages: [],

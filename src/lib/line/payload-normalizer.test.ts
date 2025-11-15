@@ -1,11 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { normalizePayload } from './payload-normalizer';
-import * as textOverlay from '../cloudinary/text-overlay';
+import * as templateComposer from '../cloudinary/template-image-composer';
 
-// Mock Cloudinary text overlay
-vi.mock('../cloudinary/text-overlay', () => ({
-  overlayTextOnImage: vi.fn(),
-  isCloudinaryUrl: vi.fn(),
+vi.mock('../cloudinary/template-image-composer', () => ({
+  composeTemplateImages: vi.fn(),
 }));
 
 describe('payload-normalizer', () => {
@@ -13,74 +11,53 @@ describe('payload-normalizer', () => {
     vi.clearAllMocks();
   });
 
-  describe('cardType with imageAreas', () => {
-    const mockCloudinaryUrl = 'https://res.cloudinary.com/demo/image/upload/sample.jpg';
-    const mockComposedUrl = 'https://res.cloudinary.com/demo/image/upload/transformed.jpg';
+  describe('cardType with templateAreas', () => {
+    const mockComposedUrl = 'https://res.cloudinary.com/demo/image/upload/v1/composed.png';
 
     beforeEach(() => {
-      (textOverlay.isCloudinaryUrl as any).mockReturnValue(true);
-      (textOverlay.overlayTextOnImage as any).mockResolvedValue(mockComposedUrl);
+      (templateComposer.composeTemplateImages as any).mockResolvedValue(mockComposedUrl);
     });
 
-    it('converts cardType with imageAreas to imagemap message', async () => {
+    it('converts template areas into an imagemap message', async () => {
       const payload = {
         to: 'U1234567890abcdef',
         type: 'cardType' as const,
-        altText: 'Product Card',
+        altText: 'Template Card',
+        templateId: 'split-2-vertical-50-50',
         template: {
           type: 'carousel' as const,
           columns: [],
         },
-        imageAreas: [
-          {
-            id: 'area1',
-            x: 100,
-            y: 100,
-            width: 200,
-            height: 150,
-            label: 'Buy Now',
-            action: {
-              type: 'uri' as const,
-              label: 'Buy Now',
-              uri: 'https://example.com/buy',
-            },
-          },
+        templateAreas: [
+          { id: 'area-1', x: 0, y: 0, width: 600, height: 300, imageUrl: 'https://res.cloudinary.com/demo/image/upload/a.png' },
+          { id: 'area-2', x: 0, y: 300, width: 600, height: 300, imageUrl: 'https://res.cloudinary.com/demo/image/upload/b.png' },
         ],
-        imageUrl: mockCloudinaryUrl,
-        imageWidth: 1024,
-        imageHeight: 1024,
       };
 
       const result = await normalizePayload(payload);
 
       expect(result.isTemplate).toBe(false);
-      expect(result.messages).toHaveLength(1);
-      expect(result.messages[0].type).toBe('imagemap');
       expect(result.messageItemType).toBe('cardType');
+      expect(result.messages).toHaveLength(1);
+      const message = result.messages[0];
+      expect(message.type).toBe('imagemap');
+      expect(message.baseSize).toEqual({ width: 600, height: 600 });
+      expect(message.actions).toHaveLength(2);
 
-      // Verify Cloudinary overlay was called
-      expect(textOverlay.overlayTextOnImage).toHaveBeenCalledWith(
-        mockCloudinaryUrl,
-        [
-          {
-            id: 'area1',
-            label: 'Buy Now',
-            x: 100,
-            y: 100,
-            width: 200,
-            height: 150,
-          },
-        ],
-        1024,
-        1024
+      expect(templateComposer.composeTemplateImages).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: 'split-2-vertical-50-50',
+          baseSize: { width: 600, height: 600 },
+        }),
+        payload.templateAreas
       );
     });
 
-    it('converts cardType without imageAreas to template message', async () => {
+    it('falls back to template payload when template areas are missing', async () => {
       const payload = {
         to: 'U1234567890abcdef',
         type: 'cardType' as const,
-        altText: 'Product Card',
+        altText: 'Template Card',
         template: {
           type: 'carousel' as const,
           columns: [],
@@ -91,200 +68,25 @@ describe('payload-normalizer', () => {
 
       expect(result.isTemplate).toBe(true);
       expect(result.templateData).toBeDefined();
-      expect(result.messageItemType).toBe('cardType');
-
-      // Verify Cloudinary overlay was NOT called
-      expect(textOverlay.overlayTextOnImage).not.toHaveBeenCalled();
+      expect(templateComposer.composeTemplateImages).not.toHaveBeenCalled();
     });
 
-    it('throws error when imageUrl is missing for imageAreas', async () => {
+    it('throws when templateId is missing for template areas', async () => {
       const payload = {
         to: 'U1234567890abcdef',
         type: 'cardType' as const,
-        altText: 'Product Card',
+        altText: 'Template Card',
         template: {
           type: 'carousel' as const,
           columns: [],
         },
-        imageAreas: [
-          {
-            id: 'area1',
-            x: 100,
-            y: 100,
-            width: 200,
-            height: 150,
-            label: 'Buy Now',
-            action: {
-              type: 'uri' as const,
-              label: 'Buy Now',
-              uri: 'https://example.com/buy',
-            },
-          },
+        templateAreas: [
+          { id: 'area-1', x: 0, y: 0, width: 600, height: 300, imageUrl: 'https://res.cloudinary.com/demo/image/upload/a.png' },
         ],
       };
 
       await expect(normalizePayload(payload as any)).rejects.toThrow(
-        'Image URL is required when using image areas'
-      );
-    });
-
-    it('throws error when imageUrl is not from Cloudinary', async () => {
-      (textOverlay.isCloudinaryUrl as any).mockReturnValue(false);
-
-      const payload = {
-        to: 'U1234567890abcdef',
-        type: 'cardType' as const,
-        altText: 'Product Card',
-        template: {
-          type: 'carousel' as const,
-          columns: [],
-        },
-        imageAreas: [
-          {
-            id: 'area1',
-            x: 100,
-            y: 100,
-            width: 200,
-            height: 150,
-            label: 'Buy Now',
-            action: {
-              type: 'uri' as const,
-              label: 'Buy Now',
-              uri: 'https://example.com/buy',
-            },
-          },
-        ],
-        imageUrl: 'https://example.com/image.jpg',
-        imageWidth: 1024,
-        imageHeight: 1024,
-      };
-
-      await expect(normalizePayload(payload)).rejects.toThrow(
-        'Image areas are only supported for Cloudinary images'
-      );
-    });
-
-    it('throws validation error for invalid image areas', async () => {
-      const payload = {
-        to: 'U1234567890abcdef',
-        type: 'cardType' as const,
-        altText: 'Product Card',
-        template: {
-          type: 'carousel' as const,
-          columns: [],
-        },
-        imageAreas: [
-          {
-            id: 'area1',
-            x: -10, // Invalid: negative x
-            y: 100,
-            width: 200,
-            height: 150,
-            label: 'Buy Now',
-            action: {
-              type: 'uri' as const,
-              label: 'Buy Now',
-              uri: 'https://example.com/buy',
-            },
-          },
-        ],
-        imageUrl: mockCloudinaryUrl,
-        imageWidth: 1024,
-        imageHeight: 1024,
-      };
-
-      await expect(normalizePayload(payload)).rejects.toThrow('Image area validation failed');
-    });
-
-    it('converts multiple imageAreas correctly', async () => {
-      const payload = {
-        to: 'U1234567890abcdef',
-        type: 'cardType' as const,
-        altText: 'Product Card',
-        template: {
-          type: 'carousel' as const,
-          columns: [],
-        },
-        imageAreas: [
-          {
-            id: 'area1',
-            x: 100,
-            y: 100,
-            width: 200,
-            height: 150,
-            label: 'Button 1',
-            action: {
-              type: 'uri' as const,
-              label: 'Button 1',
-              uri: 'https://example.com/1',
-            },
-          },
-          {
-            id: 'area2',
-            x: 400,
-            y: 200,
-            width: 150,
-            height: 100,
-            label: 'Button 2',
-            action: {
-              type: 'message' as const,
-              label: 'Button 2',
-              text: 'Hello',
-            },
-          },
-        ],
-        imageUrl: mockCloudinaryUrl,
-        imageWidth: 1024,
-        imageHeight: 1024,
-      };
-
-      const result = await normalizePayload(payload);
-
-      expect(result.messages[0].type).toBe('imagemap');
-      const imagemapMsg = result.messages[0] as any;
-      expect(imagemapMsg.actions).toHaveLength(2);
-      expect(imagemapMsg.actions[0].type).toBe('uri');
-      expect(imagemapMsg.actions[1].type).toBe('message');
-    });
-
-    it('uses default dimensions when not provided', async () => {
-      const payload = {
-        to: 'U1234567890abcdef',
-        type: 'cardType' as const,
-        altText: 'Product Card',
-        template: {
-          type: 'carousel' as const,
-          columns: [],
-        },
-        imageAreas: [
-          {
-            id: 'area1',
-            x: 100,
-            y: 100,
-            width: 200,
-            height: 150,
-            label: 'Buy Now',
-            action: {
-              type: 'uri' as const,
-              label: 'Buy Now',
-              uri: 'https://example.com/buy',
-            },
-          },
-        ],
-        imageUrl: mockCloudinaryUrl,
-        // imageWidth and imageHeight not provided
-      };
-
-      const result = await normalizePayload(payload);
-
-      expect(result.messages[0].type).toBe('imagemap');
-
-      // Verify default dimensions (1024x1024) were used
-      expect(textOverlay.overlayTextOnImage).toHaveBeenCalledWith(
-        mockCloudinaryUrl,
-        expect.any(Array),
-        1024,
-        1024
+        'templateId is required when template areas are provided'
       );
     });
   });

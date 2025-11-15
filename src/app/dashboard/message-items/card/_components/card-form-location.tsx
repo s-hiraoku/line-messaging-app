@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import type { LocationCard } from "./types";
+import type { LocationCard, TemplateArea } from "./types";
 import { ImageCropUploader } from "@/app/dashboard/_components/image-crop-uploader";
 import { ActionEditor } from "./action-editor";
-import { ImageAreaEditor } from "./image-area-editor";
+import { TemplateImageEditor } from "./template-image-editor";
+import { Button } from "@/components/ui/Button";
 
 interface LocationFormProps {
   card: LocationCard;
@@ -27,12 +28,13 @@ interface LocationFormProps {
 export function LocationForm({ card, onChange }: LocationFormProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const isTemplateMode = !!card.templateEnabled;
 
   // Validate form on mount and when card changes
   useEffect(() => {
     validateForm();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [card.title, card.address, card.hours, card.imageUrl, card.actions]);
+  }, [card.title, card.address, card.hours, card.imageUrl, card.actions, card.templateId, card.templateEnabled]);
 
   /**
    * Validates all form fields and returns error object
@@ -59,9 +61,13 @@ export function LocationForm({ card, onChange }: LocationFormProps) {
       newErrors.hours = "営業時間は60文字以内で入力してください";
     }
 
-    // Image validation (required)
-    if (!card.imageUrl || card.imageUrl.trim().length === 0) {
-      newErrors.imageUrl = "画像は必須です";
+    const requiresImage = !isTemplateMode;
+
+    // Image validation (required when not using template)
+    if (requiresImage) {
+      if (!card.imageUrl || card.imageUrl.trim().length === 0) {
+        newErrors.imageUrl = "画像は必須です";
+      }
     }
 
     // Actions validation (required, max 3)
@@ -117,6 +123,44 @@ export function LocationForm({ card, onChange }: LocationFormProps) {
   const handleActionsChange = (actions: LocationCard["actions"]) => {
     onChange({ actions });
     setTouched({ ...touched, actions: true });
+  };
+
+  const handleTemplateAreasChange = useCallback((areas: TemplateArea[]) => {
+    onChange({ templateAreas: areas });
+  }, [onChange]);
+
+  const handleTemplatePreviewChange = useCallback((previewUrl: string | null) => {
+    onChange({ templatePreviewUrl: previewUrl ?? null });
+  }, [onChange]);
+
+  const handleTemplateImageUrlChange = useCallback((imageUrl: string | null) => {
+    if (card.templateEnabled) {
+      onChange({ imageUrl: imageUrl ?? '' });
+    }
+  }, [card.templateEnabled, onChange]);
+
+  const handleTemplateChange = useCallback((templateId: string | null) => {
+    onChange({ templateEnabled: true, templateId, ...(templateId ? { imageUrl: '' } : {}) });
+    if (templateId) {
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next.imageUrl;
+        return next;
+      });
+    }
+  }, [onChange, setErrors]);
+
+  const handleTemplateModeToggle = (mode: 'image' | 'template') => {
+    if (mode === 'template') {
+      onChange({ templateEnabled: true, imageUrl: '', templatePreviewUrl: null });
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next.imageUrl;
+        return next;
+      });
+    } else {
+      onChange({ templateEnabled: false, templateId: undefined, templateAreas: undefined, templatePreviewUrl: undefined });
+    }
   };
 
   /**
@@ -213,40 +257,71 @@ export function LocationForm({ card, onChange }: LocationFormProps) {
         </div>
       </div>
 
-      {/* Image Upload Field */}
+      {/* 画像モード */}
       <div className="space-y-2">
-        <label className="text-sm font-bold uppercase tracking-wider text-black">
-          画像 <span className="text-red-600">*</span>
-        </label>
-        <ImageCropUploader
-          onImageUploaded={handleImageUploaded}
-          defaultAspectRatio="LANDSCAPE"
-          placeholder="場所の画像をアップロード (JPEG/PNG、10MB以下、1024x1024px以上)"
-        />
-        {shouldShowError("imageUrl") && (
-          <p className="text-xs font-bold text-red-600">{errors.imageUrl}</p>
-        )}
-        {card.imageUrl && (
-          <div className="border-2 border-black bg-[#FFFEF5] p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-            <p className="text-xs font-bold uppercase tracking-wider text-black mb-2">現在の画像:</p>
-            <div className="relative aspect-video w-full overflow-hidden border-2 border-black bg-white">
-              {/* eslint-disable-next-line @next/next/no-img-element -- Preview component with user-provided URLs from various sources */}
-              <img
-                src={card.imageUrl}
-                alt={card.title || "Location image"}
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <p className="text-xs font-mono text-black/60 mt-2 break-all">{card.imageUrl}</p>
-          </div>
-        )}
+        <label className="text-sm font-bold uppercase tracking-wider text-black">画像モード</label>
+        <div className="flex gap-3">
+          <Button
+            type="button"
+            variant={!isTemplateMode ? 'secondary' : 'outline'}
+            className="border-2 border-black"
+            onClick={() => handleTemplateModeToggle('image')}
+          >
+            単一画像
+          </Button>
+          <Button
+            type="button"
+            variant={isTemplateMode ? 'secondary' : 'outline'}
+            className="border-2 border-black"
+            onClick={() => handleTemplateModeToggle('template')}
+          >
+            テンプレート
+          </Button>
+        </div>
       </div>
 
-      {/* Image Area Editor */}
-      <ImageAreaEditor
-        imageUrl={card.imageUrl}
-        onAreasChange={useCallback((areas: LocationCard['imageAreas']) => onChange({ imageAreas: areas }), [onChange])}
-      />
+      {!isTemplateMode && (
+        <div className="space-y-2">
+          <label className="text-sm font-bold uppercase tracking-wider text-black">
+            画像 <span className="text-red-600">*</span>
+          </label>
+          <ImageCropUploader
+            onImageUploaded={handleImageUploaded}
+            defaultAspectRatio="LANDSCAPE"
+            placeholder="場所の画像をアップロード (JPEG/PNG、10MB以下、1024x1024px以上)"
+          />
+          <p className="text-xs text-black/60">テンプレートを選択するとこの画像は不要になります。</p>
+          {shouldShowError("imageUrl") && (
+            <p className="text-xs font-bold text-red-600">{errors.imageUrl}</p>
+          )}
+          {card.imageUrl && (
+            <div className="border-2 border-black bg-[#FFFEF5] p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+              <p className="text-xs font-bold uppercase tracking-wider text-black mb-2">現在の画像:</p>
+              <div className="relative aspect-video w-full overflow-hidden border-2 border-black bg-white">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={card.imageUrl}
+                  alt={card.title || "Location image"}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <p className="text-xs font-mono text-black/60 mt-2 break-all">{card.imageUrl}</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {isTemplateMode && (
+        <TemplateImageEditor
+          cardId={card.id}
+          initialTemplateId={card.templateId}
+          initialAreas={card.templateAreas}
+          onTemplateChange={handleTemplateChange}
+          onAreasChange={handleTemplateAreasChange}
+          onPreviewChange={handleTemplatePreviewChange}
+          onComposedImageChange={handleTemplateImageUrlChange}
+        />
+      )}
 
       {/* Actions Field */}
       <div className="space-y-2">

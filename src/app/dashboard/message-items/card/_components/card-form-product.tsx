@@ -4,14 +4,16 @@ import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { ImageCropUploader } from '@/app/dashboard/_components/image-crop-uploader';
 import { ActionEditor } from './action-editor';
-import { ImageAreaEditor } from './image-area-editor';
+import { TemplateImageEditor } from './template-image-editor';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Badge } from '@/components/ui/Badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
-import type { ProductCard } from './types';
+import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
+import type { ProductCard, TemplateArea } from './types';
 
 interface ProductFormProps {
   card: ProductCard;
@@ -37,12 +39,13 @@ interface ProductFormProps {
 export function ProductForm({ card, onChange }: ProductFormProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
+  const isTemplateMode = !!card.templateEnabled;
 
   // Validate form on mount and when card changes
   useEffect(() => {
     validateForm(card);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [card.title, card.description, card.price, card.imageUrl, card.actions]);
+  }, [card.title, card.description, card.price, card.imageUrl, card.actions, card.templateId, card.templateEnabled]);
 
   /**
    * Validates the entire form and returns validation errors
@@ -73,9 +76,13 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
       }
     }
 
+    const requiresImage = !isTemplateMode;
+
     // Image validation
-    if (!productCard.imageUrl || productCard.imageUrl.trim().length === 0) {
-      newErrors.imageUrl = '画像は必須です';
+    if (requiresImage) {
+      if (!productCard.imageUrl || productCard.imageUrl.trim().length === 0) {
+        newErrors.imageUrl = '画像は必須です';
+      }
     }
 
     // Actions validation
@@ -177,13 +184,43 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
     }
   };
 
-  /**
-   * Handles image areas change from ImageAreaEditor
-   * Memoized to prevent infinite re-render loops
-   */
-  const handleImageAreasChange = useCallback((areas: ProductCard['imageAreas']) => {
-    onChange({ imageAreas: areas });
+  const handleTemplateAreasChange = useCallback((areas: TemplateArea[]) => {
+    onChange({ templateAreas: areas });
   }, [onChange]);
+
+  const handleTemplatePreviewChange = useCallback((previewUrl: string | null) => {
+    onChange({ templatePreviewUrl: previewUrl ?? null });
+  }, [onChange]);
+
+  const handleTemplateImageUrlChange = useCallback((imageUrl: string | null) => {
+    if (card.templateEnabled) {
+      onChange({ imageUrl: imageUrl ?? '' });
+    }
+  }, [card.templateEnabled, onChange]);
+
+  const handleTemplateChange = useCallback((templateId: string | null) => {
+    onChange({ templateEnabled: true, templateId, ...(templateId ? { imageUrl: '' } : {}) });
+    if (templateId) {
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next.imageUrl;
+        return next;
+      });
+    }
+  }, [onChange, setErrors]);
+
+  const handleTemplateModeToggle = (mode: 'image' | 'template') => {
+    if (mode === 'template') {
+      onChange({ templateEnabled: true, imageUrl: '', templatePreviewUrl: null });
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next.imageUrl;
+        return next;
+      });
+    } else {
+      onChange({ templateEnabled: false, templateId: undefined, templateAreas: undefined, templatePreviewUrl: undefined });
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -287,45 +324,74 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
 
       <Separator className="bg-black h-[2px]" />
 
-      {/* Image Upload */}
+      {/* Image Mode Toggle */}
       <div className="space-y-2">
-        <Label className="text-sm font-bold uppercase tracking-wider text-black">
-          画像 <span className="text-red-600">*</span>
-        </Label>
-        <ImageCropUploader
-          onImageUploaded={handleImageUploaded}
-          defaultAspectRatio="SQUARE"
-          placeholder="商品画像をアップロード (JPEG/PNG, 1024x1024px以上)"
-        />
-        {errors.imageUrl && (
-          <p className="flex items-center gap-1.5 text-xs font-bold text-red-600">
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            {errors.imageUrl}
-          </p>
-        )}
-        {card.imageUrl && (
-          <div className="border-2 border-black bg-[#FFFEF5] p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-            <p className="text-xs font-bold uppercase tracking-wider text-black mb-2">プレビュー:</p>
-            <Image
-              src={card.imageUrl}
-              alt="アップロード済み画像"
-              width={128}
-              height={128}
-              className="h-32 w-32 border-2 border-black object-cover shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-            />
-          </div>
-        )}
+        <Label className="text-sm font-bold uppercase tracking-wider text-black">画像モード</Label>
+        <div className="flex gap-3">
+          <Button
+            type="button"
+            variant={!isTemplateMode ? 'secondary' : 'outline'}
+            className="border-2 border-black"
+            onClick={() => handleTemplateModeToggle('image')}
+          >
+            単一画像
+          </Button>
+          <Button
+            type="button"
+            variant={isTemplateMode ? 'secondary' : 'outline'}
+            className="border-2 border-black"
+            onClick={() => handleTemplateModeToggle('template')}
+          >
+            テンプレート
+          </Button>
+        </div>
       </div>
 
-      <Separator className="bg-black h-[2px]" />
+      {!isTemplateMode && (
+        <div className="space-y-2">
+          <Label className="text-sm font-bold uppercase tracking-wider text-black">
+            画像 <span className="text-red-600">*</span>
+          </Label>
+          <ImageCropUploader
+            onImageUploaded={handleImageUploaded}
+            defaultAspectRatio="SQUARE"
+            placeholder="商品画像をアップロード (JPEG/PNG, 1024x1024px以上)"
+          />
+          <p className="text-xs text-black/60">テンプレートを選択するとこの画像は不要になります。</p>
+          {errors.imageUrl && (
+            <p className="flex items-center gap-1.5 text-xs font-bold text-red-600">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {errors.imageUrl}
+            </p>
+          )}
+          {card.imageUrl && (
+            <div className="border-2 border-black bg-[#FFFEF5] p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+              <p className="text-xs text-black">プレビュー:</p>
+              <Image
+                src={card.imageUrl}
+                alt="アップロード済み画像"
+                width={128}
+                height={128}
+                className="h-32 w-32 border-2 border-black object-cover shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+              />
+            </div>
+          )}
+        </div>
+      )}
 
-      {/* Image Area Editor */}
-      <ImageAreaEditor
-        imageUrl={card.imageUrl}
-        onAreasChange={handleImageAreasChange}
-      />
+      {isTemplateMode && (
+        <TemplateImageEditor
+          cardId={card.id}
+          initialTemplateId={card.templateId}
+          initialAreas={card.templateAreas}
+          onTemplateChange={handleTemplateChange}
+          onAreasChange={handleTemplateAreasChange}
+          onPreviewChange={handleTemplatePreviewChange}
+          onComposedImageChange={handleTemplateImageUrlChange}
+        />
+      )}
 
       <Separator className="bg-black h-[2px]" />
 

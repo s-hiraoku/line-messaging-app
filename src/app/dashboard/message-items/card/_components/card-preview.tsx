@@ -34,6 +34,7 @@ function ActionButton({ action }: { action: CardAction }) {
  * Renders a single card based on its type
  */
 function CardItem({ card, index, total }: { card: Card; index: number; total: number }) {
+  const previewImageUrl = card.templatePreviewUrl || card.imageUrl;
   const renderCardContent = () => {
     switch (card.type) {
       case 'product':
@@ -125,10 +126,10 @@ function CardItem({ card, index, total }: { card: Card; index: number; total: nu
       <div className="overflow-hidden border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-shadow duration-200">
         {/* Card Image with loading state simulation */}
         <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#FFFEF5] border-b-2 border-black">
-          {card.imageUrl ? (
+          {previewImageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element -- Preview component with user-provided URLs from various sources
             <img
-              src={card.imageUrl}
+              src={previewImageUrl}
               alt={card.type === 'person' ? card.name : card.type === 'product' || card.type === 'location' ? card.title : card.title || 'Card image'}
               className="h-full w-full object-cover"
             />

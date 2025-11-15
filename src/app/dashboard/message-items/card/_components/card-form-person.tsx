@@ -5,8 +5,9 @@ import Image from 'next/image';
 import { X } from 'lucide-react';
 import { ImageCropUploader } from '@/app/dashboard/_components/image-crop-uploader';
 import { ActionEditor } from './action-editor';
-import { ImageAreaEditor } from './image-area-editor';
-import type { PersonCard } from './types';
+import { TemplateImageEditor } from './template-image-editor';
+import type { PersonCard, TemplateArea } from './types';
+import { Button } from '@/components/ui/Button';
 
 interface PersonFormProps {
   card: PersonCard;
@@ -30,12 +31,13 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
   const [errors, setErrors] = useState<Record<string, string | undefined>>({});
   const [tagInput, setTagInput] = useState('');
   const tagInputRef = useRef<HTMLInputElement>(null);
+  const isTemplateMode = !!card.templateEnabled;
 
   // Validate card fields on mount and when card changes
   useEffect(() => {
     validateCard(card);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [card.name, card.description, card.tags, card.imageUrl, card.actions]);
+  }, [card.name, card.description, card.tags, card.imageUrl, card.actions, card.templateId, card.templateEnabled]);
 
   /**
    * Validates the card and returns validation errors
@@ -65,9 +67,12 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
       }
     }
 
-    // Image validation (required)
-    if (!cardToValidate.imageUrl || cardToValidate.imageUrl.trim().length === 0) {
-      newErrors.imageUrl = '画像は必須です';
+    const requiresImage = !cardToValidate.templateEnabled;
+
+    if (requiresImage) {
+      if (!cardToValidate.imageUrl || cardToValidate.imageUrl.trim().length === 0) {
+        newErrors.imageUrl = '画像は必須です';
+      }
     }
 
     // Actions validation (required, max 3)
@@ -165,6 +170,44 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
    */
   const handleActionsChange = (actions: PersonCard['actions']) => {
     onChange({ actions });
+  };
+
+  const handleTemplateAreasChange = useCallback((areas: TemplateArea[]) => {
+    onChange({ templateAreas: areas });
+  }, [onChange]);
+
+  const handleTemplatePreviewChange = useCallback((previewUrl: string | null) => {
+    onChange({ templatePreviewUrl: previewUrl ?? null });
+  }, [onChange]);
+
+  const handleTemplateImageUrlChange = useCallback((imageUrl: string | null) => {
+    if (card.templateEnabled) {
+      onChange({ imageUrl: imageUrl ?? '' });
+    }
+  }, [card.templateEnabled, onChange]);
+
+  const handleTemplateChange = useCallback((templateId: string | null) => {
+    onChange({ templateEnabled: true, templateId, ...(templateId ? { imageUrl: '' } : {}) });
+    if (templateId) {
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next.imageUrl;
+        return next;
+      });
+    }
+  }, [onChange, setErrors]);
+
+  const handleTemplateModeToggle = (mode: 'image' | 'template') => {
+    if (mode === 'template') {
+      onChange({ templateEnabled: true, imageUrl: '', templatePreviewUrl: null });
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next.imageUrl;
+        return next;
+      });
+    } else {
+      onChange({ templateEnabled: false, templateId: undefined, templateAreas: undefined, templatePreviewUrl: undefined });
+    }
   };
 
   return (
@@ -273,38 +316,69 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
         </p>
       </div>
 
-      {/* Image Upload Field */}
+      {/* 画像モード */}
       <div className="space-y-2">
-        <label className="text-sm font-bold uppercase tracking-wider text-black">
-          画像 <span className="text-red-600">*</span>
-        </label>
-        <ImageCropUploader
-          onImageUploaded={handleImageUploaded}
-          defaultAspectRatio="SQUARE"
-          placeholder="プロフィール画像をアップロード"
-        />
-        {errors.imageUrl && (
-          <p className="text-xs font-bold text-red-600">{errors.imageUrl}</p>
-        )}
-        {card.imageUrl && (
-          <div className="border-2 border-black bg-[#FFFEF5] p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-            <p className="text-xs font-bold uppercase tracking-wider text-black mb-2">現在の画像:</p>
-            <Image
-              src={card.imageUrl}
-              alt="プレビュー"
-              width={128}
-              height={128}
-              className="h-32 w-32 border-2 border-black object-cover shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-            />
-          </div>
-        )}
+        <label className="text-sm font-bold uppercase tracking-wider text-black">画像モード</label>
+        <div className="flex gap-3">
+          <Button
+            type="button"
+            variant={!isTemplateMode ? 'secondary' : 'outline'}
+            className="border-2 border-black"
+            onClick={() => handleTemplateModeToggle('image')}
+          >
+            単一画像
+          </Button>
+          <Button
+            type="button"
+            variant={isTemplateMode ? 'secondary' : 'outline'}
+            className="border-2 border-black"
+            onClick={() => handleTemplateModeToggle('template')}
+          >
+            テンプレート
+          </Button>
+        </div>
       </div>
 
-      {/* Image Area Editor */}
-      <ImageAreaEditor
-        imageUrl={card.imageUrl}
-        onAreasChange={useCallback((areas: PersonCard['imageAreas']) => onChange({ imageAreas: areas }), [onChange])}
-      />
+      {!isTemplateMode && (
+        <div className="space-y-2">
+          <label className="text-sm font-bold uppercase tracking-wider text-black">
+            画像 <span className="text-red-600">*</span>
+          </label>
+          <ImageCropUploader
+            onImageUploaded={handleImageUploaded}
+            defaultAspectRatio="SQUARE"
+            placeholder="プロフィール画像をアップロード"
+          />
+          <p className="text-xs text-black/60">テンプレートを選択すると単一画像は不要になります。</p>
+          {errors.imageUrl && (
+            <p className="text-xs font-bold text-red-600">{errors.imageUrl}</p>
+          )}
+          {card.imageUrl && (
+            <div className="border-2 border-black bg-[#FFFEF5] p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+              <p className="text-xs font-bold uppercase tracking-wider text-black mb-2">現在の画像:</p>
+              <Image
+                src={card.imageUrl}
+                alt="プレビュー"
+                width={128}
+                height={128}
+                className="h-32 w-32 border-2 border-black object-cover shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+              />
+            </div>
+          )}
+        </div>
+      )}
+
+      {isTemplateMode && (
+        <TemplateImageEditor
+          cardId={card.id}
+          initialTemplateId={card.templateId}
+          initialAreas={card.templateAreas}
+          onTemplateChange={handleTemplateChange}
+          onAreasChange={handleTemplateAreasChange}
+          onPreviewChange={handleTemplatePreviewChange}
+          onComposedImageChange={handleTemplateImageUrlChange}
+        />
+      )}
 
       {/* Actions Field */}
       <div className="space-y-2">

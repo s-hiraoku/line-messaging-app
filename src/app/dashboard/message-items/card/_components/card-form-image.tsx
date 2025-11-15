@@ -4,8 +4,9 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { ImageCropUploader } from "@/app/dashboard/_components/image-crop-uploader";
 import { ActionEditor } from "./action-editor";
-import { ImageAreaEditor } from "./image-area-editor";
-import type { ImageCard } from "./types";
+import { TemplateImageEditor } from "./template-image-editor";
+import type { ImageCard, TemplateArea } from "./types";
+import { Button } from "@/components/ui/Button";
 
 interface CardFormImageProps {
   card: ImageCard;
@@ -29,6 +30,7 @@ interface CardFormImageProps {
  */
 export function CardFormImage({ card, onChange }: CardFormImageProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const isTemplateMode = !!card.templateEnabled;
 
   // Validate form on mount and when card changes
   useEffect(() => {
@@ -42,9 +44,12 @@ export function CardFormImage({ card, onChange }: CardFormImageProps) {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    // Image URL validation (required)
-    if (!card.imageUrl || card.imageUrl.trim().length === 0) {
-      newErrors.imageUrl = "画像は必須です";
+    const requiresImage = !card.templateEnabled;
+
+    if (requiresImage) {
+      if (!card.imageUrl || card.imageUrl.trim().length === 0) {
+        newErrors.imageUrl = "画像は必須です";
+      }
     }
 
     // Title validation (optional, max 40 characters)
@@ -89,22 +94,84 @@ export function CardFormImage({ card, onChange }: CardFormImageProps) {
     onChange({ description: value || undefined });
   };
 
+  const handleTemplateAreasChange = useCallback((areas: TemplateArea[]) => {
+    onChange({ templateAreas: areas });
+  }, [onChange]);
+
+  const handleTemplatePreviewChange = useCallback((previewUrl: string | null) => {
+    onChange({ templatePreviewUrl: previewUrl ?? null });
+  }, [onChange]);
+
+  const handleTemplateImageUrlChange = useCallback((imageUrl: string | null) => {
+    if (card.templateEnabled) {
+      onChange({ imageUrl: imageUrl ?? '' });
+    }
+  }, [card.templateEnabled, onChange]);
+
+  const handleTemplateChange = useCallback((templateId: string | null) => {
+    onChange({ templateEnabled: true, templateId, ...(templateId ? { imageUrl: '' } : {}) });
+    if (templateId) {
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next.imageUrl;
+        return next;
+      });
+    }
+  }, [onChange, setErrors]);
+
+  const handleTemplateModeToggle = (mode: 'image' | 'template') => {
+    if (mode === 'template') {
+      onChange({ templateEnabled: true, imageUrl: '', templatePreviewUrl: null });
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next.imageUrl;
+        return next;
+      });
+    } else {
+      onChange({ templateEnabled: false, templateId: undefined, templateAreas: undefined, templatePreviewUrl: undefined });
+    }
+  };
+
   return (
     <div className="space-y-6">
-      {/* Image Upload Section - Primary Focus */}
       <div className="space-y-2">
-        <label className="text-sm font-bold uppercase tracking-wider text-black">
-          画像 <span className="text-red-600">*</span>
-        </label>
-        <ImageCropUploader
-          onImageUploaded={handleImageUpload}
-          defaultAspectRatio="FREE"
-          placeholder="画像カード用の画像をアップロード"
-        />
-        {errors.imageUrl && (
-          <p className="text-xs font-bold text-red-600">{errors.imageUrl}</p>
-        )}
+        <label className="text-sm font-bold uppercase tracking-wider text-black">画像モード</label>
+        <div className="flex gap-3">
+          <Button
+            type="button"
+            variant={!isTemplateMode ? 'secondary' : 'outline'}
+            className="border-2 border-black"
+            onClick={() => handleTemplateModeToggle('image')}
+          >
+            単一画像
+          </Button>
+          <Button
+            type="button"
+            variant={isTemplateMode ? 'secondary' : 'outline'}
+            className="border-2 border-black"
+            onClick={() => handleTemplateModeToggle('template')}
+          >
+            テンプレート
+          </Button>
+        </div>
       </div>
+
+      {!isTemplateMode && (
+        <div className="space-y-2">
+          <label className="text-sm font-bold uppercase tracking-wider text-black">
+            画像 <span className="text-red-600">*</span>
+          </label>
+          <ImageCropUploader
+            onImageUploaded={handleImageUpload}
+            defaultAspectRatio="FREE"
+            placeholder="画像カード用の画像をアップロード"
+          />
+          <p className="text-xs text-black/60">テンプレートを使う場合はこの画像を設定する必要はありません。</p>
+          {errors.imageUrl && (
+            <p className="text-xs font-bold text-red-600">{errors.imageUrl}</p>
+          )}
+        </div>
+      )}
 
       {/* Larger Image Preview */}
       {card.imageUrl && (
@@ -188,11 +255,17 @@ export function CardFormImage({ card, onChange }: CardFormImageProps) {
         </div>
       </div>
 
-      {/* Image Area Editor */}
-      <ImageAreaEditor
-        imageUrl={card.imageUrl}
-        onAreasChange={useCallback((areas: ImageCard['imageAreas']) => onChange({ imageAreas: areas }), [onChange])}
-      />
+      {isTemplateMode && (
+        <TemplateImageEditor
+          cardId={card.id}
+          initialTemplateId={card.templateId}
+          initialAreas={card.templateAreas}
+          onTemplateChange={handleTemplateChange}
+          onAreasChange={handleTemplateAreasChange}
+          onPreviewChange={handleTemplatePreviewChange}
+          onComposedImageChange={handleTemplateImageUrlChange}
+        />
+      )}
 
       {/* Actions Section (Required) */}
       <ActionEditor

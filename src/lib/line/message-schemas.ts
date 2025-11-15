@@ -335,15 +335,13 @@ export const richMessagePayloadSchema = z.object({
   actions: z.array(imagemapActionSchema).min(1),
 });
 
-// Image area schema for card-type messages with interactive regions
-export const imageAreaSchema = z.object({
+export const templateAreaSchema = z.object({
   id: z.string().min(1),
   x: z.number().min(0),
   y: z.number().min(0),
   width: z.number().min(1),
   height: z.number().min(1),
-  label: z.string().min(1).max(20),
-  action: templateActionSchema,
+  imageUrl: z.string().url(),
 });
 
 export const cardTypePayloadSchema = z.object({
@@ -351,11 +349,8 @@ export const cardTypePayloadSchema = z.object({
   type: z.literal("cardType"),
   altText: z.string().min(1).max(400),
   template: templateSchema,
-  // Optional: Image areas for converting card to imagemap
-  imageAreas: z.array(imageAreaSchema).min(1).max(10).optional(),
-  imageUrl: z.string().url().optional(),
-  imageWidth: z.number().min(1).max(2500).optional(),
-  imageHeight: z.number().min(1).max(2500).optional(),
+  templateId: z.string().min(1).optional(),
+  templateAreas: z.array(templateAreaSchema).min(1).max(6).optional(),
 });
 
 export const payloadSchema = z.union([
@@ -386,5 +381,6 @@ export type CouponMessage = z.infer<typeof couponMessageSchema>;
 export type ImagemapMessage = z.infer<typeof imagemapMessageSchema>;
 export type TemplateMessage = z.infer<typeof templateMessageSchema>;
 export type AnyMessage = z.infer<typeof anyMessageSchema>;
+export type TemplateAreaPayload = z.infer<typeof templateAreaSchema>;
 
 export type SendMessagePayload = z.infer<typeof payloadSchema>;

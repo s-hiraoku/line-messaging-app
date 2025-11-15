@@ -1,3 +1,19 @@
+import type {
+  TemplateArea,
+  TemplateAreaDefinition,
+  TemplateDefinition,
+  TemplateImageMessage,
+  TemplateVariant,
+} from '@/lib/template-image-splitter/types';
+
+export type {
+  TemplateArea,
+  TemplateAreaDefinition,
+  TemplateDefinition,
+  TemplateImageMessage,
+  TemplateVariant,
+} from '@/lib/template-image-splitter/types';
+
 /**
  * Card Message Editor - Type Definitions
  *
@@ -40,20 +56,6 @@ export interface PostbackAction {
 export type CardAction = URIAction | MessageAction | PostbackAction;
 
 /**
- * Image area for interactive regions within card images
- * Allows setting labels and actions for specific image regions
- */
-export interface ImageArea {
-  id: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  label: string;
-  action: CardAction;
-}
-
-/**
  * Base card interface with common fields
  */
 export interface BaseCard {
@@ -61,7 +63,10 @@ export interface BaseCard {
   type: CardType;
   imageUrl: string;
   actions: CardAction[];
-  imageAreas?: ImageArea[];
+  templateEnabled?: boolean;
+  templateId?: string | null;
+  templateAreas?: TemplateArea[];
+  templatePreviewUrl?: string | null;
 }
 
 /**
