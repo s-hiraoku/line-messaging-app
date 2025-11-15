@@ -2,7 +2,11 @@ import Link from "next/link";
 import { Syne, IBM_Plex_Sans } from "next/font/google";
 
 const syne = Syne({ weight: "800", subsets: ["latin"], display: "swap" });
-const ibmPlexSans = IBM_Plex_Sans({ weight: ["400", "500", "700"], subsets: ["latin"], display: "swap" });
+const ibmPlexSans = IBM_Plex_Sans({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const metadata = { title: "設計仕様 (全体) | LINE Messaging App" };
 
@@ -164,87 +168,186 @@ const sections: { id: string; title: string; items: string[] }[] = [
     title: "レート制限 / RBAC",
     items: [
       "レート: send_single 30/分, broadcast_create 5/分, webhook 1000/分 (burst2x)",
-      "RBACロール: ADMIN / OPERATOR / ANALYST / SUPPORT", "can(user,action) ポリシー評価", "権限制御: 送信/テンプレCRUD/分析閲覧/タグ編集 分離"],
+      "RBACロール: ADMIN / OPERATOR / ANALYST / SUPPORT",
+      "can(user,action) ポリシー評価",
+      "権限制御: 送信/テンプレCRUD/分析閲覧/タグ編集 分離",
+    ],
   },
   {
     title: "セキュリティ / プライバシー",
-    items: ["HMAC署名検証 (LINE)", "CSRF: NextAuth + POSTのみ", "ヘッダ: HSTS/CSP/X-Frame-Options/X-Content-Type-Options", "PII最小化: displayName/pictureUrlのみ + 分析はハッシュ"],
+    items: [
+      "HMAC署名検証 (LINE)",
+      "CSRF: NextAuth + POSTのみ",
+      "ヘッダ: HSTS/CSP/X-Frame-Options/X-Content-Type-Options",
+      "PII最小化: displayName/pictureUrlのみ + 分析はハッシュ",
+    ],
   },
   {
     title: "可観測性 / ログ",
-    items: ["構造化ログ: level,event,requestId,userIdHash,latencyMs,errorCode", "Sentryトレース + エラーレポート", "info100% debug10%(LOG_DEBUGで拡張)", "ダッシュボード: 失敗率/レイテンシ/ブロードキャストスループット(将来)"],
+    items: [
+      "構造化ログ: level,event,requestId,userIdHash,latencyMs,errorCode",
+      "Sentryトレース + エラーレポート",
+      "info100% debug10%(LOG_DEBUGで拡張)",
+      "ダッシュボード: 失敗率/レイテンシ/ブロードキャストスループット(将来)",
+    ],
   },
   {
     title: "パフォーマンス / 容量計画",
-    items: ["P95 API <250ms / Webhook <150ms", "LCP <2.5s / JS <300KB gzip", "月間メッセージ≈35万 (初期 <1GB)", "50M行超で月別パーティション"],
+    items: [
+      "P95 API <250ms / Webhook <150ms",
+      "LCP <2.5s / JS <300KB gzip",
+      "月間メッセージ≈35万 (初期 <1GB)",
+      "50M行超で月別パーティション",
+    ],
   },
   {
     title: "障害シナリオ",
-    items: ["LINE障害→PENDING_RETRY +指数バックオフ", "Redis停止→リアルタイム退避(in-memory)", "DB飽和→pgbouncer導入", "Webhook攻撃→署名+RateLimit即時拒否"],
+    items: [
+      "LINE障害→PENDING_RETRY +指数バックオフ",
+      "Redis停止→リアルタイム退避(in-memory)",
+      "DB飽和→pgbouncer導入",
+      "Webhook攻撃→署名+RateLimit即時拒否",
+    ],
   },
   {
     title: "DR / バックアップ",
-    items: ["RPO24h→Phase2で1h", "RTO<4h→自動化で30m", "手順: 検知→ブロードキャスト停止→復旧→再同期"],
+    items: [
+      "RPO24h→Phase2で1h",
+      "RTO<4h→自動化で30m",
+      "手順: 検知→ブロードキャスト停止→復旧→再同期",
+    ],
   },
   {
     title: "環境変数主要一覧",
-    items: ["LINE_CHANNEL_*", "NEXTAUTH_SECRET/NEXTAUTH_URL", "DATABASE_URL", "UPSTASH_REDIS_*", "SENTRY_DSN", "FEATURE_RICH_MENU_EDITOR, ENABLE_SOCKET_IO, LOG_DEBUG"],
+    items: [
+      "LINE_CHANNEL_*",
+      "NEXTAUTH_SECRET/NEXTAUTH_URL",
+      "DATABASE_URL",
+      "UPSTASH_REDIS_*",
+      "SENTRY_DSN",
+      "FEATURE_RICH_MENU_EDITOR, ENABLE_SOCKET_IO, LOG_DEBUG",
+    ],
   },
   {
     title: "フロント構成 / 状態",
-    items: ["Featureモジュール + UIプリミティブ + useXxxフック", "深いprop drilling禁止", "楽観的更新 + WebSocket再整合", "リアルタイム: Socket.io / フォールバック: ポーリング"],
+    items: [
+      "Featureモジュール + UIプリミティブ + useXxxフック",
+      "深いprop drilling禁止",
+      "楽観的更新 + WebSocket再整合",
+      "リアルタイム: Socket.io / フォールバック: ポーリング",
+    ],
   },
   {
     title: "アクセシビリティ",
-    items: ["Tab移動全要素対応", "ライブリージョンで新着通知", "コントラスト>=4.5:1", "モーダルFocusトラップ"],
+    items: [
+      "Tab移動全要素対応",
+      "ライブリージョンで新着通知",
+      "コントラスト>=4.5:1",
+      "モーダルFocusトラップ",
+    ],
   },
   {
     title: "i18n計画",
-    items: ["Phase0: 日本語ハードコード", "Phase1: messages.ts抽出", "Phase2: next-intl導入", "Phase3: テンプレ変数多言語"],
+    items: [
+      "Phase0: 日本語ハードコード",
+      "Phase1: messages.ts抽出",
+      "Phase2: next-intl導入",
+      "Phase3: テンプレ変数多言語",
+    ],
   },
   {
     title: "テンプレートシステム",
-    items: ["JSON型: type=flex + variables[]", "変数検証/エスケープ", "将来: TemplateRevision版管理", "A/Bテスト + 自動昇格(将来)"],
+    items: [
+      "JSON型: type=flex + variables[]",
+      "変数検証/エスケープ",
+      "将来: TemplateRevision版管理",
+      "A/Bテスト + 自動昇格(将来)",
+    ],
   },
   {
     title: "メッセージ配信ステータス",
-    items: ["QUEUED→SENDING→SENT/FAILED/RETRYING→SENT/FAILED_FINAL", "再試行最大5回", "失敗ログ + UI再試行"],
+    items: [
+      "QUEUED→SENDING→SENT/FAILED/RETRYING→SENT/FAILED_FINAL",
+      "再試行最大5回",
+      "失敗ログ + UI再試行",
+    ],
   },
   {
     title: "最適化テクニック",
-    items: ["N+1回避: batched findMany", "react-virtualで長一覧", "next/image最適化", "Chunk送信並列+RateLimitヘッダ監視"],
+    items: [
+      "N+1回避: batched findMany",
+      "react-virtualで長一覧",
+      "next/image最適化",
+      "Chunk送信並列+RateLimitヘッダ監視",
+    ],
   },
   {
     title: "デプロイ/CI",
-    items: ["Lint/TypeCheck→Unit/Integration→Build→Migrate(審査)→Sentryリリース→Staging→本番", "Schema変更は後方互換手順"],
+    items: [
+      "Lint/TypeCheck→Unit/Integration→Build→Migrate(審査)→Sentryリリース→Staging→本番",
+      "Schema変更は後方互換手順",
+    ],
   },
   {
     title: "コスト概算(月)",
-    items: ["Postgres $60", "Hosting $50±", "Sentry $20", "Redis/Cloudinary 初期$0", "合計≈$120-140"],
+    items: [
+      "Postgres $60",
+      "Hosting $50±",
+      "Sentry $20",
+      "Redis/Cloudinary 初期$0",
+      "合計≈$120-140",
+    ],
   },
   {
     title: "リスク / 監査",
-    items: ["Quota枯渇→送信バックオフ", "JSON肥大→10KB制限", "Webhook欠落→再同期ジョブ", "監査ログ (TEMPLATE/BROADCAST/ROLE変更) 365日"],
+    items: [
+      "Quota枯渇→送信バックオフ",
+      "JSON肥大→10KB制限",
+      "Webhook欠落→再同期ジョブ",
+      "監査ログ (TEMPLATE/BROADCAST/ROLE変更) 365日",
+    ],
   },
   {
     title: "データ一貫性 / Idempotency",
-    items: ["書き込み強整合(Postgres)", "UIは最長2秒遅延", "Webhookイベントハッシュで重複排除"],
+    items: [
+      "書き込み強整合(Postgres)",
+      "UIは最長2秒遅延",
+      "Webhookイベントハッシュで重複排除",
+    ],
   },
   {
     title: "Feature Flag",
-    items: ["Redis key feature:<flag> 60sキャッシュ", "起動時envで重大機能ゲート", "A/B検証用ラベル拡張余地"],
+    items: [
+      "Redis key feature:<flag> 60sキャッシュ",
+      "起動時envで重大機能ゲート",
+      "A/B検証用ラベル拡張余地",
+    ],
   },
   {
     title: "依存/アップグレード",
-    items: ["月次 npm audit", "Tailwind4/Next.jsメジャーは専用ブランチ", "Prisma migrate diffで破壊検知"],
+    items: [
+      "月次 npm audit",
+      "Tailwind4/Next.jsメジャーは専用ブランチ",
+      "Prisma migrate diffで破壊検知",
+    ],
   },
   {
     title: "既知の制限",
-    items: ["Rich Menu CRUDなし", "分析遅延", "高度セグメント未実装", "単純RateLimit"],
+    items: [
+      "Rich Menu CRUDなし",
+      "分析遅延",
+      "高度セグメント未実装",
+      "単純RateLimit",
+    ],
   },
   {
     title: "ロードマップ(Q)",
-    items: ["Q1 RBAC/Queue/Analytics", "Q2 RichMenu/i18n/Audit", "Q3 Partition/Segmentation/AI", "Q4 Multi-region/Failover"],
+    items: [
+      "Q1 RBAC/Queue/Analytics",
+      "Q2 RichMenu/i18n/Audit",
+      "Q3 Partition/Segmentation/AI",
+      "Q4 Multi-region/Failover",
+    ],
   },
 ];
 
@@ -304,16 +407,21 @@ export default function ProjectDesignSpec() {
           className={`max-w-3xl text-lg leading-relaxed text-black/80 sm:text-xl animate-[fadeIn_0.9s_ease-out] ${ibmPlexSans.className}`}
           style={{ animationDelay: "0.3s", animationFillMode: "backwards" }}
         >
-          README / system-design / AGENTS から抽出した PoC の包括的設計仕様。目的・機能・データ・ワークフロー・品質・拡張計画を一望し、実装/レビュー/合意形成の基盤を提供します。
+          README / system-design / AGENTS から抽出した PoC
+          の包括的設計仕様。目的・機能・データ・ワークフロー・品質・拡張計画を一望し、実装/レビュー/合意形成の基盤を提供します。
         </p>
 
         {/* 目次 */}
         <nav
           aria-label="目次"
-            className="mt-12 mb-20 rounded-lg border-2 border-black bg-white p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] animate-[slideUp_0.9s_ease-out]"
-            style={{ animationDelay: "0.45s", animationFillMode: "backwards" }}
+          className="mt-12 mb-20 rounded-lg border-2 border-black bg-white p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] animate-[slideUp_0.9s_ease-out]"
+          style={{ animationDelay: "0.45s", animationFillMode: "backwards" }}
         >
-          <h2 className={`mb-4 text-2xl font-bold text-black ${syne.className}`}>目次</h2>
+          <h2
+            className={`mb-4 text-2xl font-bold text-black ${syne.className}`}
+          >
+            目次
+          </h2>
           <ul className="grid gap-2 sm:grid-cols-2">
             {sections.map((s) => (
               <li key={s.id}>
@@ -337,7 +445,11 @@ export default function ProjectDesignSpec() {
               aria-label="セクションナビゲーション"
               className="sticky top-28 hidden lg:block rounded-lg border-2 border-black bg-white p-5 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]"
             >
-              <h2 className={`mb-3 text-lg font-black text-black ${syne.className}`}>セクション</h2>
+              <h2
+                className={`mb-3 text-lg font-black text-black ${syne.className}`}
+              >
+                セクション
+              </h2>
               <ul className="space-y-2">
                 {sections.map((s) => (
                   <li key={`side-${s.id}`}>
@@ -352,7 +464,12 @@ export default function ProjectDesignSpec() {
                 ))}
               </ul>
               <div className="mt-4 pt-4 border-t border-black/10">
-                <a href="#top" className="inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-black hover:text-[#00B900]">↑ Top</a>
+                <a
+                  href="#top"
+                  className="inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-black hover:text-[#00B900]"
+                >
+                  ↑ Top
+                </a>
               </div>
             </nav>
           </aside>
@@ -360,9 +477,21 @@ export default function ProjectDesignSpec() {
           {/* Main content */}
           <div className="flex-1 space-y-24">
             {sections.map((s) => (
-              <section key={s.id} id={s.id} aria-labelledby={`${s.id}-heading`} className="relative">
-                <h2 id={`${s.id}-heading`} className={`mb-6 text-3xl font-black text-black sm:text-4xl ${syne.className}`}>{s.title}</h2>
-                <div className={`space-y-4 text-black/80 leading-relaxed ${ibmPlexSans.className}`}>
+              <section
+                key={s.id}
+                id={s.id}
+                aria-labelledby={`${s.id}-heading`}
+                className="relative"
+              >
+                <h2
+                  id={`${s.id}-heading`}
+                  className={`mb-6 text-3xl font-black text-black sm:text-4xl ${syne.className}`}
+                >
+                  {s.title}
+                </h2>
+                <div
+                  className={`space-y-4 text-black/80 leading-relaxed ${ibmPlexSans.className}`}
+                >
                   <ul className="list-disc space-y-2 pl-6">
                     {s.items.map((item) => (
                       <li key={item}>{item}</li>
@@ -380,21 +509,27 @@ export default function ProjectDesignSpec() {
             href="/"
             className="group relative overflow-hidden border-[3px] border-black bg-linear-to-br from-[#00FF00] via-[#00B900] to-[#008F00] px-8 py-4 font-mono text-xs font-black uppercase tracking-[0.15em] text-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
           >
-            <span className="relative z-10 flex items-center gap-2">トップページへ戻る →</span>
+            <span className="relative z-10 flex items-center gap-2">
+              トップページへ戻る →
+            </span>
             <div className="absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
           </Link>
           <Link
             href="/guide"
             className="group relative overflow-hidden border-[3px] border-black bg-white px-8 py-4 font-mono text-xs font-black uppercase tracking-[0.15em] text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 hover:bg-[#FFFEF5] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
           >
-            <span className="relative z-10 flex items-center gap-2">使い方ガイド ↗</span>
+            <span className="relative z-10 flex items-center gap-2">
+              使い方ガイド ↗
+            </span>
             <div className="absolute inset-0 bg-linear-to-tr from-transparent via-[#00B900]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </Link>
         </div>
 
         <footer className="mt-20 flex items-center justify-center gap-6">
           <div className="h-1 w-16 bg-black" />
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.35em] text-black/40">ARCH SPEC</span>
+          <span className="font-mono text-xs font-bold uppercase tracking-[0.35em] text-black/40">
+            ARCH SPEC
+          </span>
           <div className="h-1 w-16 bg-black" />
         </footer>
       </div>
