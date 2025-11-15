@@ -1339,6 +1339,24 @@ describe('cardToCarouselColumn', () => {
       });
     });
 
+    it('uses template image when templateEnabled is true', () => {
+      const card: ProductCard = {
+        id: 'card-1',
+        type: 'product',
+        imageUrl: '',
+        templateEnabled: true,
+        templateImageUrl: 'https://example.com/template.jpg',
+        title: '商品名',
+        description: '説明',
+        actions: [
+          { type: 'uri', label: '詳細', uri: 'https://example.com' },
+        ],
+      };
+
+      const column = cardToCarouselColumn(card);
+      expect(column.thumbnailImageUrl).toBe('https://example.com/template.jpg');
+    });
+
     it('should convert multiple actions', () => {
       const card: ImageCard = {
         id: 'card-1',
@@ -1373,6 +1391,7 @@ describe('createDefaultCard', () => {
       expect(card.templateId).toBeNull();
       expect(card.templateAreas).toEqual([]);
       expect(card.templatePreviewUrl).toBeNull();
+      expect(card.templateImageUrl).toBeNull();
       expect(card.title).toBe('商品名');
       expect(card.description).toBe('商品の説明をここに入力してください');
       expect(card.price).toBeUndefined();
@@ -1403,6 +1422,7 @@ describe('createDefaultCard', () => {
       expect(card.templateId).toBeNull();
       expect(card.templateAreas).toEqual([]);
       expect(card.templatePreviewUrl).toBeNull();
+      expect(card.templateImageUrl).toBeNull();
       expect(card.title).toBe('場所名');
       expect(card.address).toBe('住所をここに入力してください');
       expect(card.hours).toBeUndefined();
@@ -1426,6 +1446,7 @@ describe('createDefaultCard', () => {
       expect(card.templateId).toBeNull();
       expect(card.templateAreas).toEqual([]);
       expect(card.templatePreviewUrl).toBeNull();
+      expect(card.templateImageUrl).toBeNull();
       expect(card.name).toBe('名前');
       expect(card.description).toBe('説明をここに入力してください');
       expect(card.tags).toEqual([]);
@@ -1449,6 +1470,7 @@ describe('createDefaultCard', () => {
       expect(card.templateId).toBeNull();
       expect(card.templateAreas).toEqual([]);
       expect(card.templatePreviewUrl).toBeNull();
+      expect(card.templateImageUrl).toBeNull();
       expect(card.title).toBeUndefined();
       expect(card.description).toBeUndefined();
       expect(card.actions).toHaveLength(1);

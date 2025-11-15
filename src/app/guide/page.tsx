@@ -19,6 +19,8 @@ const sections = [
   { id: "toast", title: "Toast 通知" },
   { id: "troubleshooting", title: "トラブルシュート" },
   { id: "best-practices", title: "ベストプラクティス" },
+  { id: "faq", title: "FAQ" },
+  { id: "readme-full", title: "README" },
 ];
 
 export default function GuidePage() {
@@ -29,7 +31,7 @@ export default function GuidePage() {
       <div className="pointer-events-none absolute right-0 top-1/4 h-[350px] w-[350px] translate-x-1/4 rounded-full bg-[#FFE500] opacity-[0.10] blur-[90px]" />
       <div className="pointer-events-none absolute bottom-0 left-1/3 h-[450px] w-[450px] rounded-full bg-[#00B900] opacity-[0.06] blur-[120px]" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 py-16 sm:px-12 sm:py-24">
+      <div id="top" className="relative z-10 mx-auto max-w-7xl px-6 py-16 sm:px-12 sm:py-24">
         {/* Header Badge */}
         <div className="flex items-start justify-between">
           <div
@@ -110,12 +112,16 @@ export default function GuidePage() {
           </ul>
         </nav>
 
-        {/* Content + Sticky Aside TOC for large screens */}
-        <div className="flex flex-col gap-16 lg:flex-row">
-          <aside className="order-last lg:order-first lg:w-64 lg:shrink-0">
-            <div className="sticky top-24 hidden lg:block rounded-lg border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        {/* Content + Sticky Aside TOC for large screens (sections were previously outside flex container) */}
+        <div className="flex flex-col gap-20 lg:flex-row">
+          {/* Sticky side navigation */}
+          <aside className="order-last lg:order-first lg:w-72 lg:shrink-0">
+            <nav
+              aria-label="セクションナビゲーション"
+              className="sticky top-28 hidden lg:block rounded-lg border-2 border-black bg-white p-5 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]"
+            >
               <h2
-                className={`mb-3 text-xl font-bold text-black ${syne.className}`}
+                className={`mb-3 text-lg font-black text-black ${syne.className}`}
               >
                 セクション
               </h2>
@@ -124,7 +130,7 @@ export default function GuidePage() {
                   <li key={`side-${s.id}`}>
                     <a
                       href={`#${s.id}`}
-                      className="group flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.15em] text-black hover:text-[#00B900]"
+                      className="group flex items-center gap-2 rounded px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.15em] text-black hover:bg-[#00B900]/10 hover:text-[#00B900]"
                     >
                       <span className="h-2 w-2 rounded-sm bg-black transition-colors group-hover:bg-[#00B900]" />
                       {s.title}
@@ -132,292 +138,339 @@ export default function GuidePage() {
                   </li>
                 ))}
               </ul>
-            </div>
+              <div className="mt-4 pt-4 border-t border-black/10">
+                <a
+                  href="#top"
+                  className="inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-black hover:text-[#00B900]"
+                >
+                  ↑ Top
+                </a>
+              </div>
+            </nav>
           </aside>
 
+          {/* Main content sections */}
           <div className="flex-1 space-y-32">
-            {/* Content Sections */}
-            {/* Closing wrapper for content when sticky aside is present on large screens */}
-          </div>
-          {/* Overview */}
-          <section
-            id="overview"
-            aria-labelledby="overview-heading"
-            className="relative"
-          >
-            <GuideHeading id="overview-heading">概要</GuideHeading>
-            <GuideBody>
-              このツールは{" "}
-              <strong>メッセージ運用・自動化・リッチメニュー管理</strong> を 1
-              つの UI
-              に統合し、日常的な手順を最短化することを目的としています。画面構成は以下の領域に分かれます:
-              <ul className="list-disc pl-6 mt-4 space-y-2">
-                <li>ダッシュボード: 利用状況と最近のアクティビティ</li>
-                <li>
-                  メッセージ管理: 各種メッセージタイプの作成 /
-                  テンプレート再利用
-                </li>
-                <li>自動返信: トリガー条件と返信内容の定義</li>
-                <li>
-                  リッチメニュー: 画像 + タップ領域編集 / プレビュー / 適用
-                </li>
-              </ul>
-            </GuideBody>
-          </section>
+            {/* Overview */}
+            <section
+              id="overview"
+              aria-labelledby="overview-heading"
+              className="relative"
+            >
+              <GuideHeading id="overview-heading">概要</GuideHeading>
+              <GuideBody>
+                このツールは{" "}
+                <strong>メッセージ運用・自動化・リッチメニュー管理</strong> を 1
+                つの UI
+                に統合し、日常的な手順を最短化することを目的としています。画面構成は以下の領域に分かれます:
+                <ul className="list-disc pl-6 mt-4 space-y-2">
+                  <li>ダッシュボード: 利用状況と最近のアクティビティ</li>
+                  <li>
+                    メッセージ管理: 各種メッセージタイプの作成 /
+                    テンプレート再利用
+                  </li>
+                  <li>自動返信: トリガー条件と返信内容の定義</li>
+                  <li>
+                    リッチメニュー: 画像 + タップ領域編集 / プレビュー / 適用
+                  </li>
+                </ul>
+              </GuideBody>
+            </section>
 
-          {/* Getting Started */}
-          <section
-            id="getting-started"
-            aria-labelledby="getting-started-heading"
-            className="relative"
-          >
-            <GuideHeading id="getting-started-heading">
-              初期セットアップ
-            </GuideHeading>
-            <GuideBody>
-              <ol className="list-decimal pl-6 space-y-3">
-                <li>
-                  <strong>環境変数設定:</strong> `.env.local` に LINE
-                  チャネル各種キーと `DATABASE_URL` を追加。
-                </li>
-                <li>
-                  <strong>DB 初期化:</strong> 端末で{" "}
-                  <code>npx prisma migrate dev</code> を実行しスキーマを適用。
-                </li>
-                <li>
-                  <strong>開発サーバ:</strong> <code>npm run dev</code> で起動し{" "}
-                  <code>http://localhost:3000</code> を開く。
-                </li>
-                <li>
-                  <strong>初回ログイン:</strong> 必要ならテストユーザーを seed
-                  スクリプトで投入。
-                </li>
-              </ol>
-              推奨ブラウザ: 最新 Chrome /
-              Firefox。リッチメニュー編集はタッチ操作非対応 (β)。
-            </GuideBody>
-          </section>
+            {/* Getting Started */}
+            <section
+              id="getting-started"
+              aria-labelledby="getting-started-heading"
+              className="relative"
+            >
+              <GuideHeading id="getting-started-heading">
+                初期セットアップ
+              </GuideHeading>
+              <GuideBody>
+                <ol className="list-decimal pl-6 space-y-3">
+                  <li>
+                    <strong>環境変数設定:</strong> `.env.local` に LINE
+                    チャネル各種キーと `DATABASE_URL` を追加。
+                  </li>
+                  <li>
+                    <strong>DB 初期化:</strong> 端末で{" "}
+                    <code>npx prisma migrate dev</code> を実行しスキーマを適用。
+                  </li>
+                  <li>
+                    <strong>開発サーバ:</strong> <code>npm run dev</code>{" "}
+                    で起動し <code>http://localhost:3000</code> を開く。
+                  </li>
+                  <li>
+                    <strong>初回ログイン:</strong> 必要ならテストユーザーを seed
+                    スクリプトで投入。
+                  </li>
+                </ol>
+                推奨ブラウザ: 最新 Chrome /
+                Firefox。リッチメニュー編集はタッチ操作非対応 (β)。
+              </GuideBody>
+            </section>
 
-          {/* Message Sending */}
-          <section
-            id="message-send"
-            aria-labelledby="message-send-heading"
-            className="relative"
-          >
-            <GuideHeading id="message-send-heading">
-              メッセージ送信
-            </GuideHeading>
-            <GuideBody>
-              <ol className="list-decimal pl-6 space-y-3">
-                <li>
-                  <strong>メッセージタイプ選択:</strong> テンプレート / テキスト
-                  / クーポン / スタンプなど。
-                </li>
-                <li>
-                  <strong>内容編集:</strong> 支援入力 (プレースホルダ, 絵文字)
-                  とカウンタで制限文字数を確認。
-                </li>
-                <li>
-                  <strong>プレビュー確認:</strong> 送信前に最終表示をチェック。
-                </li>
-                <li>
-                  <strong>送信対象選択:</strong> 全体 / タグ別 /
-                  条件フィルタ。誤爆防止の確認ダイアログあり。
-                </li>
-                <li>
-                  <strong>送信実行:</strong> 成功時は緑 Toast、失敗時は赤 Toast
-                  でフィードバック。
-                </li>
-              </ol>
-              ベストプラクティス: 大量送信前にテストユーザーへ試験送信 /
-              クーポンコードはテンプレート化して再利用。
-            </GuideBody>
-          </section>
+            {/* Message Sending */}
+            <section
+              id="message-send"
+              aria-labelledby="message-send-heading"
+              className="relative"
+            >
+              <GuideHeading id="message-send-heading">
+                メッセージ送信
+              </GuideHeading>
+              <GuideBody>
+                <ol className="list-decimal pl-6 space-y-3">
+                  <li>
+                    <strong>メッセージタイプ選択:</strong> テンプレート /
+                    テキスト / クーポン / スタンプなど。
+                  </li>
+                  <li>
+                    <strong>内容編集:</strong> 支援入力 (プレースホルダ, 絵文字)
+                    とカウンタで制限文字数を確認。
+                  </li>
+                  <li>
+                    <strong>プレビュー確認:</strong>{" "}
+                    送信前に最終表示をチェック。
+                  </li>
+                  <li>
+                    <strong>送信対象選択:</strong> 全体 / タグ別 /
+                    条件フィルタ。誤爆防止の確認ダイアログあり。
+                  </li>
+                  <li>
+                    <strong>送信実行:</strong> 成功時は緑 Toast、失敗時は赤
+                    Toast でフィードバック。
+                  </li>
+                </ol>
+                ベストプラクティス: 大量送信前にテストユーザーへ試験送信 /
+                クーポンコードはテンプレート化して再利用。
+              </GuideBody>
+            </section>
 
-          {/* Auto Reply */}
-          <section
-            id="auto-reply"
-            aria-labelledby="auto-reply-heading"
-            className="relative"
-          >
-            <GuideHeading id="auto-reply-heading">自動返信設定</GuideHeading>
-            <GuideBody>
-              <ol className="list-decimal pl-6 space-y-3">
-                <li>
-                  <strong>トリガー作成:</strong> キーワード / 正規表現 / 時間帯
-                  / ユーザー属性。
-                </li>
-                <li>
-                  <strong>返信内容設定:</strong> 定型文 or
-                  テンプレート選択。複数候補をランダム化可能。
-                </li>
-                <li>
-                  <strong>優先度調整:</strong>{" "}
-                  競合する条件がある場合は並び替えで制御。
-                </li>
-                <li>
-                  <strong>ステータス切替:</strong> 一時停止 /
-                  有効化をワンクリック。
-                </li>
-                <li>
-                  <strong>ログ確認:</strong> 適用履歴でヒット状況を分析。
-                </li>
-              </ol>
-              注意:
-              無制限な正規表現はパフォーマンス低下の恐れ。なるべく前方一致やタグ条件を活用。
-            </GuideBody>
-          </section>
+            {/* Auto Reply */}
+            <section
+              id="auto-reply"
+              aria-labelledby="auto-reply-heading"
+              className="relative"
+            >
+              <GuideHeading id="auto-reply-heading">自動返信設定</GuideHeading>
+              <GuideBody>
+                <ol className="list-decimal pl-6 space-y-3">
+                  <li>
+                    <strong>トリガー作成:</strong> キーワード / 正規表現 /
+                    時間帯 / ユーザー属性。
+                  </li>
+                  <li>
+                    <strong>返信内容設定:</strong> 定型文 or
+                    テンプレート選択。複数候補をランダム化可能。
+                  </li>
+                  <li>
+                    <strong>優先度調整:</strong>{" "}
+                    競合する条件がある場合は並び替えで制御。
+                  </li>
+                  <li>
+                    <strong>ステータス切替:</strong> 一時停止 /
+                    有効化をワンクリック。
+                  </li>
+                  <li>
+                    <strong>ログ確認:</strong> 適用履歴でヒット状況を分析。
+                  </li>
+                </ol>
+                注意:
+                無制限な正規表現はパフォーマンス低下の恐れ。なるべく前方一致やタグ条件を活用。
+              </GuideBody>
+            </section>
 
-          {/* Richmenu Editor */}
-          <section
-            id="richmenu-editor"
-            aria-labelledby="richmenu-editor-heading"
-            className="relative"
-          >
-            <GuideHeading id="richmenu-editor-heading">
-              リッチメニュー編集
-            </GuideHeading>
-            <GuideBody>
-              基本フロー:
-              <ol className="list-decimal pl-6 space-y-3 mt-2">
-                <li>
-                  <strong>画像アップロード:</strong> 推奨解像度比率に沿った
-                  PNG/JPEG。
-                </li>
-                <li>
-                  <strong>領域追加:</strong>{" "}
-                  キャンバス上でドラッグしてタップ領域生成。
-                </li>
-                <li>
-                  <strong>ラベル & アクション:</strong>{" "}
-                  各領域に表示名と遷移/メッセージ送信などの動作を割り当て。
-                </li>
-                <li>
-                  <strong>プレビュー:</strong> PC /
-                  モバイル表示のバランスを確認。
-                </li>
-                <li>
-                  <strong>適用:</strong> 保存後、ユーザー対象へアクティブ化。
-                </li>
-              </ol>
-              操作ヒント: Esc で選択解除 / Delete で領域削除 / Shift+ドラッグ
-              で正方形補助 (※β)。
-            </GuideBody>
-          </section>
+            {/* Richmenu Editor */}
+            <section
+              id="richmenu-editor"
+              aria-labelledby="richmenu-editor-heading"
+              className="relative"
+            >
+              <GuideHeading id="richmenu-editor-heading">
+                リッチメニュー編集
+              </GuideHeading>
+              <GuideBody>
+                基本フロー:
+                <ol className="list-decimal pl-6 space-y-3 mt-2">
+                  <li>
+                    <strong>画像アップロード:</strong> 推奨解像度比率に沿った
+                    PNG/JPEG。
+                  </li>
+                  <li>
+                    <strong>領域追加:</strong>{" "}
+                    キャンバス上でドラッグしてタップ領域生成。
+                  </li>
+                  <li>
+                    <strong>ラベル & アクション:</strong>{" "}
+                    各領域に表示名と遷移/メッセージ送信などの動作を割り当て。
+                  </li>
+                  <li>
+                    <strong>プレビュー:</strong> PC /
+                    モバイル表示のバランスを確認。
+                  </li>
+                  <li>
+                    <strong>適用:</strong> 保存後、ユーザー対象へアクティブ化。
+                  </li>
+                </ol>
+                操作ヒント: Esc で選択解除 / Delete で領域削除 / Shift+ドラッグ
+                で正方形補助 (※β)。
+              </GuideBody>
+            </section>
 
-          {/* ImageCropUploader */}
-          <section
-            id="image-crop"
-            aria-labelledby="image-crop-heading"
-            className="relative"
-          >
-            <GuideHeading id="image-crop-heading">
-              ImageCropUploader
-            </GuideHeading>
-            <GuideBody>
-              手順:
-              <ol className="list-decimal pl-6 space-y-3">
-                <li>画像選択 (10MB 以下 / 最低 1024x1024 推奨)。</li>
-                <li>
-                  アスペクト比を選択 (SQUARE / LANDSCAPE / PORTRAIT / FREE)。
-                </li>
-                <li>ズームと位置を調整し不要領域を除去。</li>
-                <li>保存でクロップ処理 → URL / Blob を取得。</li>
-              </ol>
-              <CodeBlock>{`<ImageCropUploader
+            {/* ImageCropUploader */}
+            <section
+              id="image-crop"
+              aria-labelledby="image-crop-heading"
+              className="relative"
+            >
+              <GuideHeading id="image-crop-heading">
+                ImageCropUploader
+              </GuideHeading>
+              <GuideBody>
+                手順:
+                <ol className="list-decimal pl-6 space-y-3">
+                  <li>画像選択 (10MB 以下 / 最低 1024x1024 推奨)。</li>
+                  <li>
+                    アスペクト比を選択 (SQUARE / LANDSCAPE / PORTRAIT / FREE)。
+                  </li>
+                  <li>ズームと位置を調整し不要領域を除去。</li>
+                  <li>保存でクロップ処理 → URL / Blob を取得。</li>
+                </ol>
+                <CodeBlock>{`<ImageCropUploader
   onImageUploaded={(url) => console.log('Uploaded URL', url)}
   defaultAspectRatio="SQUARE"
 />`}</CodeBlock>
-              コツ: 先に意図解像度を決めてからズーム調整 /
-              文字や主要要素を中央に。
-            </GuideBody>
-          </section>
+                コツ: 先に意図解像度を決めてからズーム調整 /
+                文字や主要要素を中央に。
+              </GuideBody>
+            </section>
 
-          {/* Toast */}
-          <section
-            id="toast"
-            aria-labelledby="toast-heading"
-            className="relative"
-          >
-            <GuideHeading id="toast-heading">Toast 通知</GuideHeading>
-            <GuideBody>
-              目的: 操作結果や進行状態を即座にフィードバック。種類: 成功 / 失敗
-              / 情報 / 警告 / ローディング。
-              <CodeBlock>{`import { toast } from '@/lib/toast';
+            {/* Toast */}
+            <section
+              id="toast"
+              aria-labelledby="toast-heading"
+              className="relative"
+            >
+              <GuideHeading id="toast-heading">Toast 通知</GuideHeading>
+              <GuideBody>
+                目的: 操作結果や進行状態を即座にフィードバック。種類: 成功 /
+                失敗 / 情報 / 警告 / ローディング。
+                <CodeBlock>{`import { toast } from '@/lib/toast';
 toast.success('保存しました');
 toast.error('エラーが発生しました');
 const id = toast.loading('処理中...');
 // 完了後
 toast.success('完了');
 toast.dismiss(id);`}</CodeBlock>
-              よくある使い方: フォーム送信 / バックグラウンド同期 /
-              画像アップロード進捗。Undo 操作は `action` オプションで追加。
-            </GuideBody>
-          </section>
+                よくある使い方: フォーム送信 / バックグラウンド同期 /
+                画像アップロード進捗。Undo 操作は `action` オプションで追加。
+              </GuideBody>
+            </section>
 
-          {/* Troubleshooting */}
-          <section
-            id="troubleshooting"
-            aria-labelledby="troubleshooting-heading"
-            className="relative"
-          >
-            <GuideHeading id="troubleshooting-heading">
-              トラブルシュート
-            </GuideHeading>
-            <GuideBody>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>
-                  <strong>画像がアップロードできない:</strong> サイズ / 形式
-                  (JPEG/PNG) / 解像度を確認。
-                </li>
-                <li>
-                  <strong>領域が動かせない:</strong>{" "}
-                  キャンバス外クリックで再選択、ブラウザ拡張の干渉を無効化。
-                </li>
-                <li>
-                  <strong>自動返信が発火しない:</strong>{" "}
-                  キーワードの前後スペース / 正規表現のエスケープ有無 /
-                  ステータスを再確認。
-                </li>
-                <li>
-                  <strong>Toast が多すぎる:</strong> ローディング後に必ず
-                  `dismiss`、長時間表示は `duration` 延長よりログ表示へ移行。
-                </li>
-              </ul>
-            </GuideBody>
-          </section>
+            {/* Troubleshooting */}
+            <section
+              id="troubleshooting"
+              aria-labelledby="troubleshooting-heading"
+              className="relative"
+            >
+              <GuideHeading id="troubleshooting-heading">
+                トラブルシュート
+              </GuideHeading>
+              <GuideBody>
+                <ul className="list-disc pl-6 space-y-2">
+                  <li>
+                    <strong>画像がアップロードできない:</strong> サイズ / 形式
+                    (JPEG/PNG) / 解像度を確認。
+                  </li>
+                  <li>
+                    <strong>領域が動かせない:</strong>{" "}
+                    キャンバス外クリックで再選択、ブラウザ拡張の干渉を無効化。
+                  </li>
+                  <li>
+                    <strong>自動返信が発火しない:</strong>{" "}
+                    キーワードの前後スペース / 正規表現のエスケープ有無 /
+                    ステータスを再確認。
+                  </li>
+                  <li>
+                    <strong>Toast が多すぎる:</strong> ローディング後に必ず
+                    `dismiss`、長時間表示は `duration` 延長よりログ表示へ移行。
+                  </li>
+                </ul>
+              </GuideBody>
+            </section>
 
-          {/* Best Practices */}
-          <section
-            id="best-practices"
-            aria-labelledby="best-practices-heading"
-            className="relative"
-          >
-            <GuideHeading id="best-practices-heading">
-              ベストプラクティス
-            </GuideHeading>
-            <GuideBody>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>送信前に小規模テスト配信で内容と改行を検証。</li>
-                <li>自動返信は条件を具体的にし過剰マッチを防止。</li>
-                <li>リッチメニュー領域は余白を均等に揃え操作性を向上。</li>
-                <li>画像クロップ時は主要要素から 5-10% の余白を確保。</li>
-                <li>
-                  Toast の連続表示はまとめて 1 つの状態管理 Toast へ集約。
-                </li>
-              </ul>
-            </GuideBody>
-          </section>
+            {/* Best Practices */}
+            <section
+              id="best-practices"
+              aria-labelledby="best-practices-heading"
+              className="relative"
+            >
+              <GuideHeading id="best-practices-heading">
+                ベストプラクティス
+              </GuideHeading>
+              <GuideBody>
+                <ul className="list-disc pl-6 space-y-2">
+                  <li>送信前に小規模テスト配信で内容と改行を検証。</li>
+                  <li>自動返信は条件を具体的にし過剰マッチを防止。</li>
+                  <li>リッチメニュー領域は余白を均等に揃え操作性を向上。</li>
+                  <li>画像クロップ時は主要要素から 5-10% の余白を確保。</li>
+                  <li>
+                    Toast の連続表示はまとめて 1 つの状態管理 Toast へ集約。
+                  </li>
+                </ul>
+                <div className="mt-8 rounded-md border border-black/10 bg-[#FFFBEA] p-4 text-sm">
+                  <p className="font-medium mb-2">次の改善候補:</p>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li>ページ内検索やキーワードフィルタ</li>
+                    <li>セクション折りたたみと常駐ミニ TOC</li>
+                    <li>ダークモード最適化 (背景装飾カラー調整)</li>
+                    <li>具体的ユースケース別クイックレシピ追加</li>
+                  </ul>
+                </div>
+              </GuideBody>
+            </section>
+
+            {/* FAQ */}
+            <section id="faq" aria-labelledby="faq-heading" className="relative">
+              <GuideHeading id="faq-heading">FAQ</GuideHeading>
+              <GuideBody>
+                <ul className="space-y-6">
+                  <li>
+                    <p className="font-semibold">Q. 本番運用と開発環境を分けるには?</p>
+                    <p>A. 環境変数セットを `.env.local` / `.env.production` に分離し、Prisma の `DATABASE_URL` をそれぞれ向け替えてビルド時に `NEXT_PUBLIC_` 付き値のみ公開します。</p>
+                  </li>
+                  <li>
+                    <p className="font-semibold">Q. 大量送信時のレート制限は?</p>
+                    <p>A. LINE Messaging API の推奨はバーストを避け数百件単位でキュー化。失敗時は指数バックオフ + 再試行上限 3 回を推奨。</p>
+                  </li>
+                  <li>
+                    <p className="font-semibold">Q. 自動返信が複数条件で競合したら?</p>
+                    <p>A. ルールに優先度 (priority) を設定し昇順で最初にマッチしたものを適用。未設定なら登録順で評価されるため重要ルールは先頭に。</p>
+                  </li>
+                  <li>
+                    <p className="font-semibold">Q. 画像が粗くなるのはなぜ?</p>
+                    <p>A. アップロード前に解像度が最適閾値(推奨 1024px 以上)未満だとブラウザ拡大でジャギー化。元画像を高解像にするか ImageCropUploader で適正アスペクト選択。</p>
+                  </li>
+                  <li>
+                    <p className="font-semibold">Q. Toast が重なり視認性が悪い。</p>
+                    <p>A. 成功/失敗を集約し状態管理用 ID で更新; 長時間表示はログコンポーネントへ移行し `toast.dismiss(id)` を忘れない。</p>
+                  </li>
+                </ul>
+              </GuideBody>
+            </section>
+          </div>
+          {/* end main content */}
         </div>
 
         {/* Navigation Footer */}
         <div className="mt-32 flex flex-wrap items-center gap-6">
           <Link
-            href="/dashboard"
+            href="/"
             className="group relative overflow-hidden border-[3px] border-black bg-linear-to-br from-[#00FF00] via-[#00B900] to-[#008F00] px-8 py-4 font-mono text-xs font-black uppercase tracking-[0.15em] text-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
           >
             <span className="relative z-10 flex items-center gap-2">
-              ダッシュボードへ戻る →
+              トップページに戻る →
             </span>
             <div className="absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
           </Link>
@@ -430,6 +483,7 @@ toast.dismiss(id);`}</CodeBlock>
             </span>
             <div className="absolute inset-0 bg-linear-to-tr from-transparent via-[#00B900]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </Link>
+
         </div>
       </div>
     </main>

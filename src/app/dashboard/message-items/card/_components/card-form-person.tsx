@@ -182,12 +182,12 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
 
   const handleTemplateImageUrlChange = useCallback((imageUrl: string | null) => {
     if (card.templateEnabled) {
-      onChange({ imageUrl: imageUrl ?? '' });
+      onChange({ templateImageUrl: imageUrl ?? null });
     }
   }, [card.templateEnabled, onChange]);
 
   const handleTemplateChange = useCallback((templateId: string | null) => {
-    onChange({ templateEnabled: true, templateId, ...(templateId ? { imageUrl: '' } : {}) });
+    onChange({ templateEnabled: true, templateId, ...(templateId ? { imageUrl: '', templateImageUrl: null } : {}) });
     if (templateId) {
       setErrors((prev) => {
         const next = { ...prev };
@@ -199,14 +199,14 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
 
   const handleTemplateModeToggle = (mode: 'image' | 'template') => {
     if (mode === 'template') {
-      onChange({ templateEnabled: true, imageUrl: '', templatePreviewUrl: null });
+      onChange({ templateEnabled: true, imageUrl: '', templatePreviewUrl: null, templateImageUrl: null });
       setErrors((prev) => {
         const next = { ...prev };
         delete next.imageUrl;
         return next;
       });
     } else {
-      onChange({ templateEnabled: false, templateId: undefined, templateAreas: undefined, templatePreviewUrl: undefined });
+      onChange({ templateEnabled: false, templateId: undefined, templateAreas: undefined, templatePreviewUrl: undefined, templateImageUrl: undefined });
     }
   };
 

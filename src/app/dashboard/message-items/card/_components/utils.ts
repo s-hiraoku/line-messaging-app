@@ -109,6 +109,13 @@ export function validateCard(card: Card): ValidationError[] {
         message: 'すべてのテンプレートエリアに画像を設定してください',
       });
     }
+
+    if (!card.templateImageUrl || !card.templateImageUrl.startsWith('https://')) {
+      errors.push({
+        field: 'templateImageUrl',
+        message: 'テンプレート画像を作成してください',
+      });
+    }
   }
 
   // Actions validation (min 1, max 3)
@@ -349,8 +356,10 @@ export function cardToCarouselColumn(card: Card): {
     return baseAction;
   });
 
+  const thumbnail = card.templateEnabled ? card.templateImageUrl : card.imageUrl;
+
   return {
-    ...(card.imageUrl ? { thumbnailImageUrl: card.imageUrl } : {}),
+    ...(thumbnail ? { thumbnailImageUrl: thumbnail } : {}),
     ...(title && { title }),
     text,
     actions,
@@ -369,6 +378,7 @@ export function createDefaultCard(type: CardType): Card {
     templateId: null as string | null,
     templateAreas: [] as TemplateArea[],
     templatePreviewUrl: null as string | null,
+    templateImageUrl: null as string | null,
     actions: [
       {
         type: 'uri' as const,

@@ -67,6 +67,7 @@ export interface BaseCard {
   templateId?: string | null;
   templateAreas?: TemplateArea[];
   templatePreviewUrl?: string | null;
+  templateImageUrl?: string | null;
 }
 
 /**

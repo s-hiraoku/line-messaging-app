@@ -215,7 +215,7 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
   const handleTemplateImageUrlChange = useCallback(
     (imageUrl: string | null) => {
       if (card.templateEnabled) {
-        onChange({ imageUrl: imageUrl ?? "" });
+        onChange({ templateImageUrl: imageUrl ?? null });
       }
     },
     [card.templateEnabled, onChange]
@@ -226,7 +226,7 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
       onChange({
         templateEnabled: true,
         templateId,
-        ...(templateId ? { imageUrl: "" } : {}),
+        ...(templateId ? { imageUrl: "", templateImageUrl: null } : {}),
       });
       if (templateId) {
         setErrors((prev) => {
@@ -245,6 +245,7 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
         templateEnabled: true,
         imageUrl: "",
         templatePreviewUrl: null,
+        templateImageUrl: null,
       });
       setErrors((prev) => {
         const next = { ...prev };
@@ -257,6 +258,7 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
         templateId: undefined,
         templateAreas: undefined,
         templatePreviewUrl: undefined,
+        templateImageUrl: undefined,
       });
     }
   };

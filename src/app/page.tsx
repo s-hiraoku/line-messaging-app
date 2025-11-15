@@ -143,15 +143,15 @@ export default function Home() {
                 <div className="absolute top-0 right-0 h-full w-[2px] bg-black/20" />
               </Link>
 
-              {/* Tertiary CTA - Docs */}
+              {/* Tertiary CTA - Docs (spec summary) */}
               <Link
-                href="/docs/system-design"
+                href="/design-spec"
                 className="group relative overflow-hidden border-[3px] border-black bg-white px-10 py-5 font-mono text-sm font-black uppercase tracking-[0.15em] text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 hover:bg-[#FFFEF5] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:scale-[0.98]"
               >
                 <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-[#00B900]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="relative z-10 flex items-center gap-3">
                   <span className="relative">
-                    設計仕様を確認
+                    設計仕様
                     <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full" />
                   </span>
                   <span className="inline-block transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1">

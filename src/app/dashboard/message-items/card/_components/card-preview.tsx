@@ -34,7 +34,7 @@ function ActionButton({ action }: { action: CardAction }) {
  * Renders a single card based on its type
  */
 function CardItem({ card, index, total }: { card: Card; index: number; total: number }) {
-  const previewImageUrl = card.templatePreviewUrl || card.imageUrl;
+  const previewImageUrl = card.templatePreviewUrl || card.templateImageUrl || card.imageUrl;
   const renderCardContent = () => {
     switch (card.type) {
       case 'product':

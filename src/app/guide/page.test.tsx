@@ -35,6 +35,7 @@ describe("Guide page", () => {
       "Toast 通知",
       "トラブルシュート",
       "ベストプラクティス",
+      "FAQ",
     ].forEach((title) => {
       expect(getByRole("heading", { name: title })).toBeInTheDocument();
     });
