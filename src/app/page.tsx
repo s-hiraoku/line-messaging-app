@@ -16,17 +16,20 @@ const ibmPlexSans = IBM_Plex_Sans({
 const featureHighlights = [
   {
     title: "メッセージ統合管理",
-    description: "チャット、ブロードキャスト、テンプレートを一元管理し、運用負荷を軽減。",
+    description:
+      "チャット、ブロードキャスト、テンプレートを一元管理し、運用負荷を軽減。",
     number: "01",
   },
   {
     title: "リアルタイム連携",
-    description: "Webhook とダッシュボードで最新のユーザー状況や会話ログを即座に把握。",
+    description:
+      "Webhook とダッシュボードで最新のユーザー状況や会話ログを即座に把握。",
     number: "02",
   },
   {
     title: "柔軟な拡張性",
-    description: "LINE Messaging API の各種メッセージタイプに対応するモジュール化された設計。",
+    description:
+      "LINE Messaging API の各種メッセージタイプに対応するモジュール化された設計。",
     number: "03",
   },
 ];
@@ -44,10 +47,10 @@ export default function Home() {
         <div className="flex items-start justify-between">
           <div
             className="inline-block animate-[slideDown_0.8s_ease-out]"
-            style={{ animationDelay: '0.1s', animationFillMode: 'backwards' }}
+            style={{ animationDelay: "0.1s", animationFillMode: "backwards" }}
           >
             <span className="inline-block -rotate-2 border-2 border-black bg-[#FFE500] px-6 py-2 font-mono text-xs font-bold uppercase tracking-[0.2em] text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-              LINE Messaging POC
+              LINE Messaging Prototype
             </span>
           </div>
         </div>
@@ -55,18 +58,37 @@ export default function Home() {
         {/* Hero Section */}
         <section className="mt-16 grid gap-12 lg:grid-cols-12 lg:gap-20">
           {/* Main Title - Takes up more space */}
-          <div className="lg:col-span-7">
+          <div className="lg:col-span-8">
             <h1
               className={`mb-8 text-6xl font-black leading-[1.1] tracking-tight text-black sm:text-7xl lg:text-8xl animate-[slideUp_1s_ease-out] ${syne.className}`}
               style={{
-                animationDelay: '0.2s',
-                animationFillMode: 'backwards',
+                animationDelay: "0.2s",
+                animationFillMode: "backwards",
               }}
             >
-              LINE チャネル運用を
               <span className="relative ml-2 inline-block">
-                <span className="relative z-10">加速</span>
-                <span className="absolute bottom-2 left-0 z-0 h-4 w-full bg-[#00B900]" />
+                <span className="relative z-10  text-[#f3270f]">Synergy!</span>
+                <span className="absolute bottom-2 left-0 z-0 h-4 w-full bg-[#2fc5c8]" />
+              </span>
+              <span className="text-[#00B900]">LINE</span> 開発を
+              <span className="relative ml-2 inline-block">
+                <span className="relative z-10">限界突破</span>
+                <svg
+                  className="absolute bottom-0 left-0 z-0 w-full"
+                  height="40"
+                  viewBox="0 0 200 40"
+                  preserveAspectRatio="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 28 Q 12.5 18, 25 24 Q 37.5 30, 50 26 Q 62.5 22, 75 24 Q 87.5 26, 100 22 Q 112.5 18, 125 20 Q 137.5 22, 150 18 Q 162.5 14, 175 16 Q 187.5 18, 200 14"
+                    stroke="#FF6B9D"
+                    strokeWidth="24"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </span>
               する
               <br />
@@ -79,8 +101,8 @@ export default function Home() {
             <p
               className={`mb-10 max-w-xl text-lg leading-relaxed text-black/80 sm:text-xl animate-[fadeIn_1s_ease-out] ${ibmPlexSans.className}`}
               style={{
-                animationDelay: '0.4s',
-                animationFillMode: 'backwards',
+                animationDelay: "0.4s",
+                animationFillMode: "backwards",
               }}
             >
               顧客とのコミュニケーションを最適化するための、
@@ -88,34 +110,69 @@ export default function Home() {
             </p>
 
             <div
-              className="flex flex-wrap gap-4 animate-[slideUp_1s_ease-out]"
-              style={{ animationDelay: '0.6s', animationFillMode: 'backwards' }}
+              className="flex flex-wrap gap-6 animate-[slideUp_1s_ease-out]"
+              style={{ animationDelay: "0.6s", animationFillMode: "backwards" }}
             >
+              {/* Primary CTA - Dashboard */}
               <Link
                 href="/dashboard"
-                className="group relative inline-flex items-center border-2 border-black bg-[#00B900] px-8 py-4 font-mono text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                className="group relative overflow-hidden border-[3px] border-black bg-gradient-to-br from-[#00FF00] via-[#00B900] to-[#008F00] px-10 py-5 font-mono text-sm font-black uppercase tracking-[0.15em] text-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:scale-[0.98]"
               >
-                <span className="relative z-10">ダッシュボードへ進む</span>
-                <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">→</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
+                <div className="relative z-10 flex items-center gap-3">
+                  <span>ダッシュボードへ進む</span>
+                  <span className="inline-block text-lg transition-transform duration-300 group-hover:translate-x-2 group-hover:scale-110">
+                    →
+                  </span>
+                </div>
+                <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-white/60 transition-all duration-300 group-hover:w-full" />
               </Link>
 
+              {/* Secondary CTA - Guide */}
+              <Link
+                href="/guide"
+                className="group relative overflow-hidden border-[3px] border-black bg-gradient-to-br from-[#FFE500] via-[#FFCF00] to-[#FFB800] px-10 py-5 font-mono text-sm font-black uppercase tracking-[0.15em] text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:scale-[0.98]"
+              >
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(255,255,255,0.4),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative z-10 flex items-center gap-3">
+                  <span className="relative">使い方を見る</span>
+                  <span className="inline-block text-lg transition-all duration-300 group-hover:rotate-12 group-hover:scale-110">
+                    📖
+                  </span>
+                </div>
+                <div className="absolute top-0 right-0 h-full w-[2px] bg-black/20" />
+              </Link>
+
+              {/* Tertiary CTA - Docs */}
               <Link
                 href="/docs/system-design"
-                className="group inline-flex items-center border-2 border-black bg-white px-8 py-4 font-mono text-sm font-bold uppercase tracking-wider text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                className="group relative overflow-hidden border-[3px] border-black bg-white px-10 py-5 font-mono text-sm font-black uppercase tracking-[0.15em] text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 hover:bg-[#FFFEF5] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:scale-[0.98]"
               >
-                設計仕様を確認
-                <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">↗</span>
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-[#00B900]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative z-10 flex items-center gap-3">
+                  <span className="relative">
+                    設計仕様を確認
+                    <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full" />
+                  </span>
+                  <span className="inline-block transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1">
+                    ↗
+                  </span>
+                </div>
+                <div className="absolute inset-0 border-2 border-black/0 group-hover:border-black/100 transition-all duration-300 -m-[2px]" />
               </Link>
             </div>
           </div>
 
           {/* Decorative Element */}
-          <div className="relative hidden lg:col-span-5 lg:block">
+          <div className="relative hidden lg:col-span-4 lg:block">
             <div className="absolute -right-20 top-0 h-[500px] w-[500px]">
               {/* Large decorative number */}
               <span
                 className="absolute right-0 top-0 select-none font-mono text-[20rem] font-black leading-none text-[#00B900] opacity-[0.15] animate-[rotateIn_1.2s_ease-out]"
-                style={{ animationDelay: '0.3s', animationFillMode: 'backwards' }}
+                style={{
+                  animationDelay: "0.3s",
+                  animationFillMode: "backwards",
+                }}
               >
                 L
               </span>
@@ -126,10 +183,14 @@ export default function Home() {
         {/* Features Grid */}
         <section className="mt-32">
           <div className="mb-12 flex items-end justify-between border-b-4 border-black pb-4">
-            <h2 className={`text-4xl font-black text-black sm:text-5xl ${syne.className}`}>
+            <h2
+              className={`text-4xl font-black text-black sm:text-5xl ${syne.className}`}
+            >
               主な機能
             </h2>
-            <span className="font-mono text-lg font-bold text-black/40">03 Features</span>
+            <span className="font-mono text-lg font-bold text-black/40">
+              03 Features
+            </span>
           </div>
 
           <div className="grid gap-8 md:grid-cols-3">
@@ -139,7 +200,7 @@ export default function Home() {
                 className="group relative animate-[slideUp_1s_ease-out]"
                 style={{
                   animationDelay: `${0.8 + index * 0.1}s`,
-                  animationFillMode: 'backwards'
+                  animationFillMode: "backwards",
                 }}
               >
                 {/* Number Badge */}
@@ -150,10 +211,14 @@ export default function Home() {
                 </div>
 
                 {/* Content */}
-                <h3 className={`mb-4 text-2xl font-bold text-black ${ibmPlexSans.className}`}>
+                <h3
+                  className={`mb-4 text-2xl font-bold text-black ${ibmPlexSans.className}`}
+                >
                   {feature.title}
                 </h3>
-                <p className={`leading-relaxed text-black/70 ${ibmPlexSans.className}`}>
+                <p
+                  className={`leading-relaxed text-black/70 ${ibmPlexSans.className}`}
+                >
                   {feature.description}
                 </p>
 

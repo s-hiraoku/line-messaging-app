@@ -164,3 +164,22 @@
     }
   }
 }
+
+/* Dashboard Sidebar Scrollbar - Neo-brutalism Design */
+aside::-webkit-scrollbar {
+  width: 10px;
+}
+
+aside::-webkit-scrollbar-track {
+  background: #FFFEF5;
+  border-left: 2px solid black;
+}
+
+aside::-webkit-scrollbar-thumb {
+  background: #00B900;
+  border: 2px solid black;
+}
+
+aside::-webkit-scrollbar-thumb:hover {
+  background: #008F00;
+}
