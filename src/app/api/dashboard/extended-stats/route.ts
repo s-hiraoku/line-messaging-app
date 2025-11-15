@@ -28,6 +28,7 @@ export async function GET() {
         COUNT(*) as count
       FROM "User"
       WHERE "createdAt" >= ${thirtyDaysAgo}
+        AND "isDeleted" = false
       GROUP BY DATE("createdAt")
       ORDER BY date ASC
     `;
@@ -48,6 +49,7 @@ export async function GET() {
         }
       },
       where: {
+        isDeleted: false,
         messages: {
           some: {}
         }
@@ -80,7 +82,10 @@ export async function GET() {
     const richMenuStats = await Promise.all(
       richMenus.map(async (menu) => {
         const userCount = await prisma.user.count({
-          where: { richMenuId: menu.richMenuId }
+          where: {
+            richMenuId: menu.richMenuId,
+            isDeleted: false
+          }
         });
         return {
           id: menu.id,
@@ -160,7 +165,8 @@ export async function GET() {
     // 新規ユーザー（過去7日間）
     const newUsersCount = await prisma.user.count({
       where: {
-        createdAt: { gte: sevenDaysAgo }
+        createdAt: { gte: sevenDaysAgo },
+        isDeleted: false
       }
     });
 
@@ -229,9 +235,12 @@ export async function GET() {
       : 0;
 
     // 2. アクティブユーザー率（過去7日間でメッセージを送ったユーザー）
-    const totalUsers = await prisma.user.count();
+    const totalUsers = await prisma.user.count({
+      where: { isDeleted: false }
+    });
     const activeUsers = await prisma.user.count({
       where: {
+        isDeleted: false,
         messages: {
           some: {
             createdAt: { gte: sevenDaysAgo }
@@ -276,7 +285,8 @@ export async function GET() {
 
     const currentMonthUsers = await prisma.user.count({
       where: {
-        createdAt: { gte: oneMonthAgo }
+        createdAt: { gte: oneMonthAgo },
+        isDeleted: false
       }
     });
 
@@ -285,7 +295,8 @@ export async function GET() {
         createdAt: {
           gte: twoMonthsAgo,
           lt: oneMonthAgo
-        }
+        },
+        isDeleted: false
       }
     });
 
@@ -318,6 +329,7 @@ export async function GET() {
 
     const recentUserActions = await prisma.user.findMany({
       where: {
+        isDeleted: false,
         OR: [
           { createdAt: { gte: oneDayAgo } },
           { updatedAt: { gte: oneDayAgo } }

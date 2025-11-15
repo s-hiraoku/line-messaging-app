@@ -3,10 +3,10 @@ import { realtime } from "@/lib/realtime/bus";
 import type { AnyMessage } from "./message-schemas";
 
 /**
- * Ensure user exists in database
+ * Ensure user exists in database and is not deleted
  */
 export async function ensureUser(lineUserId: string) {
-  return await prisma.user.upsert({
+  const user = await prisma.user.upsert({
     where: { lineUserId },
     update: {},
     create: {
@@ -15,6 +15,13 @@ export async function ensureUser(lineUserId: string) {
       isFollowing: true,
     },
   });
+
+  // 論理削除されたユーザーへのメッセージ送信を防ぐ
+  if (user.isDeleted) {
+    throw new Error('Cannot send message to deleted user');
+  }
+
+  return user;
 }
 
 /**

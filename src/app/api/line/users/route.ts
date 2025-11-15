@@ -6,6 +6,7 @@ export async function GET() {
     const users = await prisma.user.findMany({
       where: {
         isFollowing: true,
+        isDeleted: false,
       },
       select: {
         id: true,

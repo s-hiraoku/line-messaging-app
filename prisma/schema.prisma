@@ -23,6 +23,8 @@ model User {
   sessions      Session[]
   richMenuId    String?
   autoReplyLogs AutoReplyLog[]
+  isDeleted     Boolean  @default(false)
+  deletedAt     DateTime?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

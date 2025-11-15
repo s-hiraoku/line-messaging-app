@@ -65,5 +65,30 @@ export async function pushMessage(to: string, messages: Message | Message[]): Pr
 
 export async function broadcastMessage(messages: Message | Message[]): Promise<void> {
   const client = await getLineClient();
-  await client.broadcast(messages);
+
+  // 論理削除されていないフォロワーのみを取得
+  const activeUsers = await prisma.user.findMany({
+    where: {
+      isFollowing: true,
+      isDeleted: false,
+    },
+    select: {
+      lineUserId: true,
+    },
+  });
+
+  // ユーザーがいない場合は何もしない
+  if (activeUsers.length === 0) {
+    return;
+  }
+
+  const userIds = activeUsers.map(u => u.lineUserId);
+
+  // multicast APIを使用して論理削除されていないユーザーのみに送信
+  // LINE APIの制限: 一度に最大500ユーザーまで
+  const BATCH_SIZE = 500;
+  for (let i = 0; i < userIds.length; i += BATCH_SIZE) {
+    const batch = userIds.slice(i, i + BATCH_SIZE);
+    await client.multicast(batch, messages);
+  }
 }
