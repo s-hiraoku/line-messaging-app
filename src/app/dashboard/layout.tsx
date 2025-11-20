@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import { Syne, IBM_Plex_Sans } from "next/font/google";
+import { auth } from "@/auth";
+import { SignOutButton } from "@/components/auth/auth-button";
 
 import {
   Activity,
@@ -98,11 +100,13 @@ const primaryNav = [
   },
 ];
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: ReactNode;
 }) {
+  const session = await auth();
+
   return (
     <ToastProvider>
       <ConfirmDialogProvider>
@@ -117,14 +121,22 @@ export default function DashboardLayout({
                 {/* Header */}
                 <div className="space-y-3">
                   <div className="inline-block -rotate-1 border-2 border-black bg-[#FFE500] px-3 py-1 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                    <span className={`text-xs font-bold uppercase tracking-[0.2em] text-black ${ibmPlexSans.className}`}>
+                    <span
+                      className={`text-xs font-bold uppercase tracking-[0.2em] text-black ${ibmPlexSans.className}`}
+                    >
                       LINE Messaging
                     </span>
                   </div>
-                  <h1 className={`text-2xl font-black text-black ${syne.className}`}>
-                    Operations<br/>Console
+                  <h1
+                    className={`text-2xl font-black text-black ${syne.className}`}
+                  >
+                    Operations
+                    <br />
+                    Console
                   </h1>
-                  <p className={`text-sm leading-relaxed text-black/70 ${ibmPlexSans.className}`}>
+                  <p
+                    className={`text-sm leading-relaxed text-black/70 ${ibmPlexSans.className}`}
+                  >
                     リアルタイムにメッセージ戦略を最適化する統合管理基盤
                   </p>
                 </div>
@@ -135,6 +147,34 @@ export default function DashboardLayout({
                     <NavLink key={item.href} {...item} />
                   ))}
                 </nav>
+
+                {/* User Info & Logout */}
+                {session?.user && (
+                  <div className="mt-auto space-y-4 border-t-2 border-black pt-6">
+                    <div className="flex items-center gap-3">
+                      {session.user.image && (
+                        <img
+                          src={session.user.image}
+                          alt={session.user.name || "User"}
+                          className="h-10 w-10 rounded-full border-2 border-black"
+                        />
+                      )}
+                      <div className="flex-1 overflow-hidden">
+                        <p
+                          className={`truncate text-sm font-bold text-black ${ibmPlexSans.className}`}
+                        >
+                          {session.user.name || "User"}
+                        </p>
+                        <p
+                          className={`truncate text-xs text-black/60 ${ibmPlexSans.className}`}
+                        >
+                          {session.user.email}
+                        </p>
+                      </div>
+                    </div>
+                    <SignOutButton />
+                  </div>
+                )}
               </div>
             </aside>
 
