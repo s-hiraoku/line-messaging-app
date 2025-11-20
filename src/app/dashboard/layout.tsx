@@ -34,12 +34,6 @@ const ibmPlexSans = IBM_Plex_Sans({
 
 const primaryNav = [
   {
-    href: "/",
-    label: "トップページ",
-    description: "ホーム画面に戻る",
-    icon: <Home className="h-4 w-4" />,
-  },
-  {
     href: "/dashboard",
     label: "ダッシュボード",
     description: "全体の指標と最新情報",
@@ -150,20 +144,22 @@ export default async function DashboardLayout({
 
                 {/* Navigation */}
                 <nav className="flex flex-col gap-2">
-                  {primaryNav.slice(0, 10).map((item) => (
+                  {primaryNav.slice(0, 9).map((item) => (
                     <NavLink key={item.href} {...item} />
                   ))}
 
                   {/* Separator for Development Tools */}
                   <div className="my-3 flex items-center gap-3">
                     <div className="h-[2px] flex-1 bg-black"></div>
-                    <span className={`text-xs font-bold uppercase tracking-wider text-black/40 ${ibmPlexSans.className}`}>
+                    <span
+                      className={`text-xs font-bold uppercase tracking-wider text-black/40 ${ibmPlexSans.className}`}
+                    >
                       開発ツール
                     </span>
                     <div className="h-[2px] flex-1 bg-black"></div>
                   </div>
 
-                  {primaryNav.slice(10).map((item) => (
+                  {primaryNav.slice(9).map((item) => (
                     <NavLink key={item.href} {...item} />
                   ))}
                 </nav>

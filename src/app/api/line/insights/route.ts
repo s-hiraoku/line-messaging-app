@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAuthenticatedUserId } from "@/lib/auth-helpers";
 import { getChannelAccessToken } from "@/lib/line/client";
 
 export async function GET(req: NextRequest) {
   try {
+    // Get authenticated user ID
+    const userId = await requireAuthenticatedUserId();
+
     const { searchParams } = new URL(req.url);
     const date = searchParams.get("date") || getPreviousDate();
 
-    const token = await getChannelAccessToken();
+    const token = await getChannelAccessToken(userId);
 
     // フォロワー統計を取得
     const followersUrl = `https://api.line.me/v2/bot/insight/followers?date=${date}`;

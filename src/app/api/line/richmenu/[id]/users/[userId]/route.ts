@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAuthenticatedUserId } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { getLineClient } from "@/lib/line/client";
 
@@ -9,6 +10,9 @@ interface RouteContext {
 export async function POST(request: NextRequest, context: RouteContext) {
   const resolvedParams = await context.params;
   try {
+    // Get authenticated user ID
+    const authUserId = await requireAuthenticatedUserId();
+
     const { id, userId } = resolvedParams;
 
     // Find the rich menu
@@ -17,7 +21,10 @@ export async function POST(request: NextRequest, context: RouteContext) {
     });
 
     if (!richMenu) {
-      return NextResponse.json({ error: "リッチメニューが見つかりません" }, { status: 404 });
+      return NextResponse.json(
+        { error: "リッチメニューが見つかりません" },
+        { status: 404 }
+      );
     }
 
     if (!richMenu.richMenuId) {
@@ -33,11 +40,14 @@ export async function POST(request: NextRequest, context: RouteContext) {
     });
 
     if (!user) {
-      return NextResponse.json({ error: "ユーザーが見つかりません" }, { status: 404 });
+      return NextResponse.json(
+        { error: "ユーザーが見つかりません" },
+        { status: 404 }
+      );
     }
 
     // Link rich menu to user on LINE
-    const client = await getLineClient();
+    const client = await getLineClient(authUserId);
     await client.linkRichMenuToUser(user.lineUserId, richMenu.richMenuId);
 
     // Update database
@@ -51,17 +61,22 @@ export async function POST(request: NextRequest, context: RouteContext) {
       message: "ユーザーにリッチメニューを設定しました",
     });
   } catch (error) {
-    console.error("[POST /api/line/richmenu/[id]/users/[userId]] Link rich menu error:", {
-      error,
-      richMenuId: resolvedParams.id,
-      userId: resolvedParams.userId,
-      url: request.url,
-      method: request.method,
-    });
+    console.error(
+      "[POST /api/line/richmenu/[id]/users/[userId]] Link rich menu error:",
+      {
+        error,
+        richMenuId: resolvedParams.id,
+        userId: resolvedParams.userId,
+        url: request.url,
+        method: request.method,
+      }
+    );
     return NextResponse.json(
       {
         error:
-          error instanceof Error ? error.message : "リッチメニューの設定に失敗しました",
+          error instanceof Error
+            ? error.message
+            : "リッチメニューの設定に失敗しました",
       },
       { status: 500 }
     );
@@ -71,6 +86,9 @@ export async function POST(request: NextRequest, context: RouteContext) {
 export async function DELETE(request: NextRequest, context: RouteContext) {
   const resolvedParams = await context.params;
   try {
+    // Get authenticated user ID
+    const authUserId = await requireAuthenticatedUserId();
+
     const { userId } = resolvedParams;
 
     // Find the user
@@ -79,11 +97,14 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     });
 
     if (!user) {
-      return NextResponse.json({ error: "ユーザーが見つかりません" }, { status: 404 });
+      return NextResponse.json(
+        { error: "ユーザーが見つかりません" },
+        { status: 404 }
+      );
     }
 
     // Unlink rich menu from user on LINE
-    const client = await getLineClient();
+    const client = await getLineClient(authUserId);
     await client.unlinkRichMenuFromUser(user.lineUserId);
 
     // Update database
@@ -97,13 +118,16 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
       message: "ユーザーのリッチメニュー設定を解除しました",
     });
   } catch (error) {
-    console.error("[DELETE /api/line/richmenu/[id]/users/[userId]] Unlink rich menu error:", {
-      error,
-      richMenuId: resolvedParams.id,
-      userId: resolvedParams.userId,
-      url: request.url,
-      method: request.method,
-    });
+    console.error(
+      "[DELETE /api/line/richmenu/[id]/users/[userId]] Unlink rich menu error:",
+      {
+        error,
+        richMenuId: resolvedParams.id,
+        userId: resolvedParams.userId,
+        url: request.url,
+        method: request.method,
+      }
+    );
     return NextResponse.json(
       {
         error:

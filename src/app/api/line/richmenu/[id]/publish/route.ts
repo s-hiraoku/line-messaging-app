@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAuthenticatedUserId } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { getLineClient } from "@/lib/line/client";
 
@@ -19,6 +20,9 @@ export async function POST(
 ) {
   const resolvedParams = await params;
   try {
+    // Get authenticated user ID
+    const userId = await requireAuthenticatedUserId();
+
     const { id } = resolvedParams;
 
     // Get rich menu from database
@@ -47,7 +51,7 @@ export async function POST(
       );
     }
 
-    const client = await getLineClient();
+    const client = await getLineClient(userId);
 
     // Step 1: Create rich menu in LINE API
     const richMenuSize = RICHMENU_SIZES[richMenu.size];
@@ -95,12 +99,15 @@ export async function POST(
       },
     });
   } catch (error) {
-    console.error("[POST /api/line/richmenu/[id]/publish] Failed to publish rich menu:", {
-      error,
-      richMenuId: resolvedParams.id,
-      url: req.url,
-      method: req.method,
-    });
+    console.error(
+      "[POST /api/line/richmenu/[id]/publish] Failed to publish rich menu:",
+      {
+        error,
+        richMenuId: resolvedParams.id,
+        url: req.url,
+        method: req.method,
+      }
+    );
     return NextResponse.json(
       {
         error: "公開に失敗しました",

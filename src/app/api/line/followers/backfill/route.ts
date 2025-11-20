@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { requireAuthenticatedUserId } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { getChannelAccessToken, getLineClient } from "@/lib/line/client";
 
@@ -14,22 +15,29 @@ type FollowersResp = { userIds: string[]; next?: string };
 
 export async function POST(req: NextRequest) {
   try {
+    // Get authenticated user ID
+    const userId = await requireAuthenticatedUserId();
+
     const body = await req.json().catch(() => ({}));
     const { limitPerPage, maxPages, start, syncProfile } = schema.parse(body);
 
     let accessToken: string;
     try {
-      accessToken = await getChannelAccessToken();
+      accessToken = await getChannelAccessToken(userId);
     } catch (e) {
-      const msg = e instanceof Error ? e.message : 'Failed to issue channel access token';
+      const msg =
+        e instanceof Error ? e.message : "Failed to issue channel access token";
       return NextResponse.json({ error: msg }, { status: 400 });
     }
-    const client = syncProfile ? await getLineClient() : null;
+    const client = syncProfile ? await getLineClient(userId) : null;
 
     let imported = 0;
     let pages = 0;
     let cursor = start;
-    const stats: { created: number; updated: number } = { created: 0, updated: 0 };
+    const stats: { created: number; updated: number } = {
+      created: 0,
+      updated: 0,
+    };
 
     while (pages < maxPages) {
       const url = new URL("https://api.line.me/v2/bot/followers/ids");
@@ -42,7 +50,10 @@ export async function POST(req: NextRequest) {
       });
       if (!res.ok) {
         const errText = await res.text().catch(() => "");
-        return NextResponse.json({ error: "LINE API error", status: res.status, body: errText }, { status: res.status });
+        return NextResponse.json(
+          { error: "LINE API error", status: res.status, body: errText },
+          { status: res.status }
+        );
       }
 
       const data = (await res.json()) as FollowersResp;
@@ -60,21 +71,28 @@ export async function POST(req: NextRequest) {
             displayName = p.displayName ?? "";
             pictureUrl = (p.pictureUrl as string | undefined) ?? null;
           } catch (error) {
-            console.error(`[POST /api/line/followers/backfill] Failed to fetch profile for ${lineUserId}:`, {
-              error,
-              lineUserId,
-            });
+            console.error(
+              `[POST /api/line/followers/backfill] Failed to fetch profile for ${lineUserId}:`,
+              {
+                error,
+                lineUserId,
+              }
+            );
             // Continue with empty profile data
           }
         }
 
         const result = await prisma.user.upsert({
           where: { lineUserId },
-          update: { isFollowing: true, ...(syncProfile ? { displayName, pictureUrl } : {}) },
+          update: {
+            isFollowing: true,
+            ...(syncProfile ? { displayName, pictureUrl } : {}),
+          },
           create: { lineUserId, displayName, pictureUrl, isFollowing: true },
         });
         imported += 1;
-        if (result.createdAt.getTime() === result.updatedAt.getTime()) stats.created += 1;
+        if (result.createdAt.getTime() === result.updatedAt.getTime())
+          stats.created += 1;
         else stats.updated += 1;
       }
 
@@ -86,9 +104,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ imported, pages, next: cursor ?? null, stats });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Invalid request body", issues: error.flatten() }, { status: 400 });
+      return NextResponse.json(
+        { error: "Invalid request body", issues: error.flatten() },
+        { status: 400 }
+      );
     }
-    console.error('[POST /api/line/followers/backfill] Error:', {
+    console.error("[POST /api/line/followers/backfill] Error:", {
       error,
       url: req.url,
       method: req.method,

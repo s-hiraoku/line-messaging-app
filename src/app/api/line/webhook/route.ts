@@ -6,12 +6,22 @@ import { realtime } from "@/lib/realtime/bus";
 import { addLog } from "@/lib/dev/logger";
 import { executeAutoReply } from "@/lib/auto-reply/executor";
 
-async function verifySignature(body: string, signature: string | null): Promise<void> {
-  const config = await prisma.channelConfig.findUnique({ where: { id: "primary" } });
-  const channelSecret = config?.channelSecret ?? null;
+async function verifySignature(
+  body: string,
+  signature: string | null
+): Promise<void> {
+  // Simple migration approach: Use the first user's channel config
+  // For full multi-tenant support, webhook URL would need to include user identifier
+  const firstUser = await prisma.user.findFirst({
+    include: { channelConfig: true },
+  });
+
+  const channelSecret = firstUser?.channelConfig?.channelSecret ?? null;
 
   if (!channelSecret) {
-    throw new Error("チャネルシークレットが未設定です。設定画面から登録してください。");
+    throw new Error(
+      "チャネルシークレットが未設定です。設定画面から登録してください。"
+    );
   }
 
   if (!signature) {
@@ -26,12 +36,21 @@ async function verifySignature(body: string, signature: string | null): Promise<
 }
 
 async function handleEvent(event: WebhookEvent) {
-  const client = await getLineClient();
+  // Simple migration approach: Use the first user's channel config
+  const firstUser = await prisma.user.findFirst({
+    select: { id: true },
+  });
+
+  if (!firstUser) {
+    throw new Error("No users found. Please configure channel settings first.");
+  }
+
+  const client = await getLineClient(firstUser.id);
 
   switch (event.type) {
     case "follow": {
       if (event.source.type === "user" && event.source.userId) {
-        addLog('info', 'webhook:event:follow', { userId: event.source.userId });
+        addLog("info", "webhook:event:follow", { userId: event.source.userId });
         try {
           const profile = await client.getProfile(event.source.userId);
           await prisma.user.upsert({
@@ -49,12 +68,19 @@ async function handleEvent(event: WebhookEvent) {
             },
           });
         } catch (e) {
-          addLog('warn', 'webhook:profile:error', { userId: event.source.userId, error: e instanceof Error ? e.message : String(e) });
+          addLog("warn", "webhook:profile:error", {
+            userId: event.source.userId,
+            error: e instanceof Error ? e.message : String(e),
+          });
           // swallow profile errors
           await prisma.user.upsert({
             where: { lineUserId: event.source.userId },
             update: { isFollowing: true },
-            create: { lineUserId: event.source.userId, displayName: "", isFollowing: true },
+            create: {
+              lineUserId: event.source.userId,
+              displayName: "",
+              isFollowing: true,
+            },
           });
         }
       }
@@ -62,7 +88,9 @@ async function handleEvent(event: WebhookEvent) {
     }
     case "unfollow": {
       if (event.source.type === "user" && event.source.userId) {
-        addLog('info', 'webhook:event:unfollow', { userId: event.source.userId });
+        addLog("info", "webhook:event:unfollow", {
+          userId: event.source.userId,
+        });
         await prisma.user.updateMany({
           where: { lineUserId: event.source.userId },
           data: { isFollowing: false },
@@ -74,7 +102,10 @@ async function handleEvent(event: WebhookEvent) {
       if (event.message.type === "text") {
         // store inbound
         if (event.source.type === "user" && event.source.userId) {
-          addLog('info', 'webhook:event:message', { userId: event.source.userId, text: event.message.text?.slice(0,120) });
+          addLog("info", "webhook:event:message", {
+            userId: event.source.userId,
+            text: event.message.text?.slice(0, 120),
+          });
 
           // Try to get profile information for new or existing users
           let user;
@@ -94,12 +125,19 @@ async function handleEvent(event: WebhookEvent) {
               },
             });
           } catch (e) {
-            addLog('warn', 'webhook:message:profile:error', { userId: event.source.userId, error: e instanceof Error ? e.message : String(e) });
+            addLog("warn", "webhook:message:profile:error", {
+              userId: event.source.userId,
+              error: e instanceof Error ? e.message : String(e),
+            });
             // Fallback: create/update without profile info
             user = await prisma.user.upsert({
               where: { lineUserId: event.source.userId },
               update: {},
-              create: { lineUserId: event.source.userId, displayName: "", isFollowing: true },
+              create: {
+                lineUserId: event.source.userId,
+                displayName: "",
+                isFollowing: true,
+              },
             });
           }
 
@@ -140,11 +178,16 @@ export async function POST(req: NextRequest) {
     const signature = req.headers.get("x-line-signature");
     const rawBody = await req.text();
 
-    addLog('info', 'webhook:received', { signaturePresent: Boolean(signature), length: rawBody.length });
+    addLog("info", "webhook:received", {
+      signaturePresent: Boolean(signature),
+      length: rawBody.length,
+    });
     await verifySignature(rawBody, signature);
 
     const events = JSON.parse(rawBody).events as WebhookEvent[];
-    addLog('info', 'webhook:events', { count: Array.isArray(events) ? events.length : 0 });
+    addLog("info", "webhook:events", {
+      count: Array.isArray(events) ? events.length : 0,
+    });
 
     await Promise.all(events.map((event) => handleEvent(event)));
 
