@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+import { requireAuthenticatedUserId } from "@/lib/auth-helpers";
 import { pushMessage } from "@/lib/line/client";
+
 import { payloadSchema } from "@/lib/line/message-schemas";
 import { normalizePayload } from "@/lib/line/payload-normalizer";
 import {
@@ -43,6 +45,9 @@ import {
  */
 export async function POST(req: NextRequest) {
   try {
+    // 0. Get authenticated user ID
+    const userId = await requireAuthenticatedUserId();
+
     // 1. Parse and validate request body
     const json = await req.json();
     const payload = payloadSchema.parse(json);
@@ -56,7 +61,7 @@ export async function POST(req: NextRequest) {
     // 4. Send to LINE and persist to database
     if (normalized.isTemplate && normalized.templateData) {
       // Template message (special case)
-      await pushMessage(normalized.to, {
+      await pushMessage(userId, normalized.to, {
         type: "template",
         altText: normalized.templateData.altText,
         template: normalized.templateData.template,
@@ -84,7 +89,7 @@ export async function POST(req: NextRequest) {
     ) {
       // Rich message items (sent as imagemap but stored as RICH_MESSAGE)
       const msg = normalized.messages[0];
-      await pushMessage(normalized.to, msg as any);
+      await pushMessage(userId, normalized.to, msg as any);
       await persistRichMessage(
         user.id,
         msg.baseUrl,
@@ -94,7 +99,7 @@ export async function POST(req: NextRequest) {
       );
     } else {
       // Regular messages
-      await pushMessage(normalized.to, normalized.messages as any);
+      await pushMessage(userId, normalized.to, normalized.messages as any);
       await persistMessages(user.id, normalized.messages);
     }
 
