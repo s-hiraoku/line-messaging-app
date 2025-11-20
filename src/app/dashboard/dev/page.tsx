@@ -2,6 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { DebugPanel, toCurl } from "../_components/debug-panel";
+import { Syne, IBM_Plex_Sans } from "next/font/google";
+
+const syne = Syne({
+  weight: "800",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const ibmPlexSans = IBM_Plex_Sans({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
 
 type DevInfo = {
   app: { name: string; version: string; node: string; env: string; now: string };
@@ -137,9 +150,14 @@ export default function DevPage() {
 
   return (
     <div className="space-y-8">
-      <header className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-        <h1 className="text-2xl font-bold uppercase tracking-wider text-black">開発情報</h1>
-        <p className="text-xs font-mono text-black/60">ランタイム・チャネル・接続状況の確認に。</p>
+      <header className="space-y-3">
+        <div className="flex items-center gap-4">
+          <h1 className={`text-5xl font-black text-black ${syne.className}`}>開発情報</h1>
+          <div className="h-2 w-12 rotate-12 bg-[#FFE500]" />
+        </div>
+        <p className={`text-base text-black/70 ${ibmPlexSans.className}`}>
+          ランタイム・チャネル・接続状況の確認に。
+        </p>
       </header>
 
       {error && <p className="border-2 border-black bg-red-600/10 px-4 py-3 text-sm font-bold text-red-600 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">{error}</p>}
@@ -147,7 +165,7 @@ export default function DevPage() {
       {info && (
         <div className="grid gap-4 md:grid-cols-2">
           <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-            <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-black">アプリ</h2>
+            <h2 className={`mb-4 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>アプリ</h2>
             <ul className="space-y-2 text-xs font-mono text-black/60">
               <li>name: <code className="font-bold text-black">{info.app.name}</code></li>
               <li>version: <span className="font-bold text-black">{info.app.version}</span></li>
@@ -158,7 +176,7 @@ export default function DevPage() {
           </section>
 
           <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-            <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-black">ランタイム</h2>
+            <h2 className={`mb-4 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>ランタイム</h2>
             <ul className="space-y-2 text-xs font-mono text-black/60">
               <li>databaseConnected: <span className="font-bold text-black">{info.runtime.databaseConnected ? "true" : "false"}</span></li>
               <li>redisConfigured: <span className="font-bold text-black">{info.runtime.redisConfigured ? "true" : "false"}</span></li>
@@ -167,7 +185,7 @@ export default function DevPage() {
           </section>
 
           <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:col-span-2">
-            <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-black">チャネル</h2>
+            <h2 className={`mb-4 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>チャネル</h2>
             <ul className="space-y-2 text-xs font-mono text-black/60">
               <li>channelId: <code className="font-bold text-black">{info.channel.channelId || "(未設定)"}</code></li>
               <li>channelSecretConfigured: <span className="font-bold text-black">{info.channel.channelSecretConfigured ? "true" : "false"}</span></li>
@@ -183,7 +201,7 @@ export default function DevPage() {
           </section>
           {info.channel.friendAddUrl ? (
             <section className="border-2 border-black bg-[#FFFEF5] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:col-span-2">
-              <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-black">友だち追加 QR</h2>
+              <h2 className={`mb-4 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>友だち追加 QR</h2>
               <div className="flex items-start gap-6">
                 <img
                   alt="Add friend QR"
@@ -206,12 +224,12 @@ export default function DevPage() {
             </section>
           ) : (
             <section className="border-2 border-black bg-[#FFFEF5] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:col-span-2">
-              <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-black">友だち追加 QR</h2>
+              <h2 className={`mb-4 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>友だち追加 QR</h2>
               <p className="text-xs font-mono text-black/60">設定でベーシックIDまたは友だち追加URLを入力するとQRを表示できます。</p>
             </section>
           )}
           <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:col-span-2">
-            <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-black">Webhook チェック</h2>
+            <h2 className={`mb-4 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>Webhook チェック</h2>
             <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto] items-end">
               <input
                 placeholder="公開URL（https://xxxx.trycloudflare.com または 完全URL /api/line/webhook まで）"
@@ -266,7 +284,7 @@ export default function DevPage() {
           </div>
           <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:col-span-2">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-black">開発ログ（Webhook）</h2>
+              <h2 className={`text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>開発ログ（Webhook）</h2>
               <div className="flex items-center gap-2">
                 <button
                   className="border-2 border-black bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
@@ -317,7 +335,7 @@ export default function DevPage() {
             </div>
           </section>
           <section className="border-2 border-black bg-[#FFFEF5] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:col-span-2">
-            <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-black">権限・運用ヒント</h2>
+            <h2 className={`mb-4 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>権限・運用ヒント</h2>
             <ul className="list-disc space-y-2 pl-5 text-xs font-mono text-black/60">
               <li>followers/ids API はアカウント種別・プランにより利用できない場合があります（403）。Webhook 取り込みで代替可能です。</li>
               <li>Webhook は https の公開URLが必要（例: Cloudflare Tunnel）。再起動でURLが変わる場合はLINE側URLも更新します。</li>
@@ -328,7 +346,7 @@ export default function DevPage() {
           {/* API デバッグ */}
           <section className="md:col-span-2 space-y-4">
             <div className="flex items-center justify-between border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-black">API デバッグ</h2>
+              <h2 className={`text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>API デバッグ</h2>
               <button
                 className="border-2 border-black bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
                 onClick={loadAllDebugData}

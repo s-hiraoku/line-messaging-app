@@ -1,9 +1,26 @@
-import type { SendMessagePayload, AnyMessage } from "./message-schemas";
+import type { SendMessagePayload, AnyMessage, TemplateAreaPayload } from "./message-schemas";
+import type { TemplateArea } from '@/lib/template-image-splitter/types';
+import { composeTemplateImages } from "../cloudinary/template-image-composer";
+import { convertTemplateToImagemap } from "./imagemap-converter";
+
+function inferBaseSize(areas: TemplateAreaPayload[]): { width: number; height: number } {
+  if (!areas.length) {
+    return { width: 1024, height: 1024 };
+  }
+
+  const width = Math.max(...areas.map((area) => area.x + area.width));
+  const height = Math.max(...areas.map((area) => area.y + area.height));
+
+  return {
+    width: Math.max(1, width),
+    height: Math.max(1, height),
+  };
+}
 
 /**
  * Normalize various payload formats to a standard messages array format
  */
-export function normalizePayload(payload: SendMessagePayload): {
+export async function normalizePayload(payload: SendMessagePayload): Promise<{
   to: string;
   messages: AnyMessage[];
   isTemplate: boolean;
@@ -12,7 +29,7 @@ export function normalizePayload(payload: SendMessagePayload): {
     template: any;
   };
   messageItemType?: "richMessage" | "cardType";
-} {
+}> {
   const to = payload.to;
 
   // Template message (special case)
@@ -138,6 +155,45 @@ export function normalizePayload(payload: SendMessagePayload): {
   // Card-Type Message format: {to, type: "cardType", ...}
   // Note: Card-type messages are stored as CARD_TYPE in DB but sent as template to LINE API
   if ("type" in payload && payload.type === "cardType") {
+    if (payload.templateAreas && payload.templateAreas.length > 0) {
+      if (!payload.templateId) {
+        throw new Error("templateId is required when template areas are provided");
+      }
+
+      const baseSize = inferBaseSize(payload.templateAreas);
+      const compositionPlan = {
+        id: payload.templateId,
+        baseSize,
+        areas: payload.templateAreas.map((area) => ({
+          id: area.id,
+          x: area.x,
+          y: area.y,
+          width: area.width,
+          height: area.height,
+        })),
+      };
+
+      const composedImageUrl = await composeTemplateImages(
+        compositionPlan,
+        payload.templateAreas as TemplateArea[]
+      );
+
+      const imagemapMessage = convertTemplateToImagemap({
+        templateId: payload.templateId,
+        composedImageUrl,
+        baseSize,
+        areas: payload.templateAreas as TemplateArea[],
+      });
+
+      return {
+        to,
+        messages: [imagemapMessage],
+        isTemplate: false,
+        messageItemType: "cardType" as const,
+      };
+    }
+
+    // Traditional card without template areas - return as template
     return {
       to,
       messages: [],

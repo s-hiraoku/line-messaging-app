@@ -11,7 +11,7 @@ const dropdownVariants = cva(
     variants: {
       variant: {
         default:
-          'hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]',
+          'hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus:translate-x-[3px] focus:translate-y-[3px] focus:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]',
         error:
           'border-red-600 bg-red-50 text-red-600',
       },
@@ -306,12 +306,12 @@ export function Dropdown({
         id={optionId}
         onClick={() => !option.disabled && handleSelect(option.value)}
         className={clsx(
-          'px-4 py-2.5 cursor-pointer transition-all flex items-center justify-between gap-3 font-mono',
+          'px-4 py-2.5 cursor-pointer transition-all flex items-center justify-between gap-3 font-mono border-b-2 border-black last:border-b-0',
           {
             'bg-[#00B900] text-white': highlighted && !option.disabled,
-            'bg-[#FFFEF5]': selected && !highlighted,
+            'bg-[#FFE500]': selected && !highlighted,
             'text-black/40 cursor-not-allowed opacity-50': option.disabled,
-            'hover:bg-[#FFFEF5]': !option.disabled && !highlighted,
+            'hover:bg-[#FFE500]/50': !option.disabled && !highlighted,
           }
         )}
         role="option"
@@ -320,23 +320,23 @@ export function Dropdown({
       >
         <div className="flex items-center gap-3 flex-1 min-w-0">
           {option.icon && (
-            <div className="flex-shrink-0 text-black">
+            <div className={clsx('flex-shrink-0', highlighted ? 'text-white' : 'text-black')}>
               {option.icon}
             </div>
           )}
           <div className="flex-1 min-w-0">
-            <div className={clsx('truncate', selected && 'font-bold text-black')}>
+            <div className={clsx('truncate', selected && 'font-bold')}>
               {option.label}
             </div>
             {option.description && (
-              <div className="text-xs text-black/60 truncate mt-0.5">
+              <div className={clsx('text-xs truncate mt-0.5', highlighted ? 'text-white/80' : 'text-black/60')}>
                 {option.description}
               </div>
             )}
           </div>
         </div>
         {selected && (
-          <Check className="h-4 w-4 text-[#00B900] flex-shrink-0" />
+          <Check className={clsx('h-5 w-5 flex-shrink-0 font-bold', highlighted ? 'text-white' : 'text-black')} />
         )}
       </div>
     );
@@ -366,23 +366,23 @@ export function Dropdown({
         tabIndex={disabled ? -1 : 0}
       >
         <div className="flex items-center justify-between gap-2">
-          <span className={clsx('truncate flex-1', selectedValues.length === 0 && 'text-slate-500')}>
+          <span className={clsx('truncate flex-1', selectedValues.length === 0 && 'text-black/40')}>
             {selectedLabel}
           </span>
           <div className="flex items-center gap-1 flex-shrink-0">
             {selectedValues.length > 0 && !disabled && (
               <button
                 onClick={handleClear}
-                className="p-0.5 hover:bg-slate-800 rounded transition-colors"
+                className="p-0.5 hover:bg-black hover:text-white transition-colors"
                 type="button"
                 aria-label="選択をクリア"
               >
-                <X className="h-4 w-4 text-slate-400" />
+                <X className="h-4 w-4" />
               </button>
             )}
             <ChevronDown
               className={clsx(
-                'h-5 w-5 text-slate-400 transition-transform duration-200',
+                'h-5 w-5 text-black transition-transform duration-200',
                 isOpen && 'rotate-180'
               )}
             />
@@ -426,7 +426,7 @@ export function Dropdown({
               filteredGroups.length > 0 ? (
                 filteredGroups.map((group, groupIndex) => (
                   <div key={group.label}>
-                    <div className="px-4 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider bg-slate-900/50 sticky top-0">
+                    <div className="px-4 py-2 text-xs font-bold text-black uppercase tracking-wider bg-[#FFFEF5] border-b-2 border-black sticky top-0">
                       {group.label}
                     </div>
                     {group.options.map((option, optionIndex) => {
@@ -438,7 +438,7 @@ export function Dropdown({
                   </div>
                 ))
               ) : (
-                <div className="px-4 py-8 text-center text-slate-500 text-sm">
+                <div className="px-4 py-8 text-center text-black/40 text-sm font-mono">
                   {noOptionsMessage}
                 </div>
               )
@@ -447,7 +447,7 @@ export function Dropdown({
               filteredOptions.length > 0 ? (
                 filteredOptions.map((option, index) => renderOption(option, index))
               ) : (
-                <div className="px-4 py-8 text-center text-slate-500 text-sm">
+                <div className="px-4 py-8 text-center text-black/40 text-sm font-mono">
                   {noOptionsMessage}
                 </div>
               )
@@ -458,7 +458,7 @@ export function Dropdown({
 
       {/* エラーメッセージ */}
       {error && (
-        <p id={errorId} className="mt-1.5 text-sm text-red-400">
+        <p id={errorId} className="mt-1.5 text-sm text-red-600 font-mono font-bold">
           {error}
         </p>
       )}
@@ -466,17 +466,18 @@ export function Dropdown({
       {/* カスタムスクロールバーのスタイル */}
       <style jsx>{`
         .custom-scrollbar::-webkit-scrollbar {
-          width: 8px;
+          width: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(15, 23, 42, 0.3);
+          background: #FFFEF5;
+          border-left: 2px solid black;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(100, 116, 139, 0.5);
-          border-radius: 4px;
+          background: black;
+          border: 2px solid black;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(100, 116, 139, 0.7);
+          background: #333;
         }
       `}</style>
     </div>

@@ -109,6 +109,7 @@ export function bulkDeleteExample(count: number) {
     },
     cancel: {
       label: 'キャンセル',
+      onClick: () => {},
     },
   });
 }

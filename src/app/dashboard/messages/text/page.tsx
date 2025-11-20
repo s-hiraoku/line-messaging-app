@@ -3,6 +3,19 @@
 import { useState } from "react";
 import { DebugPanel, toCurl } from "../../_components/debug-panel";
 import { LineConversation } from "../_components/line-conversation";
+import { Syne, IBM_Plex_Sans } from "next/font/google";
+
+const syne = Syne({
+  weight: "800",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const ibmPlexSans = IBM_Plex_Sans({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -44,6 +57,16 @@ export default function MessagesTextPage() {
 
   return (
     <div className="space-y-6">
+      <header className="space-y-3">
+        <div className="flex items-center gap-4">
+          <h1 className={`text-5xl font-black text-black ${syne.className}`}>テキストメッセージ</h1>
+          <div className="h-2 w-12 rotate-12 bg-[#FFE500]" />
+        </div>
+        <p className={`text-base text-black/70 ${ibmPlexSans.className}`}>
+          個別のユーザーにテキストメッセージを送信できます。
+        </p>
+      </header>
+
       <form onSubmit={handleSubmit} className="space-y-4 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <div className="space-y-2">
           <label htmlFor="lineUserId" className="text-sm font-bold uppercase tracking-wider text-black">LINE ユーザー ID</label>

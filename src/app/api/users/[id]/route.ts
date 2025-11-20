@@ -10,7 +10,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
         tags: { include: { tag: true } },
       },
     });
-    if (!user) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    if (!user || user.isDeleted) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
     return NextResponse.json({
       id: user.id,

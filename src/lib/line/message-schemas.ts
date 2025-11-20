@@ -335,11 +335,22 @@ export const richMessagePayloadSchema = z.object({
   actions: z.array(imagemapActionSchema).min(1),
 });
 
+export const templateAreaSchema = z.object({
+  id: z.string().min(1),
+  x: z.number().min(0),
+  y: z.number().min(0),
+  width: z.number().min(1),
+  height: z.number().min(1),
+  imageUrl: z.string().url(),
+});
+
 export const cardTypePayloadSchema = z.object({
   to: z.string().min(1),
   type: z.literal("cardType"),
   altText: z.string().min(1).max(400),
   template: templateSchema,
+  templateId: z.string().min(1).optional(),
+  templateAreas: z.array(templateAreaSchema).min(1).max(6).optional(),
 });
 
 export const payloadSchema = z.union([
@@ -370,5 +381,6 @@ export type CouponMessage = z.infer<typeof couponMessageSchema>;
 export type ImagemapMessage = z.infer<typeof imagemapMessageSchema>;
 export type TemplateMessage = z.infer<typeof templateMessageSchema>;
 export type AnyMessage = z.infer<typeof anyMessageSchema>;
+export type TemplateAreaPayload = z.infer<typeof templateAreaSchema>;
 
 export type SendMessagePayload = z.infer<typeof payloadSchema>;

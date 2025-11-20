@@ -12,6 +12,7 @@ export async function GET(req: NextRequest) {
     const users = await prisma.user.findMany({
       take,
       where: {
+        isDeleted: false,
         ...(q
           ? {
               OR: [
@@ -53,5 +54,44 @@ export async function GET(req: NextRequest) {
       method: req.method,
     });
     return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { userIds } = body;
+
+    if (!Array.isArray(userIds) || userIds.length === 0) {
+      return NextResponse.json({ error: 'userIds must be a non-empty array' }, { status: 400 });
+    }
+
+    // 論理削除を実行
+    const result = await prisma.user.updateMany({
+      where: {
+        id: { in: userIds },
+        isDeleted: false, // 既に削除されているユーザーは除外
+      },
+      data: {
+        isDeleted: true,
+        deletedAt: new Date(),
+      },
+    });
+
+    return NextResponse.json({
+      message: `${result.count} user(s) deleted successfully`,
+      deletedCount: result.count,
+      requestedIds: userIds,
+    });
+  } catch (error) {
+    console.error('[DELETE /api/users] Error:', {
+      error,
+      url: req.url,
+      method: req.method,
+    });
+    return NextResponse.json({
+      error: 'Failed to delete users',
+      details: error instanceof Error ? error.message : String(error),
+    }, { status: 500 });
   }
 }

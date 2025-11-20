@@ -4,6 +4,19 @@ import { useEffect, useState } from "react";
 import { useRealtimeEvents } from "@/lib/realtime/use-events";
 import { ArrowUpRight } from "lucide-react";
 import { DebugPanel, toCurl } from "../_components/debug-panel";
+import { Syne, IBM_Plex_Sans } from "next/font/google";
+
+const syne = Syne({
+  weight: "800",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const ibmPlexSans = IBM_Plex_Sans({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
 
 type Message = {
   id: string;
@@ -75,10 +88,10 @@ export default function MessagesPage() {
     <div className="space-y-8">
       <header className="space-y-3">
         <div className="flex items-center gap-4">
-          <h1 className="text-5xl font-black text-black">メッセージ履歴</h1>
+          <h1 className={`text-5xl font-black text-black ${syne.className}`}>メッセージ履歴</h1>
           <div className="h-2 w-12 rotate-12 bg-[#FFE500]" />
         </div>
-        <p className="text-base text-black/70">
+        <p className={`text-base text-black/70 ${ibmPlexSans.className}`}>
           送受信されたすべてのメッセージの履歴を確認できます。
         </p>
       </header>
@@ -86,7 +99,7 @@ export default function MessagesPage() {
       {/* 最近のメッセージ */}
       <section className="border-2 border-black bg-[#FFFEF5] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-bold uppercase tracking-wider text-black">最近のメッセージ</h2>
+          <h2 className={`text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>最近のメッセージ</h2>
           <button
             onClick={loadMessages}
             className="inline-flex items-center gap-1 border-2 border-black bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] cursor-pointer"

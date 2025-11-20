@@ -11,7 +11,14 @@ import { DebugPanel, toCurl } from '@/app/dashboard/_components/debug-panel';
 export default function EditAutoReplyPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    keywords: string[];
+    replyText: string;
+    priority: number;
+    isActive: boolean;
+    matchType: MatchType;
+  }>({
     name: '',
     keywords: [] as string[],
     replyText: '',

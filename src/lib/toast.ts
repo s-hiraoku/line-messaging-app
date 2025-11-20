@@ -5,23 +5,12 @@
  * using sonner library with consistent styling.
  */
 
-import { toast as sonnerToast } from 'sonner';
+import { toast as sonnerToast, type ExternalToast } from 'sonner';
 
 /**
  * Toast configuration options
  */
-interface ToastOptions {
-  description?: string;
-  duration?: number;
-  action?: {
-    label: string;
-    onClick: () => void;
-  };
-  cancel?: {
-    label: string;
-    onClick?: () => void;
-  };
-}
+type ToastOptions = ExternalToast;
 
 /**
  * Shows a success toast notification
@@ -113,10 +102,9 @@ function promise<T>(
     loading: string;
     success: string | ((data: T) => string);
     error: string | ((error: unknown) => string);
-  },
-  options?: ToastOptions
+  }
 ) {
-  return sonnerToast.promise(promise, msgs, options);
+  return sonnerToast.promise(promise, msgs);
 }
 
 /**

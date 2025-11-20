@@ -118,8 +118,10 @@ async function handleEvent(event: WebhookEvent) {
             createdAt: msg.createdAt.toISOString(),
           });
 
-          // Execute auto-reply system
-          await executeAutoReply(client, event, user.id);
+          // Execute auto-reply system (skip for deleted users)
+          if (!user.isDeleted) {
+            await executeAutoReply(client, event, user.id);
+          }
         }
       }
       break;

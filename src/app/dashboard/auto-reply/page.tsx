@@ -5,6 +5,19 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { AutoReply, MatchType } from '@prisma/client';
 import { DebugPanel, toCurl } from '@/app/dashboard/_components/debug-panel';
+import { Syne, IBM_Plex_Sans } from "next/font/google";
+
+const syne = Syne({
+  weight: "800",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const ibmPlexSans = IBM_Plex_Sans({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export default function AutoReplyPage() {
   const router = useRouter();
@@ -125,14 +138,17 @@ export default function AutoReplyPage() {
 
   return (
     <div className="space-y-6">
-      <header className="flex justify-between items-center">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-bold uppercase tracking-wider text-black">自動応答ルール</h1>
-          <p className="text-xs font-mono text-black/60">
-            キーワードに基づいた自動応答を管理します。
+      <div className="flex justify-between items-start">
+        <header className="space-y-3">
+          <div className="flex items-center gap-4">
+            <h1 className={`text-5xl font-black text-black ${syne.className}`}>自動応答</h1>
+            <div className="h-2 w-12 rotate-12 bg-[#FFE500]" />
+          </div>
+          <p className={`text-base text-black/70 ${ibmPlexSans.className}`}>
+            メッセージに対する自動応答ルールを管理できます。
           </p>
-        </div>
-        <div className="flex gap-3">
+        </header>
+        <div className="flex gap-3 mt-4">
           <Link
             href="/dashboard/auto-reply/analytics"
             className="border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
@@ -146,7 +162,7 @@ export default function AutoReplyPage() {
             新規作成
           </Link>
         </div>
-      </header>
+      </div>
 
       <div className="flex gap-2">
         <button

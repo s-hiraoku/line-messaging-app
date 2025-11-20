@@ -5,6 +5,19 @@ import { DebugPanel, toCurl } from "../../_components/debug-panel";
 import { UserSelector } from "../../_components/user-selector";
 import { ImageUploader } from "../../_components/image-uploader";
 import { RichMessageEditor, ImagemapArea } from "./_components/editor";
+import { Syne, IBM_Plex_Sans } from "next/font/google";
+
+const syne = Syne({
+  weight: "800",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const ibmPlexSans = IBM_Plex_Sans({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -150,8 +163,18 @@ export default function RichMessagePage() {
 
   return (
     <div className="space-y-6">
+      <header className="space-y-3">
+        <div className="flex items-center gap-4">
+          <h1 className={`text-5xl font-black text-black ${syne.className}`}>リッチメニュー</h1>
+          <div className="h-2 w-12 rotate-12 bg-[#FFE500]" />
+        </div>
+        <p className={`text-base text-black/70 ${ibmPlexSans.className}`}>
+          リッチメニューを作成・管理できます。
+        </p>
+      </header>
+
       <div className="border-2 border-black bg-[#FFFEF5] p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-        <h2 className="mb-2 text-sm font-bold uppercase tracking-wider text-black">リッチメッセージとは？</h2>
+        <h2 className={`mb-2 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>リッチメッセージとは？</h2>
         <p className="text-xs font-mono text-black/60">
           画像に複数のタップ可能なエリアを設定できるメッセージです。ユーザーがエリアをタップすると、URLを開いたり、メッセージを送信したりできます。
           マップやメニューなど、インタラクティブな画像コンテンツに最適です。
@@ -243,12 +266,12 @@ export default function RichMessagePage() {
 
       {/* Preview section */}
       <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-        <h2 className="mb-4 text-lg font-bold uppercase tracking-wider text-black">プレビュー</h2>
+        <h2 className={`mb-4 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>プレビュー</h2>
         <div className="flex justify-end">
           <div className="max-w-xs">
             <div className="border-2 border-black bg-[#FFFEF5] p-4 text-xs text-black/80 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
               <div>
-                <div className="mb-2 font-bold uppercase tracking-wider">リッチメッセージ</div>
+                <div className={`mb-2 text-xs font-bold uppercase tracking-wider ${ibmPlexSans.className}`}>リッチメッセージ</div>
                 <div className="text-black/60">
                   {imageUrl ? (
                     <>
@@ -259,7 +282,7 @@ export default function RichMessagePage() {
                           {areas.length}個のタップ可能なエリアが設定されています。
                           <br />
                           <div className="mt-2 space-y-1">
-                            <div className="text-xs font-bold uppercase tracking-wider text-black">アクション種類：</div>
+                            <div className={`text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>アクション種類：</div>
                             {areas.filter(a => a.action.type === 'uri').length > 0 && (
                               <div>・URL: {areas.filter(a => a.action.type === 'uri').length}個</div>
                             )}

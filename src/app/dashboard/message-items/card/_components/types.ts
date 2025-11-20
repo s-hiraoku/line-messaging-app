@@ -1,3 +1,19 @@
+import type {
+  TemplateArea,
+  TemplateAreaDefinition,
+  TemplateDefinition,
+  TemplateImageMessage,
+  TemplateVariant,
+} from '@/lib/template-image-splitter/types';
+
+export type {
+  TemplateArea,
+  TemplateAreaDefinition,
+  TemplateDefinition,
+  TemplateImageMessage,
+  TemplateVariant,
+} from '@/lib/template-image-splitter/types';
+
 /**
  * Card Message Editor - Type Definitions
  *
@@ -47,6 +63,11 @@ export interface BaseCard {
   type: CardType;
   imageUrl: string;
   actions: CardAction[];
+  templateEnabled?: boolean;
+  templateId?: string | null;
+  templateAreas?: TemplateArea[];
+  templatePreviewUrl?: string | null;
+  templateImageUrl?: string | null;
 }
 
 /**

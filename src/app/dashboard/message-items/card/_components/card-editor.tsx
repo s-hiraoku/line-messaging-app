@@ -52,6 +52,65 @@ interface CardEditorProps {
 }
 
 /**
+ * Wrapper component to memoize card form onChange callback
+ * Prevents infinite re-render loops by ensuring stable function references
+ */
+function CardFormWrapper({
+  card,
+  updateCard,
+}: {
+  card: Card;
+  updateCard: (id: string, updates: Partial<Card>) => void;
+}) {
+  // Memoize the onChange callback to prevent infinite loops
+  const handleCardUpdate = useCallback(
+    (updates: Partial<Card>) => {
+      updateCard(card.id, updates);
+    },
+    [card.id, updateCard]
+  );
+
+  switch (card.type) {
+    case 'product':
+      return (
+        <ProductForm
+          card={card as ProductCard}
+          onChange={handleCardUpdate}
+        />
+      );
+    case 'location':
+      return (
+        <LocationForm
+          card={card as LocationCard}
+          onChange={handleCardUpdate}
+        />
+      );
+    case 'person':
+      return (
+        <PersonForm
+          card={card as PersonCard}
+          onChange={handleCardUpdate}
+        />
+      );
+    case 'image':
+      return (
+        <CardFormImage
+          card={card as ImageCard}
+          onChange={handleCardUpdate}
+        />
+      );
+    default:
+      return (
+        <div className="flex h-full items-center justify-center border-2 border-black bg-red-600/10 p-8 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+          <p className="font-bold uppercase tracking-wider text-black">
+            不明なカードタイプ: {(card as Card).type}
+          </p>
+        </div>
+      );
+  }
+}
+
+/**
  * Get card type icon, label, and color
  */
 function getCardTypeInfo(type: CardType) {
@@ -488,50 +547,10 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
             >
               <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 {/* Dynamic Form Rendering */}
-                {(() => {
-                  const handleCardUpdate = (updates: Partial<Card>) => {
-                    updateCard(card.id, updates);
-                  };
-
-                  switch (card.type) {
-                    case 'product':
-                      return (
-                        <ProductForm
-                          card={card as ProductCard}
-                          onChange={handleCardUpdate}
-                        />
-                      );
-                    case 'location':
-                      return (
-                        <LocationForm
-                          card={card as LocationCard}
-                          onChange={handleCardUpdate}
-                        />
-                      );
-                    case 'person':
-                      return (
-                        <PersonForm
-                          card={card as PersonCard}
-                          onChange={handleCardUpdate}
-                        />
-                      );
-                    case 'image':
-                      return (
-                        <CardFormImage
-                          card={card as ImageCard}
-                          onChange={handleCardUpdate}
-                        />
-                      );
-                    default:
-                      return (
-                        <div className="flex h-full items-center justify-center border-2 border-black bg-red-600/10 p-8 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                          <p className="font-bold uppercase tracking-wider text-black">
-                            不明なカードタイプ: {(card as Card).type}
-                          </p>
-                        </div>
-                      );
-                  }
-                })()}
+                <CardFormWrapper
+                  card={card}
+                  updateCard={updateCard}
+                />
               </div>
             </TabsContent>
           ))}

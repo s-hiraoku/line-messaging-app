@@ -15,14 +15,17 @@ interface NavLinkProps {
 export function NavLink({ href, label, description, icon }: NavLinkProps) {
   const pathname = usePathname();
   const isActive = href === '/dashboard' ? pathname === '/dashboard' : pathname?.startsWith(href ?? '') ?? false;
+  const isHomePage = href === '/';
 
   return (
     <Link
       href={href}
       className={clsx(
         'group relative flex flex-col gap-1.5 border-2 border-black px-4 py-3 font-mono transition-all cursor-pointer',
-        isActive
+        isActive && !isHomePage
           ? 'bg-[#00B900] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+          : isActive && isHomePage
+          ? 'bg-[#FFE500] text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
           : 'bg-white text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]'
       )}
     >
@@ -30,7 +33,7 @@ export function NavLink({ href, label, description, icon }: NavLinkProps) {
         {icon && (
           <span className={clsx(
             "transition-colors",
-            isActive ? "text-white" : "text-black"
+            isActive && !isHomePage ? "text-white" : "text-black"
           )}>
             {icon}
           </span>
@@ -40,7 +43,7 @@ export function NavLink({ href, label, description, icon }: NavLinkProps) {
       {description && (
         <span className={clsx(
           "text-xs font-normal normal-case tracking-normal",
-          isActive ? "text-white/90" : "text-black/60"
+          isActive && !isHomePage ? "text-white/90" : "text-black/60"
         )}>
           {description}
         </span>
