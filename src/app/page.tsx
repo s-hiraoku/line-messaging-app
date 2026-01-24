@@ -36,10 +36,10 @@ const featureHighlights = [
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#FFFEF5]">
+    <main className="relative min-h-screen overflow-hidden bg-[#e8f5e9]">
       {/* Background Decorative Elements */}
-      <div className="pointer-events-none absolute left-0 top-0 h-[600px] w-[600px] -translate-x-1/3 -translate-y-1/3 rounded-full bg-[#00B900] opacity-[0.15] blur-[120px]" />
-      <div className="pointer-events-none absolute right-0 top-1/4 h-[400px] w-[400px] translate-x-1/4 rounded-full bg-[#FFE500] opacity-[0.12] blur-[100px]" />
+      <div className="pointer-events-none absolute left-0 top-0 h-[600px] w-[600px] -translate-x-1/3 -translate-y-1/3 rounded-full bg-[#00B900] opacity-[0.12] blur-[120px]" />
+      <div className="pointer-events-none absolute right-0 top-1/4 h-[400px] w-[400px] translate-x-1/4 rounded-full bg-[#FFE500] opacity-[0.15] blur-[100px]" />
       <div className="pointer-events-none absolute bottom-0 left-1/3 h-[500px] w-[500px] rounded-full bg-[#00B900] opacity-[0.08] blur-[130px]" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 py-16 sm:px-12 sm:py-24">
@@ -49,7 +49,7 @@ export default function Home() {
             className="inline-block animate-[slideDown_0.8s_ease-out]"
             style={{ animationDelay: "0.1s", animationFillMode: "backwards" }}
           >
-            <span className="inline-block -rotate-2 border-2 border-black bg-[#FFE500] px-6 py-2 font-mono text-xs font-bold uppercase tracking-[0.2em] text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <span className="inline-block -rotate-2 rounded-2xl bg-[#FFE500] px-6 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.2em] text-amber-900 shadow-[inset_0_-8px_16px_rgba(0,0,0,0.1),inset_0_4px_8px_rgba(255,255,255,0.6),0_8px_24px_rgba(255,229,0,0.4)]">
               LINE Messaging Prototype
             </span>
           </div>
@@ -60,46 +60,31 @@ export default function Home() {
           {/* Main Title - Takes up more space */}
           <div className="lg:col-span-8">
             <h1
-              className={`mb-8 text-6xl font-black leading-[1.1] tracking-tight text-black sm:text-7xl lg:text-8xl animate-[slideUp_1s_ease-out] ${syne.className}`}
+              className={`mb-8 text-6xl font-black leading-[1.1] tracking-tight text-gray-800 sm:text-7xl lg:text-8xl animate-[slideUp_1s_ease-out] ${syne.className}`}
               style={{
                 animationDelay: "0.2s",
                 animationFillMode: "backwards",
               }}
             >
               <span className="relative ml-2 inline-block">
-                <span className="relative z-10  text-[#f3270f]">Synergy!</span>
-                <span className="absolute bottom-2 left-0 z-0 h-4 w-full bg-[#2fc5c8]" />
+                <span className="relative z-10 text-[#f3270f] drop-shadow-[0_2px_4px_rgba(243,39,15,0.3)]">Synergy!</span>
+                <span className="absolute bottom-2 left-0 z-0 h-4 w-full rounded-full bg-[#2fc5c8]/50 blur-sm" />
               </span>
-              <span className="text-[#00B900]">LINE</span> 開発を
+              <span className="text-[#00B900] drop-shadow-[0_2px_4px_rgba(0,185,0,0.3)]">LINE</span> 開発を
               <span className="relative ml-2 inline-block">
                 <span className="relative z-10">限界突破</span>
-                <svg
-                  className="absolute bottom-0 left-0 z-0 w-full"
-                  height="40"
-                  viewBox="0 0 200 40"
-                  preserveAspectRatio="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M0 28 Q 12.5 18, 25 24 Q 37.5 30, 50 26 Q 62.5 22, 75 24 Q 87.5 26, 100 22 Q 112.5 18, 125 20 Q 137.5 22, 150 18 Q 162.5 14, 175 16 Q 187.5 18, 200 14"
-                    stroke="#FF6B9D"
-                    strokeWidth="24"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <span className="absolute bottom-1 left-0 z-0 h-4 w-full rounded-full bg-[#FF6B9D]/40 blur-sm" />
               </span>
               する
               <br />
               モダン
-              <span className="relative mx-3 inline-block rotate-3 border-2 border-black bg-[#FFE500] px-4 py-1 text-5xl sm:text-6xl lg:text-7xl">
+              <span className="relative mx-3 inline-block rotate-3 rounded-2xl bg-[#FFE500] px-5 py-2 text-5xl text-gray-800 shadow-[inset_0_-8px_16px_rgba(0,0,0,0.1),inset_0_4px_8px_rgba(255,255,255,0.6),0_12px_32px_rgba(255,229,0,0.4)] sm:text-6xl lg:text-7xl">
                 ダッシュボード
               </span>
             </h1>
 
             <p
-              className={`mb-10 max-w-xl text-lg leading-relaxed text-black/80 sm:text-xl animate-[fadeIn_1s_ease-out] ${ibmPlexSans.className}`}
+              className={`mb-10 max-w-xl text-lg leading-relaxed text-gray-700 sm:text-xl animate-[fadeIn_1s_ease-out] ${ibmPlexSans.className}`}
               style={{
                 animationDelay: "0.4s",
                 animationFillMode: "backwards",
@@ -116,49 +101,43 @@ export default function Home() {
               {/* Primary CTA - Dashboard */}
               <Link
                 href="/dashboard"
-                className="group relative overflow-hidden border-[3px] border-black bg-gradient-to-br from-[#00FF00] via-[#00B900] to-[#008F00] px-10 py-5 font-mono text-sm font-black uppercase tracking-[0.15em] text-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:scale-[0.98]"
+                className="group relative overflow-hidden rounded-2xl bg-[#00B900] px-10 py-5 font-mono text-sm font-black uppercase tracking-[0.15em] text-white shadow-[inset_0_-8px_20px_rgba(0,0,0,0.2),inset_0_4px_12px_rgba(255,255,255,0.3),0_12px_32px_rgba(0,185,0,0.4)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[inset_0_-8px_20px_rgba(0,0,0,0.2),inset_0_4px_12px_rgba(255,255,255,0.3),0_16px_40px_rgba(0,185,0,0.5)] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3),0_4px_16px_rgba(0,185,0,0.3)]"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-white/20 to-transparent" />
                 <div className="relative z-10 flex items-center gap-3">
                   <span>ダッシュボードへ進む</span>
-                  <span className="inline-block text-lg transition-transform duration-300 group-hover:translate-x-2 group-hover:scale-110">
+                  <span className="inline-block text-lg transition-transform duration-300 group-hover:translate-x-2">
                     →
                   </span>
                 </div>
-                <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-white/60 transition-all duration-300 group-hover:w-full" />
               </Link>
 
               {/* Secondary CTA - Guide */}
               <Link
                 href="/guide"
-                className="group relative overflow-hidden border-[3px] border-black bg-gradient-to-br from-[#FFE500] via-[#FFCF00] to-[#FFB800] px-10 py-5 font-mono text-sm font-black uppercase tracking-[0.15em] text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:scale-[0.98]"
+                className="group relative overflow-hidden rounded-2xl bg-[#FFE500] px-10 py-5 font-mono text-sm font-black uppercase tracking-[0.15em] text-amber-900 shadow-[inset_0_-8px_20px_rgba(0,0,0,0.1),inset_0_4px_12px_rgba(255,255,255,0.5),0_12px_32px_rgba(255,229,0,0.4)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[inset_0_-8px_20px_rgba(0,0,0,0.1),inset_0_4px_12px_rgba(255,255,255,0.5),0_16px_40px_rgba(255,229,0,0.5)] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.2),0_4px_16px_rgba(255,229,0,0.3)]"
               >
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(255,255,255,0.4),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-white/30 to-transparent" />
                 <div className="relative z-10 flex items-center gap-3">
-                  <span className="relative">使い方を見る</span>
+                  <span>使い方を見る</span>
                   <span className="inline-block text-lg transition-all duration-300 group-hover:rotate-12 group-hover:scale-110">
                     📖
                   </span>
                 </div>
-                <div className="absolute top-0 right-0 h-full w-[2px] bg-black/20" />
               </Link>
 
               {/* Tertiary CTA - Docs (spec summary) */}
               <Link
                 href="/design-spec"
-                className="group relative overflow-hidden border-[3px] border-black bg-white px-10 py-5 font-mono text-sm font-black uppercase tracking-[0.15em] text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 hover:bg-[#FFFEF5] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:scale-[0.98]"
+                className="group relative overflow-hidden rounded-2xl bg-white px-10 py-5 font-mono text-sm font-black uppercase tracking-[0.15em] text-gray-700 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.06),inset_0_4px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.1)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[inset_0_-6px_16px_rgba(0,0,0,0.06),inset_0_4px_8px_rgba(255,255,255,0.8),0_12px_32px_rgba(0,0,0,0.15)] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.1),0_4px_12px_rgba(0,0,0,0.08)]"
               >
-                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-[#00B900]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-white/60 to-transparent" />
                 <div className="relative z-10 flex items-center gap-3">
-                  <span className="relative">
-                    設計仕様
-                    <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full" />
-                  </span>
+                  <span>設計仕様</span>
                   <span className="inline-block transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1">
                     ↗
                   </span>
                 </div>
-                <div className="absolute inset-0 border-2 border-black/0 group-hover:border-black/100 transition-all duration-300 -m-[2px]" />
               </Link>
             </div>
           </div>
@@ -166,9 +145,10 @@ export default function Home() {
           {/* Decorative Element */}
           <div className="relative hidden lg:col-span-4 lg:block">
             <div className="absolute -right-20 top-0 h-[500px] w-[500px]">
-              {/* Large decorative number */}
+              {/* Large decorative letter with clay effect */}
+              <div className="absolute right-0 top-0 h-80 w-80 rounded-full bg-[#00B900]/20 shadow-[inset_0_-20px_40px_rgba(0,0,0,0.1),inset_0_10px_20px_rgba(255,255,255,0.3),0_20px_60px_rgba(0,185,0,0.2)]" />
               <span
-                className="absolute right-0 top-0 select-none font-mono text-[20rem] font-black leading-none text-[#00B900] opacity-[0.15] animate-[rotateIn_1.2s_ease-out]"
+                className={`absolute right-8 top-8 select-none text-[15rem] font-black leading-none text-[#00B900]/30 drop-shadow-[0_4px_8px_rgba(0,185,0,0.2)] animate-[rotateIn_1.2s_ease-out] ${syne.className}`}
                 style={{
                   animationDelay: "0.3s",
                   animationFillMode: "backwards",
@@ -182,13 +162,13 @@ export default function Home() {
 
         {/* Features Grid */}
         <section className="mt-32">
-          <div className="mb-12 flex items-end justify-between border-b-4 border-black pb-4">
+          <div className="mb-12 flex items-end justify-between border-b-2 border-gray-300/50 pb-4">
             <h2
-              className={`text-4xl font-black text-black sm:text-5xl ${syne.className}`}
+              className={`text-4xl font-black text-gray-800 sm:text-5xl ${syne.className}`}
             >
               主な機能
             </h2>
-            <span className="font-mono text-lg font-bold text-black/40">
+            <span className="font-mono text-lg font-bold text-gray-500">
               03 Features
             </span>
           </div>
@@ -197,7 +177,7 @@ export default function Home() {
             {featureHighlights.map((feature, index) => (
               <article
                 key={feature.title}
-                className="group relative animate-[slideUp_1s_ease-out]"
+                className="group relative animate-[slideUp_1s_ease-out] rounded-3xl bg-white p-8 shadow-[inset_0_-8px_20px_rgba(0,0,0,0.04),inset_0_4px_12px_rgba(255,255,255,0.8),0_12px_32px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[inset_0_-8px_20px_rgba(0,0,0,0.04),inset_0_4px_12px_rgba(255,255,255,0.8),0_20px_48px_rgba(0,0,0,0.12)]"
                 style={{
                   animationDelay: `${0.8 + index * 0.1}s`,
                   animationFillMode: "backwards",
@@ -205,25 +185,25 @@ export default function Home() {
               >
                 {/* Number Badge */}
                 <div className="mb-6 inline-block">
-                  <span className="inline-block border-2 border-black bg-white px-4 py-2 font-mono text-2xl font-black text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all group-hover:translate-x-[2px] group-hover:translate-y-[2px] group-hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                  <span className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#00B900] to-[#00A000] font-mono text-xl font-black text-white shadow-[inset_0_-4px_12px_rgba(0,0,0,0.2),inset_0_2px_6px_rgba(255,255,255,0.3),0_6px_16px_rgba(0,185,0,0.3)] transition-all group-hover:shadow-[inset_0_-4px_12px_rgba(0,0,0,0.2),inset_0_2px_6px_rgba(255,255,255,0.3),0_8px_20px_rgba(0,185,0,0.4)]">
                     {feature.number}
                   </span>
                 </div>
 
                 {/* Content */}
                 <h3
-                  className={`mb-4 text-2xl font-bold text-black ${ibmPlexSans.className}`}
+                  className={`mb-4 text-2xl font-bold text-gray-800 ${ibmPlexSans.className}`}
                 >
                   {feature.title}
                 </h3>
                 <p
-                  className={`leading-relaxed text-black/70 ${ibmPlexSans.className}`}
+                  className={`leading-relaxed text-gray-600 ${ibmPlexSans.className}`}
                 >
                   {feature.description}
                 </p>
 
-                {/* Hover decoration */}
-                <div className="absolute -bottom-2 -right-2 -z-10 h-full w-full border-2 border-black bg-[#FFE500] opacity-0 transition-opacity group-hover:opacity-100" />
+                {/* Bottom accent */}
+                <div className="absolute bottom-0 left-0 h-1 w-0 rounded-full bg-gradient-to-r from-[#00B900] to-[#FFE500] shadow-[0_0_12px_rgba(0,185,0,0.5)] transition-all duration-500 group-hover:w-full" />
               </article>
             ))}
           </div>
@@ -231,11 +211,11 @@ export default function Home() {
 
         {/* Footer Accent */}
         <div className="mt-32 flex items-center justify-center gap-6">
-          <div className="h-1 w-16 bg-black" />
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.3em] text-black/40">
+          <div className="h-1 w-16 rounded-full bg-gradient-to-r from-transparent to-gray-400" />
+          <span className="rounded-full bg-white px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.3em] text-gray-500 shadow-[inset_0_-4px_10px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)]">
             Built for Communication
           </span>
-          <div className="h-1 w-16 bg-black" />
+          <div className="h-1 w-16 rounded-full bg-gradient-to-l from-transparent to-gray-400" />
         </div>
       </div>
     </main>
