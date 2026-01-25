@@ -26,7 +26,7 @@ const sections = [
 
 export default function GuidePage() {
   return (
-    <main className="min-h-screen bg-[#FFFEF5]">
+    <main className="min-h-screen bg-[#e8f5e9]">
       <div id="top" className="mx-auto max-w-6xl px-6 py-14">
         {/* ヘッダー */}
         <h1
@@ -35,14 +35,14 @@ export default function GuidePage() {
         >
           利用ガイド (メニュー別)
         </h1>
-        <p className={`text-black/80 max-w-3xl mb-10 leading-relaxed ${ibmPlexSans.className}`}>
+        <p className={`text-gray-700 max-w-3xl mb-10 leading-relaxed ${ibmPlexSans.className}`}>
           このページではダッシュボードの各メニューで「何ができるか / 最短でどう操作するか」を章立てで整理しています。初めて触る人が迷わず運用を開始できるよう、必須ステップと確認ポイントのみを厳選して記載しました。
         </p>
 
         {/* 目次 */}
         <nav
           aria-label="目次"
-          className="mb-14 rounded-lg border-2 border-black bg-white p-6 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]"
+          className="mb-14 rounded-2xl bg-white/70 p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] backdrop-blur-sm transition-all duration-300"
           data-testid="guide-toc"
         >
           <h2 className={`text-xl font-bold mb-4 ${syne.className}`}>目次</h2>
@@ -51,9 +51,9 @@ export default function GuidePage() {
               <li key={s.id}>
                 <a
                   href={`#${s.id}`}
-                  className="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.15em] hover:text-[#00B900]"
+                  className="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.15em] text-gray-700 hover:text-[#00B900] transition-all duration-300"
                 >
-                  <span className="h-2 w-2 rounded-full bg-black" />
+                  <span className="h-2 w-2 rounded-full bg-gray-700" />
                   {s.title}
                 </a>
               </li>
@@ -828,13 +828,13 @@ export default function GuidePage() {
         <div className="mt-28 flex flex-wrap gap-6">
           <Link
             href="/"
-            className="border-2 border-black bg-[#00B900] text-white font-mono text-xs px-6 py-3 font-bold tracking-[0.15em] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:opacity-90"
+            className="rounded-xl bg-[#00B900] text-white font-mono text-xs px-6 py-3 font-bold tracking-[0.15em] shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] hover:opacity-90 transition-all duration-300"
           >
             トップへ戻る →
           </Link>
           <Link
             href="/docs/system-design"
-            className="border-2 border-black bg-white text-black font-mono text-xs px-6 py-3 font-bold tracking-[0.15em] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-[#FFFEF5]"
+            className="rounded-xl bg-white/70 text-gray-800 font-mono text-xs px-6 py-3 font-bold tracking-[0.15em] shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] hover:bg-[#e8f5e9] transition-all duration-300"
           >
             設計仕様 ↗
           </Link>
@@ -851,16 +851,16 @@ function Section({ id, title, children }: { id: string; title: string; children:
       <h2 id={`${id}-heading`} className={`mb-6 text-3xl font-black ${syne.className}`}>
         {title}
       </h2>
-      <div className={`space-y-6 leading-relaxed text-black/80 ${ibmPlexSans.className}`}>{children}</div>
+      <div className={`space-y-6 leading-relaxed text-gray-700 ${ibmPlexSans.className}`}>{children}</div>
     </section>
   );
 }
 
 function Tips({ items }: { items: string[] }) {
   return (
-    <div className="mt-6 rounded-md border border-black/10 bg-[#F6FFE9] p-4 text-sm space-y-2">
-      <p className="font-semibold">Tips</p>
-      <ul className="list-disc pl-5 space-y-1">
+    <div className="mt-6 rounded-xl bg-[#F6FFE9]/80 p-4 text-sm space-y-2 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300">
+      <p className="font-semibold text-gray-800">Tips</p>
+      <ul className="list-disc pl-5 space-y-1 text-gray-700">
         {items.map((t) => (
           <li key={t}>{t}</li>
         ))}
@@ -871,9 +871,9 @@ function Tips({ items }: { items: string[] }) {
 
 function InlineBest({ label, items }: { label: string; items: string[] }) {
   return (
-    <div className="mt-6 rounded-md border border-black/10 bg-[#FFFBEA] p-4 text-xs space-y-2">
-      <p className="font-semibold">{label}</p>
-      <ul className="list-disc pl-5 space-y-1">
+    <div className="mt-6 rounded-xl bg-[#FFFBEA]/80 p-4 text-xs space-y-2 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300">
+      <p className="font-semibold text-gray-800">{label}</p>
+      <ul className="list-disc pl-5 space-y-1 text-gray-700">
         {items.map((t) => (
           <li key={t}>{t}</li>
         ))}

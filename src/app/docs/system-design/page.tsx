@@ -103,13 +103,13 @@ export default function SystemDesignPage() {
   }
   const html = renderMarkdown(raw);
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#FFFEF5] px-6 py-16 sm:px-12 sm:py-24">
+    <main className="relative min-h-screen overflow-hidden bg-[#e8f5e9] px-6 py-16 sm:px-12 sm:py-24 transition-all duration-300">
       <div className="pointer-events-none absolute left-0 top-0 h-[500px] w-[500px] -translate-x-1/3 -translate-y-1/3 rounded-full bg-[#00B900] opacity-[0.10] blur-[110px]" />
       <div className="pointer-events-none absolute right-0 top-1/3 h-[360px] w-[360px] translate-x-1/4 rounded-full bg-[#FFE500] opacity-[0.12] blur-[100px]" />
       <div className="pointer-events-none absolute bottom-0 left-1/3 h-[420px] w-[420px] rounded-full bg-[#00B900] opacity-[0.06] blur-[120px]" />
       <div className="relative z-10 mx-auto max-w-5xl">
         <div className="mb-12">
-          <span className="inline-block -rotate-2 border-2 border-black bg-[#FFE500] px-5 py-2 font-mono text-xs font-bold uppercase tracking-[0.2em] text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <span className="inline-block -rotate-2 rounded-xl bg-[#FFE500] px-5 py-2 font-mono text-xs font-bold uppercase tracking-[0.2em] text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300">
             System Design
           </span>
         </div>
@@ -121,14 +121,14 @@ export default function SystemDesignPage() {
         <article className="prose max-w-none animate-[fadeIn_0.8s_ease-out] prose-headings:font-black prose-h1:text-5xl prose-h1:mb-8 prose-h2:mt-16 prose-h2:mb-4 prose-h3:mt-10 prose-h3:mb-3 prose-p:leading-relaxed prose-code:bg-black/10 selection:bg-[#FFE500]/60" dangerouslySetInnerHTML={{ __html: html }} />
         <hr className="my-12" />
         <section>
-          <h2 className="text-4xl font-black mb-8 tracking-tight">Extended Specification</h2>
+          <h2 className="text-4xl font-black mb-8 tracking-tight text-gray-800">Extended Specification</h2>
           <div className="space-y-10">
             {extraSections.map(s => (
               <div key={s.title}>
-                <h3 className="text-2xl font-bold mb-4 flex items-center gap-2"><span className="inline-block border-2 border-black bg-white px-3 py-1 font-mono text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">§</span>{s.title}</h3>
+                <h3 className="text-2xl font-bold mb-4 flex items-center gap-2 text-gray-800"><span className="inline-block rounded-xl bg-white px-3 py-1 font-mono text-sm text-gray-700 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300">§</span>{s.title}</h3>
                 <ul className="list-disc pl-6 space-y-2">
                   {s.body.map(line => (
-                    <li key={line} className="text-black/80 text-sm leading-relaxed">{line}</li>
+                    <li key={line} className="text-gray-700 text-sm leading-relaxed">{line}</li>
                   ))}
                 </ul>
               </div>
