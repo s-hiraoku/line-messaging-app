@@ -210,7 +210,7 @@ export function ActionEditor({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <Label className="text-sm font-bold uppercase tracking-wider text-black">
+        <Label className="text-sm font-bold uppercase tracking-wider text-gray-800">
           アクション <span className="text-red-600">*</span>
         </Label>
         <Button
@@ -218,7 +218,7 @@ export function ActionEditor({
           onClick={handleAddAction}
           disabled={actions.length >= maxActions}
           size="sm"
-          className="inline-flex items-center gap-1.5 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
+          className="inline-flex items-center gap-1.5 rounded-xl shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 transition-all duration-300"
         >
           <Plus className="h-3.5 w-3.5" />
           アクションを追加
@@ -226,8 +226,8 @@ export function ActionEditor({
       </div>
 
       {actions.length === 0 && (
-        <div className="border-2 border-black bg-[#FFFEF5] p-4 text-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-          <p className="text-sm font-mono text-black/60">
+        <div className="rounded-xl bg-[#e8f5e9] p-4 text-center shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300">
+          <p className="text-sm font-mono text-gray-700/60">
             アクションが設定されていません。アクションを追加してください。
           </p>
         </div>
@@ -239,18 +239,18 @@ export function ActionEditor({
             <AccordionItem
               key={index}
               value={`action-${index}`}
-              className="border-2 border-black bg-white px-4 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+              className="rounded-xl bg-white px-4 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300"
             >
               <div className="flex items-center gap-2">
-                <AccordionTrigger className="flex-1 py-3 text-sm font-bold text-black hover:no-underline">
+                <AccordionTrigger className="flex-1 py-3 text-sm font-bold text-gray-800 hover:no-underline">
                   <div className="flex items-center gap-3">
-                    <Badge variant="outline" className="bg-blue-300 text-black border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                    <Badge variant="outline" className="bg-blue-300 text-gray-800 rounded-lg shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_4px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.06)]">
                       {index + 1}
                     </Badge>
                     <span className="flex-1 text-left truncate uppercase tracking-wider">
                       {action.label || "未設定"}
                     </span>
-                    <Badge variant="secondary" className="text-xs border-2 border-black bg-[#FFFEF5]">
+                    <Badge variant="secondary" className="text-xs rounded-lg bg-[#e8f5e9] shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_4px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.06)]">
                       {action.type === "uri" && "リンク"}
                       {action.type === "message" && "メッセージ"}
                       {action.type === "postback" && "ポストバック"}
@@ -262,7 +262,7 @@ export function ActionEditor({
                   variant="ghost"
                   size="sm"
                   onClick={() => handleDeleteAction(index)}
-                  className="cursor-pointer p-1.5 text-black hover:text-white hover:bg-red-600 h-8 w-8 border-2 border-black"
+                  className="cursor-pointer p-1.5 text-gray-800 hover:text-white hover:bg-red-600 h-8 w-8 rounded-lg shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_4px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 transition-all duration-300"
                   title="削除"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -272,14 +272,14 @@ export function ActionEditor({
               <AccordionContent className="space-y-4 pb-4 pt-2">
                 {/* Action Type Selector */}
                 <div className="space-y-2">
-                  <Label className="text-xs font-bold uppercase tracking-wider text-black/60">アクションタイプ</Label>
+                  <Label className="text-xs font-bold uppercase tracking-wider text-gray-700/60">アクションタイプ</Label>
                   <Select
                     value={action.type}
                     onValueChange={(value) =>
                       handleActionTypeChange(index, value as CardAction["type"])
                     }
                   >
-                    <SelectTrigger className="w-full bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                    <SelectTrigger className="w-full bg-white rounded-xl shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -292,7 +292,7 @@ export function ActionEditor({
 
                 {/* Label Input (Common for all types) */}
                 <div className="space-y-2">
-                  <Label className="text-xs font-bold uppercase tracking-wider text-black/60">
+                  <Label className="text-xs font-bold uppercase tracking-wider text-gray-700/60">
                     ラベル <span className="text-red-600">*</span>
                   </Label>
                   <Input
@@ -300,15 +300,15 @@ export function ActionEditor({
                     value={action.label}
                     onChange={(e) => handleActionUpdate(index, "label", e.target.value)}
                     maxLength={20}
-                    className="bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                    className="bg-white rounded-xl shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300"
                     placeholder="ボタンラベル (最大20文字)"
                   />
                   {errors[`${index}.label`] && (
                     <p className="text-xs font-bold text-red-600">{errors[`${index}.label`]}</p>
                   )}
                   <div className="flex justify-between items-center">
-                    <span className="text-xs font-mono text-black/40">最大20文字</span>
-                    <Badge variant="outline" className="text-xs border-2 border-black">
+                    <span className="text-xs font-mono text-gray-700/40">最大20文字</span>
+                    <Badge variant="outline" className="text-xs rounded-lg shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_4px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.06)]">
                       {action.label.length}/20
                     </Badge>
                   </div>
@@ -317,14 +317,14 @@ export function ActionEditor({
                 {/* Type-specific inputs */}
                 {action.type === "uri" && (
                   <div className="space-y-2">
-                    <Label className="text-xs font-bold uppercase tracking-wider text-black/60">
+                    <Label className="text-xs font-bold uppercase tracking-wider text-gray-700/60">
                       URL <span className="text-red-600">*</span>
                     </Label>
                     <Input
                       type="url"
                       value={action.uri}
                       onChange={(e) => handleActionUpdate(index, "uri", e.target.value)}
-                      className="bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                      className="bg-white rounded-xl shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300"
                       placeholder="https://example.com"
                     />
                     {errors[`${index}.uri`] && (
@@ -335,7 +335,7 @@ export function ActionEditor({
 
                 {action.type === "message" && (
                   <div className="space-y-2">
-                    <Label className="text-xs font-bold uppercase tracking-wider text-black/60">
+                    <Label className="text-xs font-bold uppercase tracking-wider text-gray-700/60">
                       メッセージテキスト <span className="text-red-600">*</span>
                     </Label>
                     <Textarea
@@ -343,15 +343,15 @@ export function ActionEditor({
                       onChange={(e) => handleActionUpdate(index, "text", e.target.value)}
                       maxLength={300}
                       rows={3}
-                      className="bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                      className="bg-white rounded-xl shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300"
                       placeholder="送信されるメッセージテキスト"
                     />
                     {errors[`${index}.text`] && (
                       <p className="text-xs font-bold text-red-600">{errors[`${index}.text`]}</p>
                     )}
                     <div className="flex justify-between items-center">
-                      <span className="text-xs font-mono text-black/40">最大300文字</span>
-                      <Badge variant="outline" className="text-xs border-2 border-black">
+                      <span className="text-xs font-mono text-gray-700/40">最大300文字</span>
+                      <Badge variant="outline" className="text-xs rounded-lg shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_4px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.06)]">
                         {action.text.length}/300
                       </Badge>
                     </div>
@@ -361,7 +361,7 @@ export function ActionEditor({
                 {action.type === "postback" && (
                   <>
                     <div className="space-y-2">
-                      <Label className="text-xs font-bold uppercase tracking-wider text-black/60">
+                      <Label className="text-xs font-bold uppercase tracking-wider text-gray-700/60">
                         ポストバックデータ <span className="text-red-600">*</span>
                       </Label>
                       <Textarea
@@ -369,22 +369,22 @@ export function ActionEditor({
                         onChange={(e) => handleActionUpdate(index, "data", e.target.value)}
                         maxLength={300}
                         rows={2}
-                        className="bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                        className="bg-white rounded-xl shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300"
                         placeholder="action=buy&item_id=123"
                       />
                       {errors[`${index}.data`] && (
                         <p className="text-xs font-bold text-red-600">{errors[`${index}.data`]}</p>
                       )}
                       <div className="flex justify-between items-center">
-                        <span className="text-xs font-mono text-black/40">最大300文字</span>
-                        <Badge variant="outline" className="text-xs border-2 border-black">
+                        <span className="text-xs font-mono text-gray-700/40">最大300文字</span>
+                        <Badge variant="outline" className="text-xs rounded-lg shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_4px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.06)]">
                           {action.data.length}/300
                         </Badge>
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-xs font-bold uppercase tracking-wider text-black/60">
+                      <Label className="text-xs font-bold uppercase tracking-wider text-gray-700/60">
                         表示テキスト (オプション)
                       </Label>
                       <Input
@@ -394,7 +394,7 @@ export function ActionEditor({
                           handleActionUpdate(index, "displayText", e.target.value)
                         }
                         maxLength={300}
-                        className="bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                        className="bg-white rounded-xl shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300"
                         placeholder="ユーザーに表示されるテキスト"
                       />
                       {errors[`${index}.displayText`] && (
@@ -404,8 +404,8 @@ export function ActionEditor({
                       )}
                       {action.displayText && (
                         <div className="flex justify-between items-center">
-                          <span className="text-xs font-mono text-black/40">最大300文字</span>
-                          <Badge variant="outline" className="text-xs border-2 border-black">
+                          <span className="text-xs font-mono text-gray-700/40">最大300文字</span>
+                          <Badge variant="outline" className="text-xs rounded-lg shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_4px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.06)]">
                             {action.displayText.length}/300
                           </Badge>
                         </div>
@@ -420,9 +420,9 @@ export function ActionEditor({
       )}
 
       {actions.length > 0 && (
-        <div className="flex items-center justify-between text-xs font-mono text-black/60">
+        <div className="flex items-center justify-between text-xs font-mono text-gray-700/60">
           <span>アクション使用中</span>
-          <Badge variant="outline" className="border-2 border-black">
+          <Badge variant="outline" className="rounded-lg shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_4px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.06)]">
             {actions.length}/{maxActions}
           </Badge>
         </div>

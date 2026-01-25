@@ -43,10 +43,10 @@ export function TemplateAreaUploader({
     <div className="space-y-4">
       <header className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-semibold text-black">{activeDefinition.label}</p>
-          <p className="text-xs text-black/60">{progressText}</p>
+          <p className="text-sm font-semibold text-gray-800">{activeDefinition.label}</p>
+          <p className="text-xs text-gray-600">{progressText}</p>
         </div>
-        <Badge variant={activeAreaData?.imageUrl ? 'secondary' : 'outline'} className="border border-black text-xs">
+        <Badge variant={activeAreaData?.imageUrl ? 'secondary' : 'outline'} className="text-xs">
           {activeAreaData?.imageUrl ? '画像設定済み' : '未設定'}
         </Badge>
       </header>
@@ -61,17 +61,17 @@ export function TemplateAreaUploader({
                 type="button"
                 onClick={() => onActiveAreaChange(definition.id)}
                 className={cn(
-                  'flex w-full items-center justify-between border-2 border-black bg-white px-3 py-2 text-left text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]',
-                  isActive && 'bg-[#E0F7FA]'
+                  'flex w-full items-center justify-between rounded-xl bg-white px-3 py-2 text-left text-sm shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5',
+                  isActive && 'bg-[#e8f5e9]'
                 )}
               >
                 <span className="flex items-center gap-2">
-                  <span className="inline-flex h-6 w-6 items-center justify-center border border-black bg-black/90 font-mono text-xs text-white">
+                  <span className="inline-flex h-6 w-6 items-center justify-center rounded-lg bg-gray-700 font-mono text-xs text-white">
                     {index + 1}
                   </span>
-                  <span className="text-black">{definition.label}</span>
+                  <span className="text-gray-800">{definition.label}</span>
                 </span>
-                <span className="text-xs font-semibold text-black/60">
+                <span className="text-xs font-semibold text-gray-600">
                   {item?.imageUrl ? '完了' : '未設定'}
                 </span>
               </button>
@@ -79,9 +79,9 @@ export function TemplateAreaUploader({
           })}
         </div>
         <div className="space-y-4">
-          <div className="rounded border-2 border-dashed border-black bg-[#FFFEF5] p-4">
-            <p className="mb-2 text-sm font-semibold text-black">画像をアップロード</p>
-            <p className="mb-4 text-xs text-black/60">
+          <div className="rounded-xl border-2 border-dashed border-gray-300 bg-[#e8f5e9] p-4 transition-all duration-300">
+            <p className="mb-2 text-sm font-semibold text-gray-800">画像をアップロード</p>
+            <p className="mb-4 text-xs text-gray-600">
               推奨: {activeDefinition.width}×{activeDefinition.height}px（アスペクト比 {aspectRatio ?? '自由'}）
             </p>
             <ImageCropUploader
@@ -94,9 +94,9 @@ export function TemplateAreaUploader({
           </div>
           {activeAreaData?.imageUrl ? (
             <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-black">現在のプレビュー</p>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-800">現在のプレビュー</p>
               <div className="flex items-center gap-4">
-                <div className="relative h-40 w-40 overflow-hidden border-2 border-black">
+                <div className="relative h-40 w-40 overflow-hidden rounded-xl shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)]">
                   <Image
                     src={activeAreaData.imageUrl}
                     alt={`${activeDefinition.label} プレビュー`}
@@ -108,7 +108,7 @@ export function TemplateAreaUploader({
                   <Button
                     type="button"
                     variant="ghost"
-                    className="border-2 border-black"
+                    className="rounded-xl shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5"
                     onClick={() => onImageRemoved(activeDefinition.id)}
                   >
                     この画像を削除
@@ -117,7 +117,7 @@ export function TemplateAreaUploader({
               </div>
             </div>
           ) : (
-            <p className="text-xs text-black/60">画像をアップロードするとプレビューが表示されます。</p>
+            <p className="text-xs text-gray-600">画像をアップロードするとプレビューが表示されます。</p>
           )}
         </div>
       </div>

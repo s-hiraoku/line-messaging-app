@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable react-hooks/set-state-in-effect */
 
 import { useAtom } from 'jotai';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -300,26 +301,26 @@ export function TemplateImageEditor({
   const progressLabel = selectedTemplate ? `${completedCount}/${totalCount} エリア完了` : 'テンプレート未選択';
 
   return (
-    <div className="space-y-6 border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+    <div className="space-y-6 rounded-2xl bg-white p-4 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-bold uppercase tracking-wider text-black">テンプレート画像エディタ</p>
-          <p className="text-xs text-black/60">1〜3分割のプリセットから選択して各エリアに画像を設定します</p>
+          <p className="text-sm font-bold uppercase tracking-wider text-gray-800">テンプレート画像エディタ</p>
+          <p className="text-xs text-gray-600">1〜3分割のプリセットから選択して各エリアに画像を設定します</p>
         </div>
         <div className="flex items-center gap-2">
-          <Badge variant="secondary" className="border border-black text-xs">
+          <Badge variant="secondary" className="text-xs">
             ステップ: {phase === 'select' ? 'テンプレート選択' : phase === 'upload' ? '画像設定' : 'プレビュー'}
           </Badge>
-          <Badge variant="outline" className="border border-black text-xs">
+          <Badge variant="outline" className="text-xs">
             {progressLabel}
           </Badge>
-          <Button type="button" variant="ghost" className="border-2 border-black" onClick={handleTemplateReset}>
+          <Button type="button" variant="ghost" className="rounded-xl shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5" onClick={handleTemplateReset}>
             リセット
           </Button>
         </div>
       </div>
 
-      <Separator className="bg-black" />
+      <Separator className="bg-gray-300" />
 
       {phase === 'select' && (
         <TemplateSelector
@@ -333,13 +334,13 @@ export function TemplateImageEditor({
         <div className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-semibold text-black">{activeTemplate.name}</p>
-              <p className="text-xs text-black/60">{activeTemplate.description}</p>
+              <p className="text-sm font-semibold text-gray-800">{activeTemplate.name}</p>
+              <p className="text-xs text-gray-600">{activeTemplate.description}</p>
             </div>
             <Button
               type="button"
               variant="secondary"
-              className="border-2 border-black"
+              className="rounded-xl shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5"
               onClick={handleTemplateChangeRequest}
             >
               別のテンプレートに変更
@@ -358,7 +359,7 @@ export function TemplateImageEditor({
           )}
 
           {phase === 'upload' && !isComplete && (
-            <Alert className="border-2 border-black bg-[#FFFDE7] text-black">
+            <Alert className="rounded-xl bg-[#e8f5e9] text-gray-800 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)]">
               <AlertDescription className="text-sm">
                 すべてのエリアに画像を設定すると完成プレビューが生成されます。
               </AlertDescription>
@@ -373,7 +374,7 @@ export function TemplateImageEditor({
                 previewUrl={previewUrl}
                 isComposing={isPreviewing || isUploadingComposed}
               />
-              <Alert className="border-2 border-black bg-[#E8F5E9] text-black">
+              <Alert className="rounded-xl bg-[#e8f5e9] text-gray-800 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)]">
                 <AlertDescription className="text-sm">
                   プレビューを確認し、問題がなければそのまま送信できます。変更したい場合は任意のエリア画像を差し替えてください。
                 </AlertDescription>
@@ -384,7 +385,7 @@ export function TemplateImageEditor({
       )}
 
       {phase === 'select' && (
-        <Alert className="border-2 border-black bg-[#FFF3E0] text-black">
+        <Alert className="rounded-xl bg-[#e8f5e9] text-gray-800 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)]">
           <AlertDescription className="text-sm">
             まずはテンプレートを選択してください。1〜3分割のプリセットが用意されています。
           </AlertDescription>

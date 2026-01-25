@@ -78,26 +78,26 @@ function ConfirmDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="w-full max-w-md border-2 border-black bg-white p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] animate-in zoom-in-95 duration-200">
+      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] animate-in zoom-in-95 duration-200 transition-all">
         <div className="mb-5 flex items-start gap-4">
-          <div className="border-2 border-black bg-red-600 p-3">
+          <div className="rounded-xl bg-red-600 p-3 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)]">
             <AlertCircle className="h-6 w-6 flex-shrink-0 text-white" />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-bold uppercase tracking-wider text-black mb-2">{title}</h3>
-            <p className="text-sm font-mono text-black/70 leading-relaxed">{message}</p>
+            <h3 className="text-lg font-bold uppercase tracking-wider text-gray-800 mb-2">{title}</h3>
+            <p className="text-sm font-mono text-gray-700/70 leading-relaxed">{message}</p>
           </div>
         </div>
         <div className="flex justify-end gap-3">
           <button
             onClick={onCancel}
-            className="border-2 border-black bg-white px-5 py-2.5 text-sm font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+            className="rounded-xl bg-white px-5 py-2.5 text-sm font-bold uppercase tracking-wider text-gray-800 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 hover:bg-[#e8f5e9] transition-all duration-300"
           >
             キャンセル
           </button>
           <button
             onClick={onConfirm}
-            className="border-2 border-black bg-red-600 px-5 py-2.5 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+            className="rounded-xl bg-red-600 px-5 py-2.5 text-sm font-bold uppercase tracking-wider text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 transition-all duration-300"
           >
             削除する
           </button>
@@ -167,10 +167,10 @@ function SortableCardItem({
       ref={setNodeRef}
       style={style}
       className={`
-        group relative border-2 transition-all duration-200
+        group relative rounded-xl transition-all duration-300
         ${isSelected
-          ? 'border-[#00B900] bg-[#00B900]/10 shadow-[4px_4px_0px_0px_rgba(0,185,0,1)]'
-          : 'border-black bg-white hover:bg-[#FFFEF5] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
+          ? 'bg-[#00B900]/10 shadow-[inset_0_-6px_16px_rgba(0,185,0,0.1),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,185,0,0.15)]'
+          : 'bg-white hover:bg-[#e8f5e9] shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)]'
         }
         ${isDragging ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}
       `}
@@ -180,7 +180,7 @@ function SortableCardItem({
         <button
           {...attributes}
           {...listeners}
-          className="cursor-grab touch-none text-black/60 hover:text-black active:cursor-grabbing transition-colors"
+          className="cursor-grab touch-none text-gray-700/60 hover:text-gray-800 active:cursor-grabbing transition-colors duration-300"
           aria-label="ドラッグして並び替え"
         >
           <GripVertical className="h-5 w-5" />
@@ -188,7 +188,7 @@ function SortableCardItem({
 
         {/* Thumbnail with hover effect */}
         <div
-          className="h-14 w-14 flex-shrink-0 cursor-pointer overflow-hidden border-2 border-black transition-all hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+          className="h-14 w-14 flex-shrink-0 cursor-pointer overflow-hidden rounded-lg transition-all duration-300 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] hover:-translate-y-0.5"
           onClick={onSelect}
         >
           {card.imageUrl ? (
@@ -198,8 +198,8 @@ function SortableCardItem({
               className="h-full w-full object-cover transition-transform hover:scale-110"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-[#FFFEF5]">
-              <TypeIcon className={`h-7 w-7 text-black`} />
+            <div className="flex h-full w-full items-center justify-center bg-[#e8f5e9]">
+              <TypeIcon className={`h-7 w-7 text-gray-800`} />
             </div>
           )}
         </div>
@@ -207,17 +207,17 @@ function SortableCardItem({
         {/* Card Info */}
         <div className="flex-1 cursor-pointer overflow-hidden" onClick={onSelect}>
           <div className="flex items-center gap-2 mb-1">
-            <TypeIcon className={`h-4 w-4 flex-shrink-0 text-black`} />
-            <span className="text-xs font-bold uppercase tracking-wider text-black/60">{typeInfo.label}</span>
+            <TypeIcon className={`h-4 w-4 flex-shrink-0 text-gray-800`} />
+            <span className="text-xs font-bold uppercase tracking-wider text-gray-700/60">{typeInfo.label}</span>
           </div>
-          <p className="truncate text-sm font-bold text-black leading-tight">{cardTitle}</p>
+          <p className="truncate text-sm font-bold text-gray-800 leading-tight">{cardTitle}</p>
         </div>
 
         {/* Delete Button with improved hover state */}
         <button
           onClick={onDelete}
           disabled={!canDelete}
-          className="flex-shrink-0 p-2 border-2 border-black bg-white text-black transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:bg-red-600 hover:text-white hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:text-black disabled:hover:bg-white"
+          className="flex-shrink-0 p-2 rounded-lg bg-white text-gray-800 transition-all duration-300 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 hover:bg-red-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:translate-y-0 disabled:hover:text-gray-800 disabled:hover:bg-white"
           aria-label="カードを削除"
           title={canDelete ? "カードを削除" : "最低1枚必要です"}
         >
@@ -288,19 +288,19 @@ export function CardList({ cards, selectedId, onSelect, onDelete, onReorder, onA
   return (
     <div className="space-y-4">
       {/* Header with improved visual hierarchy */}
-      <div className="flex items-center justify-between pb-2 border-b-2 border-black">
+      <div className="flex items-center justify-between pb-2 border-b border-gray-200">
         <div>
-          <h3 className="text-base font-bold uppercase tracking-wider text-black mb-1">
+          <h3 className="text-base font-bold uppercase tracking-wider text-gray-800 mb-1">
             カード一覧
           </h3>
-          <p className="text-xs font-mono text-black/60">
-            {cards.length} / 9 カード {canAddCard && <span className="text-black/40">• あと {9 - cards.length} 枚追加可能</span>}
+          <p className="text-xs font-mono text-gray-700/60">
+            {cards.length} / 9 カード {canAddCard && <span className="text-gray-700/40">• あと {9 - cards.length} 枚追加可能</span>}
           </p>
         </div>
         <button
           onClick={onAdd}
           disabled={!canAddCard}
-          className="inline-flex items-center gap-2 border-2 border-black bg-[#00B900] px-4 py-2.5 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+          className="inline-flex items-center gap-2 rounded-xl bg-[#00B900] px-4 py-2.5 text-sm font-bold uppercase tracking-wider text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
           title={canAddCard ? "新しいカードを追加" : "カードは最大9枚までです"}
         >
           <Plus className="h-4 w-4" />
@@ -329,15 +329,15 @@ export function CardList({ cards, selectedId, onSelect, onDelete, onReorder, onA
       {/* Helper Text with icons */}
       <div className="space-y-2">
         {!canAddCard && (
-          <div className="flex items-center gap-2 border-2 border-black bg-[#FFE500] px-3 py-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-            <AlertCircle className="h-4 w-4 text-black flex-shrink-0" />
-            <p className="text-xs font-bold text-black">最大9枚までカードを作成できます</p>
+          <div className="flex items-center gap-2 rounded-xl bg-[#FFE500] px-3 py-2 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300">
+            <AlertCircle className="h-4 w-4 text-gray-800 flex-shrink-0" />
+            <p className="text-xs font-bold text-gray-800">最大9枚までカードを作成できます</p>
           </div>
         )}
         {!canDeleteCard && (
-          <div className="flex items-center gap-2 border-2 border-black bg-[#00B900]/20 px-3 py-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-            <AlertCircle className="h-4 w-4 text-black flex-shrink-0" />
-            <p className="text-xs font-bold text-black">少なくとも1枚のカードが必要です</p>
+          <div className="flex items-center gap-2 rounded-xl bg-[#00B900]/20 px-3 py-2 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300">
+            <AlertCircle className="h-4 w-4 text-gray-800 flex-shrink-0" />
+            <p className="text-xs font-bold text-gray-800">少なくとも1枚のカードが必要です</p>
           </div>
         )}
       </div>

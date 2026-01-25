@@ -101,8 +101,8 @@ function CardFormWrapper({
       );
     default:
       return (
-        <div className="flex h-full items-center justify-center border-2 border-black bg-red-600/10 p-8 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-          <p className="font-bold uppercase tracking-wider text-black">
+        <div className="flex h-full items-center justify-center rounded-2xl bg-red-600/10 p-8 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300">
+          <p className="font-bold uppercase tracking-wider text-gray-800">
             不明なカードタイプ: {(card as Card).type}
           </p>
         </div>
@@ -116,13 +116,13 @@ function CardFormWrapper({
 function getCardTypeInfo(type: CardType) {
   switch (type) {
     case 'product':
-      return { icon: ShoppingBag, label: '商品', color: 'text-[#00B900] bg-[#00B900]/10 border-2 border-black' };
+      return { icon: ShoppingBag, label: '商品', color: 'text-[#00B900] bg-[#00B900]/10 rounded-lg shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_4px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.06)]' };
     case 'location':
-      return { icon: MapPin, label: '場所', color: 'text-[#00B900] bg-[#00B900]/10 border-2 border-black' };
+      return { icon: MapPin, label: '場所', color: 'text-[#00B900] bg-[#00B900]/10 rounded-lg shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_4px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.06)]' };
     case 'person':
-      return { icon: User, label: '人物', color: 'text-[#00B900] bg-[#00B900]/10 border-2 border-black' };
+      return { icon: User, label: '人物', color: 'text-[#00B900] bg-[#00B900]/10 rounded-lg shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_4px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.06)]' };
     case 'image':
-      return { icon: ImageIcon, label: '画像', color: 'text-[#FFE500] bg-[#FFE500]/10 border-2 border-black' };
+      return { icon: ImageIcon, label: '画像', color: 'text-[#FFE500] bg-[#FFE500]/10 rounded-lg shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_4px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.06)]' };
   }
 }
 
@@ -187,26 +187,26 @@ function ConfirmDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="w-full max-w-md border-2 border-black bg-white p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300">
         <div className="mb-5 flex items-start gap-4">
-          <div className="border-2 border-black bg-red-600/10 p-3">
-            <AlertCircle className="h-6 w-6 flex-shrink-0 text-black" />
+          <div className="rounded-xl bg-red-600/10 p-3 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)]">
+            <AlertCircle className="h-6 w-6 flex-shrink-0 text-gray-800" />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-bold uppercase tracking-wider text-black mb-2">{title}</h3>
-            <p className="text-sm text-black/60 leading-relaxed">{message}</p>
+            <h3 className="text-lg font-bold uppercase tracking-wider text-gray-800 mb-2">{title}</h3>
+            <p className="text-sm text-gray-700/60 leading-relaxed">{message}</p>
           </div>
         </div>
         <div className="flex justify-end gap-3">
           <button
             onClick={onCancel}
-            className="cursor-pointer border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
+            className="cursor-pointer rounded-xl bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-800 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#e8f5e9]"
           >
             キャンセル
           </button>
           <button
             onClick={onConfirm}
-            className="cursor-pointer border-2 border-black bg-red-600 px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+            className="cursor-pointer rounded-xl bg-red-600 px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5"
           >
             削除する
           </button>
@@ -362,9 +362,9 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
   const renderCardForm = () => {
     if (!selectedCard) {
       return (
-        <div className="flex h-full items-center justify-center border-2 border-black bg-[#FFFEF5] p-8">
+        <div className="flex h-full items-center justify-center rounded-2xl bg-[#e8f5e9] p-8 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300">
           <div className="text-center">
-            <p className="text-black/60">カードを選択して編集を開始してください</p>
+            <p className="text-gray-700/60">カードを選択して編集を開始してください</p>
           </div>
         </div>
       );
@@ -409,8 +409,8 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
 
       default:
         return (
-          <div className="flex h-full items-center justify-center border-2 border-black bg-red-600/10 p-8 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-            <p className="font-bold uppercase tracking-wider text-black">
+          <div className="flex h-full items-center justify-center rounded-2xl bg-red-600/10 p-8 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300">
+            <p className="font-bold uppercase tracking-wider text-gray-800">
               不明なカードタイプ: {(selectedCard as Card).type}
             </p>
           </div>
@@ -430,14 +430,14 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
         className="flex-1 flex flex-col"
       >
         {/* Tab Navigation */}
-        <div className="flex-shrink-0 border-b-2 border-black pb-4">
+        <div className="flex-shrink-0 border-b border-gray-200 pb-4">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h3 className="text-base font-bold uppercase tracking-wider text-black">カード編集</h3>
-              <p className="text-xs text-black/60 mt-1">
+              <h3 className="text-base font-bold uppercase tracking-wider text-gray-800">カード編集</h3>
+              <p className="text-xs text-gray-700/60 mt-1">
                 {cards.length} / 9 カード
                 {canAddCard && (
-                  <span className="text-black/40 ml-2">
+                  <span className="text-gray-700/40 ml-2">
                     あと {9 - cards.length} 枚追加可能
                   </span>
                 )}
@@ -448,7 +448,7 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
             <button
               onClick={handleAddCard}
               disabled={!canAddCard}
-              className="cursor-pointer inline-flex items-center gap-2 border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+              className="cursor-pointer inline-flex items-center gap-2 rounded-xl bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
               title={canAddCard ? '新しいカードを追加' : 'カードは最大9枚までです'}
             >
               <Plus className="h-4 w-4" />
@@ -457,7 +457,7 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
           </div>
 
           {/* Tabs List - Horizontal Scrollable */}
-          <TabsList className="w-full h-auto p-1 justify-start overflow-x-auto overflow-y-hidden bg-white border-2 border-black">
+          <TabsList className="w-full h-auto p-1 justify-start overflow-x-auto overflow-y-hidden bg-white rounded-xl shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)]">
             {cards.map((card, index) => {
               const typeInfo = getCardTypeInfo(card.type);
               const Icon = typeInfo.icon;
@@ -468,7 +468,7 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
                 <TabsTrigger
                   key={card.id}
                   value={card.id}
-                  className="relative min-w-fit h-auto py-2.5 px-4 border-2 border-black bg-[#FFFEF5] data-[state=active]:bg-white data-[state=active]:text-[#00B900] hover:bg-white group"
+                  className="relative min-w-fit h-auto py-2.5 px-4 rounded-lg bg-[#e8f5e9] data-[state=active]:bg-white data-[state=active]:text-[#00B900] data-[state=active]:shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] hover:bg-white group transition-all duration-300"
                 >
                   <div className="flex items-center justify-between w-full gap-3">
                     {/* Left: Card Icon and Info */}
@@ -481,7 +481,7 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
                       {/* Card Info */}
                       <div className="flex flex-col items-start min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-bold uppercase tracking-wider text-black">
+                          <span className="text-xs font-bold uppercase tracking-wider text-gray-800">
                             {typeInfo.label} {index + 1}
                           </span>
                           {/* Error Badge */}
@@ -491,7 +491,7 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
                             </div>
                           )}
                         </div>
-                        <span className="text-xs text-black/60 truncate max-w-[120px]">
+                        <span className="text-xs text-gray-700/60 truncate max-w-[120px]">
                           {cardTitle}
                         </span>
                       </div>
@@ -504,7 +504,7 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
                           e.stopPropagation();
                           handleDeleteClick(card);
                         }}
-                        className="cursor-pointer p-1 border-2 border-black text-black opacity-0 group-hover:opacity-100 transition-all hover:text-red-600 hover:bg-red-600/10 flex-shrink-0"
+                        className="cursor-pointer p-1 rounded-lg text-gray-800 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:text-red-600 hover:bg-red-600/10 hover:-translate-y-0.5 flex-shrink-0 shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_4px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.06)]"
                         title="カードを削除"
                       >
                         <X className="h-3.5 w-3.5" />
@@ -519,17 +519,17 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
           {/* Helper Messages */}
           <div className="mt-3 space-y-2">
             {!canAddCard && (
-              <div className="flex items-center gap-2 border-2 border-black bg-[#FFE500] px-3 py-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                <AlertCircle className="h-4 w-4 text-black flex-shrink-0" />
-                <p className="text-xs font-bold uppercase tracking-wider text-black">
+              <div className="flex items-center gap-2 rounded-xl bg-[#FFE500] px-3 py-2 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300">
+                <AlertCircle className="h-4 w-4 text-gray-800 flex-shrink-0" />
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-800">
                   最大9枚までカードを作成できます
                 </p>
               </div>
             )}
             {!canDeleteCard && (
-              <div className="flex items-center gap-2 border-2 border-black bg-[#00B900]/10 px-3 py-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                <AlertCircle className="h-4 w-4 text-black flex-shrink-0" />
-                <p className="text-xs font-bold uppercase tracking-wider text-black">
+              <div className="flex items-center gap-2 rounded-xl bg-[#00B900]/10 px-3 py-2 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300">
+                <AlertCircle className="h-4 w-4 text-gray-800 flex-shrink-0" />
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-800">
                   少なくとも1枚のカードが必要です
                 </p>
               </div>
@@ -545,7 +545,7 @@ export function CardEditor({ initialCards, onChange }: CardEditorProps) {
               value={card.id}
               className="mt-0 h-full data-[state=inactive]:hidden"
             >
-              <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              <div className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300">
                 {/* Dynamic Form Rendering */}
                 <CardFormWrapper
                   card={card}

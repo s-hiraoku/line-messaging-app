@@ -214,7 +214,7 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
     <div className="space-y-6">
       {/* Name Field */}
       <div className="space-y-2">
-        <label className="text-sm font-bold uppercase tracking-wider text-black">
+        <label className="text-sm font-bold uppercase tracking-wider text-gray-800">
           名前 <span className="text-red-600">*</span>
         </label>
         <input
@@ -222,18 +222,18 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
           value={card.name}
           onChange={handleNameChange}
           maxLength={40}
-          className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
+          className="w-full rounded-xl bg-white px-3 py-2 text-sm font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
           placeholder="例: 山田 太郎"
         />
         {errors.name && (
           <p className="text-xs font-bold text-red-600">{errors.name}</p>
         )}
-        <p className="text-xs font-mono text-black/60">{card.name.length}/40文字</p>
+        <p className="text-xs font-mono text-gray-600">{card.name.length}/40文字</p>
       </div>
 
       {/* Description Field */}
       <div className="space-y-2">
-        <label className="text-sm font-bold uppercase tracking-wider text-black">
+        <label className="text-sm font-bold uppercase tracking-wider text-gray-800">
           説明 <span className="text-red-600">*</span>
         </label>
         <textarea
@@ -241,19 +241,19 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
           onChange={handleDescriptionChange}
           maxLength={60}
           rows={3}
-          className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
+          className="w-full rounded-xl bg-white px-3 py-2 text-sm font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
           placeholder="例: プロジェクトマネージャー / 東京オフィス"
         />
         {errors.description && (
           <p className="text-xs font-bold text-red-600">{errors.description}</p>
         )}
-        <p className="text-xs font-mono text-black/60">{card.description.length}/60文字</p>
+        <p className="text-xs font-mono text-gray-600">{card.description.length}/60文字</p>
       </div>
 
       {/* Tags Field */}
       <div className="space-y-2">
-        <label className="text-sm font-bold uppercase tracking-wider text-black">
-          タグ <span className="font-mono text-black/60">(オプション)</span>
+        <label className="text-sm font-bold uppercase tracking-wider text-gray-800">
+          タグ <span className="font-mono text-gray-600">(オプション)</span>
         </label>
 
         {/* Tag chips display */}
@@ -262,13 +262,13 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
             {card.tags.map((tag, index) => (
               <div
                 key={index}
-                className="inline-flex items-center gap-1.5 border-2 border-black bg-[#00B900]/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[#00B900]/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-gray-800 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300"
               >
                 <span>{tag}</span>
                 <button
                   type="button"
                   onClick={() => removeTag(index)}
-                  className="border-2 border-black bg-white p-0.5 hover:bg-red-600 hover:text-white transition-colors"
+                  className="rounded-lg bg-white p-0.5 hover:bg-red-600 hover:text-white transition-all duration-300 shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_3px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.06)]"
                   aria-label={`タグ "${tag}" を削除`}
                 >
                   <X className="h-3 w-3" />
@@ -287,13 +287,13 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
             onChange={handleTagInputChange}
             onKeyDown={handleTagInputKeyDown}
             maxLength={20}
-            className="flex-1 border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
+            className="flex-1 rounded-xl bg-white px-3 py-2 text-sm font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
             placeholder="タグを入力してEnterキーで追加"
           />
           <button
             type="button"
             onClick={addTag}
-            className="border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
+            className="rounded-xl bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5"
           >
             追加
           </button>
@@ -308,22 +308,22 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
         )}
 
         {tagInput && (
-          <p className="text-xs font-mono text-black/60">{tagInput.length}/20文字</p>
+          <p className="text-xs font-mono text-gray-600">{tagInput.length}/20文字</p>
         )}
 
-        <p className="text-xs font-mono text-black/60">
+        <p className="text-xs font-mono text-gray-600">
           Enterキーまたは「追加」ボタンでタグを追加できます。各タグは最大20文字です。
         </p>
       </div>
 
       {/* 画像モード */}
       <div className="space-y-2">
-        <label className="text-sm font-bold uppercase tracking-wider text-black">画像モード</label>
+        <label className="text-sm font-bold uppercase tracking-wider text-gray-800">画像モード</label>
         <div className="flex gap-3">
           <Button
             type="button"
             variant={!isTemplateMode ? 'secondary' : 'outline'}
-            className="border-2 border-black"
+            className="rounded-xl shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5"
             onClick={() => handleTemplateModeToggle('image')}
           >
             単一画像
@@ -331,7 +331,7 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
           <Button
             type="button"
             variant={isTemplateMode ? 'secondary' : 'outline'}
-            className="border-2 border-black"
+            className="rounded-xl shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5"
             onClick={() => handleTemplateModeToggle('template')}
           >
             テンプレート
@@ -341,7 +341,7 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
 
       {!isTemplateMode && (
         <div className="space-y-2">
-          <label className="text-sm font-bold uppercase tracking-wider text-black">
+          <label className="text-sm font-bold uppercase tracking-wider text-gray-800">
             画像 <span className="text-red-600">*</span>
           </label>
           <ImageCropUploader
@@ -349,19 +349,19 @@ export function PersonForm({ card, onChange }: PersonFormProps) {
             defaultAspectRatio="SQUARE"
             placeholder="プロフィール画像をアップロード"
           />
-          <p className="text-xs text-black/60">テンプレートを選択すると単一画像は不要になります。</p>
+          <p className="text-xs text-gray-600">テンプレートを選択すると単一画像は不要になります。</p>
           {errors.imageUrl && (
             <p className="text-xs font-bold text-red-600">{errors.imageUrl}</p>
           )}
           {card.imageUrl && (
-            <div className="border-2 border-black bg-[#FFFEF5] p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-              <p className="text-xs font-bold uppercase tracking-wider text-black mb-2">現在の画像:</p>
+            <div className="rounded-2xl bg-[#e8f5e9] p-3 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300">
+              <p className="text-xs font-bold uppercase tracking-wider text-gray-800 mb-2">現在の画像:</p>
               <Image
                 src={card.imageUrl}
                 alt="プレビュー"
                 width={128}
                 height={128}
-                className="h-32 w-32 border-2 border-black object-cover shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                className="h-32 w-32 rounded-xl object-cover shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)]"
               />
             </div>
           )}
