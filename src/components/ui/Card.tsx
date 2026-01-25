@@ -3,16 +3,16 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { clsx } from 'clsx';
 
 const cardVariants = cva(
-  'border-2 border-black transition-all',
+  'rounded-2xl transition-all duration-300',
   {
     variants: {
       variant: {
         default:
-          'bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]',
+          'bg-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]',
         glass:
-          'bg-white/90 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]',
-        solid: 'bg-[#FFFEF5] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]',
-        outline: 'bg-transparent shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]',
+          'bg-white/80 backdrop-blur-sm shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_6px_20px_rgba(0,0,0,0.06)]',
+        solid: 'bg-[#e8f5e9] shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_16px_rgba(0,185,0,0.1)]',
+        outline: 'bg-transparent shadow-[inset_0_-3px_8px_rgba(0,0,0,0.02),0_4px_12px_rgba(0,0,0,0.06)]',
       },
       padding: {
         none: 'p-0',
@@ -21,7 +21,7 @@ const cardVariants = cva(
         lg: 'p-8',
       },
       hoverable: {
-        true: 'cursor-pointer hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]',
+        true: 'cursor-pointer hover:-translate-y-1 hover:shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_12px_32px_rgba(0,0,0,0.12)]',
       },
     },
     defaultVariants: {
@@ -62,7 +62,7 @@ export const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
         ref={ref}
         className={clsx(
           'flex items-center justify-between',
-          border && 'pb-4 border-b-2 border-black',
+          border && 'pb-4 border-b border-gray-200',
           className
         )}
         {...props}
@@ -84,7 +84,7 @@ export const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
       <Component
         ref={ref}
         className={clsx(
-          'text-lg font-bold uppercase tracking-wider text-black',
+          'text-lg font-bold uppercase tracking-wider text-gray-800',
           className
         )}
         {...props}
@@ -103,7 +103,7 @@ export const CardDescription = forwardRef<
   return (
     <p
       ref={ref}
-      className={clsx('text-sm text-black/60', className)}
+      className={clsx('text-sm text-gray-500', className)}
       {...props}
     />
   );
@@ -123,7 +123,7 @@ export const CardContent = forwardRef<HTMLDivElement, CardContentProps>(
         ref={ref}
         className={clsx(
           'py-4',
-          border && 'border-t-2 border-black',
+          border && 'border-t border-gray-200',
           className
         )}
         {...props}
@@ -146,7 +146,7 @@ export const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
         ref={ref}
         className={clsx(
           'flex items-center gap-2',
-          border && 'pt-4 border-t-2 border-black',
+          border && 'pt-4 border-t border-gray-200',
           className
         )}
         {...props}

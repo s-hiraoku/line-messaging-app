@@ -6,14 +6,14 @@ import { ChevronDown, Search, Check, X } from 'lucide-react';
 import { clsx } from 'clsx';
 
 const dropdownVariants = cva(
-  'w-full border-2 border-black bg-white px-4 py-2 text-black font-mono transition-all cursor-pointer',
+  'w-full rounded-xl bg-white px-4 py-2 text-gray-800 font-mono transition-all duration-300 cursor-pointer shadow-[inset_0_-3px_8px_rgba(0,0,0,0.04),inset_0_2px_4px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)]',
   {
     variants: {
       variant: {
         default:
-          'hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus:translate-x-[3px] focus:translate-y-[3px] focus:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]',
+          'hover:-translate-y-0.5 hover:shadow-[inset_0_-3px_8px_rgba(0,0,0,0.04),inset_0_2px_4px_rgba(255,255,255,0.8),0_6px_16px_rgba(0,0,0,0.1)] focus:shadow-[inset_0_-3px_8px_rgba(0,0,0,0.04),inset_0_2px_4px_rgba(255,255,255,0.8),0_6px_16px_rgba(0,185,0,0.15)]',
         error:
-          'border-red-600 bg-red-50 text-red-600',
+          'bg-red-50 text-red-600 shadow-[inset_0_2px_4px_rgba(239,68,68,0.1),0_2px_8px_rgba(239,68,68,0.2)]',
       },
       size: {
         sm: 'px-3 py-1.5 text-sm',
@@ -29,12 +29,12 @@ const dropdownVariants = cva(
 );
 
 const menuVariants = cva(
-  'absolute z-50 w-full mt-2 border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden',
+  'absolute z-50 w-full mt-2 rounded-xl bg-white shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.12)] overflow-hidden',
   {
     variants: {
       variant: {
-        default: 'border-black',
-        error: 'border-red-600',
+        default: '',
+        error: 'shadow-[inset_0_2px_4px_rgba(239,68,68,0.1),0_4px_12px_rgba(239,68,68,0.2)]',
       },
     },
     defaultVariants: {
@@ -306,12 +306,12 @@ export function Dropdown({
         id={optionId}
         onClick={() => !option.disabled && handleSelect(option.value)}
         className={clsx(
-          'px-4 py-2.5 cursor-pointer transition-all flex items-center justify-between gap-3 font-mono border-b-2 border-black last:border-b-0',
+          'px-4 py-2.5 cursor-pointer transition-all flex items-center justify-between gap-3 font-mono border-b border-gray-100 last:border-b-0 rounded-lg mx-1 first:mt-1 last:mb-1',
           {
-            'bg-[#00B900] text-white': highlighted && !option.disabled,
-            'bg-[#FFE500]': selected && !highlighted,
-            'text-black/40 cursor-not-allowed opacity-50': option.disabled,
-            'hover:bg-[#FFE500]/50': !option.disabled && !highlighted,
+            'bg-[#00B900] text-white shadow-[inset_0_-2px_6px_rgba(0,0,0,0.2),0_2px_8px_rgba(0,185,0,0.3)]': highlighted && !option.disabled,
+            'bg-[#e8f5e9]': selected && !highlighted,
+            'text-gray-400 cursor-not-allowed opacity-50': option.disabled,
+            'hover:bg-[#e8f5e9]': !option.disabled && !highlighted,
           }
         )}
         role="option"
@@ -320,7 +320,7 @@ export function Dropdown({
       >
         <div className="flex items-center gap-3 flex-1 min-w-0">
           {option.icon && (
-            <div className={clsx('flex-shrink-0', highlighted ? 'text-white' : 'text-black')}>
+            <div className={clsx('flex-shrink-0', highlighted ? 'text-white' : 'text-gray-600')}>
               {option.icon}
             </div>
           )}
@@ -329,14 +329,14 @@ export function Dropdown({
               {option.label}
             </div>
             {option.description && (
-              <div className={clsx('text-xs truncate mt-0.5', highlighted ? 'text-white/80' : 'text-black/60')}>
+              <div className={clsx('text-xs truncate mt-0.5', highlighted ? 'text-white/80' : 'text-gray-500')}>
                 {option.description}
               </div>
             )}
           </div>
         </div>
         {selected && (
-          <Check className={clsx('h-5 w-5 flex-shrink-0 font-bold', highlighted ? 'text-white' : 'text-black')} />
+          <Check className={clsx('h-5 w-5 flex-shrink-0 font-bold', highlighted ? 'text-white' : 'text-[#00B900]')} />
         )}
       </div>
     );
@@ -366,23 +366,23 @@ export function Dropdown({
         tabIndex={disabled ? -1 : 0}
       >
         <div className="flex items-center justify-between gap-2">
-          <span className={clsx('truncate flex-1', selectedValues.length === 0 && 'text-black/40')}>
+          <span className={clsx('truncate flex-1', selectedValues.length === 0 && 'text-gray-400')}>
             {selectedLabel}
           </span>
           <div className="flex items-center gap-1 flex-shrink-0">
             {selectedValues.length > 0 && !disabled && (
               <button
                 onClick={handleClear}
-                className="p-0.5 hover:bg-black hover:text-white transition-colors"
+                className="p-0.5 rounded-lg hover:bg-[#e8f5e9] transition-colors"
                 type="button"
                 aria-label="選択をクリア"
               >
-                <X className="h-4 w-4" />
+                <X className="h-4 w-4 text-gray-500" />
               </button>
             )}
             <ChevronDown
               className={clsx(
-                'h-5 w-5 text-black transition-transform duration-200',
+                'h-5 w-5 text-gray-500 transition-transform duration-200',
                 isOpen && 'rotate-180'
               )}
             />
@@ -400,9 +400,9 @@ export function Dropdown({
         >
           {/* 検索入力 */}
           {searchable && (
-            <div className="p-2 border-b-2 border-black">
+            <div className="p-2 border-b border-gray-100">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-black/60" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   ref={searchInputRef}
                   type="text"
@@ -412,7 +412,7 @@ export function Dropdown({
                     setHighlightedIndex(0);
                   }}
                   placeholder={searchPlaceholder}
-                  className="w-full pl-9 pr-3 py-2 bg-white border-2 border-black text-sm text-black placeholder-black/40 font-mono focus:outline-none transition-all"
+                  className="w-full pl-9 pr-3 py-2 rounded-lg bg-white text-sm text-gray-800 placeholder-gray-400 font-mono focus:outline-none transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] focus:shadow-[inset_0_2px_4px_rgba(0,0,0,0.08),0_0_0_2px_rgba(0,185,0,0.2)]"
                   onClick={(e) => e.stopPropagation()}
                 />
               </div>
@@ -426,7 +426,7 @@ export function Dropdown({
               filteredGroups.length > 0 ? (
                 filteredGroups.map((group, groupIndex) => (
                   <div key={group.label}>
-                    <div className="px-4 py-2 text-xs font-bold text-black uppercase tracking-wider bg-[#FFFEF5] border-b-2 border-black sticky top-0">
+                    <div className="px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider bg-[#e8f5e9] border-b border-gray-100 sticky top-0">
                       {group.label}
                     </div>
                     {group.options.map((option, optionIndex) => {
@@ -438,7 +438,7 @@ export function Dropdown({
                   </div>
                 ))
               ) : (
-                <div className="px-4 py-8 text-center text-black/40 text-sm font-mono">
+                <div className="px-4 py-8 text-center text-gray-400 text-sm font-mono">
                   {noOptionsMessage}
                 </div>
               )
@@ -447,7 +447,7 @@ export function Dropdown({
               filteredOptions.length > 0 ? (
                 filteredOptions.map((option, index) => renderOption(option, index))
               ) : (
-                <div className="px-4 py-8 text-center text-black/40 text-sm font-mono">
+                <div className="px-4 py-8 text-center text-gray-400 text-sm font-mono">
                   {noOptionsMessage}
                 </div>
               )
@@ -466,18 +466,18 @@ export function Dropdown({
       {/* カスタムスクロールバーのスタイル */}
       <style jsx>{`
         .custom-scrollbar::-webkit-scrollbar {
-          width: 10px;
+          width: 8px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: #FFFEF5;
-          border-left: 2px solid black;
+          background: #f5f5f5;
+          border-radius: 4px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: black;
-          border: 2px solid black;
+          background: #d1d5db;
+          border-radius: 4px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #333;
+          background: #9ca3af;
         }
       `}</style>
     </div>

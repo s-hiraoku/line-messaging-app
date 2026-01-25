@@ -73,10 +73,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   );
 
   const toastStyles = {
-    success: "border-2 border-black bg-[#00B900] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
-    error: "border-2 border-black bg-red-600 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
-    info: "border-2 border-black bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
-    warning: "border-2 border-black bg-[#FFE500] text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
+    success: "rounded-xl bg-[#00B900] text-white shadow-[inset_0_-4px_12px_rgba(0,0,0,0.2),inset_0_2px_6px_rgba(255,255,255,0.3),0_8px_24px_rgba(0,185,0,0.4)]",
+    error: "rounded-xl bg-red-500 text-white shadow-[inset_0_-4px_12px_rgba(0,0,0,0.2),inset_0_2px_6px_rgba(255,255,255,0.3),0_8px_24px_rgba(239,68,68,0.4)]",
+    info: "rounded-xl bg-white text-gray-800 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.12)]",
+    warning: "rounded-xl bg-[#FFE500] text-amber-900 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.1),inset_0_2px_6px_rgba(255,255,255,0.5),0_8px_24px_rgba(255,229,0,0.4)]",
   };
 
   const icons = {
