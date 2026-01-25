@@ -270,50 +270,50 @@ export default function UsersPage() {
       <header className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <h1 className={`text-5xl font-black text-black ${syne.className}`}>ユーザー管理</h1>
+            <h1 className={`text-5xl font-black text-gray-800 ${syne.className}`}>ユーザー管理</h1>
             <div className="h-2 w-12 rotate-12 bg-[#FFE500]" />
           </div>
           {selectedUserIds.size > 0 && (
             <button
               onClick={handleDeleteUsers}
               disabled={deleting}
-              className="flex items-center gap-2 border-2 border-black bg-red-600 px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex items-center gap-2 rounded-xl bg-red-600 px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)] disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Trash2 className="h-4 w-4" />
               {deleting ? "削除中..." : `選択したユーザーを削除 (${selectedUserIds.size})`}
             </button>
           )}
         </div>
-        <p className={`text-base text-black/70 ${ibmPlexSans.className}`}>
+        <p className={`text-base text-gray-500 ${ibmPlexSans.className}`}>
           LINEフォロワーの一覧と詳細情報を確認できます。
         </p>
       </header>
 
       {/* デバッグ情報 */}
-      <section className="border-2 border-black bg-yellow-100 p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-        <h3 className="mb-3 text-xs font-bold uppercase">デバッグ情報 - QR 表示条件</h3>
+      <section className="rounded-2xl bg-yellow-100 p-4 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+        <h3 className="mb-3 text-xs font-bold uppercase text-gray-700">デバッグ情報 - QR 表示条件</h3>
         <div className="space-y-3">
           <div>
-            <h4 className="mb-1 text-xs font-bold">状態:</h4>
-            <ul className="space-y-1 text-xs font-mono">
+            <h4 className="mb-1 text-xs font-bold text-gray-700">状態:</h4>
+            <ul className="space-y-1 text-xs font-mono text-gray-500">
               <li>loading: {String(loading)}</li>
               <li>!loading: {String(!loading)}</li>
             </ul>
           </div>
           <div>
-            <h4 className="mb-1 text-xs font-bold">チャネルデータ (API):</h4>
-            <ul className="space-y-1 text-xs font-mono">
+            <h4 className="mb-1 text-xs font-bold text-gray-700">チャネルデータ (API):</h4>
+            <ul className="space-y-1 text-xs font-mono text-gray-500">
               <li>basicId: {channelData?.basicId || "(empty)"}</li>
               <li>friendUrl: {channelData?.friendUrl || "(empty)"}</li>
             </ul>
           </div>
           <div>
-            <h4 className="mb-1 text-xs font-bold">計算結果:</h4>
-            <ul className="space-y-1 text-xs font-mono">
+            <h4 className="mb-1 text-xs font-bold text-gray-700">計算結果:</h4>
+            <ul className="space-y-1 text-xs font-mono text-gray-500">
               <li>friendAddUrl: {friendAddUrl || "(null)"}</li>
-              <li className="mt-2 font-bold">
+              <li className="mt-2 font-bold text-gray-700">
                 QR表示: {String(!loading && !!friendAddUrl)}
-                {!loading && !friendAddUrl && " ← basicId または friendUrl を設定してください"}
+                {!loading && !friendAddUrl && " <- basicId または friendUrl を設定してください"}
               </li>
             </ul>
           </div>
@@ -322,20 +322,20 @@ export default function UsersPage() {
 
       {/* 友だち追加 QR */}
       {!loading && (friendAddUrl ? (
-        <section className="border-2 border-black bg-[#FFFEF5] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-          <h2 className={`mb-4 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>友だち追加 QR</h2>
+        <section className="rounded-2xl bg-[#e8f5e9] p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+          <h2 className={`mb-4 text-xs font-bold uppercase tracking-wider text-gray-800 ${ibmPlexSans.className}`}>友だち追加 QR</h2>
           <div className="flex items-start gap-6">
             <img
               alt="Add friend QR"
-              className="h-40 w-40 border-2 border-black bg-white p-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+              className="h-40 w-40 rounded-xl bg-white p-2 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]"
               src={`https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=${encodeURIComponent(friendAddUrl)}`}
             />
             <div className="flex-1 space-y-3">
-              <p className="text-xs font-mono text-black/60">QR をスキャン、または下のリンクから友だち追加できます。</p>
+              <p className="text-xs font-mono text-gray-500">QR をスキャン、または下のリンクから友だち追加できます。</p>
               <a className="block text-xs font-bold text-[#00B900] underline hover:text-[#00B900]/80" href={friendAddUrl} target="_blank" rel="noreferrer">{friendAddUrl}</a>
               <div>
                 <button
-                  className="border-2 border-black bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
+                  className="rounded-xl bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#e8f5e9] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]"
                   onClick={async () => {
                     try { await navigator.clipboard.writeText(friendAddUrl); } catch {}
                   }}
@@ -345,61 +345,61 @@ export default function UsersPage() {
           </div>
         </section>
       ) : (
-        <section className="border-2 border-black bg-[#FFFEF5] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-          <h2 className={`mb-4 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>友だち追加 QR</h2>
-          <p className="text-xs font-mono text-black/60">設定でベーシックIDまたは友だち追加URLを入力するとQRを表示できます。</p>
+        <section className="rounded-2xl bg-[#e8f5e9] p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+          <h2 className={`mb-4 text-xs font-bold uppercase tracking-wider text-gray-800 ${ibmPlexSans.className}`}>友だち追加 QR</h2>
+          <p className="text-xs font-mono text-gray-500">設定でベーシックIDまたは友だち追加URLを入力するとQRを表示できます。</p>
         </section>
       ))}
 
       {loading ? (
         <LoadingSpinner text="読み込み中..." />
       ) : users.length === 0 ? (
-        <div className="border-2 border-black bg-white p-12 text-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-          <UserIcon className="mx-auto h-12 w-12 text-black/40" />
-          <h3 className="mt-4 text-lg font-bold uppercase tracking-wider text-black">ユーザーがいません</h3>
-          <p className="mt-2 text-sm text-black/60">
+        <div className="rounded-2xl bg-white p-12 text-center shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+          <UserIcon className="mx-auto h-12 w-12 text-gray-400" />
+          <h3 className="mt-4 text-lg font-bold uppercase tracking-wider text-gray-800">ユーザーがいません</h3>
+          <p className="mt-2 text-sm text-gray-500">
             LINEでボットを友だち追加したユーザーがここに表示されます。
           </p>
         </div>
       ) : (
-        <div className="overflow-hidden border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="overflow-hidden rounded-2xl bg-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
           <table className="w-full">
-            <thead className="border-b-2 border-black bg-white">
+            <thead className="border-b border-gray-200 bg-white">
               <tr>
                 <th className="px-6 py-3 text-center">
                   <input
                     type="checkbox"
                     checked={users.length > 0 && selectedUserIds.size === users.length}
                     onChange={handleToggleAll}
-                    className="h-5 w-5 cursor-pointer border-2 border-black accent-[#00B900]"
+                    className="h-5 w-5 cursor-pointer rounded accent-[#00B900]"
                   />
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-black">
+                <th className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-800">
                   ユーザー
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-black">
+                <th className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-800">
                   登録日
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-black">
+                <th className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-800">
                   リッチメニュー
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider text-black">
+                <th className="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider text-gray-800">
                   操作
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y-2 divide-black">
+            <tbody className="divide-y divide-gray-200">
               {users.map((user) => {
                 const currentMenu = richMenus.find((m) => m.richMenuId === user.richMenuId);
 
                 return (
-                  <tr key={user.id} className="hover:bg-[#FFFEF5]">
+                  <tr key={user.id} className="hover:bg-[#e8f5e9]">
                     <td className="px-6 py-4 text-center">
                       <input
                         type="checkbox"
                         checked={selectedUserIds.has(user.id)}
                         onChange={() => handleToggleUser(user.id)}
-                        className="h-5 w-5 cursor-pointer border-2 border-black accent-[#00B900]"
+                        className="h-5 w-5 cursor-pointer rounded accent-[#00B900]"
                       />
                     </td>
                     <td className="whitespace-nowrap px-6 py-4">
@@ -408,20 +408,20 @@ export default function UsersPage() {
                           <img
                             src={user.pictureUrl}
                             alt={user.displayName}
-                            className="h-10 w-10 border-2 border-black"
+                            className="h-10 w-10 rounded-xl"
                           />
                         ) : (
-                          <div className="flex h-10 w-10 items-center justify-center border-2 border-black bg-white">
-                            <UserIcon className="h-5 w-5 text-black/40" />
+                          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+                            <UserIcon className="h-5 w-5 text-gray-400" />
                           </div>
                         )}
                         <div>
-                          <div className="font-bold text-black">{user.displayName}</div>
-                          <div className="font-mono text-xs text-black/60">{user.lineUserId}</div>
+                          <div className="font-bold text-gray-800">{user.displayName}</div>
+                          <div className="font-mono text-xs text-gray-500">{user.lineUserId}</div>
                         </div>
                       </div>
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-black/60">
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                       {new Date(user.createdAt).toLocaleDateString("ja-JP")}
                     </td>
                     <td className="px-6 py-4">
@@ -431,7 +431,7 @@ export default function UsersPage() {
                             value={currentMenu.id}
                             onChange={(e) => handleSetRichMenu(user.id, e.target.value)}
                             disabled={settingMenu === user.id}
-                            className="border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all disabled:cursor-not-allowed disabled:opacity-50"
+                            className="rounded-xl bg-white px-3 py-2 text-sm font-mono text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] focus:outline-none focus:ring-2 focus:ring-[#00B900]/30 transition-all disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             {richMenus.map((menu) => (
                               <option key={menu.id} value={menu.id}>
@@ -442,7 +442,7 @@ export default function UsersPage() {
                           <button
                             onClick={() => handleUnlinkRichMenu(user.id, currentMenu.id)}
                             disabled={settingMenu === user.id}
-                            className="border-2 border-black bg-red-600 px-3 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50"
+                            className="rounded-xl bg-red-600 px-3 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)] disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             {settingMenu === user.id ? "解除中..." : "解除"}
                           </button>
@@ -452,7 +452,7 @@ export default function UsersPage() {
                           value=""
                           onChange={(e) => handleSetRichMenu(user.id, e.target.value)}
                           disabled={settingMenu === user.id || richMenus.length === 0}
-                          className="border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all disabled:cursor-not-allowed disabled:opacity-50"
+                          className="rounded-xl bg-white px-3 py-2 text-sm font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] focus:outline-none focus:ring-2 focus:ring-[#00B900]/30 transition-all disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           <option value="">メニューを選択...</option>
                           {richMenus.map((menu) => (
@@ -465,7 +465,7 @@ export default function UsersPage() {
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-right text-sm">
                       {settingMenu === user.id && (
-                        <span className="font-bold text-black/60">設定中...</span>
+                        <span className="font-bold text-gray-500">設定中...</span>
                       )}
                     </td>
                   </tr>
@@ -478,10 +478,10 @@ export default function UsersPage() {
 
       {/* API デバッグセクション */}
       <section className="space-y-4">
-        <div className="flex items-center justify-between border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-          <h2 className={`text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>API デバッグ情報</h2>
+        <div className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+          <h2 className={`text-xs font-bold uppercase tracking-wider text-gray-800 ${ibmPlexSans.className}`}>API デバッグ情報</h2>
           <button
-            className="border-2 border-black bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
+            className="rounded-xl bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#e8f5e9] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]"
             onClick={loadData}
           >
             全て再読込

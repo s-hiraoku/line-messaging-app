@@ -135,56 +135,56 @@ export default function DropdownDemoPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-8">
+    <div className="min-h-screen bg-[#e8f5e9] p-8">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* ヘッダー */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-white">
+          <h1 className="text-4xl font-bold text-gray-800">
             ドロップダウンコンポーネント デモ
           </h1>
-          <p className="text-slate-400 text-lg max-w-3xl mx-auto">
+          <p className="text-gray-500 text-lg max-w-3xl mx-auto">
             shadcn/ui (Radix UI) ベースの高品質なSelectとComboboxコンポーネント。
             アクセシビリティ、キーボードナビゲーション、スムーズなアニメーションを備えています。
           </p>
         </div>
 
         {/* コンポーネント比較表 */}
-        <Card>
+        <Card className="rounded-2xl shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
           <CardHeader>
-            <CardTitle>コンポーネントの選択ガイド</CardTitle>
+            <CardTitle className="text-gray-800">コンポーネントの選択ガイド</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-2 p-4 bg-slate-800/30 rounded-lg">
-                <h3 className="font-semibold text-blue-400">Select (Radix UI)</h3>
-                <p className="text-sm text-slate-400">
+              <div className="space-y-2 p-4 rounded-xl bg-[#e8f5e9] shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+                <h3 className="font-semibold text-[#00B900]">Select (Radix UI)</h3>
+                <p className="text-sm text-gray-500">
                   シンプルな選択肢に最適。ネイティブに近い動作で、キーボード操作に完全対応。
                 </p>
-                <ul className="text-xs text-slate-500 space-y-1 list-disc list-inside">
+                <ul className="text-xs text-gray-500 space-y-1 list-disc list-inside">
                   <li>10-20個程度のオプション</li>
                   <li>グループ化サポート</li>
                   <li>高速・軽量</li>
                 </ul>
               </div>
 
-              <div className="space-y-2 p-4 bg-slate-800/30 rounded-lg">
-                <h3 className="font-semibold text-green-400">Combobox</h3>
-                <p className="text-sm text-slate-400">
+              <div className="space-y-2 p-4 rounded-xl bg-[#e8f5e9] shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+                <h3 className="font-semibold text-[#00B900]">Combobox</h3>
+                <p className="text-sm text-gray-500">
                   検索可能なドロップダウン。多数のオプションから絞り込みが必要な場合に最適。
                 </p>
-                <ul className="text-xs text-slate-500 space-y-1 list-disc list-inside">
+                <ul className="text-xs text-gray-500 space-y-1 list-disc list-inside">
                   <li>20個以上のオプション</li>
                   <li>検索/フィルタリング</li>
                   <li>説明テキスト対応</li>
                 </ul>
               </div>
 
-              <div className="space-y-2 p-4 bg-slate-800/30 rounded-lg">
-                <h3 className="font-semibold text-purple-400">カスタムDropdown</h3>
-                <p className="text-sm text-slate-400">
+              <div className="space-y-2 p-4 rounded-xl bg-[#e8f5e9] shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+                <h3 className="font-semibold text-[#00B900]">カスタムDropdown</h3>
+                <p className="text-sm text-gray-500">
                   高度な機能が必要な場合。マルチセレクト、最大選択数制限など。
                 </p>
-                <ul className="text-xs text-slate-500 space-y-1 list-disc list-inside">
+                <ul className="text-xs text-gray-500 space-y-1 list-disc list-inside">
                   <li>マルチセレクト</li>
                   <li>最大選択数制限</li>
                   <li>カスタムレンダリング</li>
@@ -196,13 +196,13 @@ export default function DropdownDemoPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Select (Radix UI) */}
-          <Card>
+          <Card className="rounded-2xl shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
             <CardHeader>
-              <CardTitle>Select (Radix UI)</CardTitle>
+              <CardTitle className="text-gray-800">Select (Radix UI)</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   基本的なSelect
                 </label>
                 <SelectRadix value={selectValue} onValueChange={setSelectValue}>
@@ -218,14 +218,14 @@ export default function DropdownDemoPage() {
                   </SelectContent>
                 </SelectRadix>
                 {selectValue && (
-                  <p className="mt-2 text-sm text-slate-400">
-                    選択: <span className="text-blue-400">{selectValue}</span>
+                  <p className="mt-2 text-sm text-gray-500">
+                    選択: <span className="text-[#00B900]">{selectValue}</span>
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   グループ化されたSelect
                 </label>
                 <SelectRadix value={selectGroupValue} onValueChange={setSelectGroupValue}>
@@ -253,14 +253,14 @@ export default function DropdownDemoPage() {
                   </SelectContent>
                 </SelectRadix>
                 {selectGroupValue && (
-                  <p className="mt-2 text-sm text-slate-400">
-                    選択: <span className="text-blue-400">{selectGroupValue}</span>
+                  <p className="mt-2 text-sm text-gray-500">
+                    選択: <span className="text-[#00B900]">{selectGroupValue}</span>
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   無効状態
                 </label>
                 <SelectRadix disabled>
@@ -276,13 +276,13 @@ export default function DropdownDemoPage() {
           </Card>
 
           {/* Combobox (検索可能) */}
-          <Card>
+          <Card className="rounded-2xl shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
             <CardHeader>
-              <CardTitle>Combobox (検索可能)</CardTitle>
+              <CardTitle className="text-gray-800">Combobox (検索可能)</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   技術スタックを検索
                 </label>
                 <Combobox
@@ -294,14 +294,14 @@ export default function DropdownDemoPage() {
                   emptyMessage="該当する技術が見つかりません"
                 />
                 {comboboxValue && (
-                  <p className="mt-2 text-sm text-slate-400">
-                    選択: <span className="text-blue-400">{comboboxValue}</span>
+                  <p className="mt-2 text-sm text-gray-500">
+                    選択: <span className="text-[#00B900]">{comboboxValue}</span>
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   グループ化されたCombobox
                 </label>
                 <Combobox
@@ -312,14 +312,14 @@ export default function DropdownDemoPage() {
                   searchPlaceholder="検索..."
                 />
                 {comboboxGroupValue && (
-                  <p className="mt-2 text-sm text-slate-400">
-                    選択: <span className="text-blue-400">{comboboxGroupValue}</span>
+                  <p className="mt-2 text-sm text-gray-500">
+                    選択: <span className="text-[#00B900]">{comboboxGroupValue}</span>
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   エラー状態
                 </label>
                 <Combobox
@@ -330,7 +330,7 @@ export default function DropdownDemoPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   無効状態
                 </label>
                 <Combobox
@@ -343,14 +343,14 @@ export default function DropdownDemoPage() {
           </Card>
 
           {/* カスタムDropdown (高度な機能) */}
-          <Card className="lg:col-span-2">
+          <Card className="lg:col-span-2 rounded-2xl shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
             <CardHeader>
-              <CardTitle>カスタムDropdown (高度な機能)</CardTitle>
+              <CardTitle className="text-gray-800">カスタムDropdown (高度な機能)</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     シングルセレクト + 検索
                   </label>
                   <Dropdown
@@ -362,14 +362,14 @@ export default function DropdownDemoPage() {
                     searchPlaceholder="連絡方法を検索..."
                   />
                   {dropdownValue && (
-                    <p className="mt-2 text-sm text-slate-400">
-                      選択: <span className="text-blue-400">{dropdownValue}</span>
+                    <p className="mt-2 text-sm text-gray-500">
+                      選択: <span className="text-[#00B900]">{dropdownValue}</span>
                     </p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     マルチセレクト (最大3個)
                   </label>
                   <Dropdown
@@ -383,12 +383,12 @@ export default function DropdownDemoPage() {
                   />
                   {dropdownMultiValue.length > 0 && (
                     <div className="mt-2">
-                      <p className="text-sm text-slate-400 mb-1">選択中:</p>
+                      <p className="text-sm text-gray-500 mb-1">選択中:</p>
                       <div className="flex flex-wrap gap-2">
                         {dropdownMultiValue.map((val) => (
                           <span
                             key={val}
-                            className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs"
+                            className="px-2 py-1 bg-[#00B900]/20 text-[#00B900] rounded-lg text-xs"
                           >
                             {val}
                           </span>
@@ -403,26 +403,26 @@ export default function DropdownDemoPage() {
         </div>
 
         {/* 主な機能 */}
-        <Card>
+        <Card className="rounded-2xl shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
           <CardHeader>
-            <CardTitle>主な機能と改善点</CardTitle>
+            <CardTitle className="text-gray-800">主な機能と改善点</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
               <div className="space-y-2">
-                <h3 className="font-semibold text-slate-200">🎨 見た目の改善</h3>
-                <ul className="text-slate-400 space-y-1 list-disc list-inside">
+                <h3 className="font-semibold text-gray-700">見た目の改善</h3>
+                <ul className="text-gray-500 space-y-1 list-disc list-inside">
                   <li>スムーズなアニメーション</li>
                   <li>モダンなデザイン</li>
-                  <li>ダークテーマ最適化</li>
+                  <li>クレイモーフィズム対応</li>
                   <li>ホバー/フォーカスエフェクト</li>
                 </ul>
               </div>
 
               <div className="space-y-2">
-                <h3 className="font-semibold text-slate-200">⌨️ キーボード対応</h3>
-                <ul className="text-slate-400 space-y-1 list-disc list-inside">
-                  <li>↑↓ でオプション移動</li>
+                <h3 className="font-semibold text-gray-700">キーボード対応</h3>
+                <ul className="text-gray-500 space-y-1 list-disc list-inside">
+                  <li>上下キーでオプション移動</li>
                   <li>Enter で選択</li>
                   <li>Escape で閉じる</li>
                   <li>文字入力で検索</li>
@@ -430,8 +430,8 @@ export default function DropdownDemoPage() {
               </div>
 
               <div className="space-y-2">
-                <h3 className="font-semibold text-slate-200">♿ アクセシビリティ</h3>
-                <ul className="text-slate-400 space-y-1 list-disc list-inside">
+                <h3 className="font-semibold text-gray-700">アクセシビリティ</h3>
+                <ul className="text-gray-500 space-y-1 list-disc list-inside">
                   <li>ARIA属性完全対応</li>
                   <li>スクリーンリーダー対応</li>
                   <li>フォーカス管理</li>
@@ -440,8 +440,8 @@ export default function DropdownDemoPage() {
               </div>
 
               <div className="space-y-2">
-                <h3 className="font-semibold text-slate-200">🚀 高度な機能</h3>
-                <ul className="text-slate-400 space-y-1 list-disc list-inside">
+                <h3 className="font-semibold text-gray-700">高度な機能</h3>
+                <ul className="text-gray-500 space-y-1 list-disc list-inside">
                   <li>検索/フィルタリング</li>
                   <li>グループ化</li>
                   <li>アイコン・説明対応</li>
@@ -453,16 +453,16 @@ export default function DropdownDemoPage() {
         </Card>
 
         {/* 使用例 */}
-        <Card>
+        <Card className="rounded-2xl shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
           <CardHeader>
-            <CardTitle>使用例</CardTitle>
+            <CardTitle className="text-gray-800">使用例</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-semibold text-slate-300 mb-2">Select (Radix UI)</h3>
-                <div className="bg-slate-950/50 rounded-lg p-4 overflow-x-auto">
-                  <pre className="text-xs text-slate-300">
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">Select (Radix UI)</h3>
+                <div className="rounded-xl p-4 overflow-x-auto bg-gray-50 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+                  <pre className="text-xs text-gray-700">
                     <code>{`import {
   SelectRadix,
   SelectContent,
@@ -485,9 +485,9 @@ export default function DropdownDemoPage() {
               </div>
 
               <div>
-                <h3 className="text-sm font-semibold text-slate-300 mb-2">Combobox</h3>
-                <div className="bg-slate-950/50 rounded-lg p-4 overflow-x-auto">
-                  <pre className="text-xs text-slate-300">
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">Combobox</h3>
+                <div className="rounded-xl p-4 overflow-x-auto bg-gray-50 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+                  <pre className="text-xs text-gray-700">
                     <code>{`import { Combobox } from '@/components/ui';
 
 <Combobox
