@@ -48,15 +48,15 @@ export function BroadcastOverview({ statusData, recentBroadcasts }: Props) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "DRAFT":
-        return "text-black bg-white border-2 border-black";
+        return "text-gray-600 bg-white shadow-[inset_0_-2px_4px_rgba(0,0,0,0.04),inset_0_1px_2px_rgba(255,255,255,0.8)]";
       case "SCHEDULED":
-        return "text-black bg-[#FFE500] border-2 border-black";
+        return "text-amber-900 bg-[#FFE500] shadow-[inset_0_-2px_4px_rgba(0,0,0,0.1),inset_0_1px_2px_rgba(255,255,255,0.5)]";
       case "SENDING":
-        return "text-white bg-[#00B900] border-2 border-black";
+        return "text-white bg-[#00B900] shadow-[inset_0_-2px_4px_rgba(0,0,0,0.2),inset_0_1px_2px_rgba(255,255,255,0.3)]";
       case "SENT":
-        return "text-white bg-[#00B900] border-2 border-black";
+        return "text-white bg-[#00B900] shadow-[inset_0_-2px_4px_rgba(0,0,0,0.2),inset_0_1px_2px_rgba(255,255,255,0.3)]";
       default:
-        return "text-black bg-white border-2 border-black";
+        return "text-gray-600 bg-white shadow-[inset_0_-2px_4px_rgba(0,0,0,0.04),inset_0_1px_2px_rgba(255,255,255,0.8)]";
     }
   };
 
@@ -71,9 +71,9 @@ export function BroadcastOverview({ statusData, recentBroadcasts }: Props) {
   };
 
   return (
-    <article className="border-2 border-black bg-white p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+    <article className="rounded-2xl bg-white p-5 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold uppercase tracking-wider text-black">配信ステータス</h2>
+        <h2 className="text-lg font-bold uppercase tracking-wider text-gray-700">配信ステータス</h2>
         <Link
           href="/dashboard/broadcasts"
           className="inline-flex items-center gap-1 text-sm font-bold text-[#00B900] hover:text-[#00B900]/80 cursor-pointer transition-colors"
@@ -88,14 +88,14 @@ export function BroadcastOverview({ statusData, recentBroadcasts }: Props) {
         {statusData.map((stat) => (
           <div
             key={stat.status}
-            className="flex items-center gap-3 p-3 border-2 border-black bg-[#FFFEF5] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+            className="flex items-center gap-3 p-3 rounded-xl bg-[#e8f5e9] shadow-[inset_0_-3px_8px_rgba(0,0,0,0.04),inset_0_2px_4px_rgba(255,255,255,0.8)]"
           >
-            <div className={`p-2 ${getStatusColor(stat.status)}`}>
+            <div className={`p-2 rounded-lg ${getStatusColor(stat.status)}`}>
               {getStatusIcon(stat.status)}
             </div>
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-black/60">{getStatusLabel(stat.status)}</p>
-              <p className="text-xl font-bold text-black">{stat.count}</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-gray-500">{getStatusLabel(stat.status)}</p>
+              <p className="text-xl font-bold text-gray-800">{stat.count}</p>
             </div>
           </div>
         ))}
@@ -103,24 +103,24 @@ export function BroadcastOverview({ statusData, recentBroadcasts }: Props) {
 
       {/* 最近の配信 */}
       {recentBroadcasts.length > 0 && (
-        <div className="pt-4 border-t-2 border-black">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-black mb-3">最近の配信</h3>
+        <div className="pt-4 border-t border-gray-200">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-gray-700 mb-3">最近の配信</h3>
           <ul className="space-y-2">
             {recentBroadcasts.map((broadcast) => (
               <li
                 key={broadcast.id}
-                className="flex items-center justify-between p-2 border-2 border-black bg-white hover:bg-[#FFFEF5] transition-colors"
+                className="flex items-center justify-between p-2 rounded-lg bg-white hover:bg-[#e8f5e9] transition-colors shadow-[inset_0_-2px_4px_rgba(0,0,0,0.02),0_2px_8px_rgba(0,0,0,0.04)]"
               >
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-black truncate">{broadcast.title}</p>
-                  <p className="text-xs font-mono text-black/60">
+                  <p className="text-sm font-bold text-gray-800 truncate">{broadcast.title}</p>
+                  <p className="text-xs font-mono text-gray-500">
                     {broadcast.scheduledAt
                       ? `予約: ${formatDateTime(broadcast.scheduledAt)}`
                       : `作成: ${formatDateTime(broadcast.createdAt)}`}
                   </p>
                 </div>
                 <span
-                  className={`ml-2 flex-shrink-0 px-2 py-1 text-xs font-bold uppercase tracking-wider ${getStatusColor(broadcast.status)}`}
+                  className={`ml-2 flex-shrink-0 px-2 py-1 text-xs font-bold uppercase tracking-wider rounded-md ${getStatusColor(broadcast.status)}`}
                 >
                   {getStatusLabel(broadcast.status)}
                 </span>

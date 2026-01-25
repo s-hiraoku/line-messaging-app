@@ -23,7 +23,7 @@ const DEFAULT_COLORS = [
 export function PieChart({ data, size = 300 }: PieChartProps) {
   if (data.length === 0) {
     return (
-      <div className="flex items-center justify-center border-2 border-black bg-white p-8" style={{ width: size, height: size }}>
+      <div className="flex items-center justify-center rounded-2xl bg-white/80 p-8 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300" style={{ width: size, height: size }}>
         <p className="text-sm font-mono text-black/60">データがありません</p>
       </div>
     );
@@ -34,13 +34,23 @@ export function PieChart({ data, size = 300 }: PieChartProps) {
   const centerY = size / 2;
   const radius = Math.min(size, size) / 2 - 40;
 
-  let currentAngle = -Math.PI / 2; // Start at top
+  type SliceData = {
+    path: string;
+    color: string;
+    label: string;
+    percentage: string;
+    value: number;
+    labelX: number;
+    labelY: number;
+    endAngle: number;
+  };
 
-  const slices = data.map((item, index) => {
+  const slices = data.reduce<SliceData[]>((acc, item, index) => {
+    const prevAngle = index === 0 ? -Math.PI / 2 : acc[index - 1].endAngle;
     const percentage = (item.value / total) * 100;
     const angle = (item.value / total) * 2 * Math.PI;
-    const startAngle = currentAngle;
-    const endAngle = currentAngle + angle;
+    const startAngle = prevAngle;
+    const endAngle = prevAngle + angle;
 
     const x1 = centerX + radius * Math.cos(startAngle);
     const y1 = centerY + radius * Math.sin(startAngle);
@@ -62,33 +72,34 @@ export function PieChart({ data, size = 300 }: PieChartProps) {
     const labelX = centerX + labelRadius * Math.cos(midAngle);
     const labelY = centerY + labelRadius * Math.sin(midAngle);
 
-    currentAngle = endAngle;
-
-    return {
+    acc.push({
       path,
       color: item.color || DEFAULT_COLORS[index % DEFAULT_COLORS.length],
       label: item.label,
       percentage: percentage.toFixed(1),
       value: item.value,
       labelX,
-      labelY
-    };
-  });
+      labelY,
+      endAngle,
+    });
+
+    return acc;
+  }, []);
 
   return (
     <div className="space-y-4">
       <svg
         width={size}
         height={size}
-        className="border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+        className="rounded-2xl bg-white/80 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300"
       >
         {slices.map((slice, i) => (
           <g key={i}>
             <path
               d={slice.path}
               fill={slice.color}
-              stroke="#000"
-              strokeWidth="2"
+              stroke="rgba(255,255,255,0.5)"
+              strokeWidth="1"
             />
             {/* パーセンテージ表示 */}
             {parseFloat(slice.percentage) > 5 && (
@@ -112,9 +123,9 @@ export function PieChart({ data, size = 300 }: PieChartProps) {
       {/* 凡例 */}
       <div className="grid grid-cols-2 gap-2">
         {slices.map((slice, i) => (
-          <div key={i} className="flex items-center gap-2 border-2 border-black bg-white p-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <div key={i} className="flex items-center gap-2 rounded-xl bg-white/80 p-2 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300">
             <div
-              className="h-4 w-4 border-2 border-black"
+              className="h-4 w-4 rounded-md"
               style={{ backgroundColor: slice.color }}
             />
             <div className="flex-1 min-w-0">

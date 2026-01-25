@@ -21,19 +21,19 @@ export function NavLink({ href, label, description, icon }: NavLinkProps) {
     <Link
       href={href}
       className={clsx(
-        'group relative flex flex-col gap-1.5 border-2 border-black px-4 py-3 font-mono transition-all cursor-pointer',
+        'group relative flex flex-col gap-1.5 rounded-2xl px-4 py-3 font-mono transition-all duration-300 cursor-pointer',
         isActive && !isHomePage
-          ? 'bg-[#00B900] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+          ? 'bg-[#00B900] text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.2),inset_0_3px_8px_rgba(255,255,255,0.3),0_8px_24px_rgba(0,185,0,0.4)]'
           : isActive && isHomePage
-          ? 'bg-[#FFE500] text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
-          : 'bg-white text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]'
+          ? 'bg-[#FFE500] text-amber-900 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.1),inset_0_3px_8px_rgba(255,255,255,0.5),0_8px_24px_rgba(255,229,0,0.4)]'
+          : 'bg-white text-gray-700 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 hover:shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_8px_20px_rgba(0,0,0,0.1)]'
       )}
     >
       <div className="flex items-center gap-3 text-sm font-bold uppercase tracking-wide">
         {icon && (
           <span className={clsx(
             "transition-colors",
-            isActive && !isHomePage ? "text-white" : "text-black"
+            isActive && !isHomePage ? "text-white" : isActive && isHomePage ? "text-amber-900" : "text-gray-600"
           )}>
             {icon}
           </span>
@@ -43,7 +43,7 @@ export function NavLink({ href, label, description, icon }: NavLinkProps) {
       {description && (
         <span className={clsx(
           "text-xs font-normal normal-case tracking-normal",
-          isActive && !isHomePage ? "text-white/90" : "text-black/60"
+          isActive && !isHomePage ? "text-white/90" : isActive && isHomePage ? "text-amber-900/70" : "text-gray-500"
         )}>
           {description}
         </span>

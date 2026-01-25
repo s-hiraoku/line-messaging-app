@@ -13,7 +13,7 @@ type LineChartProps = {
 export function LineChart({ data, height = 200, color = "#00B900", showGrid = true }: LineChartProps) {
   if (data.length === 0) {
     return (
-      <div className="flex items-center justify-center border-2 border-black bg-white p-8" style={{ height }}>
+      <div className="flex items-center justify-center rounded-2xl bg-white/70 p-8 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300" style={{ height }}>
         <p className="text-sm font-mono text-black/60">データがありません</p>
       </div>
     );
@@ -41,7 +41,7 @@ export function LineChart({ data, height = 200, color = "#00B900", showGrid = tr
       width="100%"
       height={height}
       viewBox={`0 0 ${width} ${height}`}
-      className="border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+      className="rounded-2xl bg-white/70 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300"
     >
       {/* グリッドライン */}
       {showGrid && (
