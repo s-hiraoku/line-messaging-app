@@ -26,16 +26,16 @@ export function LineConversation({ direction = "outbound", displayName = "あな
   const [tab, setTab] = useState<'room' | 'list'>('room');
 
   return (
-    <div className="w-full max-w-md overflow-hidden border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+    <div className="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300">
       {/* Title bar */}
-      <div className="flex items-center justify-between bg-black px-3 py-2 text-xs text-white">
+      <div className="flex items-center justify-between rounded-t-2xl bg-[#06C755] px-3 py-2 text-xs text-white">
         <div className="flex items-center gap-2"><span>▼</span><span className="font-bold uppercase tracking-wider">プレビュー</span></div>
         <div className="flex items-center gap-3"><span className="opacity-60">?</span><span className="opacity-60">⇩</span></div>
       </div>
       {/* Tabs */}
-      <div className="flex border-b-2 border-black bg-white text-xs">
-        <button onClick={()=>setTab('room')} className={clsx("w-1/2 border-r-2 border-black px-4 py-2 text-center transition font-bold uppercase tracking-wider", tab==='room' ? 'text-[#06C755] bg-[#FFFEF5]' : 'text-black hover:bg-[#FFFEF5]/50')}>トークルーム</button>
-        <button onClick={()=>setTab('list')} className={clsx("w-1/2 px-4 py-2 text-center transition font-bold uppercase tracking-wider", tab==='list' ? 'text-[#06C755] bg-[#FFFEF5]' : 'text-black hover:bg-[#FFFEF5]/50')}>トークリスト</button>
+      <div className="flex border-b border-gray-200 bg-white text-xs">
+        <button onClick={()=>setTab('room')} className={clsx("w-1/2 border-r border-gray-200 px-4 py-2 text-center transition-all duration-300 font-bold uppercase tracking-wider", tab==='room' ? 'text-[#06C755] bg-[#e8f5e9]' : 'text-gray-700 hover:bg-[#e8f5e9]')}>トークルーム</button>
+        <button onClick={()=>setTab('list')} className={clsx("w-1/2 px-4 py-2 text-center transition-all duration-300 font-bold uppercase tracking-wider", tab==='list' ? 'text-[#06C755] bg-[#e8f5e9]' : 'text-gray-700 hover:bg-[#e8f5e9]')}>トークリスト</button>
       </div>
       {/* Body */}
       {tab === 'room' ? (

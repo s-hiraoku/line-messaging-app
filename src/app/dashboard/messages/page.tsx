@@ -65,7 +65,7 @@ export default function MessagesPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <p className="font-bold text-black/60">読み込み中...</p>
+        <p className="font-bold text-gray-500">読み込み中...</p>
       </div>
     );
   }
@@ -76,7 +76,7 @@ export default function MessagesPage() {
         <p className="font-bold text-red-600">{error}</p>
         <button
           onClick={loadMessages}
-          className="border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer"
+          className="rounded-xl bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)] cursor-pointer"
         >
           再読み込み
         </button>
@@ -88,21 +88,21 @@ export default function MessagesPage() {
     <div className="space-y-8">
       <header className="space-y-3">
         <div className="flex items-center gap-4">
-          <h1 className={`text-5xl font-black text-black ${syne.className}`}>メッセージ履歴</h1>
-          <div className="h-2 w-12 rotate-12 bg-[#FFE500]" />
+          <h1 className={`text-5xl font-black text-gray-800 ${syne.className}`}>メッセージ履歴</h1>
+          <div className="h-2 w-12 rotate-12 bg-[#FFE500] rounded-full" />
         </div>
-        <p className={`text-base text-black/70 ${ibmPlexSans.className}`}>
+        <p className={`text-base text-gray-500 ${ibmPlexSans.className}`}>
           送受信されたすべてのメッセージの履歴を確認できます。
         </p>
       </header>
 
       {/* 最近のメッセージ */}
-      <section className="border-2 border-black bg-[#FFFEF5] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <section className="rounded-2xl bg-[#e8f5e9] p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className={`text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>最近のメッセージ</h2>
+          <h2 className={`text-xs font-bold uppercase tracking-wider text-gray-800 ${ibmPlexSans.className}`}>最近のメッセージ</h2>
           <button
             onClick={loadMessages}
-            className="inline-flex items-center gap-1 border-2 border-black bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] cursor-pointer"
+            className="inline-flex items-center gap-1 rounded-xl bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)] cursor-pointer"
           >
             再読込
             <ArrowUpRight className="h-4 w-4" />
@@ -110,25 +110,25 @@ export default function MessagesPage() {
         </div>
 
         {messages.length === 0 ? (
-          <p className="py-8 text-center text-sm font-bold text-black/40">メッセージがありません</p>
+          <p className="py-8 text-center text-sm font-bold text-gray-400">メッセージがありません</p>
         ) : (
-          <ul className="divide-y-2 divide-black">
+          <ul className="divide-y divide-gray-200">
             {messages.map((msg) => (
               <li key={msg.id} className="flex items-start gap-4 py-3">
                 <div
-                  className={`mt-1 shrink-0 border-2 border-black px-2 py-0.5 text-xs font-bold uppercase ${
+                  className={`mt-1 shrink-0 rounded-lg px-2 py-0.5 text-xs font-bold uppercase ${
                     msg.direction === "INBOUND"
                       ? "bg-[#00B900] text-white"
-                      : "bg-white text-black"
+                      : "bg-white text-gray-800 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8)]"
                   }`}
                 >
                   {msg.direction === "INBOUND" ? "受信" : "送信"}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm text-black font-mono">
+                  <p className="truncate text-sm text-gray-800 font-mono">
                     {msg.content.text || `(${msg.content.type || "非テキスト"})`}
                   </p>
-                  <p className="mt-1 text-xs font-mono text-black/60">
+                  <p className="mt-1 text-xs font-mono text-gray-500">
                     {msg.user.displayName || msg.user.lineUserId.slice(0, 8) + "..."} ・{" "}
                     {new Date(msg.createdAt).toLocaleString()}
                   </p>
@@ -141,7 +141,7 @@ export default function MessagesPage() {
 
       {/* API デバッグ */}
       <section className="space-y-4">
-        <h2 className="text-lg font-bold uppercase tracking-wider text-black">API デバッグ</h2>
+        <h2 className="text-lg font-bold uppercase tracking-wider text-gray-800">API デバッグ</h2>
         <DebugPanel
           title="/api/dashboard/stats (recentMessages)"
           request={{}}
