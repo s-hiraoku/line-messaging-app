@@ -113,25 +113,25 @@ export default function DashboardLayout({
   return (
     <ToastProvider>
       <ConfirmDialogProvider>
-        <div className="min-h-screen bg-[#FFFEF5]">
+        <div className="min-h-screen bg-[#e8f5e9]">
           <div className="flex min-h-screen flex-col lg:flex-row">
             {/* Sidebar */}
-            <aside className="relative w-full overflow-x-hidden border-b-4 border-black bg-white lg:fixed lg:left-0 lg:top-0 lg:h-screen lg:w-[320px] lg:overflow-y-auto lg:border-b-0 lg:border-r-4">
+            <aside className="relative w-full overflow-x-hidden bg-white/80 backdrop-blur-sm lg:fixed lg:left-0 lg:top-0 lg:h-screen lg:w-[320px] lg:overflow-y-auto lg:shadow-[inset_-8px_0_20px_rgba(0,0,0,0.03),8px_0_32px_rgba(0,0,0,0.08)]">
               {/* Decorative Background */}
-              <div className="pointer-events-none absolute right-0 top-20 h-[300px] w-[300px] translate-x-1/2 rounded-full bg-[#00B900] opacity-[0.08] blur-[100px]" />
+              <div className="pointer-events-none absolute right-0 top-20 h-[300px] w-[300px] translate-x-1/2 rounded-full bg-[#00B900] opacity-[0.06] blur-[100px]" />
 
-              <div className="relative z-10 flex h-full flex-col gap-8 px-8 pb-10 pt-12">
+              <div className="relative z-10 flex h-full flex-col gap-8 px-6 pb-10 pt-10">
                 {/* Header */}
                 <div className="space-y-3">
-                  <div className="inline-block -rotate-1 border-2 border-black bg-[#FFE500] px-3 py-1 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                    <span className={`text-xs font-bold uppercase tracking-[0.2em] text-black ${ibmPlexSans.className}`}>
+                  <div className="inline-block rounded-xl bg-[#FFE500] px-4 py-1.5 shadow-[inset_0_-4px_10px_rgba(0,0,0,0.1),inset_0_2px_6px_rgba(255,255,255,0.5),0_4px_12px_rgba(255,229,0,0.3)]">
+                    <span className={`text-xs font-bold uppercase tracking-[0.2em] text-amber-900 ${ibmPlexSans.className}`}>
                       LINE Messaging
                     </span>
                   </div>
-                  <h1 className={`text-2xl font-black text-black ${syne.className}`}>
+                  <h1 className={`text-2xl font-black text-gray-800 ${syne.className}`}>
                     Operations<br/>Console
                   </h1>
-                  <p className={`text-sm leading-relaxed text-black/70 ${ibmPlexSans.className}`}>
+                  <p className={`text-sm leading-relaxed text-gray-600 ${ibmPlexSans.className}`}>
                     リアルタイムにメッセージ戦略を最適化する統合管理基盤
                   </p>
                 </div>
@@ -144,11 +144,11 @@ export default function DashboardLayout({
 
                   {/* Separator for Development Tools */}
                   <div className="my-3 flex items-center gap-3">
-                    <div className="h-[2px] flex-1 bg-black"></div>
-                    <span className={`text-xs font-bold uppercase tracking-wider text-black/40 ${ibmPlexSans.className}`}>
+                    <div className="h-px flex-1 bg-gradient-to-r from-transparent to-gray-300"></div>
+                    <span className={`text-xs font-bold uppercase tracking-wider text-gray-400 ${ibmPlexSans.className}`}>
                       開発ツール
                     </span>
-                    <div className="h-[2px] flex-1 bg-black"></div>
+                    <div className="h-px flex-1 bg-gradient-to-l from-transparent to-gray-300"></div>
                   </div>
 
                   {primaryNav.slice(10).map((item) => (
@@ -159,9 +159,10 @@ export default function DashboardLayout({
             </aside>
 
             {/* Main Content */}
-            <main className="relative flex-1 bg-[#FFFEF5] px-6 py-10 lg:ml-[320px] lg:px-12">
+            <main className="relative flex-1 bg-[#e8f5e9] px-6 py-10 lg:ml-[320px] lg:px-12">
               {/* Decorative Background Elements */}
-              <div className="pointer-events-none absolute right-0 top-0 h-[400px] w-[400px] translate-x-1/4 -translate-y-1/4 rounded-full bg-[#00B900] opacity-[0.06] blur-[120px]" />
+              <div className="pointer-events-none absolute right-0 top-0 h-[400px] w-[400px] translate-x-1/4 -translate-y-1/4 rounded-full bg-[#00B900] opacity-[0.08] blur-[120px]" />
+              <div className="pointer-events-none absolute bottom-0 left-0 h-[300px] w-[300px] -translate-x-1/4 translate-y-1/4 rounded-full bg-[#FFE500] opacity-[0.1] blur-[100px]" />
 
               <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-8">
                 {children}

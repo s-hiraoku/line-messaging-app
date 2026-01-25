@@ -184,18 +184,20 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <p className="font-bold text-black/60">読み込み中...</p>
+        <div className="rounded-2xl bg-white/80 p-8 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+          <p className="font-bold text-gray-600">読み込み中...</p>
+        </div>
       </div>
     );
   }
 
   if (error || !stats) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 rounded-2xl bg-white/80 p-8 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
         <p className="font-bold text-red-600">{error || "データの取得に失敗しました"}</p>
         <button
           onClick={loadStats}
-          className="border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
+          className="rounded-xl bg-[#00B900] px-6 py-3 text-sm font-bold uppercase tracking-wider text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.2),inset_0_3px_8px_rgba(255,255,255,0.3),0_8px_24px_rgba(0,185,0,0.4)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[inset_0_-6px_16px_rgba(0,0,0,0.2),inset_0_3px_8px_rgba(255,255,255,0.3),0_12px_32px_rgba(0,185,0,0.5)] cursor-pointer active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3),0_4px_16px_rgba(0,185,0,0.3)]"
         >
           再読み込み
         </button>
@@ -207,10 +209,10 @@ export default function DashboardPage() {
     <div className="space-y-8">
       <header className="space-y-3">
         <div className="flex items-center gap-4">
-          <h1 className={`text-5xl font-black text-black ${syne.className}`}>ダッシュボード</h1>
-          <div className="h-2 w-12 rotate-12 bg-[#FFE500]" />
+          <h1 className={`text-5xl font-black text-gray-800 ${syne.className}`}>ダッシュボード</h1>
+          <div className="h-3 w-14 rotate-12 rounded-full bg-[#FFE500] shadow-[inset_0_-2px_4px_rgba(0,0,0,0.1),inset_0_1px_2px_rgba(255,255,255,0.5),0_4px_12px_rgba(255,229,0,0.4)]" />
         </div>
-        <p className={`text-base text-black/70 ${ibmPlexSans.className}`}>
+        <p className={`text-base text-gray-600 ${ibmPlexSans.className}`}>
           LINE Messaging API の運用状況をここから把握できます。
         </p>
       </header>
@@ -218,31 +220,31 @@ export default function DashboardPage() {
       {/* 統計カード */}
       <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {/* 今日のメッセージ */}
-        <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <article className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className={`text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>
+            <h2 className={`text-xs font-bold uppercase tracking-wider text-gray-700 ${ibmPlexSans.className}`}>
               今日のメッセージ
             </h2>
-            <MessageSquare className="h-5 w-5 text-black" />
+            <MessageSquare className="h-5 w-5 text-gray-600" />
           </div>
-          <p className={`text-4xl font-black text-black ${syne.className}`}>{stats.today.total}</p>
+          <p className={`text-4xl font-black text-gray-800 ${syne.className}`}>{stats.today.total}</p>
           <div className="mt-3 flex gap-4 text-xs font-mono font-bold">
             <span className="text-[#00B900]">受信: {stats.today.inbound}</span>
-            <span className="text-black/60">送信: {stats.today.outbound}</span>
+            <span className="text-gray-500">送信: {stats.today.outbound}</span>
           </div>
         </article>
 
         {/* ユーザー */}
         <Link href="/dashboard/users" className="group">
-          <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer">
+          <article className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_12px_32px_rgba(0,0,0,0.12)] cursor-pointer">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className={`text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>
+              <h2 className={`text-xs font-bold uppercase tracking-wider text-gray-700 ${ibmPlexSans.className}`}>
                 フォロワー
               </h2>
-              <Users className="h-5 w-5 text-black" />
+              <Users className="h-5 w-5 text-gray-600" />
             </div>
-            <p className={`text-4xl font-black text-black ${syne.className}`}>{stats.users.following}</p>
-            <p className="mt-3 text-xs font-mono font-bold text-black/60">
+            <p className={`text-4xl font-black text-gray-800 ${syne.className}`}>{stats.users.following}</p>
+            <p className="mt-3 text-xs font-mono font-bold text-gray-500">
               総ユーザー: {stats.users.total}
             </p>
           </article>
@@ -250,17 +252,17 @@ export default function DashboardPage() {
 
         {/* 配信 */}
         <Link href="/dashboard/broadcasts" className="group">
-          <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer">
+          <article className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_12px_32px_rgba(0,0,0,0.12)] cursor-pointer">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className={`text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>
+              <h2 className={`text-xs font-bold uppercase tracking-wider text-gray-700 ${ibmPlexSans.className}`}>
                 配信
               </h2>
-              <Send className="h-5 w-5 text-black" />
+              <Send className="h-5 w-5 text-gray-600" />
             </div>
-            <p className={`text-4xl font-black text-black ${syne.className}`}>
+            <p className={`text-4xl font-black text-gray-800 ${syne.className}`}>
               {stats.broadcasts.draft + stats.broadcasts.scheduled}
             </p>
-            <div className="mt-3 flex gap-4 text-xs font-mono font-bold text-black/60">
+            <div className="mt-3 flex gap-4 text-xs font-mono font-bold text-gray-500">
               <span>下書き: {stats.broadcasts.draft}</span>
               <span>予約: {stats.broadcasts.scheduled}</span>
             </div>
@@ -269,15 +271,15 @@ export default function DashboardPage() {
 
         {/* テンプレート */}
         <Link href="/dashboard/templates" className="group">
-          <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer">
+          <article className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_12px_32px_rgba(0,0,0,0.12)] cursor-pointer">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className={`text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>
+              <h2 className={`text-xs font-bold uppercase tracking-wider text-gray-700 ${ibmPlexSans.className}`}>
                 テンプレート
               </h2>
-              <FileText className="h-5 w-5 text-black" />
+              <FileText className="h-5 w-5 text-gray-600" />
             </div>
-            <p className={`text-4xl font-black text-black ${syne.className}`}>{stats.templates.active}</p>
-            <p className="mt-3 text-xs font-mono font-bold text-black/60">アクティブなテンプレート</p>
+            <p className={`text-4xl font-black text-gray-800 ${syne.className}`}>{stats.templates.active}</p>
+            <p className="mt-3 text-xs font-mono font-bold text-gray-500">アクティブなテンプレート</p>
           </article>
         </Link>
       </section>
@@ -286,47 +288,47 @@ export default function DashboardPage() {
       {extendedStats && (
         <>
           {/* エンゲージメント指標 */}
-          <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-            <h2 className={`mb-6 text-lg font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>
+          <section className="rounded-3xl bg-white p-6 shadow-[inset_0_-8px_20px_rgba(0,0,0,0.04),inset_0_4px_12px_rgba(255,255,255,0.8),0_12px_32px_rgba(0,0,0,0.08)]">
+            <h2 className={`mb-6 text-lg font-bold uppercase tracking-wider text-gray-700 ${ibmPlexSans.className}`}>
               エンゲージメント指標
             </h2>
             <div className="grid gap-4 md:grid-cols-3">
-              <article className="border-2 border-black bg-[#FFFEF5] p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-black/60">平均応答時間</h3>
+              <article className="rounded-2xl bg-[#e8f5e9] p-4 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,185,0,0.1)]">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">平均応答時間</h3>
                 <p className={`mt-2 text-3xl font-black text-[#00B900] ${syne.className}`}>
                   {extendedStats.engagement.averageResponseTime}
                 </p>
-                <p className="mt-1 text-xs font-mono text-black/60">分</p>
+                <p className="mt-1 text-xs font-mono text-gray-500">分</p>
               </article>
-              <article className="border-2 border-black bg-[#FFFEF5] p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-black/60">アクティブユーザー率</h3>
+              <article className="rounded-2xl bg-[#e8f5e9] p-4 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,185,0,0.1)]">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">アクティブユーザー率</h3>
                 <p className={`mt-2 text-3xl font-black text-[#00B900] ${syne.className}`}>
                   {extendedStats.engagement.activeUserRate}%
                 </p>
-                <p className="mt-1 text-xs font-mono text-black/60">
+                <p className="mt-1 text-xs font-mono text-gray-500">
                   {extendedStats.engagement.activeUsers} / {extendedStats.engagement.totalUsers} ユーザー
                 </p>
               </article>
-              <article className="border-2 border-black bg-[#FFFEF5] p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-black/60">ユーザーあたりの平均メッセージ</h3>
+              <article className="rounded-2xl bg-[#e8f5e9] p-4 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,185,0,0.1)]">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">ユーザーあたりの平均メッセージ</h3>
                 <p className={`mt-2 text-3xl font-black text-[#00B900] ${syne.className}`}>
                   {extendedStats.engagement.messagesPerUser}
                 </p>
-                <p className="mt-1 text-xs font-mono text-black/60">メッセージ / 週</p>
+                <p className="mt-1 text-xs font-mono text-gray-500">メッセージ / 週</p>
               </article>
             </div>
           </section>
 
           {/* 月次比較 */}
-          <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-            <h2 className={`mb-6 text-lg font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>
+          <section className="rounded-3xl bg-white p-6 shadow-[inset_0_-8px_20px_rgba(0,0,0,0.04),inset_0_4px_12px_rgba(255,255,255,0.8),0_12px_32px_rgba(0,0,0,0.08)]">
+            <h2 className={`mb-6 text-lg font-bold uppercase tracking-wider text-gray-700 ${ibmPlexSans.className}`}>
               月次成長率
             </h2>
             <div className="grid gap-4 md:grid-cols-2">
-              <article className="border-2 border-black bg-[#FFFEF5] p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-black/60">メッセージ成長</h3>
+              <article className="rounded-2xl bg-[#e8f5e9] p-4 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,185,0,0.1)]">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">メッセージ成長</h3>
                 <div className="mt-3 flex items-baseline gap-3">
-                  <p className={`text-3xl font-black text-black ${syne.className}`}>
+                  <p className={`text-3xl font-black text-gray-800 ${syne.className}`}>
                     {extendedStats.monthlyComparison.messages.current.toLocaleString()}
                   </p>
                   <span className={`text-sm font-bold ${
@@ -336,14 +338,14 @@ export default function DashboardPage() {
                     {extendedStats.monthlyComparison.messages.growthRate}%
                   </span>
                 </div>
-                <p className="mt-2 text-xs font-mono text-black/60">
+                <p className="mt-2 text-xs font-mono text-gray-500">
                   前月: {extendedStats.monthlyComparison.messages.previous.toLocaleString()}
                 </p>
               </article>
-              <article className="border-2 border-black bg-[#FFFEF5] p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-black/60">新規ユーザー成長</h3>
+              <article className="rounded-2xl bg-[#e8f5e9] p-4 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,185,0,0.1)]">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">新規ユーザー成長</h3>
                 <div className="mt-3 flex items-baseline gap-3">
-                  <p className={`text-3xl font-black text-black ${syne.className}`}>
+                  <p className={`text-3xl font-black text-gray-800 ${syne.className}`}>
                     {extendedStats.monthlyComparison.users.current.toLocaleString()}
                   </p>
                   <span className={`text-sm font-bold ${
@@ -353,7 +355,7 @@ export default function DashboardPage() {
                     {extendedStats.monthlyComparison.users.growthRate}%
                   </span>
                 </div>
-                <p className="mt-2 text-xs font-mono text-black/60">
+                <p className="mt-2 text-xs font-mono text-gray-500">
                   前月: {extendedStats.monthlyComparison.users.previous.toLocaleString()}
                 </p>
               </article>
@@ -362,27 +364,27 @@ export default function DashboardPage() {
 
           {/* 人気テンプレート */}
           {extendedStats.topTemplates.length > 0 && (
-            <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-              <h2 className={`mb-6 text-lg font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>
+            <section className="rounded-3xl bg-white p-6 shadow-[inset_0_-8px_20px_rgba(0,0,0,0.04),inset_0_4px_12px_rgba(255,255,255,0.8),0_12px_32px_rgba(0,0,0,0.08)]">
+              <h2 className={`mb-6 text-lg font-bold uppercase tracking-wider text-gray-700 ${ibmPlexSans.className}`}>
                 人気テンプレート TOP5
               </h2>
               <div className="space-y-3">
                 {extendedStats.topTemplates.map((template, index) => (
-                  <div key={template.id} className="flex items-center gap-3 border-2 border-black bg-[#FFFEF5] p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                    <div className={`flex h-8 w-8 items-center justify-center border-2 border-black bg-[#FFE500] font-black ${syne.className}`}>
+                  <div key={template.id} className="flex items-center gap-3 rounded-xl bg-[#e8f5e9] p-3 shadow-[inset_0_-3px_8px_rgba(0,0,0,0.04),inset_0_2px_4px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,185,0,0.1)]">
+                    <div className={`flex h-8 w-8 items-center justify-center rounded-lg bg-[#FFE500] font-black shadow-[inset_0_-2px_6px_rgba(0,0,0,0.1),inset_0_1px_3px_rgba(255,255,255,0.5),0_2px_8px_rgba(255,229,0,0.4)] ${syne.className}`}>
                       {index + 1}
                     </div>
                     <div className="flex-1">
-                      <p className={`font-bold text-black ${ibmPlexSans.className}`}>{template.name}</p>
+                      <p className={`font-bold text-gray-800 ${ibmPlexSans.className}`}>{template.name}</p>
                       {template.category && (
-                        <p className="text-xs font-mono text-black/60">{template.category}</p>
+                        <p className="text-xs font-mono text-gray-500">{template.category}</p>
                       )}
                     </div>
                     <div className="text-right">
                       <p className={`text-xl font-black text-[#00B900] ${syne.className}`}>
                         {template.usageCount}
                       </p>
-                      <p className="text-xs font-mono text-black/60">回使用</p>
+                      <p className="text-xs font-mono text-gray-500">回使用</p>
                     </div>
                   </div>
                 ))}
@@ -391,57 +393,57 @@ export default function DashboardPage() {
           )}
 
           {/* リアルタイムアクティビティフィード */}
-          <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-            <h2 className={`mb-6 text-lg font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>
+          <section className="rounded-3xl bg-white p-6 shadow-[inset_0_-8px_20px_rgba(0,0,0,0.04),inset_0_4px_12px_rgba(255,255,255,0.8),0_12px_32px_rgba(0,0,0,0.08)]">
+            <h2 className={`mb-6 text-lg font-bold uppercase tracking-wider text-gray-700 ${ibmPlexSans.className}`}>
               最近のアクティビティ（過去24時間）
             </h2>
             <div className="grid gap-4 md:grid-cols-2">
               {/* 最近のメッセージ */}
               <div>
-                <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-black/60">メッセージ</h3>
+                <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-gray-500">メッセージ</h3>
                 <div className="space-y-2">
                   {extendedStats.activityFeed.recentMessages.slice(0, 5).map((msg) => (
-                    <div key={msg.id} className="flex items-center gap-3 border-2 border-black bg-[#FFFEF5] p-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                      <div className={`rounded-full border-2 border-black p-1 ${
+                    <div key={msg.id} className="flex items-center gap-3 rounded-xl bg-[#e8f5e9] p-2 shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_3px_rgba(255,255,255,0.8),0_2px_8px_rgba(0,185,0,0.1)]">
+                      <div className={`rounded-full p-1.5 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.15),inset_0_1px_2px_rgba(255,255,255,0.3)] ${
                         msg.direction === 'INBOUND' ? 'bg-[#00B900]' : 'bg-[#FFE500]'
                       }`}>
-                        <MessageSquare className="h-3 w-3 text-black" />
+                        <MessageSquare className={`h-3 w-3 ${msg.direction === 'INBOUND' ? 'text-white' : 'text-amber-900'}`} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="truncate text-xs font-bold text-black">{msg.userName}</p>
-                        <p className="text-xs font-mono text-black/60">
+                        <p className="truncate text-xs font-bold text-gray-800">{msg.userName}</p>
+                        <p className="text-xs font-mono text-gray-500">
                           {msg.type} • {new Date(msg.timestamp).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
                         </p>
                       </div>
                     </div>
                   ))}
                   {extendedStats.activityFeed.recentMessages.length === 0 && (
-                    <p className="py-4 text-center text-xs font-mono text-black/60">まだメッセージがありません</p>
+                    <p className="py-4 text-center text-xs font-mono text-gray-500">まだメッセージがありません</p>
                   )}
                 </div>
               </div>
 
               {/* 最近のユーザーアクション */}
               <div>
-                <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-black/60">ユーザーアクション</h3>
+                <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-gray-500">ユーザーアクション</h3>
                 <div className="space-y-2">
                   {extendedStats.activityFeed.recentUserActions.slice(0, 5).map((action) => (
-                    <div key={action.userId} className="flex items-center gap-3 border-2 border-black bg-[#FFFEF5] p-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                      <div className={`rounded-full border-2 border-black p-1 ${
+                    <div key={action.userId} className="flex items-center gap-3 rounded-xl bg-[#e8f5e9] p-2 shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_3px_rgba(255,255,255,0.8),0_2px_8px_rgba(0,185,0,0.1)]">
+                      <div className={`rounded-full p-1.5 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.15),inset_0_1px_2px_rgba(255,255,255,0.3)] ${
                         action.action === 'follow' ? 'bg-[#00B900]' : action.action === 'unfollow' ? 'bg-red-400' : 'bg-[#FFE500]'
                       }`}>
-                        <Users className="h-3 w-3 text-black" />
+                        <Users className={`h-3 w-3 ${action.action === 'follow' ? 'text-white' : action.action === 'unfollow' ? 'text-white' : 'text-amber-900'}`} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="truncate text-xs font-bold text-black">{action.userName}</p>
-                        <p className="text-xs font-mono text-black/60">
+                        <p className="truncate text-xs font-bold text-gray-800">{action.userName}</p>
+                        <p className="text-xs font-mono text-gray-500">
                           {action.action === 'follow' ? 'フォロー' : action.action === 'unfollow' ? 'ブロック' : '更新'} • {new Date(action.timestamp).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
                         </p>
                       </div>
                     </div>
                   ))}
                   {extendedStats.activityFeed.recentUserActions.length === 0 && (
-                    <p className="py-4 text-center text-xs font-mono text-black/60">まだアクションがありません</p>
+                    <p className="py-4 text-center text-xs font-mono text-gray-500">まだアクションがありません</p>
                   )}
                 </div>
               </div>
@@ -476,45 +478,45 @@ export default function DashboardPage() {
       <section className="grid gap-4 md:grid-cols-3">
         <Link
           href="/dashboard/messages"
-          className="group border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer"
+          className="group rounded-2xl bg-white p-4 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_12px_32px_rgba(0,0,0,0.12)] cursor-pointer"
         >
           <div className="flex items-center gap-3">
-            <div className="border-2 border-black bg-[#FFE500] p-2">
-              <MessageSquare className="h-5 w-5 text-black" />
+            <div className="rounded-xl bg-[#FFE500] p-2 shadow-[inset_0_-3px_8px_rgba(0,0,0,0.1),inset_0_2px_4px_rgba(255,255,255,0.5),0_4px_12px_rgba(255,229,0,0.4)]">
+              <MessageSquare className="h-5 w-5 text-amber-900" />
             </div>
             <div>
-              <h3 className={`font-bold text-black ${ibmPlexSans.className}`}>メッセージ送信</h3>
-              <p className="text-xs font-mono text-black/60">個別のユーザーに送信</p>
+              <h3 className={`font-bold text-gray-800 ${ibmPlexSans.className}`}>メッセージ送信</h3>
+              <p className="text-xs font-mono text-gray-500">個別のユーザーに送信</p>
             </div>
           </div>
         </Link>
 
         <Link
           href="/dashboard/broadcasts"
-          className="group border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer"
+          className="group rounded-2xl bg-white p-4 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_12px_32px_rgba(0,0,0,0.12)] cursor-pointer"
         >
           <div className="flex items-center gap-3">
-            <div className="border-2 border-black bg-[#00B900] p-2">
+            <div className="rounded-xl bg-[#00B900] p-2 shadow-[inset_0_-3px_8px_rgba(0,0,0,0.2),inset_0_2px_4px_rgba(255,255,255,0.3),0_4px_12px_rgba(0,185,0,0.4)]">
               <Send className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h3 className={`font-bold text-black ${ibmPlexSans.className}`}>一斉配信</h3>
-              <p className="text-xs font-mono text-black/60">全フォロワーに配信</p>
+              <h3 className={`font-bold text-gray-800 ${ibmPlexSans.className}`}>一斉配信</h3>
+              <p className="text-xs font-mono text-gray-500">全フォロワーに配信</p>
             </div>
           </div>
         </Link>
 
         <Link
           href="/dashboard/users"
-          className="group border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer"
+          className="group rounded-2xl bg-white p-4 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_12px_32px_rgba(0,0,0,0.12)] cursor-pointer"
         >
           <div className="flex items-center gap-3">
-            <div className="border-2 border-black bg-[#FFFEF5] p-2">
-              <Users className="h-5 w-5 text-black" />
+            <div className="rounded-xl bg-[#e8f5e9] p-2 shadow-[inset_0_-3px_8px_rgba(0,0,0,0.04),inset_0_2px_4px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,185,0,0.15)]">
+              <Users className="h-5 w-5 text-gray-700" />
             </div>
             <div>
-              <h3 className={`font-bold text-black ${ibmPlexSans.className}`}>ユーザー管理</h3>
-              <p className="text-xs font-mono text-black/60">フォロワーを確認</p>
+              <h3 className={`font-bold text-gray-800 ${ibmPlexSans.className}`}>ユーザー管理</h3>
+              <p className="text-xs font-mono text-gray-500">フォロワーを確認</p>
             </div>
           </div>
         </Link>
@@ -522,7 +524,7 @@ export default function DashboardPage() {
 
       {/* API デバッグ */}
       <section className="space-y-4">
-        <h2 className={`text-lg font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>API デバッグ</h2>
+        <h2 className={`text-lg font-bold uppercase tracking-wider text-gray-700 ${ibmPlexSans.className}`}>API デバッグ</h2>
         <DebugPanel
           title="/api/dashboard/stats"
           request={{}}
