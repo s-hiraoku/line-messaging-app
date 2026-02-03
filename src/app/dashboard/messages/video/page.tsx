@@ -134,20 +134,20 @@ export default function VideoMessagePage() {
     <div className="space-y-6">
       <header className="space-y-3">
         <div className="flex items-center gap-4">
-          <h1 className={`text-5xl font-black text-black ${syne.className}`}>動画メッセージ</h1>
-          <div className="h-2 w-12 rotate-12 bg-[#FFE500]" />
+          <h1 className={`text-5xl font-black text-gray-800 ${syne.className}`}>動画メッセージ</h1>
+          <div className="h-2 w-12 rotate-12 bg-[#FFE500] rounded-full" />
         </div>
-        <p className={`text-base text-black/70 ${ibmPlexSans.className}`}>
+        <p className={`text-base text-gray-500 ${ibmPlexSans.className}`}>
           動画を送信できます。
         </p>
       </header>
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+        className="space-y-4 rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]"
       >
         <div className="space-y-2">
-          <label htmlFor="lineUserId" className="text-sm font-bold uppercase tracking-wider text-black">
+          <label htmlFor="lineUserId" className="text-sm font-bold uppercase tracking-wider text-gray-800">
             LINE ユーザー ID <span className="text-red-600">*</span>
           </label>
           <input
@@ -155,14 +155,14 @@ export default function VideoMessagePage() {
             type="text"
             value={lineUserId}
             onChange={(event) => setLineUserId(event.target.value)}
-            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
+            className="w-full rounded-xl bg-white px-3 py-2 text-sm font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_2px_8px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-[#00B900] focus:ring-offset-2 transition-all"
             placeholder="Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
             required
           />
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="videoUrl" className="text-sm font-bold uppercase tracking-wider text-black">
+          <label htmlFor="videoUrl" className="text-sm font-bold uppercase tracking-wider text-gray-800">
             動画URL <span className="text-red-600">*</span>
           </label>
           <input
@@ -170,22 +170,22 @@ export default function VideoMessagePage() {
             type="url"
             value={videoUrl}
             onChange={(event) => handleVideoUrlChange(event.target.value)}
-            className={`w-full border-2 ${
-              videoUrlError ? "border-red-600" : "border-black"
-            } bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all`}
+            className={`w-full rounded-xl bg-white px-3 py-2 text-sm font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_2px_8px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all ${
+              videoUrlError ? "focus:ring-red-600" : "focus:ring-[#00B900]"
+            }`}
             placeholder="https://example.com/video.mp4"
             required
           />
           {videoUrlError && (
             <p className="text-xs text-red-600 font-bold">{videoUrlError}</p>
           )}
-          <p className="text-xs font-mono text-black/60">
+          <p className="text-xs font-mono text-gray-500">
             MP4形式、HTTPS必須、最大200MB
           </p>
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="previewUrl" className="text-sm font-bold uppercase tracking-wider text-black">
+          <label htmlFor="previewUrl" className="text-sm font-bold uppercase tracking-wider text-gray-800">
             プレビュー画像URL <span className="text-red-600">*</span>
           </label>
           <input
@@ -193,16 +193,16 @@ export default function VideoMessagePage() {
             type="url"
             value={previewUrl}
             onChange={(event) => handlePreviewUrlChange(event.target.value)}
-            className={`w-full border-2 ${
-              previewUrlError ? "border-red-600" : "border-black"
-            } bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all`}
+            className={`w-full rounded-xl bg-white px-3 py-2 text-sm font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_2px_8px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all ${
+              previewUrlError ? "focus:ring-red-600" : "focus:ring-[#00B900]"
+            }`}
             placeholder="https://example.com/preview.jpg"
             required
           />
           {previewUrlError && (
             <p className="text-xs text-red-600 font-bold">{previewUrlError}</p>
           )}
-          <p className="text-xs font-mono text-black/60">
+          <p className="text-xs font-mono text-gray-500">
             JPEG形式、HTTPS必須、最大1MB
           </p>
         </div>
@@ -217,10 +217,10 @@ export default function VideoMessagePage() {
           }}
         />
 
-        <div className="flex items-center gap-3 border-t-2 border-black pt-4">
+        <div className="flex items-center gap-3 border-t border-gray-200 pt-4">
           <button
             type="submit"
-            className="inline-flex items-center border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50 active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
+            className="inline-flex items-center rounded-xl bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]"
             disabled={status === "sending" || !isFormValid}
           >
             {status === "sending" ? "送信中..." : "送信"}

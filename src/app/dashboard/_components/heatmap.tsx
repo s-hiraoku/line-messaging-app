@@ -55,7 +55,7 @@ export function Heatmap({ data }: HeatmapProps) {
   const labelHeight = 25;
 
   return (
-    <div className="overflow-x-auto border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+    <div className="overflow-x-auto rounded-2xl bg-white p-4 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300">
       <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-black">
         時間帯×曜日 アクティビティヒートマップ
       </h3>
@@ -96,11 +96,11 @@ export function Heatmap({ data }: HeatmapProps) {
                     height: cellSize,
                     backgroundColor: getColor(value),
                   }}
-                  className="group relative border border-black"
+                  className="group relative rounded-sm transition-all duration-300"
                   title={`${day}曜日 ${hour}時: ${value}`}
                 >
                   {/* ツールチップ */}
-                  <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden -translate-x-1/2 whitespace-nowrap border-2 border-black bg-white px-2 py-1 text-xs font-mono shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] group-hover:block">
+                  <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden -translate-x-1/2 whitespace-nowrap rounded-xl bg-white px-2 py-1 text-xs font-mono shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 group-hover:block">
                     {day}曜日 {hour}時<br />
                     アクティビティ: {value}
                   </div>
@@ -113,12 +113,11 @@ export function Heatmap({ data }: HeatmapProps) {
         {/* 凡例 */}
         <div className="mt-4 flex items-center gap-2 text-xs font-mono text-black/60">
           <span>少ない</span>
-          <div className="flex border-2 border-black">
+          <div className="flex overflow-hidden rounded-xl shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300">
             {["#FFFEF5", "#FFE500", "#8FD400", "#4EBF00", "#00B900"].map((color, i) => (
               <div
                 key={i}
                 style={{ backgroundColor: color, width: 20, height: 20 }}
-                className="border-r border-black last:border-r-0"
               />
             ))}
           </div>

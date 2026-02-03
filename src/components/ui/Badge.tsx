@@ -5,18 +5,18 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(
-  "inline-flex items-center justify-center border-2 border-black px-2 py-0.5 text-xs font-bold uppercase tracking-wider w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none transition-all overflow-hidden",
+  "inline-flex items-center justify-center rounded-lg px-2 py-0.5 text-xs font-bold uppercase tracking-wider w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none transition-all duration-300 overflow-hidden",
   {
     variants: {
       variant: {
         default:
-          "bg-[#00B900] text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] [a&]:hover:translate-x-[1px] [a&]:hover:translate-y-[1px] [a&]:hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]",
+          "bg-[#00B900] text-white shadow-[inset_0_-2px_4px_rgba(0,0,0,0.2),inset_0_1px_2px_rgba(255,255,255,0.3),0_2px_8px_rgba(0,185,0,0.3)] [a&]:hover:-translate-y-0.5 [a&]:hover:shadow-[inset_0_-2px_4px_rgba(0,0,0,0.2),inset_0_1px_2px_rgba(255,255,255,0.3),0_4px_12px_rgba(0,185,0,0.4)]",
         secondary:
-          "bg-white text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] [a&]:hover:translate-x-[1px] [a&]:hover:translate-y-[1px] [a&]:hover:bg-[#FFFEF5] [a&]:hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]",
+          "bg-white text-gray-700 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.04),inset_0_1px_2px_rgba(255,255,255,0.8),0_2px_8px_rgba(0,0,0,0.06)] [a&]:hover:-translate-y-0.5 [a&]:hover:bg-[#e8f5e9] [a&]:hover:shadow-[inset_0_-2px_4px_rgba(0,0,0,0.04),inset_0_1px_2px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.1)]",
         destructive:
-          "bg-red-600 text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] [a&]:hover:translate-x-[1px] [a&]:hover:translate-y-[1px] [a&]:hover:bg-red-700 [a&]:hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]",
+          "bg-red-500 text-white shadow-[inset_0_-2px_4px_rgba(0,0,0,0.2),inset_0_1px_2px_rgba(255,255,255,0.3),0_2px_8px_rgba(239,68,68,0.3)] [a&]:hover:-translate-y-0.5 [a&]:hover:shadow-[inset_0_-2px_4px_rgba(0,0,0,0.2),inset_0_1px_2px_rgba(255,255,255,0.3),0_4px_12px_rgba(239,68,68,0.4)]",
         outline:
-          "bg-transparent text-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] [a&]:hover:bg-[#FFFEF5]",
+          "bg-transparent text-gray-700 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.04),0_2px_6px_rgba(0,0,0,0.04)] [a&]:hover:bg-[#e8f5e9]",
       },
     },
     defaultVariants: {

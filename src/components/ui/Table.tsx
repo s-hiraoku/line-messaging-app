@@ -10,13 +10,13 @@ export interface TableProps extends HTMLAttributes<HTMLTableElement> {
 export const Table = forwardRef<HTMLTableElement, TableProps>(
   ({ className, striped = false, hoverable = true, ...props }, ref) => {
     return (
-      <div className="w-full overflow-x-auto border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <div className="w-full overflow-x-auto rounded-2xl shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
         <table
           ref={ref}
           className={clsx(
             'w-full border-collapse text-sm',
-            striped && '[&_tbody_tr:nth-child(even)]:bg-[#FFFEF5]',
-            hoverable && '[&_tbody_tr]:hover:bg-[#FFFEF5] [&_tbody_tr]:transition-colors',
+            striped && '[&_tbody_tr:nth-child(even)]:bg-[#e8f5e9]',
+            hoverable && '[&_tbody_tr]:hover:bg-[#e8f5e9] [&_tbody_tr]:transition-colors',
             className
           )}
           {...props}
@@ -37,7 +37,7 @@ export const TableHeader = forwardRef<
     <thead
       ref={ref}
       className={clsx(
-        'bg-white border-b-2 border-black',
+        'bg-white border-b border-gray-200',
         className
       )}
       {...props}
@@ -52,7 +52,7 @@ export const TableBody = forwardRef<
   HTMLTableSectionElement,
   HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => {
-  return <tbody ref={ref} className={clsx('', className)} {...props} />;
+  return <tbody ref={ref} className={clsx('bg-white', className)} {...props} />;
 });
 
 TableBody.displayName = 'TableBody';
@@ -66,7 +66,7 @@ export const TableFooter = forwardRef<
     <tfoot
       ref={ref}
       className={clsx(
-        'bg-white border-t-2 border-black font-bold',
+        'bg-white border-t border-gray-200 font-bold',
         className
       )}
       {...props}
@@ -84,7 +84,7 @@ export const TableRow = forwardRef<
   return (
     <tr
       ref={ref}
-      className={clsx('border-b-2 border-black last:border-0', className)}
+      className={clsx('border-b border-gray-100 last:border-0', className)}
       {...props}
     />
   );
@@ -104,8 +104,8 @@ export const TableHead = forwardRef<HTMLTableCellElement, TableHeadProps>(
       <th
         ref={ref}
         className={clsx(
-          'px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-black',
-          sortable && 'cursor-pointer select-none hover:bg-[#FFFEF5]',
+          'px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-700',
+          sortable && 'cursor-pointer select-none hover:bg-[#e8f5e9]',
           className
         )}
         {...props}
@@ -133,7 +133,7 @@ export const TableCell = forwardRef<
   return (
     <td
       ref={ref}
-      className={clsx('px-4 py-3 text-black', className)}
+      className={clsx('px-4 py-3 text-gray-800', className)}
       {...props}
     />
   );
@@ -149,7 +149,7 @@ export const TableCaption = forwardRef<
   return (
     <caption
       ref={ref}
-      className={clsx('mt-4 text-sm text-black/60', className)}
+      className={clsx('mt-4 text-sm text-gray-500', className)}
       {...props}
     />
   );

@@ -4,20 +4,20 @@ import { Loader2 } from 'lucide-react';
 import { clsx } from 'clsx';
 
 const buttonVariants = cva(
-  'cursor-pointer inline-flex items-center justify-center gap-2 border-2 border-black font-bold uppercase tracking-wider transition-all disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none',
+  'cursor-pointer inline-flex items-center justify-center gap-2 rounded-xl font-bold uppercase tracking-wider transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none',
   {
     variants: {
       variant: {
         primary:
-          'bg-[#00B900] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none',
+          'bg-[#00B900] text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.2),inset_0_3px_8px_rgba(255,255,255,0.3),0_8px_24px_rgba(0,185,0,0.4)] hover:-translate-y-0.5 hover:shadow-[inset_0_-6px_16px_rgba(0,0,0,0.2),inset_0_3px_8px_rgba(255,255,255,0.3),0_12px_32px_rgba(0,185,0,0.5)] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3),0_4px_16px_rgba(0,185,0,0.3)]',
         secondary:
-          'bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none',
+          'bg-white text-gray-700 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 hover:shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_8px_20px_rgba(0,0,0,0.12)] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.1),0_2px_8px_rgba(0,0,0,0.06)]',
         danger:
-          'bg-red-600 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-red-700 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none',
+          'bg-red-500 text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.2),inset_0_3px_8px_rgba(255,255,255,0.3),0_8px_24px_rgba(239,68,68,0.4)] hover:-translate-y-0.5 hover:shadow-[inset_0_-6px_16px_rgba(0,0,0,0.2),inset_0_3px_8px_rgba(255,255,255,0.3),0_12px_32px_rgba(239,68,68,0.5)] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3),0_4px_16px_rgba(239,68,68,0.3)]',
         ghost:
-          'border-transparent text-black hover:border-black hover:bg-[#FFFEF5] active:bg-white',
+          'text-gray-700 hover:bg-[#e8f5e9] hover:shadow-[inset_0_-2px_8px_rgba(0,0,0,0.04),0_2px_8px_rgba(0,185,0,0.1)] active:bg-white',
         outline:
-          'bg-transparent text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none',
+          'bg-transparent text-gray-700 shadow-[inset_0_-3px_8px_rgba(0,0,0,0.04),inset_0_2px_4px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 hover:bg-[#e8f5e9] hover:shadow-[inset_0_-3px_8px_rgba(0,0,0,0.04),inset_0_2px_4px_rgba(255,255,255,0.8),0_6px_16px_rgba(0,0,0,0.1)] active:translate-y-0.5 active:shadow-[inset_0_2px_8px_rgba(0,0,0,0.08)]',
       },
       size: {
         sm: 'px-3 py-1.5 text-xs',

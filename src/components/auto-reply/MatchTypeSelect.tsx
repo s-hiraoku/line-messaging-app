@@ -20,10 +20,10 @@ export function MatchTypeSelect({ value, onChange }: MatchTypeSelectProps) {
       {matchTypes.map((type) => (
         <label
           key={type.value}
-          className={`flex items-start p-3 border-2 border-black cursor-pointer transition-all ${
+          className={`flex items-start p-3 rounded-xl cursor-pointer transition-all duration-300 ${
             value === type.value
-              ? 'bg-[#00B900]/10 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]'
-              : 'bg-white hover:bg-[#FFFEF5] hover:translate-x-[1px] hover:translate-y-[1px]'
+              ? 'bg-[#00B900]/10 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)]'
+              : 'bg-white shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] hover:bg-[#e8f5e9] hover:-translate-y-0.5'
           }`}
         >
           <input
@@ -32,11 +32,11 @@ export function MatchTypeSelect({ value, onChange }: MatchTypeSelectProps) {
             value={type.value}
             checked={value === type.value}
             onChange={(e) => onChange(e.target.value as MatchType)}
-            className="mt-1 mr-3 h-4 w-4 border-2 border-black"
+            className="mt-1 mr-3 h-4 w-4"
           />
           <div>
-            <div className="font-bold uppercase tracking-wider text-black text-sm">{type.label}</div>
-            <div className="text-xs font-mono text-black/60">{type.description}</div>
+            <div className="font-bold uppercase tracking-wider text-gray-800 text-sm">{type.label}</div>
+            <div className="text-xs font-mono text-gray-500">{type.description}</div>
           </div>
         </label>
       ))}

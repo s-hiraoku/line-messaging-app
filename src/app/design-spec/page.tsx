@@ -582,7 +582,7 @@ const sections: { id: string; title: string; subsections?: { title: string; item
 
 export default function ProjectDesignSpec() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#FFFEF5]">
+    <main className="relative min-h-screen overflow-hidden bg-[#e8f5e9]">
       {/* Background */}
       <div className="pointer-events-none absolute left-0 top-0 h-[500px] w-[500px] -translate-x-1/3 -translate-y-1/3 rounded-full bg-[#00B900] opacity-[0.12] blur-[110px]" />
       <div className="pointer-events-none absolute right-0 top-1/4 h-[350px] w-[350px] translate-x-1/4 rounded-full bg-[#FFE500] opacity-[0.10] blur-[90px]" />
@@ -590,13 +590,13 @@ export default function ProjectDesignSpec() {
       <div id="top" className="relative z-10 mx-auto max-w-7xl px-6 py-16 sm:px-12 sm:py-24">
         {/* Header */}
         <div className="flex items-start justify-between">
-          <span className="inline-block -rotate-2 border-2 border-black bg-[#FFE500] px-6 py-2 font-mono text-xs font-bold uppercase tracking-[0.2em] text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <span className="inline-block -rotate-2 rounded-xl bg-[#FFE500] px-6 py-2 font-mono text-xs font-bold uppercase tracking-[0.2em] text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300">
             Design Specification
           </span>
         </div>
 
         <h1
-          className={`mt-12 mb-10 text-5xl font-black leading-[1.1] tracking-tight text-black sm:text-6xl lg:text-7xl ${syne.className}`}
+          className={`mt-12 mb-10 text-5xl font-black leading-[1.1] tracking-tight text-gray-800 sm:text-6xl lg:text-7xl ${syne.className}`}
         >
           <span className="relative inline-block ml-2">
             <span className="relative z-10 text-[#00B900]">設計仕様</span>
@@ -611,18 +611,18 @@ export default function ProjectDesignSpec() {
           </span>
         </h1>
 
-        <p className={`max-w-3xl text-lg leading-relaxed text-black/80 sm:text-xl ${ibmPlexSans.className}`}>
+        <p className={`max-w-3xl text-lg leading-relaxed text-gray-700 sm:text-xl ${ibmPlexSans.className}`}>
           README / system-design / AGENTS から抽出した PoC の包括的設計仕様。目的・機能・データ・ワークフロー・品質・拡張計画を一望し、実装/レビュー/合意形成の基盤を提供します。
         </p>
 
         {/* TOC */}
-        <nav aria-label="目次" className="mt-12 mb-20 rounded-lg border-2 border-black bg-white p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-          <h2 className={`mb-4 text-2xl font-bold text-black ${syne.className}`}>目次</h2>
+        <nav aria-label="目次" className="mt-12 mb-20 rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_12px_32px_rgba(0,0,0,0.1)] transition-all duration-300">
+          <h2 className={`mb-4 text-2xl font-bold text-gray-800 ${syne.className}`}>目次</h2>
           <ul className="grid gap-2 sm:grid-cols-2">
             {sections.map((s) => (
               <li key={`toc-${s.id}`}>
-                <a href={`#${s.id}`} className="group inline-flex items-center gap-2 font-mono text-sm font-bold uppercase tracking-[0.15em] text-black hover:text-[#00B900]">
-                  <span className="inline-block h-2 w-2 rounded-full bg-black transition-colors group-hover:bg-[#00B900]" />
+                <a href={`#${s.id}`} className="group inline-flex items-center gap-2 font-mono text-sm font-bold uppercase tracking-[0.15em] text-gray-800 hover:text-[#00B900] transition-all duration-300">
+                  <span className="inline-block h-2 w-2 rounded-full bg-gray-800 transition-colors group-hover:bg-[#00B900]" />
                   {s.title}
                 </a>
               </li>
@@ -633,20 +633,20 @@ export default function ProjectDesignSpec() {
         {/* Content + Side nav */}
         <div className="flex flex-col gap-20 lg:flex-row">
           <aside className="order-last lg:order-first lg:w-72 lg:shrink-0">
-            <nav className="sticky top-28 hidden lg:block rounded-lg border-2 border-black bg-white p-5 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]">
-              <h2 className={`mb-3 text-lg font-black text-black ${syne.className}`}>セクション</h2>
+            <nav className="sticky top-28 hidden lg:block rounded-2xl bg-white p-5 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300">
+              <h2 className={`mb-3 text-lg font-black text-gray-800 ${syne.className}`}>セクション</h2>
               <ul className="space-y-2">
                 {sections.map((s) => (
                   <li key={`side-${s.id}`}>
-                    <a href={`#${s.id}`} className="group flex items-center gap-2 rounded px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.15em] text-black hover:bg-[#00B900]/10 hover:text-[#00B900]">
-                      <span className="h-2 w-2 rounded-sm bg-black transition-colors group-hover:bg-[#00B900]" />
+                    <a href={`#${s.id}`} className="group flex items-center gap-2 rounded-xl px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.15em] text-gray-800 hover:bg-[#00B900]/10 hover:text-[#00B900] transition-all duration-300">
+                      <span className="h-2 w-2 rounded-sm bg-gray-800 transition-colors group-hover:bg-[#00B900]" />
                       {s.title}
                     </a>
                   </li>
                 ))}
               </ul>
-              <div className="mt-4 pt-4 border-t border-black/10">
-                <a href="#top" className="inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-black hover:text-[#00B900]">
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <a href="#top" className="inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-gray-800 hover:text-[#00B900] transition-all duration-300">
                   ↑ Top
                 </a>
               </div>
@@ -656,14 +656,14 @@ export default function ProjectDesignSpec() {
           <div className="flex-1 space-y-24">
             {sections.map((s) => (
               <section key={s.id} id={s.id} aria-labelledby={`${s.id}-heading`} className="relative">
-                <h2 id={`${s.id}-heading`} className={`mb-6 text-3xl font-black text-black sm:text-4xl ${syne.className}`}>
+                <h2 id={`${s.id}-heading`} className={`mb-6 text-3xl font-black text-gray-800 sm:text-4xl ${syne.className}`}>
                   {s.title}
                 </h2>
-                <div className={`space-y-8 text-black/80 leading-relaxed ${ibmPlexSans.className}`}>
+                <div className={`space-y-8 text-gray-700 leading-relaxed ${ibmPlexSans.className}`}>
                   {s.subsections ? (
                     s.subsections.map((sub, subIdx) => (
                       <div key={`${s.id}-sub-${subIdx}`} className="space-y-4">
-                        <h3 className="text-xl font-bold text-black">{sub.title}</h3>
+                        <h3 className="text-xl font-bold text-gray-800">{sub.title}</h3>
                         <ul className="list-disc space-y-2 pl-6">
                           {sub.items.map((item, itemIdx) => (
                             <li key={`${s.id}-sub-${subIdx}-item-${itemIdx}`}>{item}</li>
@@ -680,10 +680,10 @@ export default function ProjectDesignSpec() {
 
         {/* Footer */}
         <div className="mt-32 flex flex-wrap items-center gap-6">
-          <Link href="/" className="border-[3px] border-black bg-[#00B900] px-8 py-4 font-mono text-xs font-black uppercase tracking-[0.15em] text-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:opacity-90">
+          <Link href="/" className="rounded-xl bg-[#00B900] px-8 py-4 font-mono text-xs font-black uppercase tracking-[0.15em] text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_12px_32px_rgba(0,0,0,0.1)] hover:opacity-90 transition-all duration-300">
             トップページへ戻る →
           </Link>
-          <Link href="/guide" className="border-[3px] border-black bg-white px-8 py-4 font-mono text-xs font-black uppercase tracking-[0.15em] text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:bg-[#FFFEF5]">
+          <Link href="/guide" className="rounded-xl bg-white px-8 py-4 font-mono text-xs font-black uppercase tracking-[0.15em] text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_12px_32px_rgba(0,0,0,0.1)] hover:bg-[#e8f5e9] transition-all duration-300">
             利用ガイド ↗
           </Link>
         </div>

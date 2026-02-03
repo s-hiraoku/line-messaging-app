@@ -30,10 +30,10 @@ export function DebugPanel({
   };
 
   return (
-    <div className="border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+    <div className="rounded-2xl bg-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
       <button
         type="button"
-        className="flex w-full items-center justify-between px-4 py-2 text-left text-sm font-bold uppercase tracking-wider text-black cursor-pointer border-b-2 border-black hover:bg-[#FFFEF5] transition-colors"
+        className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-bold uppercase tracking-wider text-gray-700 cursor-pointer rounded-t-2xl hover:bg-[#e8f5e9] transition-colors"
         onClick={() => setOpen((v) => !v)}
       >
         <div className="flex items-center gap-2">
@@ -51,16 +51,16 @@ export function DebugPanel({
             </a>
           )}
         </div>
-        <span className="text-xs text-black/60 font-bold">{open ? '▼' : '▶'}</span>
+        <span className="text-xs text-gray-500 font-bold">{open ? '▼' : '▶'}</span>
       </button>
       {open && (
-        <div className="space-y-3 px-4 py-3 bg-[#FFFEF5]">
+        <div className="space-y-3 px-4 py-3 bg-[#e8f5e9] rounded-b-2xl">
           {curl && (
             <div>
               <div className="mb-2 flex items-center justify-between">
-                <p className="text-xs font-bold uppercase tracking-wider text-black">cURL</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-700">cURL</p>
                 <button
-                  className="flex items-center gap-1 text-xs border-2 border-black bg-white px-2 py-1 font-bold uppercase tracking-wider text-black hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer"
+                  className="flex items-center gap-1 text-xs rounded-lg bg-white px-2 py-1 font-bold uppercase tracking-wider text-gray-700 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.04),inset_0_1px_2px_rgba(255,255,255,0.8),0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[inset_0_-2px_4px_rgba(0,0,0,0.04),inset_0_1px_2px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.12)] cursor-pointer"
                   onClick={() => copy(curl, 'curl')}
                 >
                   {copiedSection === 'curl' ? (
@@ -76,7 +76,7 @@ export function DebugPanel({
                   )}
                 </button>
               </div>
-              <pre className="overflow-auto border-2 border-black bg-white p-2 text-[11px] leading-relaxed text-black font-mono">
+              <pre className="overflow-auto rounded-xl bg-white p-3 text-[11px] leading-relaxed text-gray-800 font-mono shadow-[inset_0_2px_4px_rgba(0,0,0,0.04)]">
 {curl}
               </pre>
             </div>
@@ -84,9 +84,9 @@ export function DebugPanel({
           {request !== undefined && (
             <div>
               <div className="mb-2 flex items-center justify-between">
-                <p className="text-xs font-bold uppercase tracking-wider text-black">Request</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-700">Request</p>
                 <button
-                  className="flex items-center gap-1 text-xs border-2 border-black bg-white px-2 py-1 font-bold uppercase tracking-wider text-black hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer"
+                  className="flex items-center gap-1 text-xs rounded-lg bg-white px-2 py-1 font-bold uppercase tracking-wider text-gray-700 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.04),inset_0_1px_2px_rgba(255,255,255,0.8),0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[inset_0_-2px_4px_rgba(0,0,0,0.04),inset_0_1px_2px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.12)] cursor-pointer"
                   onClick={() => copy(JSON.stringify(request, null, 2), 'request')}
                 >
                   {copiedSection === 'request' ? (
@@ -102,7 +102,7 @@ export function DebugPanel({
                   )}
                 </button>
               </div>
-              <pre className="overflow-auto border-2 border-black bg-white p-2 text-[11px] leading-relaxed text-black font-mono">
+              <pre className="overflow-auto rounded-xl bg-white p-3 text-[11px] leading-relaxed text-gray-800 font-mono shadow-[inset_0_2px_4px_rgba(0,0,0,0.04)]">
 {JSON.stringify(request, null, 2)}
               </pre>
             </div>
@@ -110,9 +110,9 @@ export function DebugPanel({
           {response !== undefined && (
             <div>
               <div className="mb-2 flex items-center justify-between">
-                <p className="text-xs font-bold uppercase tracking-wider text-black">Response</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-700">Response</p>
                 <button
-                  className="flex items-center gap-1 text-xs border-2 border-black bg-white px-2 py-1 font-bold uppercase tracking-wider text-black hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer"
+                  className="flex items-center gap-1 text-xs rounded-lg bg-white px-2 py-1 font-bold uppercase tracking-wider text-gray-700 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.04),inset_0_1px_2px_rgba(255,255,255,0.8),0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[inset_0_-2px_4px_rgba(0,0,0,0.04),inset_0_1px_2px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.12)] cursor-pointer"
                   onClick={() => copy(JSON.stringify(response, null, 2), 'response')}
                 >
                   {copiedSection === 'response' ? (
@@ -128,7 +128,7 @@ export function DebugPanel({
                   )}
                 </button>
               </div>
-              <pre className="overflow-auto border-2 border-black bg-white p-2 text-[11px] leading-relaxed text-black font-mono">
+              <pre className="overflow-auto rounded-xl bg-white p-3 text-[11px] leading-relaxed text-gray-800 font-mono shadow-[inset_0_2px_4px_rgba(0,0,0,0.04)]">
 {JSON.stringify(response, null, 2)}
               </pre>
             </div>

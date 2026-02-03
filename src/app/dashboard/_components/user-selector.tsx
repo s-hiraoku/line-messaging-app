@@ -143,29 +143,29 @@ export function UserSelector({
     <div className="relative w-full">
       {/* Selected user display */}
       {selectedUser ? (
-        <div className="flex items-center justify-between border-2 border-black bg-white px-3 py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="flex items-center justify-between rounded-xl bg-white px-3 py-2 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300">
           <div className="flex items-center gap-2 min-w-0">
             {selectedUser.pictureUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={selectedUser.pictureUrl}
                 alt={selectedUser.displayName}
-                className="h-8 w-8 border-2 border-black object-cover"
+                className="h-8 w-8 rounded-lg object-cover"
               />
             ) : (
-              <div className="flex h-8 w-8 items-center justify-center border-2 border-black bg-[#FFFEF5]">
-                <User className="h-4 w-4 text-black" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#e8f5e9]">
+                <User className="h-4 w-4 text-gray-700" />
               </div>
             )}
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-bold text-black truncate">{selectedUser.displayName}</p>
-              <p className="text-xs font-mono text-black/60 truncate">{selectedUser.lineUserId}</p>
+              <p className="text-sm font-bold text-gray-800 truncate">{selectedUser.displayName}</p>
+              <p className="text-xs font-mono text-gray-500 truncate">{selectedUser.lineUserId}</p>
             </div>
           </div>
           <button
             type="button"
             onClick={handleClear}
-            className="ml-2 flex-shrink-0 border-2 border-black bg-white p-1 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] text-black transition-all"
+            className="ml-2 flex-shrink-0 rounded-lg bg-white p-1 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 text-gray-700 transition-all duration-300"
             aria-label="選択を解除"
           >
             <X className="h-4 w-4" />
@@ -175,7 +175,7 @@ export function UserSelector({
         <>
           {/* Search input */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-black/60" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
             <input
               ref={inputRef}
               type="text"
@@ -185,7 +185,7 @@ export function UserSelector({
                 setIsOpen(true);
                 if (searchTerm) fetchUsers(searchTerm);
               }}
-              className="w-full border-2 border-black bg-white pl-10 pr-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
+              className="w-full rounded-xl bg-white pl-10 pr-3 py-2 text-sm font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] focus:shadow-[inset_0_-6px_16px_rgba(0,0,0,0.06),inset_0_3px_8px_rgba(255,255,255,0.9),0_12px_32px_rgba(0,0,0,0.12)] focus:outline-none transition-all duration-300"
               placeholder={placeholder}
             />
           </div>
@@ -194,10 +194,10 @@ export function UserSelector({
           {isOpen && (
             <div
               ref={dropdownRef}
-              className="absolute z-10 mt-2 w-full border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] max-h-60 overflow-auto"
+              className="absolute z-10 mt-2 w-full rounded-xl bg-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] max-h-60 overflow-auto transition-all duration-300"
             >
               {loading ? (
-                <div className="px-3 py-2 text-sm font-mono text-black/60 text-center">
+                <div className="px-3 py-2 text-sm font-mono text-gray-500 text-center">
                   読み込み中...
                 </div>
               ) : users.length > 0 ? (
@@ -207,34 +207,34 @@ export function UserSelector({
                       <button
                         type="button"
                         onClick={() => handleSelectUser(user)}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-[#FFFEF5] transition-colors"
+                        className="flex w-full items-center gap-2 px-3 py-2 text-left rounded-lg hover:bg-[#e8f5e9] transition-all duration-300"
                       >
                         {user.pictureUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
                             src={user.pictureUrl}
                             alt={user.displayName}
-                            className="h-8 w-8 border-2 border-black object-cover"
+                            className="h-8 w-8 rounded-lg object-cover"
                           />
                         ) : (
-                          <div className="flex h-8 w-8 items-center justify-center border-2 border-black bg-[#FFFEF5]">
-                            <User className="h-4 w-4 text-black" />
+                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#e8f5e9]">
+                            <User className="h-4 w-4 text-gray-700" />
                           </div>
                         )}
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-bold text-black truncate">{user.displayName}</p>
-                          <p className="text-xs font-mono text-black/60 truncate">{user.lineUserId}</p>
+                          <p className="text-sm font-bold text-gray-800 truncate">{user.displayName}</p>
+                          <p className="text-xs font-mono text-gray-500 truncate">{user.lineUserId}</p>
                         </div>
                       </button>
                     </li>
                   ))}
                 </ul>
               ) : searchTerm ? (
-                <div className="px-3 py-2 text-sm font-mono text-black/60 text-center">
+                <div className="px-3 py-2 text-sm font-mono text-gray-500 text-center">
                   ユーザーが見つかりませんでした
                 </div>
               ) : (
-                <div className="px-3 py-2 text-sm font-mono text-black/60 text-center">
+                <div className="px-3 py-2 text-sm font-mono text-gray-500 text-center">
                   検索キーワードを入力してください
                 </div>
               )}

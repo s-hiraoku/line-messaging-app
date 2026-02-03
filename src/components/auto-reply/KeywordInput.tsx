@@ -41,7 +41,7 @@ export function KeywordInput({ keywords, onChange, maxKeywords = 20 }: KeywordIn
         {keywords.map((keyword, index) => (
           <span
             key={index}
-            className="inline-flex items-center gap-1 px-3 py-1 border-2 border-black bg-[#FFFEF5] text-black text-sm font-mono"
+            className="inline-flex items-center gap-1 px-3 py-1 rounded-xl bg-[#e8f5e9] text-gray-800 text-sm font-mono shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300"
           >
             {keyword}
             <button
@@ -61,10 +61,10 @@ export function KeywordInput({ keywords, onChange, maxKeywords = 20 }: KeywordIn
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="キーワードを入力してEnterキーで追加"
-        className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all disabled:opacity-50"
+        className="w-full rounded-xl bg-white px-3 py-2 text-sm font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 focus:outline-none disabled:opacity-50"
         disabled={keywords.length >= maxKeywords}
       />
-      <p className="text-xs font-mono text-black/60">
+      <p className="text-xs font-mono text-gray-500">
         {keywords.length} / {maxKeywords} キーワード
       </p>
     </div>

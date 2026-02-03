@@ -131,7 +131,7 @@ export default function AutoReplyPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <p className="text-sm font-mono text-black/60">読み込み中...</p>
+        <p className="text-sm font-mono text-gray-500">読み込み中...</p>
       </div>
     );
   }
@@ -141,23 +141,23 @@ export default function AutoReplyPage() {
       <div className="flex justify-between items-start">
         <header className="space-y-3">
           <div className="flex items-center gap-4">
-            <h1 className={`text-5xl font-black text-black ${syne.className}`}>自動応答</h1>
-            <div className="h-2 w-12 rotate-12 bg-[#FFE500]" />
+            <h1 className={`text-5xl font-black text-gray-800 ${syne.className}`}>自動応答</h1>
+            <div className="h-2 w-12 rotate-12 bg-[#FFE500] rounded-xl" />
           </div>
-          <p className={`text-base text-black/70 ${ibmPlexSans.className}`}>
+          <p className={`text-base text-gray-700 ${ibmPlexSans.className}`}>
             メッセージに対する自動応答ルールを管理できます。
           </p>
         </header>
         <div className="flex gap-3 mt-4">
           <Link
             href="/dashboard/auto-reply/analytics"
-            className="border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+            className="rounded-xl bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#e8f5e9] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]"
           >
             分析
           </Link>
           <Link
             href="/dashboard/auto-reply/new"
-            className="border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+            className="rounded-xl bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]"
           >
             新規作成
           </Link>
@@ -167,39 +167,39 @@ export default function AutoReplyPage() {
       <div className="flex gap-2">
         <button
           onClick={() => setFilter('all')}
-          className={`px-4 py-2 text-sm font-bold uppercase tracking-wider transition-all ${
+          className={`px-4 py-2 text-sm font-bold uppercase tracking-wider transition-all duration-300 rounded-xl ${
             filter === 'all'
-              ? 'border-2 border-black bg-[#00B900] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
-              : 'border-2 border-black bg-white text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]'
-          }`}
+              ? 'bg-[#00B900] text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]'
+              : 'bg-white text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 hover:bg-[#e8f5e9]'
+          } active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]`}
         >
           すべて
         </button>
         <button
           onClick={() => setFilter('active')}
-          className={`px-4 py-2 text-sm font-bold uppercase tracking-wider transition-all ${
+          className={`px-4 py-2 text-sm font-bold uppercase tracking-wider transition-all duration-300 rounded-xl ${
             filter === 'active'
-              ? 'border-2 border-black bg-[#00B900] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
-              : 'border-2 border-black bg-white text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]'
-          }`}
+              ? 'bg-[#00B900] text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]'
+              : 'bg-white text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 hover:bg-[#e8f5e9]'
+          } active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]`}
         >
           有効
         </button>
         <button
           onClick={() => setFilter('inactive')}
-          className={`px-4 py-2 text-sm font-bold uppercase tracking-wider transition-all ${
+          className={`px-4 py-2 text-sm font-bold uppercase tracking-wider transition-all duration-300 rounded-xl ${
             filter === 'inactive'
-              ? 'border-2 border-black bg-[#00B900] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
-              : 'border-2 border-black bg-white text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]'
-          }`}
+              ? 'bg-[#00B900] text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]'
+              : 'bg-white text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 hover:bg-[#e8f5e9]'
+          } active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]`}
         >
           無効
         </button>
       </div>
 
       {autoReplies.length === 0 ? (
-        <div className="border-2 border-black bg-[#FFFEF5] p-12 text-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-          <p className="text-sm font-mono text-black/60">自動応答ルールがありません</p>
+        <div className="rounded-2xl bg-[#e8f5e9] p-12 text-center shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+          <p className="text-sm font-mono text-gray-500">自動応答ルールがありません</p>
           <Link
             href="/dashboard/auto-reply/new"
             className="mt-2 inline-block text-sm font-bold text-[#00B900] hover:underline"
@@ -212,25 +212,25 @@ export default function AutoReplyPage() {
           {autoReplies.map((rule) => (
             <div
               key={rule.id}
-              className="border-2 border-black bg-white p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+              className="rounded-2xl bg-white p-5 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]"
             >
               <div className="flex justify-between items-start mb-3">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-3 flex-wrap">
-                    <h3 className="text-lg font-bold text-black">{rule.name}</h3>
+                    <h3 className="text-lg font-bold text-gray-800">{rule.name}</h3>
                     <span
-                      className={`px-2 py-1 text-xs font-bold uppercase border-2 border-black ${
+                      className={`px-2 py-1 text-xs font-bold uppercase rounded-lg ${
                         rule.isActive
                           ? 'bg-[#00B900] text-white'
-                          : 'bg-white text-black'
+                          : 'bg-white text-gray-800 shadow-[inset_0_-3px_8px_rgba(0,0,0,0.04),inset_0_2px_4px_rgba(255,255,255,0.8)]'
                       }`}
                     >
                       {rule.isActive ? '有効' : '無効'}
                     </span>
-                    <span className="px-2 py-1 text-xs font-bold font-mono border-2 border-black bg-white text-black">
+                    <span className="px-2 py-1 text-xs font-bold font-mono rounded-lg bg-white text-gray-800 shadow-[inset_0_-3px_8px_rgba(0,0,0,0.04),inset_0_2px_4px_rgba(255,255,255,0.8)]">
                       優先度: {rule.priority}
                     </span>
-                    <span className="px-2 py-1 text-xs font-bold uppercase border-2 border-black bg-white text-black">
+                    <span className="px-2 py-1 text-xs font-bold uppercase rounded-lg bg-white text-gray-800 shadow-[inset_0_-3px_8px_rgba(0,0,0,0.04),inset_0_2px_4px_rgba(255,255,255,0.8)]">
                       {getMatchTypeLabel(rule.matchType)}
                     </span>
                   </div>
@@ -238,41 +238,41 @@ export default function AutoReplyPage() {
                     {rule.keywords.slice(0, 5).map((keyword, idx) => (
                       <span
                         key={idx}
-                        className="px-2 py-1 border-2 border-black bg-[#FFFEF5] text-black text-sm font-mono"
+                        className="px-2 py-1 rounded-lg bg-[#e8f5e9] text-gray-800 text-sm font-mono shadow-[inset_0_-3px_8px_rgba(0,0,0,0.04),inset_0_2px_4px_rgba(255,255,255,0.8)]"
                       >
                         {keyword}
                       </span>
                     ))}
                     {rule.keywords.length > 5 && (
-                      <span className="px-2 py-1 text-black/60 text-sm font-mono">
+                      <span className="px-2 py-1 text-gray-500 text-sm font-mono">
                         ...他{rule.keywords.length - 5}個
                       </span>
                     )}
                   </div>
-                  <p className="text-sm font-mono text-black/70 line-clamp-2">
+                  <p className="text-sm font-mono text-gray-700 line-clamp-2">
                     {rule.replyText}
                   </p>
                 </div>
                 <div className="flex gap-2 ml-4 flex-wrap">
                   <button
                     onClick={() => toggleActive(rule.id)}
-                    className={`px-3 py-1.5 text-sm font-bold uppercase tracking-wider transition-all ${
+                    className={`px-3 py-1.5 text-sm font-bold uppercase tracking-wider transition-all duration-300 rounded-xl ${
                       rule.isActive
-                        ? 'border-2 border-black bg-white text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]'
-                        : 'border-2 border-black bg-[#00B900] text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]'
-                    }`}
+                        ? 'bg-white text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 hover:bg-[#e8f5e9]'
+                        : 'bg-[#00B900] text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-0.5'
+                    } active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]`}
                   >
                     {rule.isActive ? '無効化' : '有効化'}
                   </button>
                   <Link
                     href={`/dashboard/auto-reply/${rule.id}/edit`}
-                    className="px-3 py-1.5 text-sm border-2 border-black bg-white text-black font-bold uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+                    className="px-3 py-1.5 text-sm rounded-xl bg-white text-gray-800 font-bold uppercase tracking-wider shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#e8f5e9] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]"
                   >
                     編集
                   </Link>
                   <button
                     onClick={() => deleteAutoReply(rule.id, rule.name)}
-                    className="px-3 py-1.5 text-sm border-2 border-black bg-red-600 text-white font-bold uppercase tracking-wider shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                    className="px-3 py-1.5 text-sm rounded-xl bg-red-600 text-white font-bold uppercase tracking-wider shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]"
                   >
                     削除
                   </button>

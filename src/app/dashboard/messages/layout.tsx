@@ -22,9 +22,9 @@ export default function MessagesLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   return (
     <div className="space-y-6">
-      <header className="space-y-3 border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-        <h1 className="text-2xl font-bold uppercase tracking-wider text-black">メッセージ</h1>
-        <p className="text-sm text-black/60">メッセージタイプごとに送信を検証できます。</p>
+      <header className="space-y-3 rounded-2xl bg-white/70 p-4 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] backdrop-blur-sm transition-all duration-300">
+        <h1 className="text-2xl font-bold uppercase tracking-wider text-gray-800">メッセージ</h1>
+        <p className="text-sm text-gray-600">メッセージタイプごとに送信を検証できます。</p>
         <nav className="mt-4 flex flex-wrap items-center gap-2">
           {tabs.map((t) => {
             const active = pathname === t.href;
@@ -33,8 +33,8 @@ export default function MessagesLayout({ children }: { children: ReactNode }) {
                 <span
                   key={t.href}
                   className={clsx(
-                    "cursor-not-allowed border-2 border-black bg-white/50 px-3 py-1.5 text-xs font-bold uppercase tracking-wider",
-                    "text-black/40"
+                    "cursor-not-allowed rounded-xl bg-white/30 px-3 py-1.5 text-xs font-bold uppercase tracking-wider",
+                    "text-gray-400"
                   )}
                   title="準備中"
                 >
@@ -47,10 +47,10 @@ export default function MessagesLayout({ children }: { children: ReactNode }) {
                 key={t.href}
                 href={t.href}
                 className={clsx(
-                  "border-2 border-black px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all",
+                  "rounded-xl px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all duration-300",
                   active
-                    ? "bg-[#00B900] text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
-                    : "bg-white text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+                    ? "bg-[#00B900] text-white shadow-[inset_0_-4px_12px_rgba(0,0,0,0.1),inset_0_2px_6px_rgba(255,255,255,0.3),0_4px_12px_rgba(0,185,0,0.3)]"
+                    : "bg-white/80 text-gray-700 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 hover:bg-[#e8f5e9] hover:shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_6px_16px_rgba(0,0,0,0.1)]"
                 )}
               >
                 {t.label}

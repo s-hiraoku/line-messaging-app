@@ -295,10 +295,10 @@ export default function FlexMessagePage() {
     <div className="space-y-6">
       <header className="space-y-3">
         <div className="flex items-center gap-4">
-          <h1 className={`text-5xl font-black text-black ${syne.className}`}>Flexメッセージ</h1>
-          <div className="h-2 w-12 rotate-12 bg-[#FFE500]" />
+          <h1 className={`text-5xl font-black text-gray-800 ${syne.className}`}>Flexメッセージ</h1>
+          <div className="h-2 w-12 rotate-12 bg-[#FFE500] rounded-full" />
         </div>
-        <p className={`text-base text-black/70 ${ibmPlexSans.className}`}>
+        <p className={`text-base text-gray-500 ${ibmPlexSans.className}`}>
           カスタマイズ可能なFlexメッセージを送信できます。
         </p>
       </header>
@@ -308,10 +308,10 @@ export default function FlexMessagePage() {
         <div className="space-y-6">
           <form
             onSubmit={handleSubmit}
-            className="space-y-6 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+            className="space-y-6 rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]"
           >
             <div className="space-y-2">
-              <label htmlFor="lineUserId" className="text-sm font-bold uppercase tracking-wider text-black">
+              <label htmlFor="lineUserId" className="text-sm font-bold uppercase tracking-wider text-gray-800">
                 LINE ユーザー ID <span className="text-red-600">*</span>
               </label>
               <input
@@ -319,14 +319,14 @@ export default function FlexMessagePage() {
                 type="text"
                 value={lineUserId}
                 onChange={(event) => setLineUserId(event.target.value)}
-                className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
+                className="w-full rounded-xl bg-white px-3 py-2 text-sm font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_2px_8px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-[#00B900] focus:ring-offset-2 transition-all"
                 placeholder="Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="altText" className="text-sm font-bold uppercase tracking-wider text-black">
+              <label htmlFor="altText" className="text-sm font-bold uppercase tracking-wider text-gray-800">
                 代替テキスト <span className="text-red-600">*</span>
               </label>
               <input
@@ -335,35 +335,35 @@ export default function FlexMessagePage() {
                 value={altText}
                 onChange={(event) => setAltText(event.target.value)}
                 maxLength={400}
-                className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
+                className="w-full rounded-xl bg-white px-3 py-2 text-sm font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_2px_8px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-[#00B900] focus:ring-offset-2 transition-all"
                 placeholder="Flex Message"
                 required
               />
-              <p className="text-xs font-mono text-black/60">最大400文字</p>
+              <p className="text-xs font-mono text-gray-500">最大400文字</p>
             </div>
 
             {/* Template Selection */}
             <div className="space-y-2">
-              <label className="text-sm font-bold uppercase tracking-wider text-black">テンプレート</label>
+              <label className="text-sm font-bold uppercase tracking-wider text-gray-800">テンプレート</label>
               <div className="grid grid-cols-3 gap-2">
                 <button
                   type="button"
                   onClick={() => loadTemplate("restaurant")}
-                  className="border-2 border-black bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
+                  className="rounded-xl bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#e8f5e9] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]"
                 >
                   レストラン
                 </button>
                 <button
                   type="button"
                   onClick={() => loadTemplate("shopping")}
-                  className="border-2 border-black bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
+                  className="rounded-xl bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#e8f5e9] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]"
                 >
                   ショッピング
                 </button>
                 <button
                   type="button"
                   onClick={() => loadTemplate("event")}
-                  className="border-2 border-black bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
+                  className="rounded-xl bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#e8f5e9] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]"
                 >
                   イベント
                 </button>
@@ -372,24 +372,24 @@ export default function FlexMessagePage() {
 
             {/* JSON Editor */}
             <div className="space-y-2">
-              <label htmlFor="flexJson" className="text-sm font-bold uppercase tracking-wider text-black">
+              <label htmlFor="flexJson" className="text-sm font-bold uppercase tracking-wider text-gray-800">
                 Flex Message JSON <span className="text-red-600">*</span>
               </label>
               <textarea
                 id="flexJson"
                 value={flexJson}
                 onChange={(e) => handleJsonChange(e.target.value)}
-                className="h-96 w-full border-2 border-black bg-white px-3 py-2 font-mono text-xs text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
+                className="h-96 w-full rounded-xl bg-white px-3 py-2 font-mono text-xs text-gray-800 placeholder-gray-400 shadow-[inset_0_2px_8px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-[#00B900] focus:ring-offset-2 transition-all"
                 placeholder="{}"
                 required
               />
               {jsonError && <p className="text-xs font-mono text-red-600">{jsonError}</p>}
-              <p className="text-xs font-mono text-black/60">
+              <p className="text-xs font-mono text-gray-500">
                 <a
                   href="https://developers.line.biz/flex-simulator/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-bold text-black hover:text-black/80"
+                  className="font-bold text-gray-800 hover:text-gray-600"
                 >
                   Flex Message Simulator
                 </a>{" "}
@@ -397,10 +397,10 @@ export default function FlexMessagePage() {
               </p>
             </div>
 
-            <div className="flex items-center gap-3 border-t-2 border-black pt-4">
+            <div className="flex items-center gap-3 border-t border-gray-200 pt-4">
               <button
                 type="submit"
-                className="inline-flex items-center border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center rounded-xl bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]"
                 disabled={status === "sending" || !lineUserId || !altText || !!jsonError}
               >
                 {status === "sending" ? "送信中..." : "送信"}
@@ -416,18 +416,18 @@ export default function FlexMessagePage() {
         {/* Right Column - Preview & Debug */}
         <div className="space-y-6">
           {/* Preview */}
-          <div className="border-2 border-black bg-[#FFFEF5] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-            <h2 className="mb-4 text-lg font-bold uppercase tracking-wider text-black">プレビュー</h2>
+          <div className="rounded-2xl bg-[#e8f5e9] p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+            <h2 className="mb-4 text-lg font-bold uppercase tracking-wider text-gray-800">プレビュー</h2>
             <div className="flex justify-end">
               <div className="max-w-xs">
-                <div className="border-2 border-black bg-white p-4 text-xs text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                <div className="rounded-xl bg-white p-4 text-xs text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
                   {jsonError ? (
                     <div className="text-red-600">JSON形式が正しくありません</div>
                   ) : (
                     <div className="whitespace-pre-wrap break-all">
                       Flex Message
                       <br />
-                      <span className="text-black/60">
+                      <span className="text-gray-500">
                         （実際のプレビューは LINE Flex Simulator をご利用ください）
                       </span>
                     </div>

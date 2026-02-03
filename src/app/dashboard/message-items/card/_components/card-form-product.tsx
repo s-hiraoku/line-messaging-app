@@ -269,7 +269,7 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
       <div className="space-y-2">
         <Label
           htmlFor="product-title"
-          className="text-sm font-bold uppercase tracking-wider text-black"
+          className="text-sm font-bold uppercase tracking-wider text-gray-800"
         >
           タイトル <span className="text-red-600">*</span>
         </Label>
@@ -279,9 +279,9 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
           value={card.title}
           onChange={handleTitleChange}
           maxLength={40}
-          className={`bg-white border-2 ${
-            errors.title ? "border-red-600" : "border-black"
-          } font-mono text-black placeholder-black/40 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all`}
+          className={`bg-white rounded-xl ${
+            errors.title ? "ring-2 ring-red-400" : ""
+          } font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300`}
           placeholder="商品名を入力 (最大40文字)"
         />
         <div className="flex items-center justify-between">
@@ -303,26 +303,26 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
               {errors.title}
             </p>
           ) : (
-            <p className="text-xs font-mono text-black/60">
+            <p className="text-xs font-mono text-gray-600">
               商品のタイトルを入力してください
             </p>
           )}
           <Badge
             variant={card.title.length >= 35 ? "outline" : "secondary"}
-            className="text-xs border-2 border-black"
+            className="text-xs rounded-lg shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_3px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.06)]"
           >
             {card.title.length}/40
           </Badge>
         </div>
       </div>
 
-      <Separator className="bg-black h-[2px]" />
+      <Separator className="bg-gray-200 h-[1px]" />
 
       {/* Description Field */}
       <div className="space-y-2">
         <Label
           htmlFor="product-description"
-          className="text-sm font-bold uppercase tracking-wider text-black"
+          className="text-sm font-bold uppercase tracking-wider text-gray-800"
         >
           説明 <span className="text-red-600">*</span>
         </Label>
@@ -332,9 +332,9 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
           onChange={handleDescriptionChange}
           maxLength={60}
           rows={3}
-          className={`bg-white border-2 ${
-            errors.description ? "border-red-600" : "border-black"
-          } font-mono text-black placeholder-black/40 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none resize-none transition-all`}
+          className={`bg-white rounded-xl ${
+            errors.description ? "ring-2 ring-red-400" : ""
+          } font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none transition-all duration-300`}
           placeholder="商品の説明を入力 (最大60文字)"
         />
         <div className="flex items-center justify-between">
@@ -356,37 +356,37 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
               {errors.description}
             </p>
           ) : (
-            <p className="text-xs font-mono text-black/60">
+            <p className="text-xs font-mono text-gray-600">
               商品の説明を入力してください
             </p>
           )}
           <Badge
             variant={card.description.length >= 55 ? "outline" : "secondary"}
-            className="text-xs border-2 border-black"
+            className="text-xs rounded-lg shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_3px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.06)]"
           >
             {card.description.length}/60
           </Badge>
         </div>
       </div>
 
-      <Separator className="bg-black h-[2px]" />
+      <Separator className="bg-gray-200 h-[1px]" />
 
       {/* Price Field (Optional) */}
       <div className="space-y-2">
         <Label
           htmlFor="product-price"
-          className="text-sm font-bold uppercase tracking-wider text-black"
+          className="text-sm font-bold uppercase tracking-wider text-gray-800"
         >
           価格{" "}
           <Badge
             variant="secondary"
-            className="text-xs ml-2 border-2 border-black bg-[#FFFEF5]"
+            className="text-xs ml-2 rounded-lg bg-[#e8f5e9] shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_3px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.06)]"
           >
             オプション
           </Badge>
         </Label>
         <div className="relative">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-black">
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-gray-800">
             ¥
           </span>
           <Input
@@ -396,9 +396,9 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
             onChange={handlePriceChange}
             min={0}
             step={1}
-            className={`bg-white border-2 ${
-              errors.price ? "border-red-600" : "border-black"
-            } pl-9 font-mono text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all`}
+            className={`bg-white rounded-xl ${
+              errors.price ? "ring-2 ring-red-400" : ""
+            } pl-9 font-mono text-gray-800 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300`}
             placeholder="0"
           />
         </div>
@@ -420,24 +420,24 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
             {errors.price}
           </p>
         ) : (
-          <p className="text-xs font-mono text-black/60">
+          <p className="text-xs font-mono text-gray-600">
             商品の価格を入力してください（任意）
           </p>
         )}
       </div>
 
-      <Separator className="bg-black h-[2px]" />
+      <Separator className="bg-gray-200 h-[1px]" />
 
       {/* Image Mode Toggle */}
       <div className="space-y-2">
-        <Label className="text-sm font-bold uppercase tracking-wider text-black">
+        <Label className="text-sm font-bold uppercase tracking-wider text-gray-800">
           画像モード
         </Label>
         <div className="flex gap-3">
           <Button
             type="button"
             variant={!isTemplateMode ? "secondary" : "outline"}
-            className="border-2 border-black"
+            className="rounded-xl shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5"
             onClick={() => handleTemplateModeToggle("image")}
           >
             単一画像
@@ -445,7 +445,7 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
           <Button
             type="button"
             variant={isTemplateMode ? "secondary" : "outline"}
-            className="border-2 border-black"
+            className="rounded-xl shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5"
             onClick={() => handleTemplateModeToggle("template")}
           >
             テンプレート
@@ -455,7 +455,7 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
 
       {!isTemplateMode && (
         <div className="space-y-2">
-          <Label className="text-sm font-bold uppercase tracking-wider text-black">
+          <Label className="text-sm font-bold uppercase tracking-wider text-gray-800">
             画像 <span className="text-red-600">*</span>
           </Label>
           <ImageCropUploader
@@ -463,7 +463,7 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
             defaultAspectRatio="SQUARE"
             placeholder="商品画像をアップロード (JPEG/PNG, 1024x1024px以上)"
           />
-          <p className="text-xs text-black/60">
+          <p className="text-xs text-gray-600">
             テンプレートを選択するとこの画像は不要になります。
           </p>
           {errors.imageUrl && (
@@ -485,14 +485,14 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
             </p>
           )}
           {card.imageUrl && (
-            <div className="border-2 border-black bg-[#FFFEF5] p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-              <p className="text-xs text-black">プレビュー:</p>
+            <div className="rounded-2xl bg-[#e8f5e9] p-4 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300">
+              <p className="text-xs text-gray-700">プレビュー:</p>
               <Image
                 src={card.imageUrl}
                 alt="アップロード済み画像"
                 width={128}
                 height={128}
-                className="h-32 w-32 border-2 border-black object-cover shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                className="h-32 w-32 rounded-xl object-cover shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)]"
               />
             </div>
           )}
@@ -511,7 +511,7 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
         />
       )}
 
-      <Separator className="bg-black h-[2px]" />
+      <Separator className="bg-gray-200 h-[1px]" />
 
       {/* Actions Editor */}
       <div className="space-y-2">
@@ -544,12 +544,12 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
       {Object.keys(errors).length > 0 && (
         <Alert
           variant="destructive"
-          className="border-2 border-black bg-[#FFE500] shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
+          className="rounded-2xl bg-amber-50 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300"
         >
           <AlertDescription className="space-y-2">
             <div className="flex items-center gap-2">
               <svg
-                className="w-5 h-5 text-black"
+                className="w-5 h-5 text-gray-800"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -561,14 +561,14 @@ export function ProductForm({ card, onChange }: ProductFormProps) {
                   d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
                 />
               </svg>
-              <p className="text-sm font-bold uppercase tracking-wider text-black">
+              <p className="text-sm font-bold uppercase tracking-wider text-gray-800">
                 入力内容に問題があります ({Object.keys(errors).length}件)
               </p>
             </div>
-            <ul className="space-y-2 text-xs font-mono text-black pl-7">
+            <ul className="space-y-2 text-xs font-mono text-gray-700 pl-7">
               {Object.values(errors).map((error, index) => (
                 <li key={index} className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 bg-black mt-1.5 flex-shrink-0" />
+                  <span className="w-1.5 h-1.5 bg-gray-700 rounded-full mt-1.5 flex-shrink-0" />
                   <span className="flex-1">{error}</span>
                 </li>
               ))}

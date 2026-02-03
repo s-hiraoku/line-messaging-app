@@ -179,7 +179,7 @@ export default function AnalyticsPage() {
   if (loading || !data) {
     return (
       <div className="flex items-center justify-center py-12">
-        <p className="text-sm font-bold uppercase tracking-wider text-black/60">読み込み中...</p>
+        <p className="text-sm font-bold uppercase tracking-wider text-gray-500">読み込み中...</p>
       </div>
     );
   }
@@ -248,15 +248,15 @@ export default function AnalyticsPage() {
 
   return (
     <div className="space-y-6">
-      <header className="flex items-center justify-between border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <header className="flex items-center justify-between rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold uppercase tracking-wider text-black">分析</h1>
-          <p className="text-xs font-mono text-black/60">メッセージとユーザーの統計情報</p>
+          <h1 className="text-2xl font-bold uppercase tracking-wider text-gray-800">分析</h1>
+          <p className="text-xs font-mono text-gray-500">メッセージとユーザーの統計情報</p>
         </div>
         <div className="flex gap-2">
           <button
             onClick={exportToCSV}
-            className="flex items-center gap-2 border-2 border-black bg-white px-3 py-2 text-sm font-bold uppercase tracking-wider text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
+            className="flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-sm font-bold uppercase tracking-wider text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#e8f5e9] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]"
           >
             <Download className="h-4 w-4" />
             <span>CSV出力</span>
@@ -265,10 +265,10 @@ export default function AnalyticsPage() {
             <button
               key={d}
               onClick={() => setPeriod(d)}
-              className={`border-2 border-black px-4 py-2 text-sm font-bold uppercase tracking-wider transition-all ${
+              className={`rounded-xl px-4 py-2 text-sm font-bold uppercase tracking-wider transition-all duration-300 ${
                 period === d
-                  ? "bg-[#00B900] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-                  : "bg-white text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[#FFFEF5] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
+                  ? "bg-[#00B900] text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]"
+                  : "bg-white text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 hover:bg-[#e8f5e9] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]"
               }`}
             >
               {d}日間
@@ -279,63 +279,63 @@ export default function AnalyticsPage() {
 
       {/* LINE公式統計 */}
       {insights && insights.followers && (
-        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <section className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
           <div className="mb-4 flex items-center gap-2">
-            <Target className="h-5 w-5 text-black" />
-            <h2 className="text-lg font-bold uppercase tracking-wider text-black">LINE 公式統計</h2>
-            <span className="ml-auto text-xs font-mono text-black/60">
+            <Target className="h-5 w-5 text-gray-800" />
+            <h2 className="text-lg font-bold uppercase tracking-wider text-gray-800">LINE 公式統計</h2>
+            <span className="ml-auto text-xs font-mono text-gray-500">
               {insights.date.slice(0, 4)}/{insights.date.slice(4, 6)}/{insights.date.slice(6, 8)}
             </span>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
-            <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <article className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-black/60">ターゲットリーチ</h3>
-                <Target className="h-4 w-4 text-black" />
+                <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500">ターゲットリーチ</h3>
+                <Target className="h-4 w-4 text-gray-800" />
               </div>
               <p className="mt-2 text-3xl font-bold text-[#00B900]">
                 {insights.followers.targetedReaches.toLocaleString()}
               </p>
-              <p className="mt-1 text-xs font-mono text-black/60">メッセージ到達可能数</p>
+              <p className="mt-1 text-xs font-mono text-gray-500">メッセージ到達可能数</p>
             </article>
 
-            <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <article className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-black/60">友だち数</h3>
-                <Users className="h-4 w-4 text-black" />
+                <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500">友だち数</h3>
+                <Users className="h-4 w-4 text-gray-800" />
               </div>
               <p className="mt-2 text-3xl font-bold text-[#00B900]">
                 {insights.followers.followers.toLocaleString()}
               </p>
-              <p className="mt-1 text-xs font-mono text-black/60">公式フォロワー数</p>
+              <p className="mt-1 text-xs font-mono text-gray-500">公式フォロワー数</p>
             </article>
 
-            <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <article className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-black/60">ブロック数</h3>
-                <UserMinus className="h-4 w-4 text-black" />
+                <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500">ブロック数</h3>
+                <UserMinus className="h-4 w-4 text-gray-800" />
               </div>
               <p className="mt-2 text-3xl font-bold text-[#00B900]">
                 {insights.followers.blocks.toLocaleString()}
               </p>
-              <p className="mt-1 text-xs font-mono text-black/60">ブロック中のユーザー</p>
+              <p className="mt-1 text-xs font-mono text-gray-500">ブロック中のユーザー</p>
             </article>
           </div>
-          <p className="mt-4 text-xs font-mono text-black/60">
+          <p className="mt-4 text-xs font-mono text-gray-500">
             ※ LINE公式APIから取得した統計データです。前日の数値が表示されます。
           </p>
         </section>
       )}
 
       {insightsLoading && (
-        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-          <p className="text-center text-sm font-mono text-black/60">LINE統計情報を読み込み中...</p>
+        <section className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+          <p className="text-center text-sm font-mono text-gray-500">LINE統計情報を読み込み中...</p>
         </section>
       )}
 
       {!insightsLoading && !insights?.followers && (
-        <section className="border-2 border-black bg-[#FFFEF5] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-          <p className="text-center text-sm font-mono text-black/60">
+        <section className="rounded-2xl bg-[#e8f5e9] p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+          <p className="text-center text-sm font-mono text-gray-500">
             LINE統計情報を取得できませんでした。チャネル設定を確認してください。
           </p>
         </section>
@@ -343,30 +343,30 @@ export default function AnalyticsPage() {
 
       {/* ユーザー属性 */}
       {demographics && demographics.available && (
-        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <section className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
           <div className="mb-4 flex items-center gap-2">
-            <User className="h-5 w-5 text-black" />
-            <h2 className="text-lg font-bold uppercase tracking-wider text-black">ユーザー属性</h2>
+            <User className="h-5 w-5 text-gray-800" />
+            <h2 className="text-lg font-bold uppercase tracking-wider text-gray-800">ユーザー属性</h2>
           </div>
 
           <div className="space-y-6">
             {/* 性別分布 */}
             {demographics.genders && demographics.genders.length > 0 && (
               <div>
-                <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-black">性別</h3>
+                <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-gray-800">性別</h3>
                 <div className="space-y-2">
                   {demographics.genders.map((item) => (
                     <div key={item.gender} className="flex items-center gap-3">
-                      <span className="w-16 text-xs font-mono text-black/60">
+                      <span className="w-16 text-xs font-mono text-gray-500">
                         {item.gender === "male" ? "男性" : item.gender === "female" ? "女性" : "不明"}
                       </span>
                       <div className="flex-1">
                         <div
-                          className="h-6 border-2 border-black bg-[#00B900] transition-all"
+                          className="h-6 rounded-lg bg-[#00B900] transition-all"
                           style={{ width: `${item.percentage}%` }}
                         />
                       </div>
-                      <span className="w-12 text-right text-sm font-bold text-black">
+                      <span className="w-12 text-right text-sm font-bold text-gray-800">
                         {item.percentage}%
                       </span>
                     </div>
@@ -378,18 +378,18 @@ export default function AnalyticsPage() {
             {/* 年齢分布 */}
             {demographics.ages && demographics.ages.length > 0 && (
               <div>
-                <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-black">年齢</h3>
+                <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-gray-800">年齢</h3>
                 <div className="space-y-2">
                   {demographics.ages.map((item) => (
                     <div key={item.age} className="flex items-center gap-3">
-                      <span className="w-16 text-xs font-mono text-black/60">{item.age}</span>
+                      <span className="w-16 text-xs font-mono text-gray-500">{item.age}</span>
                       <div className="flex-1">
                         <div
-                          className="h-6 border-2 border-black bg-[#00B900] transition-all"
+                          className="h-6 rounded-lg bg-[#00B900] transition-all"
                           style={{ width: `${item.percentage}%` }}
                         />
                       </div>
-                      <span className="w-12 text-right text-sm font-bold text-black">
+                      <span className="w-12 text-right text-sm font-bold text-gray-800">
                         {item.percentage}%
                       </span>
                     </div>
@@ -401,21 +401,21 @@ export default function AnalyticsPage() {
             {/* 地域分布 */}
             {demographics.areas && demographics.areas.length > 0 && (
               <div>
-                <h3 className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-black">
+                <h3 className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-800">
                   <MapPin className="h-4 w-4" />
                   <span>地域（上位10件）</span>
                 </h3>
                 <div className="space-y-2">
                   {demographics.areas.slice(0, 10).map((item) => (
                     <div key={item.area} className="flex items-center gap-3">
-                      <span className="w-20 text-xs font-mono text-black/60">{item.area}</span>
+                      <span className="w-20 text-xs font-mono text-gray-500">{item.area}</span>
                       <div className="flex-1">
                         <div
-                          className="h-6 border-2 border-black bg-[#00B900] transition-all"
+                          className="h-6 rounded-lg bg-[#00B900] transition-all"
                           style={{ width: `${item.percentage}%` }}
                         />
                       </div>
-                      <span className="w-12 text-right text-sm font-bold text-black">
+                      <span className="w-12 text-right text-sm font-bold text-gray-800">
                         {item.percentage}%
                       </span>
                     </div>
@@ -425,21 +425,21 @@ export default function AnalyticsPage() {
             )}
           </div>
 
-          <p className="mt-4 text-xs font-mono text-black/60">
+          <p className="mt-4 text-xs font-mono text-gray-500">
             ※ LINE公式APIから取得したユーザー属性の統計データです。
           </p>
         </section>
       )}
 
       {demographicsLoading && (
-        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-          <p className="text-center text-sm font-mono text-black/60">ユーザー属性情報を読み込み中...</p>
+        <section className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+          <p className="text-center text-sm font-mono text-gray-500">ユーザー属性情報を読み込み中...</p>
         </section>
       )}
 
       {!demographicsLoading && (!demographics || !demographics.available) && (
-        <section className="border-2 border-black bg-[#FFFEF5] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-          <p className="text-center text-sm font-mono text-black/60">
+        <section className="rounded-2xl bg-[#e8f5e9] p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+          <p className="text-center text-sm font-mono text-gray-500">
             ユーザー属性情報を取得できませんでした。友だち数が一定数以上必要です。
           </p>
         </section>
@@ -447,14 +447,14 @@ export default function AnalyticsPage() {
 
       {/* サマリーカード */}
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <article className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-black/60">総メッセージ</h2>
-            <MessageSquare className="h-4 w-4 text-black" />
+            <h2 className="text-sm font-bold uppercase tracking-wider text-gray-500">総メッセージ</h2>
+            <MessageSquare className="h-4 w-4 text-gray-800" />
           </div>
           <p className="mt-3 text-3xl font-bold text-[#00B900]">{data.summary.total}</p>
           <div className="mt-2 flex items-center justify-between text-xs">
-            <div className="flex gap-3 font-mono text-black/60">
+            <div className="flex gap-3 font-mono text-gray-500">
               <span>受信: {data.summary.totalInbound}</span>
               <span>送信: {data.summary.totalOutbound}</span>
             </div>
@@ -473,27 +473,27 @@ export default function AnalyticsPage() {
           </div>
         </article>
 
-        <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <article className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-black/60">応答率</h2>
-            <TrendingUp className="h-4 w-4 text-black" />
+            <h2 className="text-sm font-bold uppercase tracking-wider text-gray-500">応答率</h2>
+            <TrendingUp className="h-4 w-4 text-gray-800" />
           </div>
           <p className="mt-3 text-3xl font-bold text-[#00B900]">
             {data.summary.totalInbound > 0 ? `${data.summary.responseRate}%` : "N/A"}
           </p>
-          <p className="mt-2 text-xs font-mono text-black/60">
+          <p className="mt-2 text-xs font-mono text-gray-500">
             受信メッセージへの応答率（最大100%）
           </p>
         </article>
 
-        <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <article className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-black/60">新規ユーザー</h2>
-            <UserPlus className="h-4 w-4 text-black" />
+            <h2 className="text-sm font-bold uppercase tracking-wider text-gray-500">新規ユーザー</h2>
+            <UserPlus className="h-4 w-4 text-gray-800" />
           </div>
           <p className="mt-3 text-3xl font-bold text-[#00B900]">{data.summary.newUsers}</p>
           <div className="mt-2 flex items-center justify-between">
-            <p className="text-xs font-mono text-black/60">期間内の新規登録</p>
+            <p className="text-xs font-mono text-gray-500">期間内の新規登録</p>
             {data.comparison && (
               <span className={`flex items-center gap-1 text-xs font-bold ${
                 data.comparison.newUsers.change >= 0 ? "text-[#00B900]" : "text-red-600"
@@ -509,25 +509,25 @@ export default function AnalyticsPage() {
           </div>
         </article>
 
-        <article className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <article className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-black/60">フォロワー</h2>
-            <Users className="h-4 w-4 text-black" />
+            <h2 className="text-sm font-bold uppercase tracking-wider text-gray-500">フォロワー</h2>
+            <Users className="h-4 w-4 text-gray-800" />
           </div>
           <p className="mt-3 text-3xl font-bold text-[#00B900]">{data.summary.followingUsers}</p>
-          <p className="mt-2 text-xs font-mono text-black/60">総ユーザー: {data.summary.totalUsers}</p>
+          <p className="mt-2 text-xs font-mono text-gray-500">総ユーザー: {data.summary.totalUsers}</p>
         </article>
       </section>
 
       {/* 日別推移 - バーチャート */}
-      <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-        <h2 className="mb-4 text-lg font-bold uppercase tracking-wider text-black">日別メッセージ推移</h2>
+      <section className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+        <h2 className="mb-4 text-lg font-bold uppercase tracking-wider text-gray-800">日別メッセージ推移</h2>
         <div className="space-y-2">
           {data.daily.map((day) => (
             <div key={day.date} className="flex items-center gap-3">
-              <span className="w-20 text-xs font-mono text-black/60">{day.date.slice(5)}</span>
+              <span className="w-20 text-xs font-mono text-gray-500">{day.date.slice(5)}</span>
               <div className="flex-1">
-                <div className="flex h-8 overflow-hidden border-2 border-black">
+                <div className="flex h-8 overflow-hidden rounded-lg">
                   {day.inbound > 0 && (
                     <div
                       className="bg-[#00B900] transition-all"
@@ -544,27 +544,27 @@ export default function AnalyticsPage() {
                   )}
                 </div>
               </div>
-              <span className="w-12 text-right text-sm font-bold text-black">{day.total}</span>
+              <span className="w-12 text-right text-sm font-bold text-gray-800">{day.total}</span>
             </div>
           ))}
         </div>
-        <div className="mt-4 flex gap-4 text-xs font-mono text-black/60">
+        <div className="mt-4 flex gap-4 text-xs font-mono text-gray-500">
           <div className="flex items-center gap-2">
-            <div className="h-3 w-3 border-2 border-black bg-[#00B900]" />
+            <div className="h-3 w-3 rounded bg-[#00B900]" />
             <span>受信</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-3 w-3 border-2 border-black bg-[#FFE500]" />
+            <div className="h-3 w-3 rounded bg-[#FFE500]" />
             <span>送信</span>
           </div>
         </div>
       </section>
 
       {/* 日別推移 - 折れ線グラフ */}
-      <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <section className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
         <div className="mb-4 flex items-center gap-2">
-          <BarChart3 className="h-5 w-5 text-black" />
-          <h2 className="text-lg font-bold uppercase tracking-wider text-black">日別推移グラフ</h2>
+          <BarChart3 className="h-5 w-5 text-gray-800" />
+          <h2 className="text-lg font-bold uppercase tracking-wider text-gray-800">日別推移グラフ</h2>
         </div>
         <LineChart
           data={data.daily.map(d => ({
@@ -578,10 +578,10 @@ export default function AnalyticsPage() {
 
       {/* メッセージタイプ分布 - 円グラフ */}
       {data.messageTypes && data.messageTypes.length > 0 && (
-        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <section className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
           <div className="mb-4 flex items-center gap-2">
-            <PieChartIcon className="h-5 w-5 text-black" />
-            <h2 className="text-lg font-bold uppercase tracking-wider text-black">メッセージタイプ分布</h2>
+            <PieChartIcon className="h-5 w-5 text-gray-800" />
+            <h2 className="text-lg font-bold uppercase tracking-wider text-gray-800">メッセージタイプ分布</h2>
           </div>
           <div className="flex justify-center">
             <PieChart
@@ -598,38 +598,38 @@ export default function AnalyticsPage() {
       {/* アクティビティヒートマップ */}
       <section>
         <div className="mb-4 flex items-center gap-2">
-          <Activity className="h-5 w-5 text-black" />
-          <h2 className="text-lg font-bold uppercase tracking-wider text-black">アクティビティパターン</h2>
+          <Activity className="h-5 w-5 text-gray-800" />
+          <h2 className="text-lg font-bold uppercase tracking-wider text-gray-800">アクティビティパターン</h2>
         </div>
         <Heatmap data={{ hourly: data.hourly, weekday: data.weekday }} />
       </section>
 
       {/* トレンド・予測分析 */}
-      <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <section className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
         <div className="mb-4 flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-black" />
-          <h2 className="text-lg font-bold uppercase tracking-wider text-black">トレンド分析</h2>
+          <TrendingUp className="h-5 w-5 text-gray-800" />
+          <h2 className="text-lg font-bold uppercase tracking-wider text-gray-800">トレンド分析</h2>
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           {/* メッセージトレンド */}
-          <article className="border-2 border-black bg-[#FFFEF5] p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-black/60">メッセージ量トレンド</h3>
+          <article className="rounded-2xl bg-[#e8f5e9] p-4 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500">メッセージ量トレンド</h3>
             <div className="mt-4 space-y-2">
               <div className="flex justify-between">
-                <span className="text-xs font-mono text-black/60">現在の7日平均:</span>
-                <span className="text-sm font-bold text-black">
+                <span className="text-xs font-mono text-gray-500">現在の7日平均:</span>
+                <span className="text-sm font-bold text-gray-800">
                   {Math.round(data.daily.reduce((sum, d) => sum + d.total, 0) / data.daily.length).toLocaleString()}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-xs font-mono text-black/60">ピーク日:</span>
-                <span className="text-sm font-bold text-black">
+                <span className="text-xs font-mono text-gray-500">ピーク日:</span>
+                <span className="text-sm font-bold text-gray-800">
                   {data.daily.reduce((max, d) => d.total > max.total ? d : max, data.daily[0]).date.slice(5)} ({data.daily.reduce((max, d) => d.total > max.total ? d : max, data.daily[0]).total})
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-xs font-mono text-black/60">最低日:</span>
-                <span className="text-sm font-bold text-black">
+                <span className="text-xs font-mono text-gray-500">最低日:</span>
+                <span className="text-sm font-bold text-gray-800">
                   {data.daily.reduce((min, d) => d.total < min.total ? d : min, data.daily[0]).date.slice(5)} ({data.daily.reduce((min, d) => d.total < min.total ? d : min, data.daily[0]).total})
                 </span>
               </div>
@@ -639,7 +639,7 @@ export default function AnalyticsPage() {
               const earlier = data.daily.slice(0, -3).reduce((sum, d) => sum + d.total, 0) / (data.daily.length - 3);
               const trend = ((recent - earlier) / earlier) * 100;
               return (
-                <div className="mt-4 flex items-center gap-2 border-t-2 border-black pt-3">
+                <div className="mt-4 flex items-center gap-2 border-t border-gray-300 pt-3">
                   {trend >= 0 ? (
                     <TrendingUp className="h-4 w-4 text-[#00B900]" />
                   ) : (
@@ -654,20 +654,20 @@ export default function AnalyticsPage() {
           </article>
 
           {/* ユーザートレンド */}
-          <article className="border-2 border-black bg-[#FFFEF5] p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-black/60">ユーザー成長予測</h3>
+          <article className="rounded-2xl bg-[#e8f5e9] p-4 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500">ユーザー成長予測</h3>
             <div className="mt-4 space-y-2">
               <div className="flex justify-between">
-                <span className="text-xs font-mono text-black/60">現在のフォロワー:</span>
-                <span className="text-sm font-bold text-black">{data.summary.followingUsers.toLocaleString()}</span>
+                <span className="text-xs font-mono text-gray-500">現在のフォロワー:</span>
+                <span className="text-sm font-bold text-gray-800">{data.summary.followingUsers.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-xs font-mono text-black/60">期間内の新規:</span>
-                <span className="text-sm font-bold text-black">{data.summary.newUsers.toLocaleString()}</span>
+                <span className="text-xs font-mono text-gray-500">期間内の新規:</span>
+                <span className="text-sm font-bold text-gray-800">{data.summary.newUsers.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-xs font-mono text-black/60">1日あたりの成長:</span>
-                <span className="text-sm font-bold text-black">
+                <span className="text-xs font-mono text-gray-500">1日あたりの成長:</span>
+                <span className="text-sm font-bold text-gray-800">
                   {(data.summary.newUsers / data.period.days).toFixed(1)}
                 </span>
               </div>
@@ -676,14 +676,14 @@ export default function AnalyticsPage() {
               const dailyGrowth = data.summary.newUsers / data.period.days;
               const predicted30Days = Math.round(data.summary.followingUsers + dailyGrowth * 30);
               return (
-                <div className="mt-4 border-t-2 border-black pt-3">
+                <div className="mt-4 border-t border-gray-300 pt-3">
                   <div className="flex justify-between">
-                    <span className="text-xs font-mono text-black/60">30日後の予測:</span>
+                    <span className="text-xs font-mono text-gray-500">30日後の予測:</span>
                     <span className="text-lg font-bold text-[#00B900]">
                       {predicted30Days.toLocaleString()}
                     </span>
                   </div>
-                  <p className="mt-1 text-xs font-mono text-black/60">
+                  <p className="mt-1 text-xs font-mono text-gray-500">
                     (現在のペースで成長した場合)
                   </p>
                 </div>
@@ -695,24 +695,24 @@ export default function AnalyticsPage() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         {/* 時間帯別分布 */}
-        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <section className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
           <div className="mb-4 flex items-center gap-2">
-            <Clock className="h-5 w-5 text-black" />
-            <h2 className="text-lg font-bold uppercase tracking-wider text-black">時間帯別分布</h2>
+            <Clock className="h-5 w-5 text-gray-800" />
+            <h2 className="text-lg font-bold uppercase tracking-wider text-gray-800">時間帯別分布</h2>
           </div>
           <div className="space-y-1">
             {data.hourly.map((h) => {
               const total = h.inbound + h.outbound;
               return (
                 <div key={h.hour} className="flex items-center gap-2">
-                  <span className="w-10 text-xs font-mono text-black/60">{h.hour}時</span>
+                  <span className="w-10 text-xs font-mono text-gray-500">{h.hour}時</span>
                   <div className="flex-1">
                     <div
-                      className="h-5 border-2 border-black bg-[#00B900] transition-all"
+                      className="h-5 rounded-lg bg-[#00B900] transition-all"
                       style={{ width: `${(total / maxHourly) * 100}%` }}
                     />
                   </div>
-                  <span className="w-8 text-right text-xs font-bold text-black">{total}</span>
+                  <span className="w-8 text-right text-xs font-bold text-gray-800">{total}</span>
                 </div>
               );
             })}
@@ -720,19 +720,19 @@ export default function AnalyticsPage() {
         </section>
 
         {/* 曜日別分布 */}
-        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <section className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
           <div className="mb-4 flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-black" />
-            <h2 className="text-lg font-bold uppercase tracking-wider text-black">曜日別分布</h2>
+            <Calendar className="h-5 w-5 text-gray-800" />
+            <h2 className="text-lg font-bold uppercase tracking-wider text-gray-800">曜日別分布</h2>
           </div>
           <div className="space-y-2">
             {data.weekday.map((w) => {
               const total = w.inbound + w.outbound;
               return (
                 <div key={w.day} className="flex items-center gap-3">
-                  <span className="w-8 text-sm font-bold text-black">{w.dayName}</span>
+                  <span className="w-8 text-sm font-bold text-gray-800">{w.dayName}</span>
                   <div className="flex-1">
-                    <div className="flex h-8 overflow-hidden border-2 border-black">
+                    <div className="flex h-8 overflow-hidden rounded-lg">
                       {w.inbound > 0 && (
                         <div
                           className="bg-[#00B900]"
@@ -747,7 +747,7 @@ export default function AnalyticsPage() {
                       )}
                     </div>
                   </div>
-                  <span className="w-12 text-right text-sm font-bold text-black">{total}</span>
+                  <span className="w-12 text-right text-sm font-bold text-gray-800">{total}</span>
                 </div>
               );
             })}
@@ -757,23 +757,23 @@ export default function AnalyticsPage() {
 
       {/* メッセージタイプ別分析 */}
       {data.messageTypes && data.messageTypes.length > 0 && (
-        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <section className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
           <div className="mb-4 flex items-center gap-2">
-            <FileType className="h-5 w-5 text-black" />
-            <h2 className="text-lg font-bold uppercase tracking-wider text-black">メッセージタイプ別</h2>
+            <FileType className="h-5 w-5 text-gray-800" />
+            <h2 className="text-lg font-bold uppercase tracking-wider text-gray-800">メッセージタイプ別</h2>
           </div>
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
             {data.messageTypes.map((item) => {
               const total = data.messageTypes.reduce((sum, t) => sum + t.count, 0);
               const percentage = total > 0 ? ((item.count / total) * 100).toFixed(1) : "0";
               return (
-                <article key={item.type} className="border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <article key={item.type} className="rounded-2xl bg-white p-4 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="text-black">{getMessageTypeIcon(item.type)}</div>
-                      <h3 className="text-sm font-bold text-black">{getMessageTypeLabel(item.type)}</h3>
+                      <div className="text-gray-800">{getMessageTypeIcon(item.type)}</div>
+                      <h3 className="text-sm font-bold text-gray-800">{getMessageTypeLabel(item.type)}</h3>
                     </div>
-                    <span className="text-xs font-mono text-black/60">{percentage}%</span>
+                    <span className="text-xs font-mono text-gray-500">{percentage}%</span>
                   </div>
                   <p className="mt-2 text-2xl font-bold text-[#00B900]">{item.count.toLocaleString()}</p>
                 </article>
@@ -785,10 +785,10 @@ export default function AnalyticsPage() {
 
       {/* タグ別分析 */}
       {data.tags && data.tags.length > 0 && (
-        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <section className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
           <div className="mb-4 flex items-center gap-2">
-            <TagIcon className="h-5 w-5 text-black" />
-            <h2 className="text-lg font-bold uppercase tracking-wider text-black">タグ別ユーザー数</h2>
+            <TagIcon className="h-5 w-5 text-gray-800" />
+            <h2 className="text-lg font-bold uppercase tracking-wider text-gray-800">タグ別ユーザー数</h2>
           </div>
           <div className="space-y-2">
             {data.tags.slice(0, 10).map((tag) => {
@@ -796,14 +796,14 @@ export default function AnalyticsPage() {
               const percentage = (tag.userCount / maxUsers) * 100;
               return (
                 <div key={tag.tagId} className="flex items-center gap-3">
-                  <span className="w-32 truncate text-sm font-bold text-black">{tag.tagName}</span>
+                  <span className="w-32 truncate text-sm font-bold text-gray-800">{tag.tagName}</span>
                   <div className="flex-1">
                     <div
-                      className="h-7 border-2 border-black bg-[#00B900] transition-all"
+                      className="h-7 rounded-lg bg-[#00B900] transition-all"
                       style={{ width: `${percentage}%` }}
                     />
                   </div>
-                  <span className="w-16 text-right text-sm font-bold text-black">
+                  <span className="w-16 text-right text-sm font-bold text-gray-800">
                     {tag.userCount.toLocaleString()}
                   </span>
                 </div>
@@ -811,31 +811,31 @@ export default function AnalyticsPage() {
             })}
           </div>
           {data.tags.length === 0 && (
-            <p className="py-8 text-center text-sm font-mono text-black/60">タグが登録されていません</p>
+            <p className="py-8 text-center text-sm font-mono text-gray-500">タグが登録されていません</p>
           )}
         </section>
       )}
 
       {/* 配信分析 */}
       {data.broadcasts && (
-        <section className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <section className="rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
           <div className="mb-4 flex items-center gap-2">
-            <Send className="h-5 w-5 text-black" />
-            <h2 className="text-lg font-bold uppercase tracking-wider text-black">配信統計</h2>
+            <Send className="h-5 w-5 text-gray-800" />
+            <h2 className="text-lg font-bold uppercase tracking-wider text-gray-800">配信統計</h2>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-3">
-              <article className="border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-black/60">総配信数</h3>
+              <article className="rounded-2xl bg-white p-4 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500">総配信数</h3>
                 <p className="mt-2 text-3xl font-bold text-[#00B900]">{data.broadcasts.total.toLocaleString()}</p>
               </article>
-              <article className="border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-black/60">予約済み</h3>
+              <article className="rounded-2xl bg-white p-4 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500">予約済み</h3>
                 <p className="mt-2 text-3xl font-bold text-[#00B900]">{data.broadcasts.scheduled.toLocaleString()}</p>
               </article>
             </div>
             <div>
-              <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-black">ステータス別</h3>
+              <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-gray-800">ステータス別</h3>
               <div className="space-y-2">
                 {data.broadcasts.byStatus.map((item) => {
                   const percentage = data.broadcasts.total > 0
@@ -843,14 +843,14 @@ export default function AnalyticsPage() {
                     : "0";
                   return (
                     <div key={item.status} className="flex items-center gap-3">
-                      <span className="w-20 text-xs font-mono text-black/60">{getBroadcastStatusLabel(item.status)}</span>
+                      <span className="w-20 text-xs font-mono text-gray-500">{getBroadcastStatusLabel(item.status)}</span>
                       <div className="flex-1">
                         <div
-                          className="h-6 border-2 border-black bg-[#00B900] transition-all"
+                          className="h-6 rounded-lg bg-[#00B900] transition-all"
                           style={{ width: `${percentage}%` }}
                         />
                       </div>
-                      <span className="w-16 text-right text-sm font-bold text-black">
+                      <span className="w-16 text-right text-sm font-bold text-gray-800">
                         {item.count} ({percentage}%)
                       </span>
                     </div>
@@ -858,7 +858,7 @@ export default function AnalyticsPage() {
                 })}
               </div>
               {data.broadcasts.byStatus.length === 0 && (
-                <p className="py-8 text-center text-sm font-mono text-black/60">配信がありません</p>
+                <p className="py-8 text-center text-sm font-mono text-gray-500">配信がありません</p>
               )}
             </div>
           </div>
@@ -867,7 +867,7 @@ export default function AnalyticsPage() {
 
       {/* API デバッグ */}
       <div className="space-y-4">
-        <h2 className="text-lg font-bold uppercase tracking-wider text-black">API デバッグ</h2>
+        <h2 className="text-lg font-bold uppercase tracking-wider text-gray-800">API デバッグ</h2>
         <DebugPanel
           title="/api/analytics"
           request={{ days: period }}

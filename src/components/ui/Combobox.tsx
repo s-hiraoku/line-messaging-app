@@ -82,18 +82,19 @@ export function Combobox({
             aria-describedby={error ? errorId : undefined}
             disabled={disabled}
             className={cn(
-              "flex h-10 w-full items-center justify-between rounded-lg border bg-slate-900/50 px-4 py-2 text-sm transition-all duration-200",
+              "flex h-10 w-full items-center justify-between rounded-xl bg-white px-4 py-2 text-sm font-mono text-gray-800 transition-all duration-300",
+              "shadow-[inset_0_-3px_8px_rgba(0,0,0,0.04),inset_0_2px_4px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)]",
               error
-                ? "border-red-500/50 hover:border-red-400/50 focus:border-red-500 focus:ring-2 focus:ring-red-500/50"
-                : "border-slate-700/50 hover:border-slate-600/50 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/50",
-              "focus:outline-none focus:ring-offset-2 focus:ring-offset-slate-950",
-              "disabled:cursor-not-allowed disabled:opacity-50",
-              !selectedOption && "text-slate-500"
+                ? "shadow-[inset_0_2px_4px_rgba(239,68,68,0.1),0_2px_8px_rgba(239,68,68,0.2)] bg-red-50"
+                : "hover:-translate-y-0.5 hover:shadow-[inset_0_-3px_8px_rgba(0,0,0,0.04),inset_0_2px_4px_rgba(255,255,255,0.8),0_6px_16px_rgba(0,0,0,0.1)] focus:shadow-[inset_0_-3px_8px_rgba(0,0,0,0.04),inset_0_2px_4px_rgba(255,255,255,0.8),0_6px_16px_rgba(0,185,0,0.15)]",
+              "focus:outline-none",
+              "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-100",
+              !selectedOption && "text-gray-400"
             )}
           >
             <div className="flex items-center gap-2 flex-1 min-w-0">
               {selectedOption?.icon && (
-                <div className="flex-shrink-0 text-slate-400">
+                <div className="flex-shrink-0 text-gray-500">
                   {selectedOption.icon}
                 </div>
               )}
@@ -101,13 +102,14 @@ export function Combobox({
                 {selectedOption ? selectedOption.label : placeholder}
               </span>
             </div>
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 text-gray-500" />
           </button>
         </PopoverPrimitive.Trigger>
         <PopoverPrimitive.Portal>
           <PopoverPrimitive.Content
             className={cn(
-              "z-50 w-[var(--radix-popover-trigger-width)] rounded-lg border border-slate-700/50 bg-slate-900/95 backdrop-blur-sm p-0 shadow-2xl",
+              "z-50 w-[var(--radix-popover-trigger-width)] rounded-xl bg-white p-0",
+              "shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.12)]",
               "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
             )}
             align="start"
@@ -126,17 +128,17 @@ export function Combobox({
                 return labelMatch || descMatch ? 1 : 0;
               }}
             >
-              <div className="flex items-center border-b border-slate-700/50 px-3">
-                <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+              <div className="flex items-center border-b border-gray-100 px-3">
+                <Search className="mr-2 h-4 w-4 shrink-0 text-gray-400" />
                 <CommandPrimitive.Input
                   placeholder={searchPlaceholder}
                   value={search}
                   onValueChange={setSearch}
-                  className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm text-slate-100 outline-none placeholder:text-slate-500 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm text-gray-800 font-mono outline-none placeholder:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50"
                 />
               </div>
               <CommandPrimitive.List className="max-h-[300px] overflow-y-auto p-1">
-                <CommandPrimitive.Empty className="py-6 text-center text-sm text-slate-500">
+                <CommandPrimitive.Empty className="py-6 text-center text-sm text-gray-400 font-mono">
                   {emptyMessage}
                 </CommandPrimitive.Empty>
 
@@ -146,7 +148,7 @@ export function Combobox({
                     <CommandPrimitive.Group
                       key={group.label}
                       heading={group.label}
-                      className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:text-slate-400 [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-wider"
+                      className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-bold [&_[cmdk-group-heading]]:text-gray-500 [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-wider"
                     >
                       {group.options.map((option) => (
                         <CommandPrimitive.Item
@@ -159,28 +161,29 @@ export function Combobox({
                             setSearch("");
                           }}
                           className={cn(
-                            "relative flex cursor-pointer select-none items-center rounded-md px-2 py-2 text-sm outline-none transition-colors",
-                            "data-[selected='true']:bg-blue-500/20 data-[selected='true']:text-blue-300",
+                            "relative flex cursor-pointer select-none items-center rounded-lg px-2 py-2 text-sm font-mono outline-none transition-colors",
+                            "data-[selected='true']:bg-[#e8f5e9] data-[selected='true']:text-gray-800",
+                            "hover:bg-[#e8f5e9]",
                             "data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                           )}
                         >
                           <div className="flex items-center gap-2 flex-1 min-w-0">
                             {option.icon && (
-                              <div className="flex-shrink-0 text-slate-400">
+                              <div className="flex-shrink-0 text-gray-500">
                                 {option.icon}
                               </div>
                             )}
                             <div className="flex-1 min-w-0">
                               <div className="truncate">{option.label}</div>
                               {option.description && (
-                                <div className="text-xs text-slate-500 truncate">
+                                <div className="text-xs text-gray-500 truncate">
                                   {option.description}
                                 </div>
                               )}
                             </div>
                           </div>
                           {value === option.value && (
-                            <Check className="ml-2 h-4 w-4 text-blue-400 flex-shrink-0" />
+                            <Check className="ml-2 h-4 w-4 text-[#00B900] flex-shrink-0" />
                           )}
                         </CommandPrimitive.Item>
                       ))}
@@ -199,28 +202,29 @@ export function Combobox({
                         setSearch("");
                       }}
                       className={cn(
-                        "relative flex cursor-pointer select-none items-center rounded-md px-2 py-2 text-sm outline-none transition-colors",
-                        "data-[selected='true']:bg-blue-500/20 data-[selected='true']:text-blue-300",
+                        "relative flex cursor-pointer select-none items-center rounded-lg px-2 py-2 text-sm font-mono outline-none transition-colors",
+                        "data-[selected='true']:bg-[#e8f5e9] data-[selected='true']:text-gray-800",
+                        "hover:bg-[#e8f5e9]",
                         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                       )}
                     >
                       <div className="flex items-center gap-2 flex-1 min-w-0">
                         {option.icon && (
-                          <div className="flex-shrink-0 text-slate-400">
+                          <div className="flex-shrink-0 text-gray-500">
                             {option.icon}
                           </div>
                         )}
                         <div className="flex-1 min-w-0">
                           <div className="truncate">{option.label}</div>
                           {option.description && (
-                            <div className="text-xs text-slate-500 truncate">
+                            <div className="text-xs text-gray-500 truncate">
                               {option.description}
                             </div>
                           )}
                         </div>
                       </div>
                       {value === option.value && (
-                        <Check className="ml-2 h-4 w-4 text-blue-400 flex-shrink-0" />
+                        <Check className="ml-2 h-4 w-4 text-[#00B900] flex-shrink-0" />
                       )}
                     </CommandPrimitive.Item>
                   ))
@@ -233,7 +237,7 @@ export function Combobox({
 
       {/* エラーメッセージ */}
       {error && (
-        <p id={errorId} className="mt-1.5 text-sm text-red-400">
+        <p id={errorId} className="mt-1.5 text-sm text-red-500 font-mono">
           {error}
         </p>
       )}

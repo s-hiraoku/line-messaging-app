@@ -67,38 +67,38 @@ export function ConfirmDialogProvider({ children }: { children: ReactNode }) {
   }, [resolvePromise]);
 
   const typeStyles = {
-    danger: "border-2 border-red-600 bg-red-50 text-red-600",
-    warning: "border-2 border-black bg-[#FFE500] text-black",
-    info: "border-2 border-black bg-white text-black",
+    danger: "rounded-xl bg-red-50 text-red-600 shadow-[inset_0_-4px_12px_rgba(239,68,68,0.1),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(239,68,68,0.2)]",
+    warning: "rounded-xl bg-[#FFE500] text-amber-900 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.1),inset_0_2px_6px_rgba(255,255,255,0.5),0_4px_12px_rgba(255,229,0,0.3)]",
+    info: "rounded-xl bg-white text-gray-700 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.08)]",
   };
 
   const buttonStyles = {
-    danger: "bg-red-600 text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
-    warning: "bg-[#FFE500] text-black border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
-    info: "bg-[#00B900] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
+    danger: "rounded-xl bg-red-500 text-white shadow-[inset_0_-4px_12px_rgba(0,0,0,0.2),inset_0_2px_6px_rgba(255,255,255,0.3),0_6px_16px_rgba(239,68,68,0.4)] hover:-translate-y-0.5 hover:shadow-[inset_0_-4px_12px_rgba(0,0,0,0.2),inset_0_2px_6px_rgba(255,255,255,0.3),0_8px_20px_rgba(239,68,68,0.5)] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.2),0_2px_8px_rgba(239,68,68,0.3)]",
+    warning: "rounded-xl bg-[#FFE500] text-amber-900 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.1),inset_0_2px_6px_rgba(255,255,255,0.5),0_6px_16px_rgba(255,229,0,0.4)] hover:-translate-y-0.5 hover:shadow-[inset_0_-4px_12px_rgba(0,0,0,0.1),inset_0_2px_6px_rgba(255,255,255,0.5),0_8px_20px_rgba(255,229,0,0.5)] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.15),0_2px_8px_rgba(255,229,0,0.3)]",
+    info: "rounded-xl bg-[#00B900] text-white shadow-[inset_0_-4px_12px_rgba(0,0,0,0.2),inset_0_2px_6px_rgba(255,255,255,0.3),0_6px_16px_rgba(0,185,0,0.4)] hover:-translate-y-0.5 hover:shadow-[inset_0_-4px_12px_rgba(0,0,0,0.2),inset_0_2px_6px_rgba(255,255,255,0.3),0_8px_20px_rgba(0,185,0,0.5)] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.2),0_2px_8px_rgba(0,185,0,0.3)]",
   };
 
   return (
     <ConfirmDialogContext.Provider value={{ confirm }}>
       {children}
       {isOpen && options && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="w-full max-w-md border-2 border-black bg-white p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_16px_48px_rgba(0,0,0,0.2)]">
             <div className="mb-4 flex items-start gap-3">
               <div
-                className={`border-2 p-2 ${typeStyles[options.type || "info"]}`}
+                className={`p-2 ${typeStyles[options.type || "info"]}`}
               >
                 <AlertCircle className="h-5 w-5" />
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-bold uppercase tracking-wider text-black">{options.title}</h3>
-                <p className="mt-2 text-sm text-black/70">{options.message}</p>
+                <h3 className="text-lg font-bold uppercase tracking-wider text-gray-800">{options.title}</h3>
+                <p className="mt-2 text-sm text-gray-600">{options.message}</p>
               </div>
             </div>
             <div className="flex justify-end gap-3">
               <button
                 onClick={handleCancel}
-                className="border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                className="rounded-xl bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-700 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_6px_16px_rgba(0,0,0,0.08)] transition-all hover:-translate-y-0.5 hover:shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_8px_20px_rgba(0,0,0,0.12)] active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.06),0_2px_8px_rgba(0,0,0,0.06)]"
               >
                 {options.cancelText || "キャンセル"}
               </button>

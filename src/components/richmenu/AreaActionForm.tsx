@@ -22,7 +22,7 @@ export function AreaActionForm({ area, onUpdate }: AreaActionFormProps) {
             },
           })
         }
-        className="w-full border-2 border-black bg-white px-2 py-1.5 text-sm font-mono text-black transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none"
+        className="w-full rounded-xl bg-white px-2 py-1.5 text-sm font-mono text-gray-800 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 focus:outline-none"
       >
         <option value="uri">リンク (URI)</option>
         <option value="message">メッセージ</option>
@@ -38,7 +38,7 @@ export function AreaActionForm({ area, onUpdate }: AreaActionFormProps) {
               action: { ...area.action, uri: e.target.value },
             })
           }
-          className="w-full border-2 border-black bg-white px-2 py-1.5 text-sm font-mono text-black placeholder-black/40 transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none"
+          className="w-full rounded-xl bg-white px-2 py-1.5 text-sm font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 focus:outline-none"
           placeholder="https://example.com"
           required
         />
@@ -53,7 +53,7 @@ export function AreaActionForm({ area, onUpdate }: AreaActionFormProps) {
               action: { ...area.action, text: e.target.value },
             })
           }
-          className="w-full border-2 border-black bg-white px-2 py-1.5 text-sm font-mono text-black placeholder-black/40 transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none"
+          className="w-full rounded-xl bg-white px-2 py-1.5 text-sm font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 focus:outline-none"
           placeholder="送信されるテキスト"
           required
         />
@@ -68,7 +68,7 @@ export function AreaActionForm({ area, onUpdate }: AreaActionFormProps) {
               action: { ...area.action, data: e.target.value },
             })
           }
-          className="w-full border-2 border-black bg-white px-2 py-1.5 text-sm font-mono text-black placeholder-black/40 transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none"
+          className="w-full rounded-xl bg-white px-2 py-1.5 text-sm font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 focus:outline-none"
           placeholder="action=example&id=123"
           required
         />

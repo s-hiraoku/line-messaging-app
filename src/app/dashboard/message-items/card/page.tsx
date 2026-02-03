@@ -192,29 +192,29 @@ export default function CardMessagePage() {
     <div className="space-y-6">
       <header className="space-y-3">
         <div className="flex items-center gap-4">
-          <h1 className={`text-5xl font-black text-black ${syne.className}`}>カードメッセージ</h1>
+          <h1 className={`text-5xl font-black text-gray-800 ${syne.className}`}>カードメッセージ</h1>
           <div className="h-2 w-12 rotate-12 bg-[#FFE500]" />
         </div>
-        <p className={`text-base text-black/70 ${ibmPlexSans.className}`}>
+        <p className={`text-base text-gray-500 ${ibmPlexSans.className}`}>
           カード形式のメッセージアイテムを作成・管理できます。
         </p>
       </header>
 
       {/* Info Banner */}
-      <div className="border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <div className="rounded-2xl bg-white p-4 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
         <div className="flex flex-col gap-4">
           {/* Header Section */}
           <div className="flex items-start gap-4">
-            <div className="border-2 border-black bg-[#00B900] p-2.5 flex-shrink-0">
+            <div className="rounded-xl bg-[#00B900] p-2.5 flex-shrink-0 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
             </div>
             <div className="flex-1">
-              <h2 className={`mb-2 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>
+              <h2 className={`mb-2 text-xs font-bold uppercase tracking-wider text-gray-800 ${ibmPlexSans.className}`}>
                 カードメッセージとは？
               </h2>
-              <p className="text-xs text-black/70 leading-relaxed">
+              <p className="text-xs text-gray-500 leading-relaxed">
                 複数のカードをカルーセル形式で表示できるインタラクティブなメッセージです。
                 各カードには画像、タイトル、説明、アクションボタン（最大3つ）を設定できます。
                 商品紹介、場所案内、人物紹介など、視覚的に情報を伝えたい場面に最適です。
@@ -224,11 +224,11 @@ export default function CardMessagePage() {
 
           {/* Saved Data Notice */}
           {hasSavedData && savedAt && (
-            <div className="flex items-center gap-2 px-3 py-2 border-2 border-black bg-[#FFE500] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-              <svg className="w-4 h-4 text-black flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#FFE500] shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+              <svg className="w-4 h-4 text-gray-800 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
               </svg>
-              <span className="text-xs font-mono font-bold text-black">
+              <span className="text-xs font-mono font-bold text-gray-800">
                 前回の編集内容が復元されました（
                 {new Date(savedAt).toLocaleString('ja-JP')}）
               </span>
@@ -240,13 +240,13 @@ export default function CardMessagePage() {
       {/* Main Form with enhanced styling */}
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+        className="space-y-6 rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]"
       >
         {/* User Selector */}
         <div className="space-y-2">
           <label
             htmlFor="lineUserId"
-            className="text-sm font-bold uppercase tracking-wider text-black"
+            className="text-sm font-bold uppercase tracking-wider text-gray-800"
           >
             送信先ユーザー <span className="text-red-600">*</span>
           </label>
@@ -255,14 +255,14 @@ export default function CardMessagePage() {
             onValueChange={setLineUserId}
             placeholder="ユーザーを検索または LINE ユーザー ID を入力..."
           />
-          <p className="text-xs text-black/60">
+          <p className="text-xs text-gray-500">
             ユーザー名や表示名で検索、または LINE ユーザー ID を直接入力できます
           </p>
         </div>
 
         {/* Alt Text Input */}
         <div className="space-y-2">
-          <Label htmlFor="altText" className="text-sm font-bold uppercase tracking-wider text-black">
+          <Label htmlFor="altText" className="text-sm font-bold uppercase tracking-wider text-gray-800">
             代替テキスト <span className="text-red-600">*</span>
           </Label>
           <Input
@@ -275,7 +275,7 @@ export default function CardMessagePage() {
             required
           />
           <div className="flex items-center justify-between text-xs">
-            <p className="text-black/60">
+            <p className="text-gray-500">
               プッシュ通知やトークリストに表示されるテキスト
             </p>
             <Badge
@@ -289,8 +289,8 @@ export default function CardMessagePage() {
 
         {/* Main Editor Area */}
         <div className="space-y-4">
-          <div className="border-t-2 border-black pt-4">
-            <h3 className={`mb-4 text-xs font-bold uppercase tracking-wider text-black ${ibmPlexSans.className}`}>
+          <div className="border-t border-gray-200 pt-4">
+            <h3 className={`mb-4 text-xs font-bold uppercase tracking-wider text-gray-800 ${ibmPlexSans.className}`}>
               カード編集
             </h3>
 
@@ -326,7 +326,7 @@ export default function CardMessagePage() {
 
         {/* Validation Errors */}
         {validationErrors.length > 0 && (
-          <div className="border-2 border-red-600 bg-red-50 p-4 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <div className="rounded-xl bg-red-50 p-4 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -336,7 +336,7 @@ export default function CardMessagePage() {
                   入力エラー <Badge variant="destructive" className="ml-2">{validationErrors.length}件</Badge>
                 </h4>
               </div>
-              <ul className="space-y-2 text-xs text-black pl-7">
+              <ul className="space-y-2 text-xs text-gray-800 pl-7">
                 {validationErrors.map((err, index) => (
                   <li key={index} className="flex items-start gap-2">
                     <span className="w-1.5 h-1.5 bg-red-600 mt-1.5 flex-shrink-0" />
@@ -349,7 +349,7 @@ export default function CardMessagePage() {
         )}
 
         {/* Submit Button and Status */}
-        <div className="flex flex-col gap-4 border-t-2 border-black pt-6">
+        <div className="flex flex-col gap-4 border-t border-gray-200 pt-6">
           <div className="flex items-center gap-4">
             <Button
               type="submit"
@@ -377,7 +377,7 @@ export default function CardMessagePage() {
 
           {/* Validation Hints */}
           {status !== "sending" && !isFormValid && (
-            <div className="border-2 border-yellow-600 bg-yellow-50 p-4 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+            <div className="rounded-xl bg-yellow-50 p-4 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -385,7 +385,7 @@ export default function CardMessagePage() {
                   </svg>
                   <p className="text-sm font-bold uppercase tracking-wider text-yellow-600">送信前に以下を確認してください</p>
                 </div>
-                <ul className="space-y-1.5 text-xs text-black pl-7">
+                <ul className="space-y-1.5 text-xs text-gray-800 pl-7">
                   {!lineUserId && (
                     <li className="flex items-center gap-2">
                       <span className="w-1.5 h-1.5 bg-yellow-600" />

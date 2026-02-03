@@ -105,19 +105,19 @@ export function ImageUpload({ size, onUploadComplete, currentImageUrl }: ImageUp
       </label>
 
       {previewUrl ? (
-        <div className="relative border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="relative rounded-2xl bg-white p-4 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300">
           <div className="flex items-start gap-4">
             <div className="flex-1">
               <img
                 src={previewUrl}
                 alt="Rich menu preview"
-                className="w-full h-auto border-2 border-black"
+                className="w-full h-auto rounded-xl"
               />
             </div>
             <button
               type="button"
               onClick={handleRemove}
-              className="border-2 border-black bg-red-600 p-2 text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
+              className="rounded-xl bg-red-600 p-2 text-white shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5"
               title="画像を削除"
             >
               <X className="w-5 h-5" />
@@ -134,9 +134,9 @@ export function ImageUpload({ size, onUploadComplete, currentImageUrl }: ImageUp
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           className={`
-            border-2 border-dashed border-black p-8 text-center transition-all cursor-pointer
-            ${isDragging ? "bg-[#FFFEF5] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]" : "bg-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"}
-            ${uploading ? "opacity-50 cursor-not-allowed" : "hover:bg-[#FFFEF5]"}
+            rounded-2xl p-8 text-center transition-all duration-300 cursor-pointer
+            ${isDragging ? "bg-[#e8f5e9] shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]" : "bg-white shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)]"}
+            ${uploading ? "opacity-50 cursor-not-allowed" : "hover:bg-[#e8f5e9] hover:-translate-y-0.5"}
           `}
           onClick={() => !uploading && fileInputRef.current?.click()}
         >
@@ -169,7 +169,7 @@ export function ImageUpload({ size, onUploadComplete, currentImageUrl }: ImageUp
       )}
 
       {error && (
-        <div className="border-2 border-black bg-red-100 px-4 py-3 text-sm font-mono text-red-900 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+        <div className="rounded-xl bg-red-100 px-4 py-3 text-sm font-mono text-red-900 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300">
           {error}
         </div>
       )}

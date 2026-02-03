@@ -220,12 +220,12 @@ export function ImageUploader({
         onPaste={handlePaste}
         tabIndex={0}
         className={`
-          relative border-2 border-dashed p-6 text-center transition-all
+          relative rounded-2xl p-6 text-center transition-all duration-300
           ${isDragging
-            ? 'border-[#00B900] bg-[#00B900]/10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
-            : 'border-black bg-white'
+            ? 'bg-[#00B900]/10 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]'
+            : 'bg-white/80 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)]'
           }
-          ${uploading ? 'cursor-wait' : 'cursor-pointer'}
+          ${uploading ? 'cursor-wait' : 'cursor-pointer hover:-translate-y-0.5'}
         `}
         onClick={uploading ? undefined : handleClick}
         role="button"
@@ -251,12 +251,12 @@ export function ImageUploader({
           <div className="space-y-3">
             <Upload className="mx-auto h-12 w-12 text-[#00B900] animate-pulse" />
             <div className="space-y-1">
-              <p className="text-sm font-bold uppercase tracking-wider text-black">
+              <p className="text-sm font-bold uppercase tracking-wider text-gray-800">
                 アップロード中... {uploadProgress}%
               </p>
-              <div className="mx-auto h-3 w-48 border-2 border-black bg-white">
+              <div className="mx-auto h-3 w-48 rounded-full bg-gray-100 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]">
                 <div
-                  className="h-full bg-[#00B900] transition-all duration-300"
+                  className="h-full rounded-full bg-[#00B900] transition-all duration-300"
                   style={{ width: `${uploadProgress}%` }}
                 />
               </div>
@@ -264,12 +264,12 @@ export function ImageUploader({
           </div>
         ) : (
           <div className="space-y-3">
-            <Upload className="mx-auto h-12 w-12 text-black" />
+            <Upload className="mx-auto h-12 w-12 text-gray-700" />
             <div className="space-y-1">
-              <p className="text-sm text-black">{placeholder}</p>
+              <p className="text-sm text-gray-700">{placeholder}</p>
               <button
                 type="button"
-                className="inline-flex items-center border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                className="inline-flex items-center rounded-xl bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-800 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleClick();
@@ -278,7 +278,7 @@ export function ImageUploader({
                 ファイルを選択
               </button>
             </div>
-            <p className="text-xs font-mono text-black/60">
+            <p className="text-xs font-mono text-gray-500">
               JPEG/PNG形式、{MAX_FILE_SIZE / 1024 / 1024}MB以下、{MIN_DIMENSION}x{MIN_DIMENSION}px以上
             </p>
           </div>
@@ -287,7 +287,7 @@ export function ImageUploader({
 
       {/* Error display */}
       {error && (
-        <div className="flex items-start gap-2 border-2 border-red-600 bg-red-50 p-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="flex items-start gap-2 rounded-xl bg-red-50 p-3 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300">
           <AlertCircle className="h-5 w-5 flex-shrink-0 text-red-600 mt-0.5" />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-bold uppercase tracking-wider text-red-600">
@@ -298,7 +298,7 @@ export function ImageUploader({
           <button
             type="button"
             onClick={clearError}
-            className="flex-shrink-0 border-2 border-red-600 bg-white p-1 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] text-red-600 transition-all"
+            className="flex-shrink-0 rounded-lg bg-white p-1 text-red-600 shadow-[inset_0_-2px_6px_rgba(0,0,0,0.04),inset_0_1px_3px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5"
             aria-label="エラーを閉じる"
           >
             <X className="h-4 w-4" />

@@ -404,10 +404,10 @@ export function ImageCropUploader({
           onPaste={handlePaste}
           tabIndex={0}
           className={`
-            relative border-2 border-dashed p-6 text-center transition-all
+            relative rounded-2xl p-6 text-center transition-all duration-300
             ${isDragging
-              ? 'border-[#00B900] bg-[#00B900]/10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
-              : 'border-black bg-white'
+              ? 'bg-[#00B900]/10 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]'
+              : 'bg-[#e8f5e9] shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]'
             }
             ${isUploading ? 'cursor-wait' : 'cursor-pointer'}
           `}
@@ -431,12 +431,12 @@ export function ImageCropUploader({
             </div>
           ) : (
             <div className="space-y-3">
-              <Upload className="mx-auto h-12 w-12 text-black" />
+              <Upload className="mx-auto h-12 w-12 text-gray-700" />
               <div className="space-y-1">
-                <p className="text-sm text-black">{placeholder}</p>
+                <p className="text-sm text-gray-700">{placeholder}</p>
                 <button
                   type="button"
-                  className="inline-flex items-center border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                  className="inline-flex items-center rounded-xl bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleClick();
@@ -445,7 +445,7 @@ export function ImageCropUploader({
                   ファイルを選択
                 </button>
               </div>
-              <p className="text-xs font-mono text-black/60">
+              <p className="text-xs font-mono text-gray-700/60">
                 JPEG/PNG形式、{MAX_FILE_SIZE / 1024 / 1024}MB以下、{MIN_DIMENSION}x{MIN_DIMENSION}
                 px以上
               </p>
@@ -457,13 +457,13 @@ export function ImageCropUploader({
       {/* Crop Editor Modal */}
       {isCropping && imageSrc && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="w-full max-w-2xl border-2 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] lg:max-w-3xl">
+          <div className="w-full max-w-2xl rounded-2xl bg-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_16px_48px_rgba(0,0,0,0.15)] lg:max-w-3xl">
             {/* Header */}
-            <div className="flex items-center justify-between border-b-2 border-black p-4 bg-white">
-              <h2 className="text-lg font-bold uppercase tracking-wider text-black">画像クロップ</h2>
+            <div className="flex items-center justify-between rounded-t-2xl border-b border-gray-200 p-4 bg-white">
+              <h2 className="text-lg font-bold uppercase tracking-wider text-gray-800">画像クロップ</h2>
               <button
                 onClick={handleCancel}
-                className="border-2 border-black bg-white p-1 transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] text-black"
+                className="rounded-xl bg-white p-1 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5 text-gray-700"
                 aria-label="閉じる"
               >
                 <X className="h-5 w-5" />
@@ -495,14 +495,14 @@ export function ImageCropUploader({
             </div>
 
             {/* Controls */}
-            <div className="space-y-4 p-4 bg-[#FFFEF5]">
+            <div className="space-y-4 p-4 bg-[#e8f5e9]">
               {/* Zoom Slider */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <label htmlFor="zoom" className="text-sm font-bold uppercase tracking-wider text-black">
+                  <label htmlFor="zoom" className="text-sm font-bold uppercase tracking-wider text-gray-800">
                     ズーム
                   </label>
-                  <span className="text-sm font-mono text-black">{Math.round(zoom * 100)}%</span>
+                  <span className="text-sm font-mono text-gray-800">{Math.round(zoom * 100)}%</span>
                 </div>
                 <input
                   id="zoom"
@@ -512,14 +512,14 @@ export function ImageCropUploader({
                   step={zoomStep}
                   value={zoom}
                   onChange={(e) => setZoom(Number(e.target.value))}
-                  className="w-full h-2 bg-white border-2 border-black appearance-none cursor-pointer accent-[#00B900] hover:accent-[#00B900]/80 transition-colors"
+                  className="w-full h-2 bg-white rounded-xl appearance-none cursor-pointer accent-[#00B900] hover:accent-[#00B900]/80 transition-all duration-300"
                 />
               </div>
 
               {/* Validation Warning */}
               {!isCropValid() && croppedAreaPixels && (
-                <div className="border-2 border-[#FFE500] bg-[#FFE500]/10 p-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                  <p className="text-sm font-bold text-black">
+                <div className="rounded-xl bg-[#FFE500]/10 p-3 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
+                  <p className="text-sm font-bold text-gray-800">
                     切り取り後のサイズが小さすぎます。ズームまたは切り取り範囲を調整してください。
                     （最小: {minCroppedWidth}x{minCroppedHeight}px）
                   </p>
@@ -528,18 +528,18 @@ export function ImageCropUploader({
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-end gap-3 border-t-2 border-black p-4 bg-white">
+            <div className="flex items-center justify-end gap-3 rounded-b-2xl border-t border-gray-200 p-4 bg-white">
               <button
                 onClick={handleCancel}
                 disabled={isUploading}
-                className="border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-xl bg-white px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-800 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 キャンセル
               </button>
               <button
                 onClick={handleCrop}
                 disabled={isUploading || !isCropValid()}
-                className="bg-[#00B900] border-2 border-black px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-xl bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isUploading ? `アップロード中... ${uploadProgress}%` : '切り取る'}
               </button>
@@ -550,7 +550,7 @@ export function ImageCropUploader({
 
       {/* Error display */}
       {error && (
-        <div className="flex items-start gap-2 border-2 border-red-600 bg-red-50 p-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="flex items-start gap-2 rounded-xl bg-red-50 p-3 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]">
           <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
           <div className="min-w-0 flex-1">
             <p className="text-sm font-bold uppercase tracking-wider text-red-600">
@@ -561,7 +561,7 @@ export function ImageCropUploader({
           <button
             type="button"
             onClick={clearError}
-            className="flex-shrink-0 border-2 border-red-600 bg-white p-1 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] text-red-600 transition-all"
+            className="flex-shrink-0 rounded-xl bg-white p-1 shadow-[inset_0_-4px_12px_rgba(0,0,0,0.04),inset_0_2px_6px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.06)] text-red-600 transition-all duration-300 hover:-translate-y-0.5"
             aria-label="エラーを閉じる"
           >
             <X className="h-4 w-4" />

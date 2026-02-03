@@ -64,20 +64,20 @@ export default function AudioMessagePage() {
     <div className="space-y-6">
       <header className="space-y-3">
         <div className="flex items-center gap-4">
-          <h1 className={`text-5xl font-black text-black ${syne.className}`}>音声メッセージ</h1>
-          <div className="h-2 w-12 rotate-12 bg-[#FFE500]" />
+          <h1 className={`text-5xl font-black text-gray-800 ${syne.className}`}>音声メッセージ</h1>
+          <div className="h-2 w-12 rotate-12 bg-[#FFE500] rounded-full" />
         </div>
-        <p className={`text-base text-black/70 ${ibmPlexSans.className}`}>
+        <p className={`text-base text-gray-500 ${ibmPlexSans.className}`}>
           音声ファイルを送信できます。
         </p>
       </header>
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+        className="space-y-4 rounded-2xl bg-white p-6 shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)]"
       >
         <div className="space-y-2">
-          <label htmlFor="lineUserId" className="text-sm font-bold uppercase tracking-wider text-black">
+          <label htmlFor="lineUserId" className="text-sm font-bold uppercase tracking-wider text-gray-800">
             LINE ユーザー ID <span className="text-red-600">*</span>
           </label>
           <input
@@ -85,14 +85,14 @@ export default function AudioMessagePage() {
             type="text"
             value={lineUserId}
             onChange={(event) => setLineUserId(event.target.value)}
-            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
+            className="w-full rounded-xl bg-white px-3 py-2 text-sm font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_2px_8px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-[#00B900] focus:ring-offset-2 transition-all"
             placeholder="Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
             required
           />
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="audioUrl" className="text-sm font-bold uppercase tracking-wider text-black">
+          <label htmlFor="audioUrl" className="text-sm font-bold uppercase tracking-wider text-gray-800">
             音声ファイルURL <span className="text-red-600">*</span>
           </label>
           <input
@@ -100,17 +100,17 @@ export default function AudioMessagePage() {
             type="url"
             value={audioUrl}
             onChange={(event) => setAudioUrl(event.target.value)}
-            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
+            className="w-full rounded-xl bg-white px-3 py-2 text-sm font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_2px_8px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-[#00B900] focus:ring-offset-2 transition-all"
             placeholder="https://example.com/audio.m4a"
             required
           />
-          <p className="text-xs font-mono text-black/60">
+          <p className="text-xs font-mono text-gray-500">
             M4A形式、HTTPS必須、最大200MB
           </p>
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="duration" className="text-sm font-bold uppercase tracking-wider text-black">
+          <label htmlFor="duration" className="text-sm font-bold uppercase tracking-wider text-gray-800">
             再生時間（ミリ秒） <span className="text-red-600">*</span>
           </label>
           <input
@@ -118,14 +118,14 @@ export default function AudioMessagePage() {
             type="number"
             value={duration}
             onChange={(event) => setDuration(event.target.value)}
-            className="w-full border-2 border-black bg-white px-3 py-2 text-sm font-mono text-black placeholder-black/40 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none transition-all"
+            className="w-full rounded-xl bg-white px-3 py-2 text-sm font-mono text-gray-800 placeholder-gray-400 shadow-[inset_0_2px_8px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-[#00B900] focus:ring-offset-2 transition-all"
             placeholder="5000"
             min="1"
             max="60000"
             required
           />
           {duration && (
-            <p className={`text-xs font-mono ${isValidDuration ? "text-black/60" : "text-red-600 font-bold"}`}>
+            <p className={`text-xs font-mono ${isValidDuration ? "text-gray-500" : "text-red-600 font-bold"}`}>
               {isValidDuration
                 ? `${(durationMs / 1000).toFixed(1)}秒`
                 : "1〜60000ミリ秒（1〜60秒）の範囲で入力してください"}
@@ -135,7 +135,7 @@ export default function AudioMessagePage() {
 
         <button
           type="submit"
-          className="inline-flex items-center border-2 border-black bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-50 active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
+          className="inline-flex items-center rounded-xl bg-[#00B900] px-4 py-2 text-sm font-bold uppercase tracking-wider text-white shadow-[inset_0_-6px_16px_rgba(0,0,0,0.04),inset_0_3px_8px_rgba(255,255,255,0.8),0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 active:translate-y-0.5 active:shadow-[inset_0_4px_12px_rgba(0,0,0,0.3)]"
           disabled={status === "sending" || !lineUserId || !audioUrl || !isValidDuration}
         >
           {status === "sending" ? "送信中..." : "送信"}
